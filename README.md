@@ -23,9 +23,7 @@
   <a href="#快速开始">快速开始</a> &bull;
   <a href="#许可证">许可证</a>
 </p>
-<p align="center">
-  <img src="console.png" alt="AiMaMi" />
-</p>
+
 ---
 
 ## 核心亮点
@@ -39,6 +37,11 @@ AiMaMi **不是** Codex 的 fork 或套壳 —— 它是一个独立的原生桌
 - **自定义指令** —— 基于模板的指令注入，支持预览、应用、回滚和历史追踪。
 - **跨平台** —— 基于 Tauri 2 原生支持 macOS 和 Windows。
 
+---
+
+<p align="center">
+  <img src="assets/console.png"  alt="AiMaMi" width="1200" height="812" />
+</p>
 ---
 
 ## 账号管理
