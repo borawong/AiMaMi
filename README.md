@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/app-icon.png" alt="AiMaMi" width="128" height="128" />
+  <img src="assets/app-icon-composed.png" alt="AiMaMi" width="128" height="128" />
 </p>
 
 <h1 align="center">AiMaMi</h1>
