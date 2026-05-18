@@ -2,6 +2,7 @@
   "name": "aimami",
   "private": false,
   "version": "1.0.0",
+  "packageManager": "pnpm@10.26.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
