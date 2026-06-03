@@ -108,7 +108,7 @@ React UI ── invoke() ──▶ Tauri commands ──▶ core/
 
 ## Contributing
 
-Issues and pull requests are welcome. For larger changes, please open an issue first and keep local Codex data safety and reversibility in mind.
+Issues and pull requests are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, validation steps, and local Codex data-safety guidance. For larger changes, open an issue first so the approach can be discussed early.
 
 ---
 

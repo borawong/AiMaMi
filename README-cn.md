@@ -108,7 +108,7 @@ React UI ── invoke() ──▶ Tauri commands ──▶ core/
 
 ## 参与贡献
 
-欢迎提交 Issue 与 Pull Request。较大改动请先开 Issue，并注意本地 Codex 数据的安全与可逆性。
+欢迎提交 Issue 与 Pull Request。请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)，了解开发环境、提交前检查以及本地 Codex 数据安全注意事项。较大改动建议先开 Issue 讨论方案。
 
 ---
 
