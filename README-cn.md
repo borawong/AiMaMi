@@ -43,7 +43,7 @@ AiMaMi 基于 **Tauri 2 + React + Rust**，把这些高频操作 —— 含智�
   <img src="assets/console.png" alt="AiMaMi" width="1200" height="812" />
 </p>
 <p align="center">
-  <img src="assets/88.png" alt="AiMaMi 社区群二维码" width="400" height="300" />
+  <img src="assets/qr1.png" alt="AiMaMi 社区群二维码" width="400" height="300" />
 </p>
 
 ---
