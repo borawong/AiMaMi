@@ -44,10 +44,27 @@ native integration. Rust code under `src-tauri/src` provides commands, app
 setup, tray behavior, update handling, and platform integration. The frontend
 under `src` organizes the visible workflows and shared UI.
 
+## Second-Stage Skeleton
+
+The current reconstruction stage records a complete frontend skeleton shape and
+a backend hexagonal skeleton shape. Frontend modules are organized around
+`app`, `routes`, `features`, `services`, `store`, `hooks`, `utils`, `types`,
+`config`, `locales`, `libs`, and `layout`. The covered AiMaMi 1.0.9 frontend
+surfaces are `overview`, `accounts`, `sessions`, `analytics`,
+`custom-instructions`, `mcp`, `skills`, `relay`, `settings`, `maintenance`,
+`daemon-autoswitch`, `tray-shell`, and `voice`.
+
+Backend work is a project decision to keep business behavior intentionally
+unrestored in this stage. It records contracts, domain, ports, application,
+adapters, and infrastructure boundaries with thin command adapters and explicit
+stubs. See `frontend-backend-skeleton.md` for the P0/P1/P2 rules and future PR
+gates.
+
 ## Full-Chain Evidence
 
 The main reconstruction entry points are:
 
+- `docs/reconstruction/frontend-backend-skeleton.md`
 - `docs/reconstruction/full-chain-map.md`
 - `docs/reconstruction/consumer-facing-chain.md`
 - `evidence/full-chain/internal/INDEX.md`
@@ -72,6 +89,8 @@ results, and source evidence organization.
 
 - `import-manifest.md`: import status and intake decisions.
 - `source-map.md`: public source tree and interface map.
+- `frontend-backend-skeleton.md`: second-stage frontend and backend skeleton
+  rules.
 - `full-chain-map.md`: imported internal/raw evidence entry points.
 - `consumer-facing-chain.md`: how to consume the chain for restoration.
 - `publication-rules.md`: checks before adding reconstruction material.

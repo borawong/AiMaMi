@@ -1,3 +1,9 @@
+/*
+Restoration tier: P2
+Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl
+Frontend module: features/custom-instructions implementation adapter
+This file preserves current frontend behavior and is not recovered original source.
+*/
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -141,7 +147,7 @@ export function CustomInstructionsPage() {
 
   const applyMutation = useMutation({
     mutationFn: (params: NonNullable<typeof pendingApply>) => api.applyCustomInstruction(params),
-    onSuccess: async (response, variables) => {
+    onSuccess: async (response) => {
       syncAfterSuccess(response.data);
       setPreviewOpen(false);
       setPreview(null);
@@ -153,7 +159,7 @@ export function CustomInstructionsPage() {
       });
 
     },
-    onError: (error, variables) => {
+    onError: (error) => {
       setPreviewOpen(false);
       toast({
         title: t("customInstructions.applyFailed"),

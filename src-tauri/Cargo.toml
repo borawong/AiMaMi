@@ -2,10 +2,8 @@
 name = "aimami"
 version = "1.0.0"
 default-run = "AiMaMi"
-description = "Cross-platform Codex companion app — MCP, Skills, Custom Instructions, and more"
-authors = ["borawong"]
+description = "Hexagonal AiMaMi backend shell"
 license = "Apache-2.0"
-repository = "https://github.com/borawong/AiMaMi"
 edition = "2021"
 rust-version = "1.77"
 

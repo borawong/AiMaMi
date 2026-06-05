@@ -1,4 +1,18 @@
-import { Suspense, lazy, useCallback, useEffect, useState, type CSSProperties } from "react";
+/*
+Restoration tier: P2
+Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl
+Frontend module: app/main window shell
+This file preserves the current shell and routes pages through reconstructed module boundaries.
+*/
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useState,
+  type CSSProperties,
+  type ReactElement,
+} from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -33,23 +47,47 @@ import {
 import { createAppQueryClient } from "@/lib/query-client";
 import { api } from "@/lib/api";
 import { isMacPlatform } from "@/lib/platform";
-import type { Route } from "@/types/navigation";
+import { ALL_APP_ROUTES, type Route } from "@/types/navigation";
 import "./lib/i18n";
 
-const McpPage = lazy(() =>
-  import("@/components/mcp/mcp-page").then((module) => ({ default: module.McpPage })),
+const OverviewRoute = lazy(() =>
+  import("@/routes/desktop/main/overview").then((module) => ({ default: module.OverviewRoute })),
 );
-const SkillsPage = lazy(() =>
-  import("@/components/skills/skills-page").then((module) => ({ default: module.SkillsPage })),
+const AccountsRoute = lazy(() =>
+  import("@/routes/desktop/main/accounts").then((module) => ({ default: module.AccountsRoute })),
 );
-const CustomInstructionsPage = lazy(() =>
-  import("@/components/custom-instructions/custom-instructions-page").then((module) => ({ default: module.CustomInstructionsPage })),
+const SessionsRoute = lazy(() =>
+  import("@/routes/desktop/main/sessions").then((module) => ({ default: module.SessionsRoute })),
 );
-const MaintenancePage = lazy(() =>
-  import("@/components/maintenance/maintenance-page").then((module) => ({ default: module.MaintenancePage })),
+const AnalyticsRoute = lazy(() =>
+  import("@/routes/desktop/main/analytics").then((module) => ({ default: module.AnalyticsRoute })),
 );
-const SettingsPage = lazy(() =>
-  import("@/components/settings/settings-page").then((module) => ({ default: module.SettingsPage })),
+const CustomInstructionsRoute = lazy(() =>
+  import("@/routes/desktop/main/custom-instructions").then((module) => ({ default: module.CustomInstructionsRoute })),
+);
+const McpRoute = lazy(() =>
+  import("@/routes/desktop/main/mcp").then((module) => ({ default: module.McpRoute })),
+);
+const SkillsRoute = lazy(() =>
+  import("@/routes/desktop/main/skills").then((module) => ({ default: module.SkillsRoute })),
+);
+const RelayRoute = lazy(() =>
+  import("@/routes/desktop/main/relay").then((module) => ({ default: module.RelayRoute })),
+);
+const SettingsRoute = lazy(() =>
+  import("@/routes/desktop/main/settings").then((module) => ({ default: module.SettingsRoute })),
+);
+const MaintenanceRoute = lazy(() =>
+  import("@/routes/desktop/main/maintenance").then((module) => ({ default: module.MaintenanceRoute })),
+);
+const DaemonAutoswitchRoute = lazy(() =>
+  import("@/routes/desktop/main/daemon-autoswitch").then((module) => ({ default: module.DaemonAutoswitchRoute })),
+);
+const TrayShellRoute = lazy(() =>
+  import("@/routes/desktop/main/tray-shell").then((module) => ({ default: module.TrayShellRoute })),
+);
+const VoiceRoute = lazy(() =>
+  import("@/routes/desktop/main/voice").then((module) => ({ default: module.VoiceRoute })),
 );
 
 const DRAG_REGION_HEIGHT = isMacPlatform() ? 48 : 0;
@@ -92,30 +130,52 @@ function MainApp() {
   useEffect(() => {
     if (prewarmRoutes) {
       void Promise.allSettled([
-        import("@/components/mcp/mcp-page"),
-        import("@/components/skills/skills-page"),
-        import("@/components/custom-instructions/custom-instructions-page"),
-        import("@/components/maintenance/maintenance-page"),
-        import("@/components/settings/settings-page"),
+        import("@/routes/desktop/main/overview"),
+        import("@/routes/desktop/main/accounts"),
+        import("@/routes/desktop/main/sessions"),
+        import("@/routes/desktop/main/analytics"),
+        import("@/routes/desktop/main/custom-instructions"),
+        import("@/routes/desktop/main/mcp"),
+        import("@/routes/desktop/main/skills"),
+        import("@/routes/desktop/main/relay"),
+        import("@/routes/desktop/main/settings"),
+        import("@/routes/desktop/main/maintenance"),
+        import("@/routes/desktop/main/daemon-autoswitch"),
+        import("@/routes/desktop/main/tray-shell"),
+        import("@/routes/desktop/main/voice"),
       ]);
     }
   }, [prewarmRoutes]);
 
-  const renderPage = (targetRoute: Route) => {
+  const renderPage = (targetRoute: Route): ReactElement => {
     switch (targetRoute) {
       case "overview":
-        return null;
+        return <OverviewRoute />;
+      case "accounts":
+        return <AccountsRoute />;
+      case "sessions":
+        return <SessionsRoute />;
+      case "analytics":
+        return <AnalyticsRoute />;
       case "mcp":
-        return <McpPage />;
+        return <McpRoute />;
       case "skills":
-        return <SkillsPage />;
-      case "customInstructions":
-        return <CustomInstructionsPage />;
+        return <SkillsRoute />;
+      case "custom-instructions":
+        return <CustomInstructionsRoute />;
+      case "relay":
+        return <RelayRoute />;
       case "maintenance":
-        return <MaintenancePage />;
+        return <MaintenanceRoute />;
+      case "daemon-autoswitch":
+        return <DaemonAutoswitchRoute />;
+      case "tray-shell":
+        return <TrayShellRoute />;
+      case "voice":
+        return <VoiceRoute />;
       case "settings":
         return (
-          <SettingsPage
+          <SettingsRoute
             theme={theme}
             onThemeChange={handleThemeChange}
             accent={accent}
@@ -133,20 +193,14 @@ function MainApp() {
           />
         );
       default:
-        return null;
+        return <OverviewRoute />;
     }
   };
 
-  const routeLabelKey = appNavItems.find((item) => item.route === route)?.labelKey ?? "nav.overview";
-
-  const routeOrder: Route[] = [
-    "overview",
-    "customInstructions",
-    "mcp",
-    "skills",
-    "maintenance",
-    "settings",
-  ];
+  const activeNavItem = appNavItems.find((item) => item.route === route);
+  const routeTitle = activeNavItem
+    ? t(activeNavItem.labelKey, { defaultValue: activeNavItem.fallbackLabel })
+    : t("nav.overview", { defaultValue: "Overview" });
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#FFFFFF] dark:bg-background">
@@ -176,9 +230,9 @@ function MainApp() {
           onThemeChange={handleThemeChange}
         />
         <SidebarInset className="max-h-screen overflow-hidden">
-          <SiteHeader title={t(routeLabelKey)} />
+          <SiteHeader title={routeTitle} />
           <div className="relative min-h-0 flex-1 overflow-hidden">
-            {routeOrder
+            {ALL_APP_ROUTES
               .filter((candidate) => routeTransition.mountedRoutes.includes(candidate))
               .map((candidate) => (
                 <PageStage

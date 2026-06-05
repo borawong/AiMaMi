@@ -1,3 +1,9 @@
+/*
+Restoration tier: P2
+Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl
+Frontend module: features/settings implementation adapter
+This file preserves current frontend behavior and is not recovered original source.
+*/
 import { useState, useEffect, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -35,7 +41,7 @@ import { isMacPlatform } from "@/lib/platform";
 import { ApiProxyDialog } from "@/components/runtime/api-proxy-dialog";
 
 type SnapshotEnvelope = Awaited<ReturnType<typeof api.loadSnapshot>>;
-interface SettingsPageProps {
+export interface SettingsPageProps {
   theme: Theme;
   onThemeChange: (theme: Theme) => void;
   accent: AccentPreset;

@@ -1,9 +1,22 @@
+/*
+Restoration tier: P2
+Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json
+Frontend module: layout/sidebar
+This file preserves the current UI shell and routes it through the reconstructed module boundary.
+*/
 import { useTranslation } from "react-i18next";
 import {
+  Activity,
+  BarChart3,
   LayoutDashboard,
   FileCode2,
+  Headphones,
+  MessageSquareText,
+  Mic2,
+  RadioTower,
   Server,
   Sparkles,
+  Users,
   Wrench,
   Settings,
   Sun,
@@ -29,13 +42,21 @@ export const appNavItems: {
   route: Route;
   icon: LucideIcon;
   labelKey: string;
+  fallbackLabel: string;
 }[] = [
-  { route: "overview", icon: LayoutDashboard, labelKey: "nav.overview" },
-  { route: "customInstructions", icon: FileCode2, labelKey: "nav.customInstructions" },
-  { route: "mcp", icon: Server, labelKey: "nav.mcp" },
-  { route: "skills", icon: Sparkles, labelKey: "nav.skills" },
-  { route: "maintenance", icon: Wrench, labelKey: "nav.maintenance" },
-  { route: "settings", icon: Settings, labelKey: "nav.settings" },
+  { route: "overview", icon: LayoutDashboard, labelKey: "nav.overview", fallbackLabel: "Overview" },
+  { route: "accounts", icon: Users, labelKey: "nav.accounts", fallbackLabel: "Accounts" },
+  { route: "sessions", icon: MessageSquareText, labelKey: "nav.sessions", fallbackLabel: "Sessions" },
+  { route: "analytics", icon: BarChart3, labelKey: "nav.analytics", fallbackLabel: "Analytics" },
+  { route: "custom-instructions", icon: FileCode2, labelKey: "nav.customInstructions", fallbackLabel: "Custom Instructions" },
+  { route: "mcp", icon: Server, labelKey: "nav.mcp", fallbackLabel: "MCP" },
+  { route: "skills", icon: Sparkles, labelKey: "nav.skills", fallbackLabel: "Skills" },
+  { route: "relay", icon: RadioTower, labelKey: "nav.relay", fallbackLabel: "Relay" },
+  { route: "settings", icon: Settings, labelKey: "nav.settings", fallbackLabel: "Settings" },
+  { route: "maintenance", icon: Wrench, labelKey: "nav.maintenance", fallbackLabel: "Maintenance" },
+  { route: "daemon-autoswitch", icon: Activity, labelKey: "nav.daemonAutoswitch", fallbackLabel: "Daemon Autoswitch" },
+  { route: "tray-shell", icon: Headphones, labelKey: "nav.trayShell", fallbackLabel: "Tray Shell" },
+  { route: "voice", icon: Mic2, labelKey: "nav.voice", fallbackLabel: "Voice" },
 ];
 
 const hiddenNavRoutes = new Set<Route>([]);
@@ -176,13 +197,14 @@ export function AppSidebar({
         <SidebarMenu>
           {appNavItems
             .filter((item) => !hiddenNavRoutes.has(item.route))
-            .map(({ route, icon: Icon, labelKey }) => {
+            .map(({ route, icon: Icon, labelKey, fallbackLabel }) => {
               const isActive = activeRoute === route;
+              const label = t(labelKey, { defaultValue: fallbackLabel });
               return (
                 <SidebarMenuItem key={route}>
                   <SidebarMenuButton
                     isActive={isActive}
-                    tooltip={t(labelKey)}
+                    tooltip={label}
                     className={navButtonClassName}
                     onClick={() => onNavigate(route)}
                   >
@@ -195,7 +217,7 @@ export function AppSidebar({
                           : "text-sidebar-foreground/80 group-hover/menu-item:text-sidebar-accent-foreground",
                       )}
                     />
-                    <span className="truncate">{t(labelKey)}</span>
+                    <span className="truncate">{label}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );

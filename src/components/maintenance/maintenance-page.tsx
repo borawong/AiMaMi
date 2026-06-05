@@ -1,3 +1,9 @@
+/*
+Restoration tier: P2
+Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl
+Frontend module: features/maintenance implementation adapter
+This file preserves current frontend behavior and is not recovered original source.
+*/
 import { useState, useCallback } from "react";
 import { flushSync } from "react-dom";
 import { useTranslation } from "react-i18next";
