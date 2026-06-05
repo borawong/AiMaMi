@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { sessionsService } from "@/services/sessions";
 import { SessionsCache } from "../cache";
 
 export function useSessionsCacheController() {
@@ -12,12 +12,12 @@ export function useSessionsModule() {
 
   const sessionsQuery = useQuery({
     queryKey: [...SessionsCache.queryKeys.root, "list"],
-    queryFn: () => api.loadSessions(),
+    queryFn: () => sessionsService.loadSessions(),
     staleTime: 30_000,
   });
 
   const deleteSessionsMutation = useMutation({
-    mutationFn: (ids: string[]) => api.deleteSessions(ids),
+    mutationFn: (ids: string[]) => sessionsService.deleteSessions(ids),
     onSuccess: (payload) => {
       SessionsCache.writeAuthoritativePayload(queryClient, {
         payload,

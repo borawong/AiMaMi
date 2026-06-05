@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { voiceService } from "@/services/voice";
 import { VoiceCache } from "../cache";
 
 export function useVoiceCacheController() {
@@ -12,17 +12,17 @@ export function useVoiceModule() {
 
   const workspaceQuery = useQuery({
     queryKey: [...VoiceCache.queryKeys.root, "workspace"],
-    queryFn: () => api.loadVoiceWorkspace(),
+    queryFn: () => voiceService.loadWorkspace(),
     staleTime: 30_000,
   });
   const runtimeQuery = useQuery({
     queryKey: [...VoiceCache.queryKeys.root, "runtime"],
-    queryFn: () => api.loadVoiceRuntimeStatus(),
+    queryFn: () => voiceService.loadRuntimeStatus(),
     staleTime: 30_000,
   });
 
   const permissionsMutation = useMutation({
-    mutationFn: () => api.requestVoicePermissions(),
+    mutationFn: () => voiceService.requestPermissions(),
     onSuccess: (payload) => {
       VoiceCache.writeAuthoritativePayload(queryClient, {
         payload,

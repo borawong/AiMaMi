@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { relayService } from "@/services/relay";
 import { RelayCache } from "../cache";
 
 export function useRelayCacheController() {
@@ -12,22 +12,22 @@ export function useRelayModule() {
 
   const stateQuery = useQuery({
     queryKey: [...RelayCache.queryKeys.root, "state"],
-    queryFn: () => api.loadRelayState(),
+    queryFn: () => relayService.loadState(),
     staleTime: 30_000,
   });
   const activeQuery = useQuery({
     queryKey: [...RelayCache.queryKeys.root, "active"],
-    queryFn: () => api.getRelayActive(),
+    queryFn: () => relayService.getActive(),
     staleTime: 30_000,
   });
   const proxyQuery = useQuery({
     queryKey: [...RelayCache.queryKeys.root, "proxy-status"],
-    queryFn: () => api.getRelayProxyStatus(),
+    queryFn: () => relayService.getProxyStatus(),
     staleTime: 30_000,
   });
 
   const diagnosticsMutation = useMutation({
-    mutationFn: () => api.runCodexRouterDiagnostics(),
+    mutationFn: () => relayService.runCodexRouterDiagnostics(),
     onSuccess: (payload) => {
       RelayCache.writeAuthoritativePayload(queryClient, {
         payload,

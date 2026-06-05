@@ -6,6 +6,7 @@ import {
   type IpcArgs,
   type IpcCommandName,
 } from "@/contracts/ipc";
+import { getIpcCommandFixture } from "@/mocks/fixtures/ipc-command-fixtures";
 import {
   createE2eScenarioConfig,
   getE2eScenario,
@@ -60,6 +61,16 @@ export function resolveIpcMockSteps(
     }));
 }
 
-export function unsupportedIpcMock(command: IpcCommandName): never {
-  throw new Error(`IPC mock/stub has no evidence-backed response for command "${command}"`);
+export function createIpcMockResponse(
+  command: IpcCommandName,
+  args?: IpcArgs,
+  config: Partial<IpcMockConfig> = {},
+) {
+  const steps = resolveIpcMockSteps(command, args, config);
+  const fixture = getIpcCommandFixture(command);
+  return fixture.handler({ args, command, steps });
+}
+
+export function unsupportedIpcMock(command: IpcCommandName, args?: IpcArgs) {
+  return createIpcMockResponse(command, args);
 }

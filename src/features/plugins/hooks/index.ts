@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { runtimeExtensionsService } from "@/services/runtime-extensions";
 import { PluginsCache } from "../cache";
 
 export function usePluginsCacheController() {
@@ -12,12 +12,12 @@ export function usePluginsModule() {
 
   const pluginsQuery = useQuery({
     queryKey: [...PluginsCache.queryKeys.root, "list"],
-    queryFn: () => api.listPlugins(),
+    queryFn: () => runtimeExtensionsService.listPlugins(),
     staleTime: 30_000,
   });
 
   const refreshMutation = useMutation({
-    mutationFn: () => api.listPlugins(),
+    mutationFn: () => runtimeExtensionsService.listPlugins(),
     onSuccess: (payload) => {
       PluginsCache.writeAuthoritativePayload(queryClient, {
         payload,
@@ -31,7 +31,7 @@ export function usePluginsModule() {
 
   const togglePluginMutation = useMutation({
     mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) =>
-      api.togglePlugin(id, enabled),
+      runtimeExtensionsService.togglePlugin(id, enabled),
     onSuccess: (payload) => {
       PluginsCache.writeAuthoritativePayload(queryClient, {
         payload,
@@ -44,7 +44,7 @@ export function usePluginsModule() {
   });
 
   const loadConfigMutation = useMutation({
-    mutationFn: (id: string) => api.getPluginConfig(id),
+    mutationFn: (id: string) => runtimeExtensionsService.getPluginConfig(id),
   });
 
   return {

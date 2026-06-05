@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { systemService } from "@/services/system";
 import { TrayShellCache } from "../cache";
 
 export function useTrayShellCacheController() {
@@ -12,12 +12,12 @@ export function useTrayShellModule() {
 
   const notificationQuery = useQuery({
     queryKey: [...TrayShellCache.queryKeys.root, "notification-client"],
-    queryFn: () => api.getNotificationClientState(),
+    queryFn: () => systemService.getNotificationClientState(),
     staleTime: 30_000,
   });
 
   const focusMutation = useMutation({
-    mutationFn: () => api.focusMainWindow(),
+    mutationFn: () => systemService.focusMainWindow(),
     onSuccess: (payload) => {
       TrayShellCache.writeAuthoritativePayload(queryClient, {
         payload,

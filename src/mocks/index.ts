@@ -1,4 +1,4 @@
-export { mockableIpcCommands, unsupportedIpcMock } from "./ipc";
+export { createIpcMockResponse, mockableIpcCommands, unsupportedIpcMock } from "./ipc";
 export {
   createIpcMockConfig,
   resolveIpcMockSteps,
@@ -16,4 +16,16 @@ export {
   type E2eScenarioOutcome,
   type E2eScenarioStep,
 } from "./e2e/scenarios";
-export { fixturePolicy } from "./fixtures";
+export {
+  createEvidenceBackedIpcFixture,
+  fixturePolicy,
+  type EvidenceBackedIpcFixture,
+} from "./fixtures";
+export {
+  assertIpcFixtureCoverage,
+  createDefaultIpcCommandHandler,
+  getIpcCommandFixture,
+  ipcCommandFixtures,
+  type IpcCommandFixture,
+  type IpcCommandHandler,
+} from "./fixtures/ipc-command-fixtures";

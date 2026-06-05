@@ -112,6 +112,7 @@ export interface RouteErrorBoundaryProps {
 
 export interface RouteDefinition {
   route: Route;
+  path: `/${string}`;
   titleKey: string;
   icon: LucideIcon;
   visible: boolean;
@@ -128,7 +129,7 @@ export interface RouteDefinition {
 
 type RouteDefinitionInput = Omit<
   RouteDefinition,
-  "layout" | "ErrorBoundary" | "redirect" | "fillHeight"
+  "path" | "layout" | "ErrorBoundary" | "redirect" | "fillHeight"
 > &
   Partial<Pick<RouteDefinition, "layout" | "ErrorBoundary" | "redirect" | "fillHeight">>;
 
@@ -142,6 +143,7 @@ function RouteRegistryErrorBoundary({ children }: RouteErrorBoundaryProps) {
 
 function withRouteDefaults(definition: RouteDefinitionInput): RouteDefinition {
   return {
+    path: `/${definition.route}`,
     layout: RouteRegistryLayout,
     ErrorBoundary: RouteRegistryErrorBoundary,
     redirect: null,
@@ -313,4 +315,16 @@ const routeDefinitionMap = new Map<Route, RouteDefinition>(
 
 export function resolveRouteDefinition(route: Route) {
   return routeDefinitionMap.get(route) ?? routeDefinitions[0];
+}
+
+export function resolveRoutePath(route: Route) {
+  return resolveRouteDefinition(route).path;
+}
+
+export function resolveRouteFromPath(pathname: string): Route {
+  const normalizedPath = pathname === "/" ? "/overview" : pathname;
+  return (
+    routeDefinitions.find((definition) => definition.path === normalizedPath)
+      ?.route ?? "overview"
+  );
 }

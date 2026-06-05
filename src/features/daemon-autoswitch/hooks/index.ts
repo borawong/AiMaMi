@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { daemonAutoswitchService } from "@/services/daemon-autoswitch";
 import { DaemonAutoswitchCache } from "../cache";
 
 export function useDaemonAutoswitchCacheController() {
@@ -12,17 +12,17 @@ export function useDaemonAutoswitchModule() {
 
   const bootstrapQuery = useQuery({
     queryKey: [...DaemonAutoswitchCache.queryKeys.root, "bootstrap"],
-    queryFn: () => api.loadBootstrapState(),
+    queryFn: () => daemonAutoswitchService.loadBootstrapState(),
     staleTime: 30_000,
   });
   const pendingQuery = useQuery({
     queryKey: [...DaemonAutoswitchCache.queryKeys.root, "pending"],
-    queryFn: () => api.loadPendingAutoSwitch(),
+    queryFn: () => daemonAutoswitchService.loadPendingAutoSwitch(),
     staleTime: 30_000,
   });
 
   const runOnceMutation = useMutation({
-    mutationFn: () => api.runDaemonOnce(),
+    mutationFn: () => daemonAutoswitchService.runDaemonOnce(),
     onSuccess: (payload) => {
       DaemonAutoswitchCache.writeAuthoritativePayload(queryClient, {
         payload,

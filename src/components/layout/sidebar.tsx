@@ -165,6 +165,8 @@ export function AppSidebar({
                   <SidebarMenuButton
                     isActive={isActive}
                     tooltip={label}
+                    aria-label={label}
+                    title={label}
                     className={navButtonClassName}
                     onClick={() => onNavigate(route)}
                   >

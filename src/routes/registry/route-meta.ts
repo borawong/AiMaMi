@@ -7,6 +7,7 @@ import { resolveRouteDefinition, routeDefinitions } from "@/routes/registry/rout
 
 export interface RouteMeta {
   route: Route;
+  path: `/${string}`;
   titleKey: string;
   icon: LucideIcon;
   visible: boolean;
@@ -18,6 +19,7 @@ export interface RouteMeta {
 function toRouteMeta(definition: (typeof routeDefinitions)[number]): RouteMeta {
   return {
     route: definition.route,
+    path: definition.path,
     titleKey: definition.titleKey,
     icon: definition.icon,
     visible: definition.visible,

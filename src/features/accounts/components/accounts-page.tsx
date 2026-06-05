@@ -19,6 +19,7 @@ import {
 } from "@/features/_shared/evidence-panels";
 import { previewText } from "@/features/_shared/evidence-data";
 import { useAccountsModule } from "../hooks";
+import { AccountActionsPanel } from "../panels";
 
 export function AccountsPage() {
   const { t } = useTranslation();
@@ -56,7 +57,6 @@ export function AccountsPage() {
       <EvidencePageHeader
         titleKey="nav.accounts"
         descriptionKey="accounts.description"
-        actions={[module.attachMonitorAction]}
       />
 
       <div className="grid gap-3 md:grid-cols-3">
@@ -96,6 +96,8 @@ export function AccountsPage() {
           }
         />
       </div>
+
+      <AccountActionsPanel module={module} />
 
       <QueryPanel titleKey="accounts.snapshot" state={module.snapshotQuery}>
         <RecordList

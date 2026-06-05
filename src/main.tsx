@@ -1,13 +1,4 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { Root } from "@/entry/root";
-import { applyWindowSurfaceStyle } from "@/entry/window-surface";
-import "./index.css";
-
-applyWindowSurfaceStyle();
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Root />
-  </React.StrictMode>,
-);
+/**
+ * 中文职责说明：Vite 默认入口只转发到桌面 SPA entry，不拥有 Provider、Router 或业务初始化。
+ */
+import "@/spa/entry.desktop";

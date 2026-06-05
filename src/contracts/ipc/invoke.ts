@@ -11,5 +11,10 @@ export async function invokeIpc<T>(
     return invoke<T>(command, args);
   }
 
+  if (import.meta.env.DEV || import.meta.env.MODE === "test") {
+    const { createIpcMockResponse } = await import("@/mocks");
+    return createIpcMockResponse(command, args) as T;
+  }
+
   throw new Error(`Command "${command}" is only available in Tauri runtime`);
 }

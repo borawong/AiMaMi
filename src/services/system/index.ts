@@ -24,4 +24,15 @@ export const systemService = {
 
   mergeMysteryUnlockGrants: (grants: IpcJsonValue) =>
     invokeIpc<IpcEvidencePayload>("merge_mystery_unlock_grants", { grants }),
+
+  getOrCreateRemoteDeviceSecret: () =>
+    invokeIpc<CoreEnvelope<IpcEvidencePayload>>(
+      "get_or_create_remote_device_secret",
+    ),
+
+  importRemoteDeviceSecretIfEmpty: (secret: string) =>
+    invokeIpc<CoreEnvelope<IpcEvidencePayload>>(
+      "import_remote_device_secret_if_empty",
+      { secret },
+    ),
 };

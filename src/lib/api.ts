@@ -84,6 +84,8 @@ export const api = {
   getNotificationClientState: systemService.getNotificationClientState,
   getMysteryUnlockGrants: systemService.getMysteryUnlockGrants,
   mergeMysteryUnlockGrants: systemService.mergeMysteryUnlockGrants,
+  getOrCreateRemoteDeviceSecret: systemService.getOrCreateRemoteDeviceSecret,
+  importRemoteDeviceSecretIfEmpty: systemService.importRemoteDeviceSecretIfEmpty,
 
   beginAddAccountAttachMonitor: accountsService.beginAddAccountAttachMonitor,
   switchAccount: accountsService.switchAccount,
