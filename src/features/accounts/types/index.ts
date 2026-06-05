@@ -1,7 +1,7 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl; evidence/full-chain/raw/command-index.json; evidence/full-chain/raw/validation-summary.json
-Frontend module: features/accounts/types
-This file is a structured reconstruction scaffold, not recovered original source.
-*/
-export {};
+/**
+ * 中文职责说明：accounts 模块只声明边界类型，未证实业务字段不在这里编造。
+ */
+import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
+
+export type AccountsModuleId = "accounts";
+export type AccountsCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;

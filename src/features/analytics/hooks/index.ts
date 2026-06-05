@@ -1,7 +1,45 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl; evidence/full-chain/raw/command-index.json; evidence/full-chain/raw/validation-summary.json
-Frontend module: features/analytics/hooks
-This file is a structured reconstruction scaffold, not recovered original source.
-*/
-export {};
+import { useQuery } from "@tanstack/react-query";
+import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { api } from "@/lib/api";
+import type { AnalyticsRange } from "@/types";
+import { AnalyticsCache } from "../cache";
+
+export function useAnalyticsCacheController() {
+  return useModuleCacheController(AnalyticsCache);
+}
+
+export function useAnalyticsModule(range: AnalyticsRange = "week") {
+  const usageQuery = useQuery({
+    queryKey: [...AnalyticsCache.queryKeys.root, "usage"],
+    queryFn: () => api.loadUsageAnalytics(),
+    staleTime: 30_000,
+  });
+  const sessionQuery = useQuery({
+    queryKey: [...AnalyticsCache.queryKeys.root, "sessions", range],
+    queryFn: () => api.loadSessionAnalytics(range),
+    staleTime: 30_000,
+  });
+  const tokenQuery = useQuery({
+    queryKey: [...AnalyticsCache.queryKeys.root, "tokens", range],
+    queryFn: () => api.loadTokenAnalytics(range),
+    staleTime: 30_000,
+  });
+  const toolQuery = useQuery({
+    queryKey: [...AnalyticsCache.queryKeys.root, "tools", range],
+    queryFn: () => api.loadToolAnalytics(range),
+    staleTime: 30_000,
+  });
+  const changeQuery = useQuery({
+    queryKey: [...AnalyticsCache.queryKeys.root, "changes", range],
+    queryFn: () => api.loadChangeAnalytics(range),
+    staleTime: 30_000,
+  });
+
+  return {
+    usageQuery,
+    sessionQuery,
+    tokenQuery,
+    toolQuery,
+    changeQuery,
+  };
+}

@@ -1,7 +1,53 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl; evidence/full-chain/raw/command-index.json; evidence/full-chain/raw/validation-summary.json
-Frontend module: features/relay/hooks
-This file is a structured reconstruction scaffold, not recovered original source.
-*/
-export {};
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { api } from "@/lib/api";
+import { RelayCache } from "../cache";
+
+export function useRelayCacheController() {
+  return useModuleCacheController(RelayCache);
+}
+
+export function useRelayModule() {
+  const queryClient = useQueryClient();
+
+  const stateQuery = useQuery({
+    queryKey: [...RelayCache.queryKeys.root, "state"],
+    queryFn: () => api.loadRelayState(),
+    staleTime: 30_000,
+  });
+  const activeQuery = useQuery({
+    queryKey: [...RelayCache.queryKeys.root, "active"],
+    queryFn: () => api.getRelayActive(),
+    staleTime: 30_000,
+  });
+  const proxyQuery = useQuery({
+    queryKey: [...RelayCache.queryKeys.root, "proxy-status"],
+    queryFn: () => api.getRelayProxyStatus(),
+    staleTime: 30_000,
+  });
+
+  const diagnosticsMutation = useMutation({
+    mutationFn: () => api.runCodexRouterDiagnostics(),
+    onSuccess: (payload) => {
+      RelayCache.writeAuthoritativePayload(queryClient, {
+        payload,
+        source: "mutation-payload",
+        sequence: Date.now(),
+        receivedAt: Date.now(),
+      });
+      void RelayCache.invalidateContractQueries(queryClient);
+    },
+  });
+
+  return {
+    stateQuery,
+    activeQuery,
+    proxyQuery,
+    diagnosticsAction: {
+      id: "diagnostics",
+      labelKey: "relay.runDiagnostics",
+      run: () => diagnosticsMutation.mutateAsync(),
+      isPending: diagnosticsMutation.isPending,
+    },
+  };
+}

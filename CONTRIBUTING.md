@@ -1,115 +1,74 @@
-# Contributing to AiMaMi
+# 参与 OpenAiMami 贡献
 
-Thanks for taking the time to improve AiMaMi. This project touches local Codex configuration, account data, sessions, MCP entries, Skills, and relay settings, so contributions should keep user data safety and reversibility in mind.
+感谢参与 OpenAiMami。这个仓库公开的是可审计、匿名化、可重建的材料，贡献时请优先保证证据链清楚、隐私边界清楚、变更范围清楚。
 
-## Development setup
+## 基本原则
 
-Before starting, make sure you have the following installed:
+- 项目使用 [Apache License](LICENSE) 许可，贡献内容需要保留该许可上下文。
+- 文档、注释和提交说明使用中文。
+- 公开材料只能使用仓库相对路径。
+- 不写入内部路径、机器名、用户名、共享盘、内部项目名、凭据或未脱敏日志。
+- 不写入外部参考仓库名称。
+- 不把未证实业务写成已实现行为。
 
-- Node.js
-- pnpm
-- Rust
-- Tauri 2 prerequisites for your operating system: <https://v2.tauri.app/start/prerequisites/>
+## 可接受的贡献
 
-Clone the repository and install dependencies:
+- 基于 `evidence/full-chain/raw` 和 `evidence/full-chain/internal` 还原 OpenAiMami 1.0.9 的完整实现。
+- 根据 raw/internal 主链路补齐前端页面、路由、状态、IPC 包装、缓存、对话框、面板、组件、类型和测试；需要 IDB 时只核对 `OpenAiMami IDB`。
+- 按 commands、application、core、platform、repository、adapters、contracts 边界补齐后端六边形架构。
+- 改进匿名化规则、证据索引、manifest 校验、文档说明或重建提示。
+- 修正错误路径、哈希、索引、命令说明或未覆盖项。
 
-```bash
-git clone https://github.com/borawong/AiMaMi.git
-cd AiMaMi
-pnpm install
-```
+## PR 说明要求
 
-Start the desktop app in development mode:
+提交 PR 时请写明：
 
-```bash
-pnpm tauri dev
-```
+- 使用了哪些 raw/internal 证据，以及是否核对 `OpenAiMami IDB`。
+- 校验了哪些 manifest、哈希、dumped 文件或索引。
+- 哪些行为已经还原，哪些仍是桩、契约或待实现项。
+- 是否涉及用户数据读取、写入、导入、导出、清理、恢复、缓存或本地集成。
+- 是否新增了测试或验证说明。
 
-## Validation before opening a pull request
+## 前端贡献规则
 
-For code changes, run the relevant checks before opening a pull request:
+前端应按主流前端模块化架构重构并还原，不写入任何外部参考仓库名称。
 
-```bash
-pnpm build
-cargo check --manifest-path src-tauri/Cargo.toml
-pnpm tauri build
-```
+还原时应优先对齐：
 
-For documentation-only changes, verify that links, commands, headings, and screenshots are still accurate. A full application build is usually not required for docs-only pull requests.
+- route registry。
+- entry/root。
+- runtime initializer。
+- Provider、StoreUpdater、Content、cache、hooks、dialogs、panels、components、types、tests。
+- IPC 包装、数据类型、页面状态和缓存边界。
 
-## Local data safety
+超出证据的行为应标成待实现，不应写成确定实现。
 
-AiMaMi works with files under `~/.codex` and app-managed data under `~/.codex/codexmate/`. When contributing features or fixes that read, write, import, export, clean, or rebuild local data:
+## 后端贡献规则
 
-- Prefer reversible operations and provide clear user confirmation for destructive actions.
-- Avoid silently overwriting user-managed configuration outside AiMaMi-controlled blocks.
-- Keep backup, restore, preview, and rollback flows easy to understand.
-- Be careful with account, session, relay, and routing data in logs, screenshots, and bug reports.
-- Test changes with disposable local data whenever possible instead of personal production Codex data.
+后端是六边形架构骨架。不还原后端业务实现是项目选择，不代表证据缺失。
 
-## Pull request guidelines
+贡献后端实现时：
 
-- Keep pull requests focused and describe the user-facing impact clearly.
-- For larger behavior changes, open an issue first to discuss the approach.
-- Include validation notes in the pull request description.
-- For UI changes, include screenshots or short screen recordings when helpful.
-- For docs-only changes, state that no source code behavior was changed.
+- commands 保持薄适配层。
+- application 负责编排用例。
+- core 保留稳定领域类型。
+- platform 和 repository 保留平台与存储边界。
+- adapters 承接外部适配。
+- contracts 定义前后端可序列化契约。
+- 未证实业务只能写成桩、契约、待实现项或测试缺口。
 
----
+## 匿名化检查
 
-# 参与 AiMaMi 贡献
+提交前请确认没有写入：
 
-感谢你愿意改进 AiMaMi。该项目会接触本地 Codex 配置、账号数据、会话、MCP、Skills 与中转设置，因此贡献时应优先考虑用户数据安全与可逆性。
+- 内部项目名。
+- 本机用户名、机器名、共享盘路径或绝对本地路径。
+- 凭据、令牌、会话、密钥、账号私密值或未脱敏日志。
+- 个人数据、客户数据、运行期缓存或未审查 dump。
+- 外部参考仓库名称。
 
-## 开发环境
+如果发现材料未脱敏，请先改成占位说明，再提交。
 
-开始前，请先安装：
+## 建议验证
 
-- Node.js
-- pnpm
-- Rust
-- 当前操作系统所需的 Tauri 2 依赖：<https://v2.tauri.app/start/prerequisites/>
-
-克隆仓库并安装依赖：
-
-```bash
-git clone https://github.com/borawong/AiMaMi.git
-cd AiMaMi
-pnpm install
-```
-
-启动桌面端开发模式：
-
-```bash
-pnpm tauri dev
-```
-
-## 提交 Pull Request 前的检查
-
-如果修改了代码，建议在提交 PR 前运行相关检查：
-
-```bash
-pnpm build
-cargo check --manifest-path src-tauri/Cargo.toml
-pnpm tauri build
-```
-
-如果只是修改文档，请确认链接、命令、标题与截图仍然准确。纯文档 PR 通常不需要完整构建应用。
-
-## 本地数据安全
-
-AiMaMi 会处理 `~/.codex` 下的文件，以及 `~/.codex/codexmate/` 下的应用数据。当贡献内容涉及读取、写入、导入、导出、清理或重建本地数据时：
-
-- 优先设计可逆操作，对破坏性动作提供明确确认。
-- 避免静默覆盖 AiMaMi 受控区块之外的用户配置。
-- 让备份、恢复、预览与回滚流程清晰易懂。
-- 在日志、截图和问题反馈中谨慎处理账号、会话、中转与路由数据。
-- 尽量使用一次性测试数据验证改动，避免直接使用个人生产 Codex 数据。
-
-## Pull Request 建议
-
-- 保持 PR 聚焦，并清楚描述用户可感知的影响。
-- 较大的行为变更建议先开 Issue 讨论方案。
-- 在 PR 描述中写明验证方式。
-- UI 改动可附截图或短录屏，方便 Review。
-- 纯文档改动请说明没有改变源码行为。
+文档改动请检查是否仍有未脱敏词、外部参考名称、英文段落、乱码或本机环境信息。代码改动请根据范围运行相关构建、类型检查或后端检查，并在 PR 中写明结果。

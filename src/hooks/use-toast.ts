@@ -6,11 +6,11 @@ import type {
 } from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
-/** Visible + auto-dismiss duration (default variant). */
+/** 可见时长与自动关闭时长（default 变体）。 */
 const TOAST_DEFAULT_DURATION = 3000
-/** Visible + auto-dismiss duration (destructive). */
+/** 可见时长与自动关闭时长（destructive 变体）。 */
 const TOAST_DESTRUCTIVE_DURATION = 4000
-/** After dismiss, delay before unmount (exit animation window; legacy shadcn timing). */
+/** dismiss 后延迟卸载，用于退出动画窗口；沿用旧 shadcn 时序。 */
 const TOAST_REMOVE_DELAY = 4000
 
 type ToasterToast = ToastProps & {
@@ -18,7 +18,7 @@ type ToasterToast = ToastProps & {
   title?: React.ReactNode
   description?: React.ReactNode
   action?: ToastActionElement
-  /** Auto-dismiss duration in ms; drives bottom progress bar. */
+  /** 自动关闭时长，单位 ms；驱动底部进度条。 */
   duration?: number
 }
 
@@ -97,8 +97,8 @@ export const reducer = (state: State, action: Action): State => {
     case "DISMISS_TOAST": {
       const { toastId } = action
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
+      // 这里有副作用：可以抽成 dismissToast() action，
+      // 但为保持实现简单，仍放在 reducer 分支里。
       if (toastId) {
         addToRemoveQueue(toastId)
       } else {

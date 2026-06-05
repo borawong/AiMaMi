@@ -1,9 +1,19 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json
-Frontend module: mocks/index
-This file is a structured reconstruction scaffold, not recovered original source.
-Deep module boundary: import mocks from this public entrypoint only.
-*/
 export { mockableIpcCommands, unsupportedIpcMock } from "./ipc";
+export {
+  createIpcMockConfig,
+  resolveIpcMockSteps,
+  type IpcMockConfig,
+  type IpcMockStepResult,
+} from "./ipc";
+export {
+  E2E_SCENARIO_KINDS,
+  createE2eScenarioConfig,
+  e2eScenarioPresets,
+  getE2eScenario,
+  type E2eScenario,
+  type E2eScenarioConfig,
+  type E2eScenarioKind,
+  type E2eScenarioOutcome,
+  type E2eScenarioStep,
+} from "./e2e/scenarios";
 export { fixturePolicy } from "./fixtures";

@@ -1,7 +1,36 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl; evidence/full-chain/raw/command-index.json; evidence/full-chain/raw/validation-summary.json
-Frontend module: features/sessions/hooks
-This file is a structured reconstruction scaffold, not recovered original source.
-*/
-export {};
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { api } from "@/lib/api";
+import { SessionsCache } from "../cache";
+
+export function useSessionsCacheController() {
+  return useModuleCacheController(SessionsCache);
+}
+
+export function useSessionsModule() {
+  const queryClient = useQueryClient();
+
+  const sessionsQuery = useQuery({
+    queryKey: [...SessionsCache.queryKeys.root, "list"],
+    queryFn: () => api.loadSessions(),
+    staleTime: 30_000,
+  });
+
+  const deleteSessionsMutation = useMutation({
+    mutationFn: (ids: string[]) => api.deleteSessions(ids),
+    onSuccess: (payload) => {
+      SessionsCache.writeAuthoritativePayload(queryClient, {
+        payload,
+        source: "mutation-payload",
+        sequence: Date.now(),
+        receivedAt: Date.now(),
+      });
+      void SessionsCache.invalidateContractQueries(queryClient);
+    },
+  });
+
+  return {
+    sessionsQuery,
+    deleteSessionsMutation,
+  };
+}

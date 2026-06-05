@@ -1,0 +1,841 @@
+{
+  "We": {
+    "loadSnapshot": {
+      "command": "load_snapshot",
+      "argKeys": [
+        "localOnly"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "refreshUsageSnapshot": {
+      "command": "refresh_usage_snapshot",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "switchAccount": {
+      "command": "switch_account",
+      "argKeys": [
+        "accountKey"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "switchAccountAndRestartCodex": {
+      "command": "switch_account_and_restart_codex",
+      "argKeys": [
+        "accountKey"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "removeAccounts": {
+      "command": "remove_accounts",
+      "argKeys": [
+        "accountKeys"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "rebuildRegistry": {
+      "command": "rebuild_registry",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "forceKillCodex": {
+      "command": "force_kill_codex",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "resetCodexConfig": {
+      "command": "reset_codex_config",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "getImageCompat": {
+      "command": "get_image_compat",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setImageCompat": {
+      "command": "set_image_compat",
+      "argKeys": [
+        "enabled"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "importChatGptSessionAccount": {
+      "command": "import_chatgpt_session_account",
+      "argKeys": [
+        "sessionJson",
+        "overwriteExisting"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "exportAccountsToFile": {
+      "command": "export_accounts_to_file",
+      "argKeys": [
+        "targetPath",
+        "accountKeys"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "previewAccountImport": {
+      "command": "preview_account_import",
+      "argKeys": [
+        "filePath"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "importAccountsFromFile": {
+      "command": "import_accounts_from_file",
+      "argKeys": [
+        "filePath",
+        "overwriteExisting",
+        "selectedKeys"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setAutoSwitch": {
+      "command": "set_auto_switch",
+      "argKeys": [
+        "enabled"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "configureAutoSwitch": {
+      "command": "configure_auto_switch",
+      "argKeys": [
+        "threshold5hPercent",
+        "thresholdWeeklyPercent"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setApiProxyConfig": {
+      "command": "set_api_proxy_config",
+      "argKeys": [
+        "mode",
+        "url"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "getUsageRefreshInterval": {
+      "command": "get_usage_refresh_interval",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setUsageRefreshInterval": {
+      "command": "set_usage_refresh_interval",
+      "argKeys": [
+        "interval"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "testApiProxyConfig": {
+      "command": "test_api_proxy_config",
+      "argKeys": [
+        "mode",
+        "url"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "detectApiProxyConfig": {
+      "command": "detect_api_proxy_config",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "checkUpdateInstallability": {
+      "command": "check_update_installability",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "beginAddAccountAttachMonitor": {
+      "command": "begin_add_account_attach_monitor",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "runDaemonOnce": {
+      "command": "run_daemon_once",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadSessions": {
+      "command": "load_sessions",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "deleteSessions": {
+      "command": "delete_sessions",
+      "argKeys": [
+        "ids"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadCustomInstructionState": {
+      "command": "load_custom_instruction_state",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadVoiceWorkspace": {
+      "command": "load_voice_workspace",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "upsertVoiceTemplate": {
+      "command": "upsert_voice_template",
+      "argKeys": [
+        "id",
+        "title",
+        "description",
+        "content"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "removeVoiceTemplate": {
+      "command": "remove_voice_template",
+      "argKeys": [
+        "id"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "upsertVoiceVocabulary": {
+      "command": "upsert_voice_vocabulary",
+      "argKeys": [
+        "id",
+        "source",
+        "replacement",
+        "kind",
+        "appBundleId",
+        "appName",
+        "notes"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "removeVoiceVocabulary": {
+      "command": "remove_voice_vocabulary",
+      "argKeys": [
+        "id"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "replaceVoiceVocabularyKind": {
+      "command": "replace_voice_vocabulary_kind",
+      "argKeys": [
+        "kind",
+        "appBundleId",
+        "appName",
+        "entries"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "removeVoiceVocabularyAppScope": {
+      "command": "remove_voice_vocabulary_app_scope",
+      "argKeys": [
+        "appBundleId"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "upsertVoiceVocabularyAppScope": {
+      "command": "upsert_voice_vocabulary_app_scope",
+      "argKeys": [
+        "bundleId",
+        "name",
+        "path"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "resolveVoiceVocabularyAppInfo": {
+      "command": "resolve_voice_vocabulary_app_info",
+      "argKeys": [
+        "path"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "generateVoicePrompt": {
+      "command": "generate_voice_prompt",
+      "argKeys": [
+        "templateId",
+        "rawText",
+        "selectedText",
+        "clipboardText",
+        "targetBundleId",
+        "targetAppName",
+        "promptOverride",
+        "templateTitle",
+        "templateKind",
+        "llmProvider",
+        "llmApiKey",
+        "llmModel",
+        "llmBaseUrl",
+        "asrProvider",
+        "asrModel",
+        "asrLanguage",
+        "asrEmotion",
+        "asrDurationMs",
+        "asrErrorCode"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "testVoiceLlmConfig": {
+      "command": "test_voice_llm_config",
+      "argKeys": [
+        "llmProvider",
+        "llmApiKey",
+        "llmModel",
+        "llmBaseUrl"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadVoiceLlmConfig": {
+      "command": "load_voice_llm_config",
+      "argKeys": [
+        "provider"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "saveVoiceLlmConfig": {
+      "command": "save_voice_llm_config",
+      "argKeys": [
+        "llmProvider",
+        "llmApiKey",
+        "llmModel",
+        "llmBaseUrl"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadVoiceAsrConfig": {
+      "command": "load_voice_asr_config",
+      "argKeys": [
+        "provider"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "saveVoiceAsrConfig": {
+      "command": "save_voice_asr_config",
+      "argKeys": [
+        "asrProvider",
+        "asrApiKey",
+        "asrModel",
+        "asrBaseUrl"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "testVoiceAsrConfig": {
+      "command": "test_voice_asr_config",
+      "argKeys": [
+        "asrProvider",
+        "asrApiKey",
+        "asrModel",
+        "asrBaseUrl"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "removeVoiceHistoryEntry": {
+      "command": "remove_voice_history_entry",
+      "argKeys": [
+        "id"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadVoiceRuntimeStatus": {
+      "command": "load_voice_runtime_status",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "requestVoicePermissions": {
+      "command": "request_voice_permissions",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setVoiceGlobalShortcut": {
+      "command": "set_voice_global_shortcut",
+      "argKeys": [
+        "shortcut"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "captureVoiceTriggerKey": {
+      "command": "capture_voice_trigger_key",
+      "argKeys": [
+        "style"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "cancelVoiceTriggerCapture": {
+      "command": "cancel_voice_trigger_capture",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setVoiceTriggerListenerSuppressed": {
+      "command": "set_voice_trigger_listener_suppressed",
+      "argKeys": [
+        "suppressed"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setVoiceTriggerKey": {
+      "command": "set_voice_trigger_key",
+      "argKeys": [
+        "keyCode",
+        "keyLabel",
+        "keyKind",
+        "style",
+        "modifierMask"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setVoiceTriggerBindings": {
+      "command": "set_voice_trigger_bindings",
+      "argKeys": [
+        "activeStyle",
+        "holdKeyCode",
+        "holdKeyLabel",
+        "holdKeyKind",
+        "holdModifierMask",
+        "toggleKeyCode",
+        "toggleKeyLabel",
+        "toggleKeyKind",
+        "toggleModifierMask"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "updateVoiceRuntimeSettings": {
+      "command": "update_voice_runtime_settings",
+      "argKeys": [
+        "enabled",
+        "shortcut",
+        "speechModel",
+        "processingMode",
+        "processingModeId"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setVoiceProcessingModeId": {
+      "command": "set_voice_processing_mode_id",
+      "argKeys": [
+        "modeId",
+        "processingMode"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "startVoiceCapture": {
+      "command": "start_voice_capture",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "stopVoiceCapture": {
+      "command": "stop_voice_capture",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "injectVoiceText": {
+      "command": "inject_voice_text",
+      "argKeys": [
+        "text",
+        "expectedBundleId"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "showVoiceSearchOverlay": {
+      "command": "show_voice_search_overlay",
+      "argKeys": [
+        "query",
+        "output"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setVoiceModeShortcut": {
+      "command": "set_voice_mode_shortcut",
+      "argKeys": [
+        "modeId",
+        "keyCode",
+        "keyLabel",
+        "keyKind",
+        "style",
+        "modifierMask"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "removeVoiceModeShortcut": {
+      "command": "remove_voice_mode_shortcut",
+      "argKeys": [
+        "modeId"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "requestAccessibilityPermission": {
+      "command": "request_accessibility_permission",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "previewCustomInstructionApply": {
+      "command": "preview_custom_instruction_apply",
+      "argKeys": [
+        "content"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "applyCustomInstruction": {
+      "command": "apply_custom_instruction",
+      "argKeys": [
+        "content",
+        "templateCode",
+        "templateTitle",
+        "source"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "clearCustomInstructionBlock": {
+      "command": "clear_custom_instruction_block",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "rollbackCustomInstruction": {
+      "command": "rollback_custom_instruction",
+      "argKeys": [
+        "historyId"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadMcpServers": {
+      "command": "load_mcp_servers",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "upsertMcpServer": {
+      "command": "upsert_mcp_server",
+      "argKeys": [
+        "args",
+        "headers",
+        "environment"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setMcpServerEnabled": {
+      "command": "set_mcp_server_enabled",
+      "argKeys": [
+        "name",
+        "enabled"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "removeMcpServer": {
+      "command": "remove_mcp_server",
+      "argKeys": [
+        "name"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadInstalledSkills": {
+      "command": "load_installed_skills",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadSkillBackups": {
+      "command": "load_skill_backups",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "importSkill": {
+      "command": "import_skill",
+      "argKeys": [
+        "path"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "removeSkill": {
+      "command": "remove_skill",
+      "argKeys": [
+        "id"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "restoreSkillBackup": {
+      "command": "restore_skill_backup",
+      "argKeys": [
+        "id"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "deleteSkillBackup": {
+      "command": "delete_skill_backup",
+      "argKeys": [
+        "id"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "restartCodex": {
+      "command": "restart_codex",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadUsageAnalytics": {
+      "command": "load_usage_analytics",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadQuotaHistory": {
+      "command": "load_quota_history",
+      "argKeys": [
+        "accountKey"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadSessionAnalytics": {
+      "command": "load_session_analytics",
+      "argKeys": [
+        "range"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadTokenAnalytics": {
+      "command": "load_token_analytics",
+      "argKeys": [
+        "range"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadToolAnalytics": {
+      "command": "load_tool_analytics",
+      "argKeys": [
+        "range"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadChangeAnalytics": {
+      "command": "load_change_analytics",
+      "argKeys": [
+        "range"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "hasNotch": {
+      "command": "has_notch",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "getHotspotEnabled": {
+      "command": "get_hotspot_enabled",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "setHotspotEnabled": {
+      "command": "set_hotspot_enabled",
+      "argKeys": [
+        "enabled"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "focusMainWindow": {
+      "command": "focus_main_window",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "hotspotReady": {
+      "command": "hotspot_ready",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "openPath": {
+      "command": "open_path",
+      "argKeys": [
+        "path"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "getDeviceId": {
+      "command": "get_device_id",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "getMysteryUnlockGrants": {
+      "command": "get_mystery_unlock_grants",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "mergeMysteryUnlockGrants": {
+      "command": "merge_mystery_unlock_grants",
+      "argKeys": [
+        "grants"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "getNotificationClientState": {
+      "command": "get_notification_client_state",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "getSystemInfo": {
+      "command": "get_system_info",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadBootstrapState": {
+      "command": "load_bootstrap_state",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "loadPendingAutoSwitch": {
+      "command": "load_pending_auto_switch",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "dismissPendingAutoSwitch": {
+      "command": "dismiss_pending_auto_switch",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "confirmPendingAutoSwitch": {
+      "command": "confirm_pending_auto_switch",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "confirmPendingAutoSwitchAndRestartCodex": {
+      "command": "confirm_pending_auto_switch_and_restart_codex",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "listPlugins": {
+      "command": "list_plugins",
+      "argKeys": [],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "togglePlugin": {
+      "command": "toggle_plugin",
+      "argKeys": [
+        "id",
+        "enabled"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "getPluginConfig": {
+      "command": "get_plugin_config",
+      "argKeys": [
+        "id"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    },
+    "updatePluginConfig": {
+      "command": "update_plugin_config",
+      "argKeys": [
+        "id",
+        "settings"
+      ],
+      "definedIn": "assets/index-CL22l5v8.js"
+    }
+  },
+  "i": {
+    "loadState": {
+      "command": "load_relay_state",
+      "argKeys": [],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "upsert": {
+      "command": "upsert_relay_provider",
+      "argKeys": [
+        "input"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "delete": {
+      "command": "delete_relay_provider",
+      "argKeys": [
+        "providerId"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "activate": {
+      "command": "activate_relay_provider",
+      "argKeys": [
+        "providerId",
+        "ide"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "deactivate": {
+      "command": "deactivate_relay_provider",
+      "argKeys": [
+        "providerId",
+        "ide"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "setNetwork": {
+      "command": "set_relay_provider_network",
+      "argKeys": [
+        "providerId",
+        "network"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "test": {
+      "command": "test_relay_provider",
+      "argKeys": [
+        "providerId"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "testDraft": {
+      "command": "test_relay_draft",
+      "argKeys": [
+        "input"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "fetchModelsDraft": {
+      "command": "fetch_relay_models_draft",
+      "argKeys": [
+        "input"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "getActive": {
+      "command": "get_relay_active",
+      "argKeys": [],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "getProxyStatus": {
+      "command": "get_relay_proxy_status",
+      "argKeys": [],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "setCodexRouterEnabled": {
+      "command": "set_codex_router_enabled",
+      "argKeys": [
+        "enabled",
+        "relaunch"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "restartCodexApp": {
+      "command": "restart_codex",
+      "argKeys": [],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "exportConfig": {
+      "command": "export_relay_config",
+      "argKeys": [
+        "filePath",
+        "includeApiKeys"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "importConfig": {
+      "command": "import_relay_config",
+      "argKeys": [
+        "filePath"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "setBlockOfficialPassthrough": {
+      "command": "set_block_official_passthrough",
+      "argKeys": [
+        "blocked"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    },
+    "getPassthroughAuditLog": {
+      "command": "get_passthrough_audit_log",
+      "argKeys": [
+        "limit"
+      ],
+      "definedIn": "assets/use-relay-providers-BNphfsn5.js"
+    }
+  }
+}

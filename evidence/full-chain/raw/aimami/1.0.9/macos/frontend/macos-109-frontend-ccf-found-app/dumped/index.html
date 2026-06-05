@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AiMaMi</title>
+    <script>
+      (() => {
+        try {
+          const stored = localStorage.getItem("theme");
+          const theme = stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
+          const isDark =
+            theme === "dark" ||
+            (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+          if (isDark) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        } catch {
+          /* ignore */
+        }
+      })();
+    </script>
+    <style>
+      :root {
+        color-scheme: light;
+        background: #f8f8fa;
+      }
+
+      :root.dark {
+        color-scheme: dark;
+        background: #0e0e11;
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: inherit;
+      }
+
+      #root {
+        width: 100%;
+        height: 100%;
+        background: inherit;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-CL22l5v8.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DOPtUrVF.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

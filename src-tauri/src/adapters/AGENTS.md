@@ -1,11 +1,15 @@
-# Adapter Layer Guardrails
+# Rust adapters Agent 执行规则
 
-This layer contains thin edge adapters for the hexagonal backend skeleton.
+## 渐进式覆盖
 
-- Tauri commands preserve the frontend command surface.
-- Command handlers should delegate to `application::BackendServices`.
-- Keep command handlers thin: parse input, call a use case, return contracts.
-- Do not write backend business behavior in adapters.
-- Do not expose infrastructure internals through adapters.
-- Backend business behavior is intentionally not restored.
+- 本文件是当前目录的直接执行合同；更深层同名规则可以收紧本目录规则，不能放宽证据门、匿名化、中文文档、前端 owner 边界和后端六边形边界。
+- 本目录写入前必须确认两类硬门禁已经满足：前端 owner 只在入口、全局 Provider、路由表、route meta、runtime initializer、页面 shell、复杂模块、服务门面、TanStack cache、E2E mock 和 locale 指定层处理；后端 owner 只在 commands、application/usecase/service、core、platform、repository/adapter 和 contracts 指定层处理。
+- 发生冲突时按“用户原始要求不可改写、raw/internal 证据优先于推测、同一主题最深层目录规则优先、更严格规则优先”的顺序处理。
+- 本目录和下级目录禁止写入共享盘地址、本机用户名、机器名、内部历史标识和外部参考仓库名称。
 
+
+## adapter 边界
+
+- 文件系统、HTTP、数据库、进程、计划任务、窗口、通知、shell 和平台权限必须通过窄 adapter / trait 或窄函数进入 core。
+- adapter 只连接外部能力和内部端口，不写业务规则。
+- 适配器注释必须用中文说明职责和边界。

@@ -3,16 +3,16 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export interface ShineBorderProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Border thickness in px @default 1 */
+  /** 边框厚度，单位 px，@default 1 */
   borderWidth?: number;
-  /** Animation duration in seconds @default 14 */
+  /** 动画时长，单位秒，@default 14 */
   duration?: number;
-  /** Solid color or gradient stops (array) */
+  /** 实色或渐变色标数组 */
   shineColor?: string | string[];
 }
 
 /**
- * Magic UI–style animated border shine (https://magicui.design/docs/components/shine-border)
+ * 动态边框高光。
  */
 export function ShineBorder({
   borderWidth = 1,

@@ -1,9 +1,6 @@
-/*
-Restoration tier: P1
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl
-Frontend module: types/navigation
-This file is a structured reconstruction scaffold, not recovered original source.
-*/
+/**
+ * 中文职责说明：定义应用 route 标识，具体 meta 由 route registry 持有。
+ */
 export type Route =
   | "overview"
   | "accounts"
@@ -12,6 +9,7 @@ export type Route =
   | "custom-instructions"
   | "mcp"
   | "skills"
+  | "plugins"
   | "relay"
   | "settings"
   | "maintenance"
@@ -27,6 +25,7 @@ export const ALL_APP_ROUTES: Route[] = [
   "custom-instructions",
   "mcp",
   "skills",
+  "plugins",
   "relay",
   "settings",
   "maintenance",

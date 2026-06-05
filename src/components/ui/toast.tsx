@@ -64,7 +64,7 @@ const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
     VariantProps<typeof toastVariants> & {
-      /** ms; bottom bar animates for this length. Omit to hide bar. */
+      /** 单位 ms；底部条按该时长播放动画。省略时隐藏底部条。 */
       duration?: number
     }
 >(({ className, variant, duration, style, children, ...props }, ref) => {

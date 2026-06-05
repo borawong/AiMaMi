@@ -1,7 +1,47 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl; evidence/full-chain/raw/command-index.json; evidence/full-chain/raw/validation-summary.json
-Frontend module: features/voice/hooks
-This file is a structured reconstruction scaffold, not recovered original source.
-*/
-export {};
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { api } from "@/lib/api";
+import { VoiceCache } from "../cache";
+
+export function useVoiceCacheController() {
+  return useModuleCacheController(VoiceCache);
+}
+
+export function useVoiceModule() {
+  const queryClient = useQueryClient();
+
+  const workspaceQuery = useQuery({
+    queryKey: [...VoiceCache.queryKeys.root, "workspace"],
+    queryFn: () => api.loadVoiceWorkspace(),
+    staleTime: 30_000,
+  });
+  const runtimeQuery = useQuery({
+    queryKey: [...VoiceCache.queryKeys.root, "runtime"],
+    queryFn: () => api.loadVoiceRuntimeStatus(),
+    staleTime: 30_000,
+  });
+
+  const permissionsMutation = useMutation({
+    mutationFn: () => api.requestVoicePermissions(),
+    onSuccess: (payload) => {
+      VoiceCache.writeAuthoritativePayload(queryClient, {
+        payload,
+        source: "mutation-payload",
+        sequence: Date.now(),
+        receivedAt: Date.now(),
+      });
+      void VoiceCache.invalidateContractQueries(queryClient);
+    },
+  });
+
+  return {
+    workspaceQuery,
+    runtimeQuery,
+    requestPermissionsAction: {
+      id: "request-permissions",
+      labelKey: "voice.requestPermissions",
+      run: () => permissionsMutation.mutateAsync(),
+      isPending: permissionsMutation.isPending,
+    },
+  };
+}

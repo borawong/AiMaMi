@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Update, DownloadEvent } from "@tauri-apps/plugin-updater";
 import { useTranslation } from "react-i18next";
 import type { UpdateInstallabilityPayload } from "@/types";
 import { isTauriRuntime } from "@/lib/tauri-runtime";
+import { api } from "@/lib/api";
 
 interface UpdateInfo {
   version: string;
@@ -23,7 +23,7 @@ export function useUpdateCheck() {
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
   const [progress, setProgress] = useState<DownloadProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const updateRef = useRef<Update | null>(null);
+  const hasPendingUpdateRef = useRef(false);
 
   const checkForUpdate = useCallback(async (): Promise<"available" | "up-to-date" | "error"> => {
     if (!isTauriRuntime()) {
@@ -32,18 +32,14 @@ export function useUpdateCheck() {
     setStatus("checking");
     setError(null);
     try {
-      const { check } = await import("@tauri-apps/plugin-updater");
-      const update = await check();
+      const update = await api.checkRuntimeUpdate();
       if (update) {
-        updateRef.current = update;
-        setUpdateInfo({
-          version: update.version,
-          currentVersion: update.currentVersion,
-          body: update.body ?? null,
-        });
+        hasPendingUpdateRef.current = true;
+        setUpdateInfo(update);
         setStatus("available");
         return "available";
       }
+      hasPendingUpdateRef.current = false;
       setStatus("idle");
       return "up-to-date";
     } catch (e) {
@@ -54,14 +50,10 @@ export function useUpdateCheck() {
   }, []);
 
   const installUpdate = useCallback(async () => {
-    const update = updateRef.current;
-    if (!update) return;
+    if (!hasPendingUpdateRef.current) return;
 
     try {
-      const { invoke } = await import("@tauri-apps/api/core");
-      const installability = await invoke<UpdateInstallabilityPayload>(
-        "check_update_installability",
-      );
+      const installability = await api.checkUpdateInstallability();
       if (!installability.canInstall) {
         setError(localizeUpdateInstallabilityError(t, installability));
         setStatus("error");
@@ -71,22 +63,12 @@ export function useUpdateCheck() {
       setStatus("downloading");
       setProgress({ total: 0, downloaded: 0 });
 
-      let totalBytes = 0;
-      let downloadedBytes = 0;
-
-      await update.downloadAndInstall((event: DownloadEvent) => {
-        if (event.event === "Started" && event.data.contentLength) {
-          totalBytes = event.data.contentLength;
-          setProgress({ total: totalBytes, downloaded: 0 });
-        } else if (event.event === "Progress") {
-          downloadedBytes += event.data.chunkLength;
-          setProgress({ total: totalBytes, downloaded: downloadedBytes });
-        } else if (event.event === "Finished") {
-          setStatus("installing");
-        }
+      await api.installRuntimeUpdate((nextProgress) => {
+        setProgress(nextProgress);
       });
 
-      await invoke("graceful_restart_for_update");
+      setStatus("installing");
+      await api.gracefulRestartForUpdate();
     } catch (e) {
       setError(localizeUpdateRuntimeError(t, e));
       setStatus("error");
@@ -104,10 +86,8 @@ export function useUpdateCheck() {
   const dismiss = useCallback(() => {
     setStatus("idle");
     setError(null);
-    if (updateRef.current) {
-      updateRef.current.close().catch(() => {});
-      updateRef.current = null;
-    }
+    hasPendingUpdateRef.current = false;
+    api.dismissRuntimeUpdate().catch(() => {});
   }, []);
 
   return {

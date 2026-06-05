@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { ChartTooltip } from "@/components/ui/chart-tooltip";
 
 // ---------------------------------------------------------------------------
-// Shared types & utilities
+// 共享类型与工具
 // ---------------------------------------------------------------------------
 
 const TARGET_FONT_PX = 10;
@@ -104,7 +104,7 @@ function tooltipPoint(event: React.MouseEvent<Element>) {
 }
 
 // ---------------------------------------------------------------------------
-// BarChart
+// BarChart 柱状图
 // ---------------------------------------------------------------------------
 
 export interface BarChartProps {
@@ -165,7 +165,7 @@ export function BarChart({
           );
         })}
 
-        {/* Invisible hit areas */}
+        {/* 不可见命中区域 */}
         {data.map((_, i) => {
           const x = m.left + i * gap;
           return (
@@ -196,7 +196,7 @@ export function BarChart({
 }
 
 // ---------------------------------------------------------------------------
-// LineChart (supports dual lines with area fills)
+// LineChart 折线图（支持双线与面积填充）
 // ---------------------------------------------------------------------------
 
 export interface LineSeriesItem {
@@ -275,12 +275,12 @@ export function LineChart({
           );
         })}
 
-        {/* Highlight dots on hover */}
+        {/* 悬停时高亮圆点 */}
         {hover && series.map((s, si) => (
           <circle key={si} cx={toX(hover.idx)} cy={toY(s.values[hover.idx] ?? 0)} r={4} fill={colors[si]} stroke="var(--popover)" strokeWidth={2} />
         ))}
 
-        {/* Invisible hit areas */}
+        {/* 不可见命中区域 */}
         {labels.map((_, i) => {
           const x = toX(i) - colW / 2;
           return (
@@ -310,7 +310,7 @@ export function LineChart({
 }
 
 // ---------------------------------------------------------------------------
-// ComboChart (bars + line overlay)
+// ComboChart 组合图（柱状图 + 折线叠加）
 // ---------------------------------------------------------------------------
 
 export interface ComboChartProps {
@@ -378,7 +378,7 @@ export function ComboChart({
           <circle cx={toX(hover.idx)} cy={toLineY(lineValues[hover.idx] ?? 0)} r={3.5} fill={lineColor} stroke="var(--popover)" strokeWidth={2} />
         )}
 
-        {/* Invisible hit areas */}
+        {/* 不可见命中区域 */}
         {data.map((_, i) => {
           const x = m.left + i * gap;
           return (
@@ -408,7 +408,7 @@ export function ComboChart({
 }
 
 // ---------------------------------------------------------------------------
-// DonutChart
+// DonutChart 环形图
 // ---------------------------------------------------------------------------
 
 export interface DonutSegment {
@@ -500,7 +500,7 @@ export function DonutChart({
 }
 
 // ---------------------------------------------------------------------------
-// StackedBarChart (for changes: write + read side by side, with line)
+// StackedBarChart 堆叠柱状图（用于变更：写入与读取并列，带折线）
 // ---------------------------------------------------------------------------
 
 export interface StackedBarPoint {
@@ -589,7 +589,7 @@ export function StackedBarChart({
           <circle cx={toX(hover.idx)} cy={toY(data[hover.idx]?.line ?? 0)} r={4} fill={lineColor} stroke="var(--popover)" strokeWidth={2} />
         )}
 
-        {/* Invisible hit areas */}
+        {/* 不可见命中区域 */}
         {data.map((_, i) => {
           const x = m.left + i * gap;
           return (
@@ -619,7 +619,7 @@ export function StackedBarChart({
 }
 
 // ---------------------------------------------------------------------------
-// RankingChart (horizontal bar chart for top tools)
+// RankingChart 排名图（顶部工具的水平柱状图）
 // ---------------------------------------------------------------------------
 
 export interface RankingItem {

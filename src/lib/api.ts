@@ -1,10 +1,3 @@
-/*
-Restoration tier: P1
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl
-Frontend module: lib/api adapter
-This file is a compatibility adapter, not recovered original source.
-Deep module boundary: new code should import domain services from src/services.
-*/
 import {
   accountsService,
   analyticsService,
@@ -129,6 +122,10 @@ export const api = {
   detectApiProxyConfig: settingsService.detectApiProxyConfig,
   checkUpdateInstallability: settingsService.checkUpdateInstallability,
   gracefulRestartForUpdate: settingsService.gracefulRestartForUpdate,
+  checkRuntimeUpdate: settingsService.checkRuntimeUpdate,
+  installRuntimeUpdate: settingsService.installRuntimeUpdate,
+  dismissRuntimeUpdate: settingsService.dismissRuntimeUpdate,
+  getAppVersion: settingsService.getAppVersion,
   hasNotch: settingsService.hasNotch,
   getHotspotEnabled: settingsService.getHotspotEnabled,
   setHotspotEnabled: settingsService.setHotspotEnabled,
@@ -156,6 +153,7 @@ export const api = {
   loadInstalledSkills: skillsService.loadInstalled,
   loadSkillBackups: skillsService.loadBackups,
   importSkill: skillsService.importSkill,
+  pickSkillDirectory: skillsService.pickSkillDirectory,
   removeSkill: skillsService.removeSkill,
   restoreSkillBackup: skillsService.restoreBackup,
   deleteSkillBackup: skillsService.deleteBackup,

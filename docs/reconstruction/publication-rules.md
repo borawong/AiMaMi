@@ -1,44 +1,46 @@
-# Publication Hygiene Rules
+# 发布和匿名化规则
 
-These rules define what should be checked before adding reconstruction material
-to the repository.
+本文件定义新增重建材料、文档和 PR 说明发布前必须满足的规则。目标是让 OpenAiMami 1.0.9 的公开链条可审计，同时避免泄露隐私或内部环境信息。
 
-## Required Placeholders
+## 必须使用占位
 
-| Material | Replacement |
+| 材料类型 | 推荐占位 |
 | --- | --- |
-| Source location outside this repository | `<source-location>` |
-| Local account name | `<local-user>` |
-| Local absolute path | `<local-path>` |
-| Network location | `<network-share>` |
-| Real person or customer data | `<redacted-user-data>` |
-| Account secret or credential value | `<redacted-secret>` |
+| 仓库外来源位置 | `<来源位置>` |
+| 本地账号名 | `<本地用户>` |
+| 本地绝对路径 | `<本地路径>` |
+| 网络共享位置 | `<网络共享>` |
+| 个人或客户数据 | `<已脱敏数据>` |
+| 凭据或密钥值 | `<已脱敏凭据>` |
+| 内部项目名 | `<内部项目>` |
 
-## Do Not Publish
+## 不得发布
 
-- API keys, signing keys, session identifiers, cookies, and auth material
-- Local-only paths, share paths, account names, and workstation details
-- Raw logs, raw runtime traces, raw session content, personal data, and
-  generated dumps that have not been reviewed
-- Expanded database companion files
-- Exploit, bypass, attack, or evasion material
+- 凭据、令牌、会话、密钥、签名材料和账号私密值。
+- 本机路径、机器名、用户名、共享盘路径和绝对路径。
+- 个人数据、客户数据、未脱敏日志、运行期缓存和未审查 dump。
+- 内部项目名和外部参考仓库名称。
+- 攻击、绕过、规避或滥用材料。
+- 展开的 IDB 伴随文件。
 
-## Screening Patterns
+## 文档规则
 
-Reject or rewrite content matching these forms before publication:
+- 所有新增文档和注释使用中文。
+- 使用仓库相对路径。
+- 保留 Apache License 许可上下文。
+- 说明还原流程时同时引用 raw/internal 证据。
+- 不把 `OpenAiMami IDB` 写成唯一还原来源。
+- 不把后端业务暂不还原描述成材料缺口。
 
-- Non-public network address patterns
-- Share-style paths beginning with double separators
-- Drive-root absolute paths
-- Home-directory absolute paths
-- Long opaque bearer-like values
-- Assignment lines that name an account secret and contain a real value
+## 发布前检查
 
-## Publication Rules
+发布前至少检查：
 
-- Use repository-relative paths in public documents.
-- Keep Apache-2.0, Tauri 2 + React + Rust, and public repository structure
-  visible.
-- Do not rely on local environment state to explain restoration steps.
-- Keep large reference assets outside the main source repository and document
-  their external location, size, and hash by manifest.
+1. 是否出现内部项目名、外部参考仓库名称或本机环境信息。
+2. 是否出现凭据、令牌、会话、密钥、账号私密值或未脱敏日志。
+3. 是否使用了仓库相对路径。
+4. 是否说明了 raw/internal 主链路与 `OpenAiMami IDB` 的关系。
+5. 是否仍有英文段落或乱码中文。
+6. 是否把未证实行为写成确定实现。
+
+发现问题时先脱敏、改写或删除，再提交。

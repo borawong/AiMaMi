@@ -1,24 +1,20 @@
-# Frontend And Backend Skeleton Rules
+# 前端与后端骨架规则
 
-This document defines the second-stage reconstruction rules for the AiMaMi
-1.0.9 frontend skeleton and the Rust backend skeleton. It records the allowed
-shape, evidence tiers, and future PR gates. It does not restore source code or
-business behavior by itself.
+本文件定义 OpenAiMami 1.0.9 的前端重建规则和后端六边形骨架规则。它描述允许的架构形态、证据等级和未来 PR 门槛；它本身不声称已经还原全部业务实现。
 
-## Stage Goal
+## 阶段目标
 
-The second stage creates a complete public skeleton that can accept later
-evidence-backed implementations without reshaping the repository again.
+当前阶段的目标是建立完整、公开、可审计的骨架，让后续实现可以按证据补齐，而不需要再次重塑仓库结构。
 
-- Frontend work uses the approved reference architecture shape, but repository
-  files, comments, docs, and commits must not record any external project name.
-- Backend work uses a real hexagonal architecture with deep module boundaries.
-- Frontend behavior must stay evidence-backed.
-- Backend business behavior is intentionally not restored in this stage.
+- 前端采用主流前端模块化架构重构并还原。
+- 前端文件、注释、文档和提交说明不得写入外部参考仓库名称。
+- 前端行为必须基于 raw/internal 证据。
+- 后端保持六边形架构骨架。
+- 后端业务实现暂不还原是项目范围选择。
 
-## Frontend Organization
+## 前端模块边界
 
-The frontend target organization is:
+前端目标边界包括：
 
 - `app`
 - `routes`
@@ -33,15 +29,11 @@ The frontend target organization is:
 - `libs`
 - `layout`
 
-These folders are reconstruction boundaries, not evidence claims. Cross-module
-imports should go through each module public facade so the tree remains a deep
-module structure. Feature-private implementation details should stay behind the
-owning feature or service facade.
+这些目录是重建边界，不是原始源码声明。跨模块导入应优先经过模块公开出口，特性私有实现应留在所属 feature 或 service 内。
 
-## Frontend Coverage
+## 前端覆盖面
 
-AiMaMi 1.0.9 frontend skeleton coverage must include every known page or module
-surface listed below:
+OpenAiMami 1.0.9 前端骨架应覆盖已知页面和模块表面：
 
 - `overview`
 - `accounts`
@@ -57,97 +49,53 @@ surface listed below:
 - `tray-shell`
 - `voice`
 
-Coverage means the public route/module shell, type boundary, loading state, and
-service contract placement exist. It does not mean the original source file was
-recovered.
+覆盖意味着公开路由、模块壳、类型边界、加载状态、空状态、错误状态和服务契约位置存在；不意味着原始源码已经被恢复。
 
-## Restoration Tier Rules
+## 前端还原顺序
 
-Current evidence does not contain complete original source maps or recovered
-original source files. The frontend map does contain bundle, IPC, DTO, and
-control-flow material derived from public evidence. Treat this as a tiered
-reconstruction source:
+1. route registry：先还原路由注册、页面标识和懒加载边界。
+2. entry/root：再还原入口文件、根组件、全局 Provider 和挂载结构。
+3. runtime initializer：还原运行期初始化顺序、启动状态和全局副作用入口。
+4. 深模块：逐步补齐 Provider、StoreUpdater、Content、cache、hooks、dialogs、panels、components、types、tests。
+5. IPC 和数据：用 raw/internal 证据补齐 IPC 包装、DTO、缓存键、错误态和交互状态。
 
-| Tier | Allowed use | Not allowed |
+## 证据等级
+
+| 等级 | 可用于 | 不可用于 |
 | --- | --- | --- |
-| `P0` | Bundle manifest facts, file names, chunk names, declared surfaces, and existence of pages or modules. | Business behavior or source-level implementation claims. |
-| `P1` | IPC, DTO, command boundary, wrapper names, argument keys, and page-module boundaries. | Non-observed side effects or inferred backend logic. |
-| `P2` | Source skeletons, route shells, loading/error/empty states, type placeholders, and composition boundaries. | Claims that minified bundle analysis is recovered original source. |
+| `P0` | bundle manifest 事实、文件名、chunk 名、页面存在性、模块存在性。 | 业务行为或源码级实现声明。 |
+| `P1` | IPC、DTO、命令边界、包装名、参数键、页面与模块边界。 | 未观察到的副作用或推断出的后端业务逻辑。 |
+| `P2` | 源码骨架、路由壳、加载态、错误态、空态、类型占位和模块门面。 | 声称 dumped 或压缩分析等同于原始源码。 |
 
-Every frontend implementation PR that fills behavior beyond a shell must cite
-frontend evidence and label the tier it relies on. P0/P1/P2 material can guide
-structure; it cannot justify invented business behavior.
+任何补齐前端真实行为的 PR 都必须标明证据等级，并列出对应 raw/internal 路径。
 
-## Progressive Frontend Loading
+## 后端架构边界
 
-Routes should be lazy-loaded through route-level shells. Each route or feature
-surface needs explicit:
+后端目标是六边形架构骨架，核心边界为：
 
-- loading shell
-- error shell
-- empty shell
-- stable public export
-- service or contract boundary for later replacement
-
-This keeps the second-stage skeleton usable while preserving a clear place for
-future evidence-backed behavior.
-
-## Backend Architecture
-
-The backend target is a hexagonal skeleton with deep module boundaries:
-
-- `contracts`
-- `domain`
-- `ports`
+- `commands`
 - `application`
+- `core`
+- `platform`
+- `repository`
 - `adapters`
-- `infrastructure`
+- `contracts`
 
-This is a project decision to avoid restoring backend business implementation
-in the skeleton stage. It is not a statement that backend evidence is missing.
-The backend should model stable boundaries only, then wait for deliberate
-future implementation work.
+命令层只做输入解析、契约转换和薄适配。业务编排进入 application，稳定领域类型进入 core，平台与存储边界进入 platform 和 repository，外部适配进入 adapters，可序列化前后端契约进入 contracts。
 
-Existing command, core, and platform implementation buckets have been
-refactored into the skeleton and de-implemented where behavior would otherwise
-claim business logic. The command surface remains a thin adapter/stub layer:
+## 后端还原规则
 
-- adapters parse command input and return contract envelopes
-- application use cases own orchestration facades
-- ports describe future dependencies
-- infrastructure hides future platform, storage, process, and network details
-- contracts carry serializable frontend-facing DTOs
-- domain holds stable value types and errors
+- 不把未证实业务写成实现。
+- 不把暂不还原解释成材料缺口。
+- 新行为必须先定义 contracts 和端口边界，再补 application 和 adapters。
+- commands 不应成为业务逻辑容器。
+- 桩实现必须明确标注待实现项和证据缺口。
+- 未来补齐业务时必须说明 raw/internal 证据来源，以及是否核对 `OpenAiMami IDB`。
 
-No backend command handler should grow business behavior directly. New behavior
-must enter through ports, application use cases, and adapters.
+## 未来 PR 门槛
 
-## Progressive Backend Replacement
-
-The backend skeleton should support later replacement by keeping each layer
-explicit:
-
-- contracts define stable DTOs and default envelopes
-- mock adapters can satisfy frontend integration during skeleton work
-- stub adapters keep command surfaces callable without claiming behavior
-- ports define the replacement boundary before infrastructure is added
-- application use cases are the only place to compose real behavior later
-
-This lets frontend modules wire against stable contracts while the backend
-implementation remains intentionally absent.
-
-## Future PR Rules
-
-Future pull requests must follow these rules:
-
-- Frontend real implementation requires frontend evidence for the claimed
-  route, module, IPC, DTO, or command boundary.
-- Frontend source skeleton work must state the Restoration tier used: P0, P1,
-  or P2.
-- Backend business implementation must enter through ports, application
-  use-cases, and adapters.
-- Backend commands must remain thin adapters and must not become business logic
-  containers.
-- New reconstruction docs must use repository-relative paths and must not write
-  external reference project names, local machine paths, private hosts, or
-  environment-specific markers.
+- 前端真实实现必须引用 route、module、IPC、DTO 或 command 边界证据。
+- 前端骨架工作必须说明使用 `P0`、`P1` 或 `P2`。
+- 后端业务实现必须通过 application、ports、repository、adapters 和 contracts 进入。
+- 新文档必须使用中文和仓库相对路径。
+- 所有材料必须通过匿名化检查。

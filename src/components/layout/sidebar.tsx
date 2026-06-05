@@ -1,32 +1,13 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json
-Frontend module: layout/sidebar
-This file preserves the current UI shell and routes it through the reconstructed module boundary.
-*/
+/**
+ * 中文职责说明：侧边栏只消费 route registry 派生的导航 meta，不再持有 route label 或可见性。
+ */
 import { useTranslation } from "react-i18next";
-import {
-  Activity,
-  BarChart3,
-  LayoutDashboard,
-  FileCode2,
-  Headphones,
-  MessageSquareText,
-  Mic2,
-  RadioTower,
-  Server,
-  Sparkles,
-  Users,
-  Wrench,
-  Settings,
-  Sun,
-  Moon,
-  type LucideIcon,
-} from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 
 import { useThemeValue, type Theme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import type { Route } from "@/types/navigation";
+import type { RouteMeta } from "@/routes/registry/route-meta";
 import {
   Sidebar,
   SidebarContent,
@@ -37,29 +18,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { AnimatedSegmentedControl } from "@/components/ui/animated-segmented-control";
-
-export const appNavItems: {
-  route: Route;
-  icon: LucideIcon;
-  labelKey: string;
-  fallbackLabel: string;
-}[] = [
-  { route: "overview", icon: LayoutDashboard, labelKey: "nav.overview", fallbackLabel: "Overview" },
-  { route: "accounts", icon: Users, labelKey: "nav.accounts", fallbackLabel: "Accounts" },
-  { route: "sessions", icon: MessageSquareText, labelKey: "nav.sessions", fallbackLabel: "Sessions" },
-  { route: "analytics", icon: BarChart3, labelKey: "nav.analytics", fallbackLabel: "Analytics" },
-  { route: "custom-instructions", icon: FileCode2, labelKey: "nav.customInstructions", fallbackLabel: "Custom Instructions" },
-  { route: "mcp", icon: Server, labelKey: "nav.mcp", fallbackLabel: "MCP" },
-  { route: "skills", icon: Sparkles, labelKey: "nav.skills", fallbackLabel: "Skills" },
-  { route: "relay", icon: RadioTower, labelKey: "nav.relay", fallbackLabel: "Relay" },
-  { route: "settings", icon: Settings, labelKey: "nav.settings", fallbackLabel: "Settings" },
-  { route: "maintenance", icon: Wrench, labelKey: "nav.maintenance", fallbackLabel: "Maintenance" },
-  { route: "daemon-autoswitch", icon: Activity, labelKey: "nav.daemonAutoswitch", fallbackLabel: "Daemon Autoswitch" },
-  { route: "tray-shell", icon: Headphones, labelKey: "nav.trayShell", fallbackLabel: "Tray Shell" },
-  { route: "voice", icon: Mic2, labelKey: "nav.voice", fallbackLabel: "Voice" },
-];
-
-const hiddenNavRoutes = new Set<Route>([]);
 
 export const SIDEBAR_EXPANDED_WIDTH_PX = 176 * 1.05;
 export const SIDEBAR_COLLAPSED_WIDTH_PX = 64;
@@ -80,6 +38,7 @@ const iconInactiveClass =
 
 interface AppSidebarProps {
   activeRoute: Route;
+  routeItems: RouteMeta[];
   onNavigate: (route: Route) => void;
   onThemeChange: (theme: Theme) => void;
 }
@@ -141,6 +100,7 @@ function SidebarThemeToggle({
 
 export function AppSidebar({
   activeRoute,
+  routeItems,
   onNavigate,
   onThemeChange,
 }: AppSidebarProps) {
@@ -160,7 +120,7 @@ export function AppSidebar({
         >
           <img
             src={SIDEBAR_LOGO_SRC}
-            alt="AiMaMi"
+            alt={t("app.name")}
             className="h-[35px] w-[35px] select-none rounded-full object-cover md:translate-x-1"
             draggable={false}
           />
@@ -174,7 +134,7 @@ export function AppSidebar({
           <div className="relative h-[35px] w-[35px] shrink-0">
             <img
               src={SIDEBAR_LOGO_SRC}
-              alt="AiMaMi"
+              alt={t("app.name")}
               className="h-full w-full select-none rounded-full object-cover"
               draggable={false}
             />
@@ -185,21 +145,21 @@ export function AppSidebar({
           </div>
           <div className="flex min-w-0 flex-col leading-tight">
             <span className="truncate text-[15px] font-semibold text-sidebar-foreground">
-              AiMaMi
+              {t("app.name")}
             </span>
             <span className="truncate text-[11px] text-sidebar-foreground/60">
-              Codex Assistant
+              {t("app.subtitle")}
             </span>
           </div>
         </button>
       </SidebarHeader>
       <SidebarContent className="pt-[18px]">
         <SidebarMenu>
-          {appNavItems
-            .filter((item) => !hiddenNavRoutes.has(item.route))
-            .map(({ route, icon: Icon, labelKey, fallbackLabel }) => {
+          {routeItems
+            .filter((item) => item.visible)
+            .map(({ route, icon: Icon, titleKey }) => {
               const isActive = activeRoute === route;
-              const label = t(labelKey, { defaultValue: fallbackLabel });
+              const label = t(titleKey);
               return (
                 <SidebarMenuItem key={route}>
                   <SidebarMenuButton

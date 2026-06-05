@@ -1,8 +1,17 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl; evidence/full-chain/raw/command-index.json; evidence/full-chain/raw/validation-summary.json
-Frontend module: features/analytics/index
-This file is a structured reconstruction scaffold, not recovered original source.
-Deep module boundary: consumers must import this feature through this public entrypoint.
-*/
- export {};
+/**
+ * 中文职责说明：analytics 模块唯一公共入口，外部只能通过这里接入模块。
+ */
+import { createElement } from "react";
+import { AnalyticsProvider } from "./Provider";
+import { AnalyticsContent } from "./Content";
+
+export function AnalyticsFeature() {
+  return createElement(
+    AnalyticsProvider,
+    null,
+    createElement(AnalyticsContent),
+  );
+}
+
+export { AnalyticsProvider } from "./Provider";
+export { AnalyticsContent } from "./Content";

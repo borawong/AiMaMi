@@ -1,9 +1,17 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl; evidence/full-chain/raw/command-index.json; evidence/full-chain/raw/validation-summary.json
-Frontend module: features/maintenance/index
-This file is a structured reconstruction scaffold, not recovered original source.
-Deep module boundary: consumers must import this feature through this public entrypoint.
-*/
- export { MaintenancePage as MaintenanceFeature } from '@/components/maintenance/maintenance-page';
+/**
+ * 中文职责说明：maintenance 模块唯一公共入口，外部只能通过这里接入模块。
+ */
+import { createElement } from "react";
+import { MaintenanceProvider } from "./Provider";
+import { MaintenanceContent } from "./Content";
 
+export function MaintenanceFeature() {
+  return createElement(
+    MaintenanceProvider,
+    null,
+    createElement(MaintenanceContent),
+  );
+}
+
+export { MaintenanceProvider } from "./Provider";
+export { MaintenanceContent } from "./Content";

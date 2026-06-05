@@ -435,7 +435,7 @@ export interface BootstrapStatePayload {
 }
 
 // ---------------------------------------------------------------------------
-// Analytics
+// 分析数据
 // ---------------------------------------------------------------------------
 
 export interface DailyActivity {
@@ -478,7 +478,7 @@ export interface QuotaHistoryPayload {
 }
 
 // ---------------------------------------------------------------------------
-// Session analytics (new 4 endpoints)
+// 会话分析（新增 4 个端点）
 // ---------------------------------------------------------------------------
 
 export type AnalyticsRange = "today" | "week" | "month";

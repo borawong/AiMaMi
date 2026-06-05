@@ -4,10 +4,10 @@
 
 @layer base {
   :root {
-    /* spec: --bg: #f8f8fa */
+    /* 规格值：--bg: #f8f8fa */
     --background: 240 4% 97.6%;
     --foreground: 0 0% 6.7%;
-    /* spec: --card: #ffffff */
+    /* 规格值：--card: #ffffff */
     --card: 0 0% 100%;
     --card-foreground: 0 0% 6.7%;
     --popover: 0 0% 100%;
@@ -16,7 +16,7 @@
     --primary-foreground: 0 0% 100%;
     --secondary: 240 5% 93%;
     --secondary-foreground: 240 6% 10%;
-    /* spec: --accent-bg: rgba(0,0,0,0.04) */
+    /* 规格值：--accent-bg: rgba(0,0,0,0.04) */
     --muted: 240 5% 94%;
     --muted-foreground: 0 0% 40%;
     --accent: 0 0% 0% / 0.04;
@@ -29,25 +29,25 @@
     --ring: 217 91% 60%;
     --radius: 1rem;
 
-    /* spec: --sidebar-bg: #f3f3f6 */
+    /* 规格值：--sidebar-bg: #f3f3f6 */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
-    /* spec: --accent-bg for sidebar */
+    /* 规格值：侧边栏 --accent-bg */
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     --accent-color: 217 91% 60%;
-    /* Tooltip（Scheme C：浅色主题 黑底白字）— design-system-proposals.html */
+    /* Tooltip（方案 C：浅色主题黑底白字） */
     --tooltip: 0 0% 6.7%;
     --tooltip-foreground: 0 0% 100%;
     --heatmap-color: #3FE6A1;
     --heatmap-empty: hsl(240 5% 94% / 0.6);
 
-    /* Magic UI RainbowButton */
+    /* 彩虹按钮颜色变量 */
     --color-1: hsl(0 100% 63%);
     --color-2: hsl(270 100% 63%);
     --color-3: hsl(210 100% 63%);
@@ -56,22 +56,22 @@
   }
 
   .dark {
-    /* spec: --bg: #0e0e11 */
+    /* 规格值：--bg: #0e0e11 */
     --background: 240 10% 6%;
     --foreground: 240 20% 96%;
-    /* spec: --card: #1a1a1f */
+    /* 规格值：--card: #1a1a1f */
     --card: 240 8% 11%;
     --card-foreground: 240 20% 96%;
     --popover: 240 8% 11%;
     --popover-foreground: 240 20% 96%;
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
-    /* spec: segmented/secondary bg */
+    /* 规格值：分段控件 / secondary 背景 */
     --secondary: 0 0% 100% / 0.05;
     --secondary-foreground: 240 20% 96%;
     --muted: 240 5% 8%;
     --muted-foreground: 0 0% 63%;
-    /* spec: --accent-bg: rgba(255,255,255,0.04) */
+    /* 规格值：--accent-bg: rgba(255,255,255,0.04) */
     --accent: 0 0% 100% / 0.04;
     --accent-foreground: 240 20% 96%;
     --destructive: 0 72% 60%;
@@ -81,7 +81,7 @@
     --input: 60 2.17% 18.04%;
     --ring: 217 91% 60%;
 
-    /* spec: --sidebar-bg: #131316 */
+    /* 规格值：--sidebar-bg: #131316 */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -92,7 +92,7 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
 
     --accent-color: 217 91% 60%;
-    /* Tooltip（Scheme C：深色主题 白底黑字） */
+    /* Tooltip（方案 C：深色主题白底黑字） */
     --tooltip: 240 20% 96%;
     --tooltip-foreground: 0 0% 6.7%;
     --heatmap-color: #3FE6A1;
@@ -146,7 +146,7 @@ body {
   height: 0;
 }
 
-/* Glow Card V2 — aurora effect driven by CSS variables */
+/* 发光卡片 V2：由 CSS 变量驱动的极光效果 */
 .glow-card-aurora {
   background: radial-gradient(
     ellipse at 30% 40%,
@@ -163,7 +163,7 @@ body {
   );
 }
 
-/* Magic UI ShineBorder */
+/* 发光边框动画 */
 @keyframes shine {
   0% {
     background-position: 0% 0%;
@@ -182,7 +182,7 @@ body {
   }
 }
 
-/* Magic UI animated-gradient-text (globals.css / @theme preset equivalent) */
+/* 渐变文字动画：等效 globals.css / @theme 预设 */
 @keyframes gradient {
   to {
     background-position: var(--bg-size, 300%) 0;
@@ -199,7 +199,7 @@ body {
   }
 }
 
-/* Toast auto-dismiss progress (duration from --toast-duration on root) */
+/* Toast 自动关闭进度条（时长来自根节点 --toast-duration） */
 @keyframes toast-dismiss-progress {
   from {
     transform: scaleX(1);
@@ -222,7 +222,7 @@ body {
   }
 }
 
-/* Toast enter / exit — smooth upward motion (replaces tailwindcss-animate slide) */
+/* Toast 进入 / 退出：平滑上移动效，替代 tailwindcss-animate 的 slide */
 @keyframes toast-surface-enter {
   from {
     opacity: 0;
@@ -263,17 +263,17 @@ body {
   }
 }
 
-/* Voice capsule bar — Type4Me FloatingBarView / FloatingBarController timings:
-   panel show: 0.3s easeOut, hide: 0.25s easeIn; bar transition springSnappy + scale(0.92)+opacity, removal: opacity */
+/* 语音胶囊条时序：
+   面板显示 0.3s easeOut，隐藏 0.25s easeIn；条本体使用 springSnappy + scale(0.92)+opacity，移除时仅 opacity */
 .voice-capsule {
-  /* TF.recording (dark) — RecordingDot & Preparing trim */
+  /* 录音态（dark）：录音圆点与准备态裁剪 */
   --tf-recording: 222 97 77;
-  /* TF.success (dark) — done border */
+  /* 完成态（dark）：完成边框 */
   --tf-success: 107 179 107;
   position: relative;
   border-radius: 9999px;
   overflow: hidden;
-  /* TF bar shadow: SwiftUI shadow radius=5 ≈ CSS blur 10px */
+  /* 条阴影：SwiftUI shadow radius=5 约等于 CSS blur 10px */
   box-shadow: 0 0 10px rgba(20, 20, 20, 0.5);
 }
 
@@ -282,14 +282,14 @@ body {
 }
 
 .voice-capsule-wrapper[data-visible="exiting"] {
-  /* Match NSPanel hide: 0.25s easeIn, removal: opacity only */
+  /* 匹配 NSPanel 隐藏：0.25s easeIn，移除时仅 opacity */
   animation: voice-capsule-exit 250ms cubic-bezier(0.4, 0, 1, 1) both;
 }
 
 @keyframes voice-capsule-enter {
   from {
     opacity: 0;
-    /* insertion: .scale(0.92).combined(with: .opacity) */
+    /* 插入：.scale(0.92).combined(with: .opacity) */
     transform: scale(0.92);
   }
   to {
@@ -307,7 +307,7 @@ body {
   }
 }
 
-/* RecordingDot outer: easeInOut 1.2s repeat alternate (10→24 in 24pt) */
+/* 录音圆点外圈：easeInOut 1.2s repeat alternate（24pt 内 10→24） */
 @keyframes voice-outer-pulse {
   from {
     transform: scale(0.42);
@@ -319,7 +319,7 @@ body {
   }
 }
 
-/* RecordingDot inner stroke: 0.8s easeInOut, delay 0.12s, repeat alternate; 12↔18 in 24 frame */
+/* 录音圆点内描边：0.8s easeInOut，delay 0.12s，repeat alternate；24 frame 内 12↔18 */
 @keyframes voice-inner-pulse {
   from {
     transform: scale(0.67);
@@ -331,7 +331,7 @@ body {
   }
 }
 
-/* Type4Me: withAnimation(.easeInOut(duration:2.0).repeatForever(autoreverses:true))
+/* 呼吸边框：withAnimation(.easeInOut(duration:2.0).repeatForever(autoreverses:true))
    → 真实周期 4s (2s 正向 + 2s 反向)。 */
 @keyframes voice-breathe-border {
   0%,
@@ -353,15 +353,15 @@ body {
 }
 
 /* ----------------------------------------------------------------------
- * Phase content cross-fade transitions
+ * 阶段内容交叉淡入淡出过渡
  *
- * Type4Me FloatingBarView 每个 phase content 在 switch-case 里挂的
+ * 每个 phase content 在 switch-case 里挂载
  * .transition(.asymmetric(insertion:..., removal:...))，配合外层
- * .animation(TF.springSnappy, value: state.barPhase) 自动驱动 spring 时长。
+ * .animation(springSnappy, value: state.barPhase) 自动驱动 spring 时长。
  *
- * springSnappy ≈ response 0.35, damping 0.8 — 用 cubic-bezier 近似 350ms。
+ * springSnappy 约等于 response 0.35、damping 0.8，用 cubic-bezier 近似 350ms。
  * ----------------------------------------------------------------------- */
-/* SwiftUI .spring(response: 0.35, damping: 0.8) 等效 bezier：略带 overshoot 的弹性曲线 */
+/* SwiftUI .spring(response: 0.35, damping: 0.8) 等效 bezier：略带过冲的弹性曲线 */
 .voice-phase-enter-preparing {
   animation: voice-phase-in-92 450ms cubic-bezier(0.32, 1.35, 0.45, 1) both;
 }
@@ -413,7 +413,7 @@ body {
   to { opacity: 0; }
 }
 @keyframes voice-phase-out-recording {
-  /* removal: .scale(0.9, anchor: .leading).combined(with: .opacity) */
+  /* 移除：.scale(0.9, anchor: .leading).combined(with: .opacity) */
   from { opacity: 1; transform: scale(1); transform-origin: left center; }
   to { opacity: 0; transform: scale(0.9); transform-origin: left center; }
 }
@@ -422,8 +422,8 @@ body {
   to { opacity: 0; transform: scale(0.9); }
 }
 
-/* Background layer cross-fade (AudioRipple / ProcessingProgress
-   `.transition(.opacity)` driven by springSnappy). */
+/* 背景层交叉淡入淡出（AudioRipple / ProcessingProgress
+   由 springSnappy 驱动 `.transition(.opacity)`）。 */
 .voice-bg-fade-enter {
   animation: voice-phase-in-opacity 450ms cubic-bezier(0.32, 1.35, 0.45, 1) both;
 }

@@ -1,26 +1,19 @@
-//! Hexagonal backend skeleton.
-//!
-//! This module intentionally preserves architecture and IPC shape only.
-//! It does not restore backend business behavior by project decision.
-//!
-//! Layer: application::composition
-//! Current role: deep module facade
-//! Future integration point: replace this stub through the declared port/use-case boundary.
-
 mod adapters;
 mod application;
+mod commands;
 mod contracts;
-mod domain;
-mod infrastructure;
-mod ports;
+mod core;
+mod platform;
+mod repository;
 
 pub fn run() {
     adapters::tauri::run();
 }
 
 pub fn run_daemon_once_cli() -> Result<(), String> {
-    application::BackendServices::default()
+    application::service::BackendServices::default()
         .daemon()
         .run_once_cli()
         .map(|_| ())
+        .map_err(|error| error.public_message().to_owned())
 }

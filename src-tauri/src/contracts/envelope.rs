@@ -1,14 +1,8 @@
-//! Hexagonal backend skeleton.
-//!
-//! This module intentionally preserves architecture and IPC shape only.
-//! It does not restore backend business behavior by project decision.
-//!
-//! Layer: contracts::envelope
-//! Current role: DTO contract
-//! Future integration point: replace this stub through the declared port/use-case boundary.
-
+use crate::core::error::CoreError;
+use crate::core::migration;
 use serde::Serialize;
 
+/// 中文职责说明：统一 envelope 警告项，只暴露脱敏 code/message，不携带本机路径。
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct CoreWarning {
@@ -16,6 +10,7 @@ pub(crate) struct CoreWarning {
     pub message: String,
 }
 
+/// 中文职责说明：IPC 统一返回 envelope，pending/no-op 是后端骨架合同，不伪造成真实业务成功。
 #[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct CoreEnvelope<T: Serialize> {
@@ -30,10 +25,10 @@ pub(crate) struct CoreEnvelope<T: Serialize> {
 impl<T: Serialize> CoreEnvelope<T> {
     pub(crate) fn ok(data: T) -> Self {
         Self {
-            schema_version: 1,
+            schema_version: migration::current_schema_version().0,
             success: true,
             code: "ok".into(),
-            message: "Success".into(),
+            message: "成功。".into(),
             warnings: Vec::new(),
             data,
         }
@@ -41,32 +36,57 @@ impl<T: Serialize> CoreEnvelope<T> {
 
     pub(crate) fn ok_with_warnings(data: T, warnings: Vec<CoreWarning>) -> Self {
         Self {
-            schema_version: 1,
+            schema_version: migration::current_schema_version().0,
             success: true,
             code: "ok".into(),
-            message: "Success".into(),
+            message: "成功。".into(),
             warnings,
+            data,
+        }
+    }
+
+    pub(crate) fn pending(data: T, action: &str) -> Self {
+        Self {
+            schema_version: migration::current_schema_version().0,
+            success: true,
+            code: "backend_behavior_pending".into(),
+            message: "当前后端保留命令契约，业务实现由后续 PR 在既有边界内补齐。".into(),
+            warnings: vec![pending_warning(action)],
             data,
         }
     }
 
     pub(crate) fn no_op(data: T, action: &str) -> Self {
         Self {
-            schema_version: 1,
+            schema_version: migration::current_schema_version().0,
             success: true,
             code: "no_op".into(),
-            message: "No operation was performed.".into(),
+            message: "命令已接收，当前后端未执行副作用。".into(),
             warnings: vec![no_op_warning(action)],
+            data,
+        }
+    }
+
+    pub(crate) fn failure(data: T, error: &CoreError) -> Self {
+        Self {
+            schema_version: migration::current_schema_version().0,
+            success: false,
+            code: error.code().to_owned(),
+            message: error.public_message().to_owned(),
+            warnings: vec![CoreWarning {
+                code: error.code().to_owned(),
+                message: error.public_message().to_owned(),
+            }],
             data,
         }
     }
 }
 
-pub(crate) fn stub_warning(layer: &str) -> CoreWarning {
+pub(crate) fn pending_warning(action: &str) -> CoreWarning {
     CoreWarning {
-        code: "backend_stub".into(),
+        code: "backend_behavior_pending".into(),
         message: format!(
-            "The {layer} backend surface is intentionally stubbed; business behavior is not restored."
+            "{action} 保留后端契约；未恢复业务实现是项目选择，后续 PR 可沿 owner 边界补齐。"
         ),
     }
 }
@@ -74,6 +94,6 @@ pub(crate) fn stub_warning(layer: &str) -> CoreWarning {
 pub(crate) fn no_op_warning(action: &str) -> CoreWarning {
     CoreWarning {
         code: "no_op".into(),
-        message: format!("{action} accepted by the shell backend without side effects."),
+        message: format!("{action} 已返回结构化结果，当前没有执行文件、进程或系统副作用。"),
     }
 }

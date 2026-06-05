@@ -1,15 +1,4 @@
-//! Hexagonal backend skeleton.
-//!
-//! This module intentionally preserves architecture and IPC shape only.
-//! It does not restore backend business behavior by project decision.
-//!
-//! Layer: contracts::system
-//! Current role: DTO contract
-//! Future integration point: replace this stub through the declared port/use-case boundary.
-
-use crate::contracts::{
-    CoreSnapshotPayload, McpServerListPayload, SkillListPayload, UsageAnalyticsPayload,
-};
+use crate::contracts::{McpServerListPayload, SkillListPayload};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
@@ -88,7 +77,7 @@ impl Default for AutoSwitchStatusPayload {
             threshold_5h_percent: 80,
             threshold_weekly_percent: 80,
             service_state: AutoSwitchRuntimeState::Unknown,
-            service_label: "shell".into(),
+            service_label: "backend".into(),
         }
     }
 }
@@ -161,7 +150,7 @@ impl Default for ApiProxyTestPayload {
             code: "not_implemented".into(),
             reachable: false,
             status_code: None,
-            message: "Connectivity probing is not implemented in the shell backend.".into(),
+            message: "当前后端未执行连通性探测。".into(),
         }
     }
 }
@@ -258,6 +247,70 @@ pub(crate) struct SystemInfo {
     pub os_version: String,
     pub arch: String,
     pub hostname: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct CoreSnapshotPayload {
+    pub status: AppStatusPayload,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct DailyActivity {
+    pub date: String,
+    pub session_count: i32,
+    pub total_file_size: i64,
+    pub activity_level: i32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct TodaySummary {
+    pub session_count: i32,
+    pub total_file_size: i64,
+    pub active_minutes_estimate: i32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct SessionStats {
+    pub total_sessions: i32,
+    pub total_size_bytes: i64,
+    pub active_days: i32,
+    pub avg_sessions_per_active_day: f64,
+    pub most_active_date: Option<String>,
+    pub most_active_count: i32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct UsageAnalyticsPayload {
+    pub today: TodaySummary,
+    pub session_stats: SessionStats,
+    pub daily_activity: Vec<DailyActivity>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct QuotaHistoryPoint {
+    pub timestamp: i64,
+    pub account_key: String,
+    pub primary_used_percent: Option<f64>,
+    pub secondary_used_percent: Option<f64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct QuotaHistoryPayload {
+    pub points: Vec<QuotaHistoryPoint>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct HotspotStatePayload {
+    pub supported: bool,
+    pub enabled: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]

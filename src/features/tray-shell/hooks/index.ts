@@ -1,7 +1,41 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl; evidence/full-chain/raw/command-index.json; evidence/full-chain/raw/validation-summary.json
-Frontend module: features/tray-shell/hooks
-This file is a structured reconstruction scaffold, not recovered original source.
-*/
-export {};
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { api } from "@/lib/api";
+import { TrayShellCache } from "../cache";
+
+export function useTrayShellCacheController() {
+  return useModuleCacheController(TrayShellCache);
+}
+
+export function useTrayShellModule() {
+  const queryClient = useQueryClient();
+
+  const notificationQuery = useQuery({
+    queryKey: [...TrayShellCache.queryKeys.root, "notification-client"],
+    queryFn: () => api.getNotificationClientState(),
+    staleTime: 30_000,
+  });
+
+  const focusMutation = useMutation({
+    mutationFn: () => api.focusMainWindow(),
+    onSuccess: (payload) => {
+      TrayShellCache.writeAuthoritativePayload(queryClient, {
+        payload,
+        source: "mutation-payload",
+        sequence: Date.now(),
+        receivedAt: Date.now(),
+      });
+      void TrayShellCache.invalidateContractQueries(queryClient);
+    },
+  });
+
+  return {
+    notificationQuery,
+    focusAction: {
+      id: "focus-main-window",
+      labelKey: "trayShell.focusMainWindow",
+      run: () => focusMutation.mutateAsync(),
+      isPending: focusMutation.isPending,
+    },
+  };
+}

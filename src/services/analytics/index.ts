@@ -1,10 +1,4 @@
-/*
-Restoration tier: P1
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl
-Frontend module: services/analytics
-This file is a structured reconstruction scaffold, not recovered original source.
-*/
-import { invokeIpc } from "@/contracts/ipc";
+import { invokeIpc, type IpcEvidencePayload } from "@/contracts/ipc";
 import type {
   AnalyticsRange,
   ChangeAnalyticsPayload,
@@ -25,7 +19,7 @@ export const analyticsService = {
     }),
 
   loadSessionAnalytics: (range: AnalyticsRange = "week") =>
-    invokeIpc<CoreEnvelope<unknown>>("load_session_analytics", { range }),
+    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("load_session_analytics", { range }),
 
   loadTokenAnalytics: (range: AnalyticsRange = "week") =>
     invokeIpc<CoreEnvelope<TokenAnalyticsPayload>>("load_token_analytics", {

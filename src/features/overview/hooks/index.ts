@@ -1,7 +1,38 @@
-/*
-Restoration tier: P2
-Evidence: evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-contract-report.md; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json; evidence/full-chain/internal/frontend-map/windows-1.0.9-frontend-ccf-bootstrap/frontend/frontend-control-flow.jsonl; evidence/full-chain/raw/command-index.json; evidence/full-chain/raw/validation-summary.json
-Frontend module: features/overview/hooks
-This file is a structured reconstruction scaffold, not recovered original source.
-*/
-export {};
+import { useQuery } from "@tanstack/react-query";
+import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { api } from "@/lib/api";
+import { OverviewCache } from "../cache";
+
+export function useOverviewCacheController() {
+  return useModuleCacheController(OverviewCache);
+}
+
+export function useOverviewModule() {
+  const snapshotQuery = useQuery({
+    queryKey: [...OverviewCache.queryKeys.root, "snapshot"],
+    queryFn: () => api.loadSnapshot(true),
+    staleTime: 30_000,
+  });
+  const usageQuery = useQuery({
+    queryKey: [...OverviewCache.queryKeys.root, "usage"],
+    queryFn: () => api.loadUsageAnalytics(),
+    staleTime: 30_000,
+  });
+  const mcpQuery = useQuery({
+    queryKey: [...OverviewCache.queryKeys.root, "mcp"],
+    queryFn: () => api.loadMcpServers(),
+    staleTime: 30_000,
+  });
+  const skillsQuery = useQuery({
+    queryKey: [...OverviewCache.queryKeys.root, "skills"],
+    queryFn: () => api.loadInstalledSkills(),
+    staleTime: 30_000,
+  });
+
+  return {
+    snapshotQuery,
+    usageQuery,
+    mcpQuery,
+    skillsQuery,
+  };
+}
