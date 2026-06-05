@@ -1,0 +1,76 @@
+{
+  "schema": "restoration.cm.reverse.gate.v1",
+  "bundle": "windows-1.0.9-ui",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_at": "2026-06-05",
+  "sha12": "a5822387fa3f",
+  "sha256_binary": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "gate_tier": "strictImplementationUse",
+  "gate_accepted": false,
+  "implementation_use": false,
+  "dim6_missing": true,
+  "ceiling": "strictImplementationUse",
+  "platform": "windows-x64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "prewrite_gate_decision": "ALLOW",
+  "prewrite_gate_write_mode": "first",
+  "evidence_basis": "set_app_theme/gate-report.json <audit-session> 2026-06-04 + REVERSE-STATUS line 1484",
+  "note": "Bundle root gate-report. Per-leaf evidence lives in set_app_theme/ sub-directory. set_app_theme: owner@0x14091bc60 (0x6f4B=1780B, 57 BBs, 16 wind_states); Win IDA fully decompiled; dim1-5 closed; dim6 missing. 2026-06-05 <audit-session> ADDITIVE: theme_platform_diff leaf added (mac-vs-win cross-platform verdict; logic set_app_theme/logic/THEME-PLATFORM-DIFF-109-DISTILLED.md) — does not alter set_app_theme ceiling. 2026-06-05 <audit-session> ADDITIVE: theme_platform_diff genuine_unclosed (mac set_theme persist?) CLOSED as genuine_no_persist (mac command body 0x1000fa294 apply-only, no settings write) — moved to closed_findings; ceiling unchanged.",
+  "leaves": {
+    "set_app_theme": {
+      "owner_va": "0x14091bc60",
+      "owner_size_bytes": 1780,
+      "ipc_dispatcher_va": "0x1402663e0",
+      "gate": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "dim6": "missing",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "sub_gate_report": "set_app_theme/gate-report.json"
+    },
+    "theme_platform_diff": {
+      "type": "cross_platform_diff_verdict",
+      "session": "<audit-session>", "produced_at": "2026-06-05",
+      "model": "claude-opus-4-8",
+      "prewrite_gate_decision": "ALLOW",
+      "prewrite_gate_write_mode": "owner",
+      "logic_file": "set_app_theme/logic/THEME-PLATFORM-DIFF-109-DISTILLED.md",
+      "mac_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+      "win_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+      "verdict": "theme = shell-layer apply (set_app_theme, all-window, upstream Tauri, identical both platforms) + win program-layer persist (set_theme -> settings.json, byte-confirmed win owner 0x1408adf90); OS light/dark follow is macOS-ONLY (tao get_ns_theme@0x100babed8 + KVO AppleInterfaceThemeChangedNotification chain); WIN backend does NOT read OS theme (uxtheme entirely absent, no ShouldAppsUseLightTheme, no DwmGetColorizationColor); mica/tabbed = Win11-only window-material names but NOT wired to any DWM material API in 1.0.9 (theme command call tree cannot reach DWM cluster 0x140e5xxxx).",
+      "source_impl_guidance": "source archive win does NOT need to add OS-theme reading to match 1.0.9 (genuine win binary reads no OS light/dark; theme driven solely by frontend-supplied theme string). Adding ShouldAppsUseLightTheme on win would be NEW behavior, not upstream parity. mica/tabbed need no DWM material wiring to match 1.0.9 (inert named enum members upstream).",
+      "platform_diff_codes": {"SetTheme_msg_code_mac": 35, "SetTheme_msg_code_win": 71},
+      "genuine_unclosed": [],
+      "closed_findings": [
+        {
+          "item": "mac set_theme settings.json persistence",
+          "status": "genuine_no_persist",
+          "closed_session": "<audit-session>",
+          "closed_at": "2026-06-05",
+          "closed_machine": "<workstation>",
+          "closed_model": "claude-opus-4-8",
+          "mac_command_body_va": "0x1000fa294",
+          "mac_command_body_symbol": "tauri::ipc::InvokeResolver::respond_async_serialized_inner::{{closure}}",
+          "method": "xrefs_to AppHandle::set_theme@0x100347e08 -> single caller = inlined window-plugin command future body 0x1000fa294; full decompile shows callee set = from_command x2 -> AppHandle::set_theme (send SetTheme code 35) -> alloc 128B 'null' response -> InvokeResolver::return_result; NO save_config_text / settings_persist / fs write",
+          "capability_evidence_va": "0x100f379fc",
+          "verdict": "mac set_theme is pure upstream @tauri-apps window-plugin command (apply-only, no persist); win set_theme persist (owner 0x1408adf90 -> settings_persist_write_sys 0x140864220) is a win-only source archive program-layer addition; mac apply-only is genuine 1.0.9 behavior",
+          "fake_wall_taxonomy_exhausted": true,
+          "is_genuine_ceiling": false
+        }
+      ],
+      "gate": "consumerStartReady",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "note": "Caller-chain/platform-diff verdict; not a per-leaf full_leaf_100 closure of the win set_theme command (that lives in set_app_theme leaf for set_app_theme; set_theme win persist owner 0x1408adf90 referenced, not separately gated here)."
+    }
+  },
+  "cluster_gate_summary": {
+    "strictImplementationUse": 1,
+    "consumerStartReady": 1,
+    "readyToImplement": 0,
+    "gap_needs_reducer": 0,
+    "blocked": 0,
+    "note": "set_app_theme leaf: strictImplementationUse (dim6 not closed). theme_platform_diff leaf (<audit-session> 2026-06-05): consumerStartReady — cross-platform diff verdict, not a per-leaf full_leaf_100 closure. ceiling overall: strictImplementationUse."
+  }
+}

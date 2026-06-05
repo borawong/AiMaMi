@@ -1,0 +1,18 @@
+{
+  "schema": "restoration.cm.consumer.producer_ledger.v1",
+  "bundle": "<source-location>/audits/windows-1.0.9-accounts",
+  "authoritative_producer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "backfill_note": "backfilled by <workstation> 3-lane consolidation 2026-06-05; derived from task-plan.json; Windows accounts evidence independently confirmed"
+  },
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "sha12": "a5822387fa3f",
+  "platform": "windows-x64",
+  "produced_at": "2026-06-05",
+  "overall_gate": "readyToImplement",
+  "target_count": 9,
+  "readyToImplement_count": 0,
+  "strictImplementationUse_count": 9,
+  "note": "9 Windows accounts commands at strictImplementationUse; platform-independent absence proof for custom_instruction_state_entry_enabled"
+}

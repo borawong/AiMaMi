@@ -1,0 +1,78 @@
+{
+  "schema": "restoration.cm.reverse.gate_report.consumer_gate.v1",
+  "bundle": "windows-1.0.9-daemon-autoswitch",
+  "platform": "windows",
+  "version": "1.0.9",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "produced_at": "2026-06-02",
+  "ida_session": "win-1.0.9-daemon-autoswitch-20260602",
+  "overall_gate": "readyToImplement",
+  "readyToImplement": [
+    "run_daemon_once",
+    "load_bootstrap_state",
+    "start_auto_switch_pending_watcher",
+    "load_pending_auto_switch",
+    "confirm_pending_auto_switch",
+    "dismiss_pending_auto_switch",
+    "confirm_pending_auto_switch_and_restart_codex",
+    "configure_auto_switch",
+    "set_auto_switch"
+  ],
+  "strictImplementationUse": [],
+  "consumerStartReady": [],
+  "consumerStartReady_absent_windows": [
+    "note_usage_refresh_activity",
+    "schedule_full_runtime_refresh",
+    "start_usage_refresh_watcher",
+    "update_usage_refresh_schedule"
+  ],
+  "reverseRequiredQueues": {
+    "forbiddenUntilReady": [],
+    "forbiddenUntilStrictImplementationUse": [],
+    "consumerStartBlocked": []
+  },
+  "platformPolicy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  },
+  "readyToImplement_count": 9,
+  "strict_count": 0,
+  "total_commands": 13,
+  "dim_summary": {
+    "dim1_frontend_ccf": "Accepted (9 commands) — macos 1.0.9 ipc-contracts.jsonl tauriInvokeWrapper HIT for 8 IPC commands; native_bootstrap_substitute accepted for start_auto_switch_pending_watcher per GATE-SPEC; 4 absent = N/A",
+    "dim2_backend_owner": "Accepted (9 commands) — fresh IDA HexRays decompile SHA a5822387fa3f all owners confirmed; 4 absent = N/A",
+    "dim3_call_tree": "Accepted (9 commands) — depth 3-5, all terminal at fs/sqlite/state-write/process/sync/CreateThread/tauri_ipc_resolve leaves; persist_write_sys for set_auto_switch(0x1405565F0) and configure_auto_switch(0x14055C740) confirmed via callees+xrefs; 4 absent = N/A",
+    "dim4_interface_dto_error_sideeffect": "Accepted (9 commands) — DTO schemas, string refs, error types, side-effects fully documented; IDA-confirmed: currentAccountKey(0x141286040), candidateAccountKey(0x141286051), dismissedAt(0x141286064), threshold5hPercent(0x1412692CA), thresholdWeeklyPercent(0x1412692DC), enabled(0x14126925B); RestartResult discriminant and 8s TerminateProcess fallback confirmed; 4 absent = N/A",
+    "dim5_platform_gate": "Accepted (all 13) — Windows x64 same-platform evidence; 4 watcher commands confirmed ABSENT; TerminateProcess vs macOS SIGTERM platform delta confirmed",
+    "dim6_test_acceptance": "Accepted (9 commands) — ACCEPTANCE-MAPPING-109.md per-command assertions AC-RDO-1..5, AC-LBS-1..4, AC-SAPW-1..4, AC-CAS-1..5, AC-SAS-1..4, AC-LPA-1..4, AC-CPA-1..4, AC-DPA-1..4, AC-CPAR-1..5 bound to IDA-confirmed real DTO fields/side-effect bytes/error variants"
+  },
+  "dim6_resolution": {
+    "previous_status": "empty_per_task_spec (not gate-blocking per prior task spec)",
+    "current_status": "Accepted — acceptance assertions written per GATE-SPEC §Gate3 and full_leaf_100_definition_v2 dim6; all bound to IDA-confirmed real DTO/side-effect/error evidence",
+    "mapping_file": "logic/ACCEPTANCE-MAPPING-109.md",
+    "ida_confirmed_addresses": {
+      "set_auto_switch_persist_write_sys": "0x1405565F0",
+      "configure_auto_switch_persist_write_sys": "0x14055C740",
+      "load_pending_auto_switch_core_impl": "0x140564060",
+      "confirm_promote_leaf": "0x140563ED0",
+      "restart_codex_dispatcher": "0x140388010",
+      "daemon_schtasks_register": "0x1403FB450",
+      "json_field_currentAccountKey": "0x141286040",
+      "json_field_candidateAccountKey": "0x141286051",
+      "json_field_dismissedAt": "0x141286064"
+    }
+  },
+  "accepted_unknowns_resolved": {
+    "RestartResult_exact_payload": {
+      "previous": "accepted_unknown (sub_140388010 not fully decompiled)",
+      "resolution": "Resolved via fresh IDA decompile — sub_140388010 is 5-outcome dispatcher; discriminant at Dst[0]: 4=success-quit, 3=error-check-update, 2=error-restart-fail; inner sub_140EAD770=quit-signal, sub_140EB0110=wait+TerminateProcess-8s-fallback, sub_140EB2790=OTA-check, sub_140EB3580=OTA-execute",
+      "status": "resolved_via_IDA"
+    },
+    "dismiss_core_read_path": {
+      "note": "dismiss_pending_auto_switch_core_impl(0x1400AA290) calls load_pending_auto_switch_core_impl(0x140564060) to read old value before clearing — confirmed via IDA callees + xrefs",
+      "status": "new_discovery_IDA"
+    }
+  },
+  "not_gate_promotion_annotation": "IDB inline comments written at all 9 owner addrs with range/SHA/session/not-gate-promotion per pipeline rules",
+  "daemon_trigger_mechanism": "schtasks /Create /SC MINUTE /MO 5 /TN CodexMateAutoSwitch /TR <exe_path> /F (via daemon_schtasks_register @ 0x1403FB450, called from run_daemon_once_core_impl -> sub_14056B7F0)"
+}

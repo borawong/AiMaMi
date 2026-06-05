@@ -1,0 +1,47 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "bundle_path": "raw/aimami/1.0.9/windows/relay/set_relay_provider_network",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "3302173be228f51db7ffe68d97ba2dd530466183f712a40baea7843c4df1f55c",
+      "size": 6235
+    },
+    {
+      "path": "README.md",
+      "sha256": "2b3f2b6098abd4f66d0ec4b069edbedff8d05e0438000f9acded347d0e43c0d5",
+      "size": 2463
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "26678837a88e30fb4d961aa1800cbf9c0ecbca8f97138977587f3beac10b385d",
+      "size": 1184
+    },
+    {
+      "path": "call-trees/codexmate_lib::commands::relay::set_relay_provider_network.jsonl",
+      "sha256": "fcbbff4d6e2571d79c62e92388a95e77f6106b0db9ebfc26fbb81a8c74523733",
+      "size": 3061
+    },
+    {
+      "path": "ida/pseudocode-manifest.jsonl",
+      "sha256": "24fd879f8c6281c6d61d728da4f72af1c4652c2323e4e9ff3e27a90afce0f78e",
+      "size": 936
+    },
+    {
+      "path": "ida/pseudocode/0001_set_relay_provider_network_owner_sys_h281_3a0.c",
+      "sha256": "cd8451bff6d0ee6f4d7fe6053a3f70d5a0d6e205cd326e65cdb7655d76712e34",
+      "size": 2705
+    },
+    {
+      "path": "ida/pseudocode/0002_set_relay_provider_network_persistence_h149ad0.c",
+      "sha256": "d10bb9198ce22d5eb733e1f4bc170144206f0eb37c49697b86b2820f8ee335fc",
+      "size": 2066
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "86387dc6f688cd266f8548c3e5287a4ed9d3ac845e61a8e0ba92d5715b4aa6fc",
+      "size": 2123
+    }
+  ],
+  "note": "manifest.json and file-manifest.json self-hashes excluded per spec"
+}

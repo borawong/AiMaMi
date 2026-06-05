@@ -1,0 +1,13 @@
+{"depth":1,"addr":"0x140272E80","name":"load_bootstrap_state_owner_sys","role":"command_owner","terminated_reason":null}
+{"depth":2,"addr":"0x1400DA7C0","name":"sub_1400DA7C0","role":"repo_state_check","terminated_reason":"implementation_leaf: repo lock check"}
+{"depth":2,"addr":"0x1411CE640","name":"sub_1411CE640","role":"param_deserializer","terminated_reason":"implementation_leaf: IPC param extraction (no args)"}
+{"depth":2,"addr":"0x140451160","name":"load_bootstrap_state_core_serialize","role":"core_impl+serialize","terminated_reason":null}
+{"depth":3,"addr":"0x14041ACD0","name":"sub_14041ACD0","role":"json_key_write: schemaVersion","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x140418140","name":"sub_140418140","role":"json_str_write: success/runOnce/autoSwitchEnabled/switchedAccountKey/pendingSwitchAccountKey","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x140420FB0","name":"sub_140420FB0","role":"json_value_write: code/message/data fields","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x140419B00","name":"sub_140419B00","role":"json_date_write: executedAt","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x1404185E0","name":"sub_1404185E0","role":"json_key_write: activeAccountKey/switchedAccountKey/pendingSwitchAccountKey","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x140465420","name":"sub_465420","role":"optional_field_serialize: pendingSwitchAccountKey","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x141204520","name":"sub_141204520","role":"err_construction","terminated_reason":"implementation_leaf: CoreError build"}
+{"depth":2,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","role":"ipc_resolve","terminated_reason":"implementation_leaf: IPC response send"}
+{"depth":2,"addr":"0x140298200","name":"sub_140298200","role":"context_drop","terminated_reason":"implementation_leaf: request context cleanup"}

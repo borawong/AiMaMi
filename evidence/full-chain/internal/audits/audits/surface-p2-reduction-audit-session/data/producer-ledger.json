@@ -1,0 +1,171 @@
+{
+  "schema": "restoration.cm.producer-ledger.v1",
+  "produced_at": "2026-06-04T18:00:00+08:00",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "version": "1.0.9",
+  "reduction_type": "surface-p2-batch-归约",
+  "batch_size": 24,
+  "batch_breakdown": {
+    "macos_arm64": 23,
+    "windows_x64": 1
+  },
+  "items": [
+    {
+      "name": "relay::translator::responses_to_chat_request",
+      "platform": "macos-arm64",
+      "addr": "0x10062e41c",
+      "gate_tier": "strictImplementationUse",
+      "owner_gate": "ALLOW/first-write",
+      "closed": true,
+      "big_block_decomposed": false,
+      "genuine_ceiling": false,
+      "evidence_path": "intermediate/aimami/1.0.9/macos/relay-core/relay_translator/responses_to_chat_request/DISTILLED-<audit-session>",
+      "index_key": "aimami/1.0.9/macos/relay-core/relay_translator/responses_to_chat_request/deep-recovery-wf-surface-p2-internal"
+    },
+    {
+      "name": "codexmate_lib::core::relay::translator::responses_to_anthropic_request",
+      "platform": "macos-arm64",
+      "addr": "0x10063d538",
+      "gate_tier": "readyToImplement",
+      "owner_gate": "ALLOW/owner",
+      "closed": true,
+      "big_block_decomposed": true,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/audits/macos-1.0.9-relay/logic/RELAY-TRANSLATOR-DEEP-INTERNAL-109.md"
+    },
+    {
+      "name": "AnthropicDirectToResponsesStream::handle_event",
+      "platform": "macos-arm64",
+      "addr": "0x100668a08",
+      "gate_tier": "readyToImplement",
+      "owner_gate": "ALLOW/same-machine-bundle-extension",
+      "closed": true,
+      "big_block_decomposed": true,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/audits/macos-1.0.9-relay/logic/RELAY-STREAM-HANDLE-EVENT-109.md",
+      "notes": "VA CORRECTED from 0x10066d5a8 (emit_completed) to 0x100668a08 via func_query"
+    },
+    {
+      "name": "ChatToResponsesStream::handle_chunk",
+      "platform": "macos-arm64",
+      "addr": "0x1006539ec",
+      "gate_tier": "readyToImplement",
+      "owner_gate": "ALLOW/first-write",
+      "closed": true,
+      "big_block_decomposed": false,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/aimami/1.0.9/macos-arm64/relay-translator-stream/AI.md"
+    },
+    {
+      "name": "OpenAiToAnthropicStream::handle_chunk",
+      "platform": "macos-arm64",
+      "addr": "0x100663f60",
+      "gate_tier": "readyToImplement",
+      "owner_gate": "ALLOW/first-write",
+      "closed": true,
+      "big_block_decomposed": false,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/<source-location>/1.0.9/macos-arm64/relay-translator-stream/AI.md"
+    },
+    {
+      "name": "relay::codex_diagnostic::run_diagnostics",
+      "platform": "macos-arm64",
+      "addr": "0x10054aa94",
+      "gate_tier": "readyToImplement",
+      "owner_gate": "ALLOW/first-write",
+      "closed": true,
+      "big_block_decomposed": true,
+      "genuine_ceiling": false,
+      "evidence_path": "raw/aimami/1.0.9/macos/relay-core/relay_diagnostic/run_diagnostics/evidence.md"
+    },
+    {
+      "name": "relay::codex_diagnostic::fix_issue",
+      "platform": "macos-arm64",
+      "addr": "0x100560f44",
+      "gate_tier": "readyToImplement",
+      "owner_gate": "ALLOW/first-write",
+      "closed": true,
+      "big_block_decomposed": true,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/aimami/1.0.9/macos-arm64/relay_codex_diagnostic/fix_issue-DISTILLED.md"
+    },
+    {
+      "name": "relay::codex_writer::apply_codex_state",
+      "platform": "darwin-arm64",
+      "addr": "0x1004aef60",
+      "gate_tier": "strictImplementationUse",
+      "owner_gate": "ALLOW/owner",
+      "closed": true,
+      "big_block_decomposed": false,
+      "genuine_ceiling": false,
+      "evidence_path": "intermediate/aimami/1.0.9/macos/relay-core/relay_codex_writer/apply_codex_state/DISTILLED-<audit-session>"
+    },
+    {
+      "name": "relay::codex_writer::strip_all_managed_blocks",
+      "platform": "macos-arm64",
+      "addr": "0x1004b11dc",
+      "gate_tier": "strictImplementationUse",
+      "owner_gate": "ALLOW/first",
+      "closed": true,
+      "big_block_decomposed": false,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/aimami/1.0.9/macos-arm64/relay-codex-writer/strip_all_managed_blocks-DISTILLED.md"
+    },
+    {
+      "name": "rollback_threads_for_router",
+      "platform": "macos-arm64",
+      "addr": "0x10056837c",
+      "gate_tier": "strictImplementationUse",
+      "owner_gate": "ALLOW/first-write",
+      "closed": true,
+      "big_block_decomposed": false,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/<source-location>/1.0.9/macos-arm64/relay-codex-thread-visibility/AI.md"
+    },
+    {
+      "name": "migrate_threads_for_router_with_scope",
+      "platform": "macos-arm64",
+      "addr": "0x10056ea58",
+      "gate_tier": "strictImplementationUse",
+      "owner_gate": "ALLOW/first-write",
+      "closed": true,
+      "big_block_decomposed": true,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/<source-location>/1.0.9/macos-arm64/relay-migrate-threads-with-scope/AI.md"
+    },
+    {
+      "name": "relay::manager::RelayManager::ensure_proxy_started",
+      "platform": "macos-arm64",
+      "addr": "0x1001c91c0",
+      "gate_tier": "strictImplementationUse",
+      "owner_gate": "ALLOW/first-write",
+      "closed": true,
+      "big_block_decomposed": false,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/<source-location>/1.0.9/macos-arm64/relay-manager-ensure-proxy-started/evidence.md"
+    },
+    {
+      "name": "core::api_client::fetch_usage_snapshot",
+      "platform": "macos-arm64",
+      "addr": "0x1005441b0",
+      "gate_tier": "strictImplementationUse",
+      "owner_gate": "BLOCK",
+      "closed": false,
+      "big_block_decomposed": false,
+      "genuine_ceiling": false,
+      "local_outtake": "<source-location>/aimami/1.0.9/reviews/<workstation>/AI.md",
+      "notes": "owner_gate BLOCK — target path not confined under share root. local-outtake written (authoritative=false). Canonical bundle requires correct source archive-rooted target. Evidence partially truncated in task data (behavior field cut off at 'Wri...')"
+    },
+    {
+      "name": "diagnose_codex_router",
+      "platform": "windows-x64",
+      "addr": "0x14026C800",
+      "gate_tier": "strictImplementationUse",
+      "owner_gate": "ALLOW/first",
+      "closed": true,
+      "big_block_decomposed": false,
+      "genuine_ceiling": false,
+      "evidence_path": "<source-location>/aimami/1.0.9/windows-x64/diagnose_codex_router/AI.md"
+    }
+  ]
+}

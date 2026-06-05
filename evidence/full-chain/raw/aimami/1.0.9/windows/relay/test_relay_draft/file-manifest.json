@@ -1,0 +1,32 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "test_relay_draft",
+  "platform": "windows-x64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "produced_at": "2026-06-02",
+  "self_hash_excluded": true,
+  "files": [
+    {
+      "path": "evidence.md",
+      "size_bytes": 4288,
+      "sha256": "98f817a28702f37e89dfc04e8aab494e8f606aded5454fdfe3ae420719309f83"
+    },
+    {
+      "path": "manifest.json",
+      "size_bytes": 954,
+      "sha256": "16fffdbffa15d7852d8dd9248132552eb2fadb029361805036466f8703f1bc"
+    },
+    {
+      "path": "call-trees/test_relay_draft.jsonl",
+      "size_bytes": 2595,
+      "sha256": "c6a387007cae8718275375becd4ede3fd93777081badc62076504cb0dd5db577"
+    },
+    {
+      "path": "ida/pseudocode/health_check.c",
+      "size_bytes": 3648,
+      "sha256": "a075a677eb59f2ed40be8058d1e8034e5fd76e151bf4d71fc4172150f1a4126b"
+    }
+  ]
+}

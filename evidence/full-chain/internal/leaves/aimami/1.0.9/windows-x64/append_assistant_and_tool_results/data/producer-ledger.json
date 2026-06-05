@@ -1,0 +1,19 @@
+{
+  "target": "append_assistant_and_tool_results",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "started_at": "2026-06-05",
+  "completed_at": "2026-06-05",
+  "status": "complete",
+  "dims_closed": ["dim2", "dim3", "dim4", "dim5"],
+  "dim1_status": "not_applicable",
+  "gate_tier": "strictImplementationUse",
+  "addr_verified": "0x1402395c0",
+  "block_decomposed": true,
+  "total_basic_blocks": 824,
+  "fake_wall_taxonomy_exhausted": true,
+  "genuine_ceiling": false,
+  "accepted_unknown": false,
+  "notes": "Full sync body. HexRays produced complete 24KB decompile. 824 basic blocks listed. All 8 fake-wall taxonomy entries cleared. Caller sub_140248910 confirmed. 38 callees enumerated. DTO/error/side-effect confirmed."
+}

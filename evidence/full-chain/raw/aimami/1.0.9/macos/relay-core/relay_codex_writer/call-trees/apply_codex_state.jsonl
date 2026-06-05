@@ -1,0 +1,27 @@
+{"from": "apply_codex_state@0x1004aef60", "to": "CodexPaths::ensure_directories@0x1005267f8", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "apply_codex_state@0x1004aef60", "to": "fs::metadata@0x100d322dc", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "apply_codex_state@0x1004aef60", "to": "fs::read_to_string::inner@0x100d2c1f4", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "apply_codex_state@0x1004aef60", "to": "strip_all_managed_blocks@0x1004b11dc", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "apply_codex_state@0x1004aef60", "to": "backup_user_router_top_level_overrides@0x1004b4ec8", "edge_type": "call_conditional", "depth": 1, "terminated_reason": null, "condition": "CodexPaths[64] bit0 == 0"}
+{"from": "apply_codex_state@0x1004aef60", "to": "top_level_assignment_key@0x1004b2f2c", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "apply_codex_state@0x1004aef60", "to": "read_top_level_string_value@0x1004b46d0", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "apply_codex_state@0x1004aef60", "to": "strip_stale_router_top_level_model@0x1004b4970", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "apply_codex_state@0x1004aef60", "to": "render_bottom_block@0x100d83eb0", "edge_type": "call_conditional", "depth": 1, "terminated_reason": null, "condition": "providers list non-nil"}
+{"from": "apply_codex_state@0x1004aef60", "to": "render_router_top_block@0x100d8550c", "edge_type": "call_conditional", "depth": 1, "terminated_reason": null, "condition": "router_top_block non-nil"}
+{"from": "apply_codex_state@0x1004aef60", "to": "atomic_write::write_atomic@0x1006729f8", "edge_type": "call", "depth": 1, "terminated_reason": "persistence_commit"}
+{"from": "apply_codex_state@0x1004aef60", "to": "fs::remove_file@0x10038f23c", "edge_type": "call_conditional", "depth": 1, "terminated_reason": "persistence_commit", "condition": "backup_written previously"}
+{"from": "strip_all_managed_blocks@0x1004b11dc", "to": "split_toml_section_header@0x1004b3998", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "strip_all_managed_blocks@0x1004b11dc", "to": "is_aimami_managed_section@0x1004b38ac", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "strip_all_managed_blocks@0x1004b11dc", "to": "HashMap::insert@0x1004d92fc", "edge_type": "call", "depth": 2, "terminated_reason": "response_serialize"}
+{"from": "render_bottom_block@0x100d83eb0", "to": "escape_toml@0x1004ae990", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "render_bottom_block@0x100d83eb0", "to": "format_inner@0x100d60b34", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "render_router_top_block@0x100d8550c", "to": "escape_toml@0x1004ae990", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "render_router_top_block@0x100d8550c", "to": "String::from_utf8_lossy@0x100d623e8", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "backup_user_router_top_level_overrides@0x1004b4ec8", "to": "top_level_assignment_lines@0x1004b40dc", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "backup_user_router_top_level_overrides@0x1004b4ec8", "to": "extract_toml_string_value@0x1004b3198", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "backup_user_router_top_level_overrides@0x1004b4ec8", "to": "atomic_write::write_atomic@0x1006729f8", "edge_type": "call", "depth": 2, "terminated_reason": "persistence_commit"}
+{"from": "top_level_assignment_lines@0x1004b40dc", "to": "top_level_assignment_key@0x1004b2f2c", "edge_type": "call", "depth": 3, "terminated_reason": null}
+{"from": "read_top_level_string_value@0x1004b46d0", "to": "top_level_assignment_lines@0x1004b40dc", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "read_top_level_string_value@0x1004b46d0", "to": "extract_toml_string_value@0x1004b3198", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "strip_stale_router_top_level_model@0x1004b4970", "to": "top_level_assignment_key@0x1004b2f2c", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "strip_stale_router_top_level_model@0x1004b4970", "to": "extract_toml_string_value@0x1004b3198", "edge_type": "call", "depth": 2, "terminated_reason": null}

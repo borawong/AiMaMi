@@ -1,0 +1,52 @@
+{
+  "schema": "raw-evidence.raw.validation_result.v1",
+  "bundle_key": "aimami/1.0.9/macos/accounts/switch_account_and_restart_codex",
+  "status": "PASS_static_ida_raw_leaf_no_gate_promotion",
+  "checks": {
+    "source_binary_sot_sha_match": "PASS",
+    "ida_server_health": "PASS",
+    "threading_model_analyzed_first": "PASS",
+    "frontend_wrapper_and_arg_keys_present": "PASS",
+    "backend_owner_decompiled": "PASS",
+    "xrefs_to_owner_present": "PASS",
+    "helper_leaf_boundaries_recorded": "PASS",
+    "interface_error_side_effect_recorded": "PASS",
+    "idb_comments_written": "PASS",
+    "idb_saved": true,
+    "backend_route_ida_only": "PASS",
+    "binary_sot_route_only": "PASS",
+    "no_backend_c_or_callgraph_dump_required": "PASS",
+    "gate_no_promotion": "PASS",
+    "product_code_untouched": "PASS",
+    "json_parse": true,
+    "raw_leaf_template_7_files": true,
+    "source_binary_under_raw_binary": true,
+    "macos_only": true,
+    "no_gate_promotion": true
+  },
+  "gate": {
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "moduleExitAllowed": false
+  },
+  "remaining_blockers": [
+    "live Tauri IPC request/response/error bytes",
+    "durable registry/auth/quota side-effect fixtures",
+    "rollback and recovery before/after bytes",
+    "restart observation fixture",
+    "executed acceptance mapping",
+    "non-macOS closure outside this macOS leaf"
+  ],
+  "currentAccountsReducer": "logic/ACCOUNTS-IDB-WRITEBACK-CURRENT-SYNC-109.md",
+  "platformBoundary": "macos_only",
+  "strictImplementationUse": false,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false,
+  "updated_at": "2026-06-02T23:12:00+08:00"
+}

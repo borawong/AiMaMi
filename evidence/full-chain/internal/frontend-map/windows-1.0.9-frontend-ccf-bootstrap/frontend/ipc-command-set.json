@@ -1,0 +1,4203 @@
+{
+  "schema": "restoration.cm.reverse.frontend_ipc_command_set.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "compared": false,
+  "comparison": {
+    "baseline": null,
+    "reason": "No comparison input used; old 1.0.8 physical directories and win-restoration.cm-tmp were explicitly forbidden for this execution."
+  },
+  "commands_count": 127,
+  "ipc_rows_count": 128,
+  "commands_added": null,
+  "commands_same": null,
+  "commands": [
+    {
+      "command": "activate_relay_provider",
+      "rowCount": 1,
+      "wrappers": [
+        "activate"
+      ],
+      "argKeys": [
+        "ide",
+        "providerId"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1130,
+          "wrapper": "activate",
+          "callee": "r",
+          "argKeys": [
+            "providerId",
+            "ide"
+          ],
+          "source": "minified",
+          "snippet": "y mock: unsupported command ${e}`)}}const i={loadState:()=>r(\"load_relay_state\"),upsert:e=>r(\"upsert_relay_provider\",{input:e}),delete:e=>r(\"delete_relay_provider\",{providerId:e}),activate:(e,o)=>r(\"activate_relay_provider\",{providerId:e,ide:o}),deactivate:(e,o)=>r(\"deactivate_relay_provider\",{providerId:e,ide:o}),setNetwork:(e,o)=>r(\"set_relay_provider_network\",{providerId:e,network:o}),test:e=>r(\"t"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "apply_custom_instruction",
+      "rowCount": 1,
+      "wrappers": [
+        "applyCustomInstruction"
+      ],
+      "argKeys": [
+        "content",
+        "source",
+        "templateCode",
+        "templateTitle"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30090,
+          "wrapper": "applyCustomInstruction",
+          "callee": "G",
+          "argKeys": [
+            "content",
+            "templateCode",
+            "templateTitle",
+            "source"
+          ],
+          "source": "minified",
+          "snippet": "e_shortcut\",{modeId:t}),requestAccessibilityPermission:()=>G(\"request_accessibility_permission\"),previewCustomInstructionApply:t=>G(\"preview_custom_instruction_apply\",{content:t}),applyCustomInstruction:t=>G(\"apply_custom_instruction\",{content:t.content,templateCode:t.templateCode,templateTitle:t.templateTitle,source:t.source}),clearCustomInstructionBlock:()=>G(\"clear_custom_instruction_block\"),rollbackCustomIn"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "begin_add_account_attach_monitor",
+      "rowCount": 1,
+      "wrappers": [
+        "beginAddAccountAttachMonitor"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25465,
+          "wrapper": "beginAddAccountAttachMonitor",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "piProxyConfig:(t,e)=>G(\"test_api_proxy_config\",{mode:t,url:e}),detectApiProxyConfig:()=>G(\"detect_api_proxy_config\"),checkUpdateInstallability:()=>G(\"check_update_installability\"),beginAddAccountAttachMonitor:()=>G(\"begin_add_account_attach_monitor\"),runDaemonOnce:()=>G(\"run_daemon_once\"),diagnose:()=>G(\"diagnose\"),loadSessions:()=>G(\"load_sessions\"),deleteSessions:t=>G(\"delete_sessions\",{ids:t}),loadCustomInstructionState:()"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "cancel_voice_trigger_capture",
+      "rowCount": 1,
+      "wrappers": [
+        "cancelVoiceTriggerCapture"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 28430,
+          "wrapper": "cancelVoiceTriggerCapture",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "s:()=>G(\"request_voice_permissions\"),setVoiceGlobalShortcut:t=>G(\"set_voice_global_shortcut\",{shortcut:t??null}),captureVoiceTriggerKey:t=>G(\"capture_voice_trigger_key\",{style:t}),cancelVoiceTriggerCapture:()=>G(\"cancel_voice_trigger_capture\"),setVoiceTriggerListenerSuppressed:t=>G(\"set_voice_trigger_listener_suppressed\",{suppressed:t}),setVoiceTriggerKey:t=>G(\"set_voice_trigger_key\",{keyCode:t.keyCode,keyLabel:t.keyLa"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "capture_voice_trigger_key",
+      "rowCount": 1,
+      "wrappers": [
+        "captureVoiceTriggerKey"
+      ],
+      "argKeys": [
+        "style"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 28363,
+          "wrapper": "captureVoiceTriggerKey",
+          "callee": "G",
+          "argKeys": [
+            "style"
+          ],
+          "source": "minified",
+          "snippet": "imeStatus:()=>G(\"load_voice_runtime_status\"),requestVoicePermissions:()=>G(\"request_voice_permissions\"),setVoiceGlobalShortcut:t=>G(\"set_voice_global_shortcut\",{shortcut:t??null}),captureVoiceTriggerKey:t=>G(\"capture_voice_trigger_key\",{style:t}),cancelVoiceTriggerCapture:()=>G(\"cancel_voice_trigger_capture\"),setVoiceTriggerListenerSuppressed:t=>G(\"set_voice_trigger_listener_suppressed\",{suppressed:t}),setVoiceT"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "check_update_installability",
+      "rowCount": 1,
+      "wrappers": [
+        "checkUpdateInstallability"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25402,
+          "wrapper": "checkUpdateInstallability",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "hInterval:t=>G(\"set_usage_refresh_interval\",{interval:t}),testApiProxyConfig:(t,e)=>G(\"test_api_proxy_config\",{mode:t,url:e}),detectApiProxyConfig:()=>G(\"detect_api_proxy_config\"),checkUpdateInstallability:()=>G(\"check_update_installability\"),beginAddAccountAttachMonitor:()=>G(\"begin_add_account_attach_monitor\"),runDaemonOnce:()=>G(\"run_daemon_once\"),diagnose:()=>G(\"diagnose\"),loadSessions:()=>G(\"load_sessions\"),delet"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "clean",
+      "rowCount": 1,
+      "wrappers": [
+        "clean"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24304,
+          "wrapper": "clean",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": ",{accountKey:t}),switchAccountAndRestartCodex:t=>G(\"switch_account_and_restart_codex\",{accountKey:t}),removeAccounts:t=>G(\"remove_accounts\",{accountKeys:t}),logout:()=>G(\"logout\"),clean:()=>G(\"clean\"),rebuildRegistry:()=>G(\"rebuild_registry\"),forceKillCodex:()=>G(\"force_kill_codex\"),resetCodexConfig:()=>G(\"reset_codex_config\"),getImageCompat:()=>G(\"get_image_compat\"),setImageC"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "clear_custom_instruction_block",
+      "rowCount": 1,
+      "wrappers": [
+        "clearCustomInstructionBlock"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30240,
+          "wrapper": "clearCustomInstructionBlock",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "struction_apply\",{content:t}),applyCustomInstruction:t=>G(\"apply_custom_instruction\",{content:t.content,templateCode:t.templateCode,templateTitle:t.templateTitle,source:t.source}),clearCustomInstructionBlock:()=>G(\"clear_custom_instruction_block\"),rollbackCustomInstruction:t=>G(\"rollback_custom_instruction\",{historyId:t}),loadMcpServers:()=>G(\"load_mcp_servers\"),upsertMcpServer:t=>G(\"upsert_mcp_server\",{...t,args:t.args??["
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "configure_auto_switch",
+      "rowCount": 1,
+      "wrappers": [
+        "configureAutoSwitch"
+      ],
+      "argKeys": [
+        "threshold5hPercent",
+        "thresholdWeeklyPercent"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24980,
+          "wrapper": "configureAutoSwitch",
+          "callee": "G",
+          "argKeys": [
+            "threshold5hPercent",
+            "thresholdWeeklyPercent"
+          ],
+          "source": "minified",
+          "snippet": "filePath:t}),importAccountsFromFile:(t,e,o)=>G(\"import_accounts_from_file\",{filePath:t,overwriteExisting:e,selectedKeys:o??null}),setAutoSwitch:t=>G(\"set_auto_switch\",{enabled:t}),configureAutoSwitch:(t,e)=>G(\"configure_auto_switch\",{threshold5hPercent:t,thresholdWeeklyPercent:e}),setApiProxyConfig:(t,e)=>G(\"set_api_proxy_config\",{mode:t,url:e}),getUsageRefreshInterval:()=>G(\"get_usage_refresh_interval\"),setU"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "confirm_pending_auto_switch",
+      "rowCount": 1,
+      "wrappers": [
+        "confirmPendingAutoSwitch"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 32068,
+          "wrapper": "confirmPendingAutoSwitch",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "ystem_info\"),loadBootstrapState:()=>G(\"load_bootstrap_state\"),loadPendingAutoSwitch:()=>G(\"load_pending_auto_switch\"),dismissPendingAutoSwitch:()=>G(\"dismiss_pending_auto_switch\"),confirmPendingAutoSwitch:()=>G(\"confirm_pending_auto_switch\"),confirmPendingAutoSwitchAndRestartCodex:()=>G(\"confirm_pending_auto_switch_and_restart_codex\"),listPlugins:()=>G(\"list_plugins\"),togglePlugin:(t,e)=>G(\"toggle_plugin\",{id:t,enabl"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "confirm_pending_auto_switch_and_restart_codex",
+      "rowCount": 1,
+      "wrappers": [
+        "confirmPendingAutoSwitchAndRestartCodex"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 32130,
+          "wrapper": "confirmPendingAutoSwitchAndRestartCodex",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "loadPendingAutoSwitch:()=>G(\"load_pending_auto_switch\"),dismissPendingAutoSwitch:()=>G(\"dismiss_pending_auto_switch\"),confirmPendingAutoSwitch:()=>G(\"confirm_pending_auto_switch\"),confirmPendingAutoSwitchAndRestartCodex:()=>G(\"confirm_pending_auto_switch_and_restart_codex\"),listPlugins:()=>G(\"list_plugins\"),togglePlugin:(t,e)=>G(\"toggle_plugin\",{id:t,enabled:e}),getPluginConfig:t=>G(\"get_plugin_config\",{id:t}),updatePluginConfig:(t,e)=>G(\"update_plu"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "deactivate_relay_provider",
+      "rowCount": 1,
+      "wrappers": [
+        "deactivate"
+      ],
+      "argKeys": [
+        "ide",
+        "providerId"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1196,
+          "wrapper": "deactivate",
+          "callee": "r",
+          "argKeys": [
+            "providerId",
+            "ide"
+          ],
+          "source": "minified",
+          "snippet": "_relay_state\"),upsert:e=>r(\"upsert_relay_provider\",{input:e}),delete:e=>r(\"delete_relay_provider\",{providerId:e}),activate:(e,o)=>r(\"activate_relay_provider\",{providerId:e,ide:o}),deactivate:(e,o)=>r(\"deactivate_relay_provider\",{providerId:e,ide:o}),setNetwork:(e,o)=>r(\"set_relay_provider_network\",{providerId:e,network:o}),test:e=>r(\"test_relay_provider\",{providerId:e}),testDraft:e=>r(\"test_relay_draft\","
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "delete_relay_provider",
+      "rowCount": 1,
+      "wrappers": [
+        "delete"
+      ],
+      "argKeys": [
+        "providerId"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1078,
+          "wrapper": "delete",
+          "callee": "r",
+          "argKeys": [
+            "providerId"
+          ],
+          "source": "minified",
+          "snippet": "odexLaunchError:null}};default:throw new Error(`relay mock: unsupported command ${e}`)}}const i={loadState:()=>r(\"load_relay_state\"),upsert:e=>r(\"upsert_relay_provider\",{input:e}),delete:e=>r(\"delete_relay_provider\",{providerId:e}),activate:(e,o)=>r(\"activate_relay_provider\",{providerId:e,ide:o}),deactivate:(e,o)=>r(\"deactivate_relay_provider\",{providerId:e,ide:o}),setNetwork:(e,o)=>r(\"set_re"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "delete_sessions",
+      "rowCount": 1,
+      "wrappers": [
+        "deleteSessions"
+      ],
+      "argKeys": [
+        "ids"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25638,
+          "wrapper": "deleteSessions",
+          "callee": "G",
+          "argKeys": [
+            "ids"
+          ],
+          "source": "minified",
+          "snippet": "lity\"),beginAddAccountAttachMonitor:()=>G(\"begin_add_account_attach_monitor\"),runDaemonOnce:()=>G(\"run_daemon_once\"),diagnose:()=>G(\"diagnose\"),loadSessions:()=>G(\"load_sessions\"),deleteSessions:t=>G(\"delete_sessions\",{ids:t}),loadCustomInstructionState:()=>G(\"load_custom_instruction_state\"),loadVoiceWorkspace:()=>G(\"load_voice_workspace\"),upsertVoiceTemplate:t=>G(\"upsert_voice_template\",{id:t."
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "delete_skill_backup",
+      "rowCount": 1,
+      "wrappers": [
+        "deleteSkillBackup"
+      ],
+      "argKeys": [
+        "id"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30900,
+          "wrapper": "deleteSkillBackup",
+          "callee": "G",
+          "argKeys": [
+            "id"
+          ],
+          "source": "minified",
+          "snippet": "adSkillBackups:()=>G(\"load_skill_backups\"),importSkill:t=>G(\"import_skill\",{path:t}),removeSkill:t=>G(\"remove_skill\",{id:t}),restoreSkillBackup:t=>G(\"restore_skill_backup\",{id:t}),deleteSkillBackup:t=>G(\"delete_skill_backup\",{id:t}),restartCodex:()=>G(\"restart_codex\"),loadUsageAnalytics:()=>G(\"load_usage_analytics\"),loadQuotaHistory:t=>G(\"load_quota_history\",{accountKey:t}),loadSessionAnalytics:(t=\"we"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "detect_api_proxy_config",
+      "rowCount": 1,
+      "wrappers": [
+        "detectApiProxyConfig"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25348,
+          "wrapper": "detectApiProxyConfig",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "val:()=>G(\"get_usage_refresh_interval\"),setUsageRefreshInterval:t=>G(\"set_usage_refresh_interval\",{interval:t}),testApiProxyConfig:(t,e)=>G(\"test_api_proxy_config\",{mode:t,url:e}),detectApiProxyConfig:()=>G(\"detect_api_proxy_config\"),checkUpdateInstallability:()=>G(\"check_update_installability\"),beginAddAccountAttachMonitor:()=>G(\"begin_add_account_attach_monitor\"),runDaemonOnce:()=>G(\"run_daemon_once\"),diagn"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "diagnose",
+      "rowCount": 1,
+      "wrappers": [
+        "diagnose"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25575,
+          "wrapper": "diagnose",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "nfig\"),checkUpdateInstallability:()=>G(\"check_update_installability\"),beginAddAccountAttachMonitor:()=>G(\"begin_add_account_attach_monitor\"),runDaemonOnce:()=>G(\"run_daemon_once\"),diagnose:()=>G(\"diagnose\"),loadSessions:()=>G(\"load_sessions\"),deleteSessions:t=>G(\"delete_sessions\",{ids:t}),loadCustomInstructionState:()=>G(\"load_custom_instruction_state\"),loadVoiceWorkspace:()=>G(\"loa"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "diagnose_codex_router",
+      "rowCount": 1,
+      "wrappers": [],
+      "argKeys": [],
+      "files": [
+        "assets\\relay-page-CljGSoid.js"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeRaw",
+          "file": "assets\\relay-page-CljGSoid.js",
+          "line": 32,
+          "column": 44819,
+          "wrapper": null,
+          "callee": "pt",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": ",relaunch:m});if(i)try{const{invoke:pt}=await wt(async()=>{const{invoke:Ir}=await import(\"./index-CL22l5v8.js\").then(Pr=>Pr.aT);return{invoke:Ir}},__vite__mapDeps([1,2])),mt=await pt(\"diagnose_codex_router\"),Sr=!mt.data.config_toml_has_router,_r=mt.data.config_toml_has_catalog===!1;if(Sr||_r){C({title:e(\"relay.codexRouter.warnUserProfileExistsTitle\"),description:mt.data.summary??e(\"r"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "dismiss_pending_auto_switch",
+      "rowCount": 1,
+      "wrappers": [
+        "dismissPendingAutoSwitch"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 32006,
+          "wrapper": "dismissPendingAutoSwitch",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": ">G(\"get_notification_client_state\"),getSystemInfo:()=>G(\"get_system_info\"),loadBootstrapState:()=>G(\"load_bootstrap_state\"),loadPendingAutoSwitch:()=>G(\"load_pending_auto_switch\"),dismissPendingAutoSwitch:()=>G(\"dismiss_pending_auto_switch\"),confirmPendingAutoSwitch:()=>G(\"confirm_pending_auto_switch\"),confirmPendingAutoSwitchAndRestartCodex:()=>G(\"confirm_pending_auto_switch_and_restart_codex\"),listPlugins:()=>G(\"li"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "export_accounts_to_file",
+      "rowCount": 1,
+      "wrappers": [
+        "exportAccountsToFile"
+      ],
+      "argKeys": [
+        "accountKeys",
+        "targetPath"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24656,
+          "wrapper": "exportAccountsToFile",
+          "callee": "G",
+          "argKeys": [
+            "targetPath",
+            "accountKeys"
+          ],
+          "source": "minified",
+          "snippet": "et_image_compat\"),setImageCompat:t=>G(\"set_image_compat\",{enabled:t}),importChatGptSessionAccount:(t,e=!1)=>G(\"import_chatgpt_session_account\",{sessionJson:t,overwriteExisting:e}),exportAccountsToFile:(t,e)=>G(\"export_accounts_to_file\",{targetPath:t,accountKeys:e??null}),previewAccountImport:t=>G(\"preview_account_import\",{filePath:t}),importAccountsFromFile:(t,e,o)=>G(\"import_accounts_from_file\",{filePath:t,over"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "export_relay_config",
+      "rowCount": 1,
+      "wrappers": [
+        "exportConfig"
+      ],
+      "argKeys": [
+        "filePath",
+        "includeApiKeys"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1702,
+          "wrapper": "exportConfig",
+          "callee": "r",
+          "argKeys": [
+            "filePath",
+            "includeApiKeys"
+          ],
+          "source": "minified",
+          "snippet": "ctive\"),getProxyStatus:()=>r(\"get_relay_proxy_status\"),setCodexRouterEnabled:(e,o)=>r(\"set_codex_router_enabled\",{enabled:e,relaunch:o??!0}),restartCodexApp:()=>r(\"restart_codex\"),exportConfig:(e,o)=>r(\"export_relay_config\",{filePath:e,includeApiKeys:o}),importConfig:e=>r(\"import_relay_config\",{filePath:e}),setBlockOfficialPassthrough:e=>r(\"set_block_official_passthrough\",{blocked:e}),getPassthroughA"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "fetch_relay_models_draft",
+      "rowCount": 1,
+      "wrappers": [
+        "fetchModelsDraft"
+      ],
+      "argKeys": [
+        "input"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1434,
+          "wrapper": "fetchModelsDraft",
+          "callee": "r",
+          "argKeys": [
+            "input"
+          ],
+          "source": "minified",
+          "snippet": "d:e,ide:o}),setNetwork:(e,o)=>r(\"set_relay_provider_network\",{providerId:e,network:o}),test:e=>r(\"test_relay_provider\",{providerId:e}),testDraft:e=>r(\"test_relay_draft\",{input:e}),fetchModelsDraft:e=>r(\"fetch_relay_models_draft\",{input:e}),getActive:()=>r(\"get_relay_active\"),getProxyStatus:()=>r(\"get_relay_proxy_status\"),setCodexRouterEnabled:(e,o)=>r(\"set_codex_router_enabled\",{enabled:e,relaunch:o??!0})"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "fix_codex_router_issue",
+      "rowCount": 1,
+      "wrappers": [],
+      "argKeys": [
+        "itemId"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeRaw",
+          "file": "assets/<asset>",
+          "line": 32,
+          "column": 1268,
+          "wrapper": null,
+          "callee": "s",
+          "argKeys": [
+            "itemId"
+          ],
+          "source": "minified",
+          "snippet": "(null);const d=Date.now();try{const{invoke:s}=await F(async()=>{const{invoke:j}=await import(\"./index-CL22l5v8.js\").then(L=>L.aT);return{invoke:j}},__vite__mapDeps([0,1])),g=await s(\"fix_codex_router_issue\",{itemId:r});g!=null&&g.data&&k(g.data);const{invoke:y}=await F(async()=>{const{invoke:j}=await import(\"./index-CL22l5v8.js\").then(L=>L.aT);return{invoke:j}},__vite__mapDeps([0,1])"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "focus_main_window",
+      "rowCount": 1,
+      "wrappers": [
+        "focusMainWindow"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31516,
+          "wrapper": "focusMainWindow",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "oad_change_analytics\",{range:t}),hasNotch:()=>G(\"has_notch\").catch(()=>!1),getHotspotEnabled:()=>G(\"get_hotspot_enabled\"),setHotspotEnabled:t=>G(\"set_hotspot_enabled\",{enabled:t}),focusMainWindow:()=>G(\"focus_main_window\"),hotspotReady:()=>G(\"hotspot_ready\"),openPath:t=>G(\"open_path\",{path:t}),getDeviceId:()=>G(\"get_device_id\"),getMysteryUnlockGrants:()=>G(\"get_mystery_unlock_grants\"),mergeMysteryU"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "force_kill_codex",
+      "rowCount": 1,
+      "wrappers": [
+        "forceKillCodex"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24367,
+          "wrapper": "forceKillCodex",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "unt_and_restart_codex\",{accountKey:t}),removeAccounts:t=>G(\"remove_accounts\",{accountKeys:t}),logout:()=>G(\"logout\"),clean:()=>G(\"clean\"),rebuildRegistry:()=>G(\"rebuild_registry\"),forceKillCodex:()=>G(\"force_kill_codex\"),resetCodexConfig:()=>G(\"reset_codex_config\"),getImageCompat:()=>G(\"get_image_compat\"),setImageCompat:t=>G(\"set_image_compat\",{enabled:t}),importChatGptSessionAccount:(t,e=!1)=>G("
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "generate_voice_prompt",
+      "rowCount": 1,
+      "wrappers": [
+        "generateVoicePrompt"
+      ],
+      "argKeys": [
+        "asrDurationMs",
+        "asrEmotion",
+        "asrErrorCode",
+        "asrLanguage",
+        "asrModel",
+        "asrProvider",
+        "clipboardText",
+        "llmApiKey",
+        "llmBaseUrl",
+        "llmModel",
+        "llmProvider",
+        "promptOverride",
+        "rawText",
+        "selectedText",
+        "targetAppName",
+        "targetBundleId",
+        "templateId",
+        "templateKind",
+        "templateTitle"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 26756,
+          "wrapper": "generateVoicePrompt",
+          "callee": "G",
+          "argKeys": [
+            "templateId",
+            "rawText",
+            "selectedText",
+            "clipboardText",
+            "targetBundleId",
+            "targetAppName",
+            "promptOverride",
+            "templateTitle",
+            "templateKind",
+            "llmProvider",
+            "llmApiKey",
+            "llmModel",
+            "llmBaseUrl",
+            "asrProvider",
+            "asrModel",
+            "asrLanguage",
+            "asrEmotion",
+            "asrDurationMs",
+            "asrErrorCode"
+          ],
+          "source": "minified",
+          "snippet": "ryAppScope:t=>G(\"upsert_voice_vocabulary_app_scope\",{bundleId:t.bundleId,name:t.name,path:t.path}),resolveVoiceVocabularyAppInfo:t=>G(\"resolve_voice_vocabulary_app_info\",{path:t}),generateVoicePrompt:t=>G(\"generate_voice_prompt\",{templateId:t.templateId,rawText:t.rawText,selectedText:t.selectedText??null,clipboardText:t.clipboardText??null,targetBundleId:t.targetBundleId??null,targetAppName:t.targetAppNam"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_device_id",
+      "rowCount": 1,
+      "wrappers": [
+        "getDeviceId"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31631,
+          "wrapper": "getDeviceId",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "bled\"),setHotspotEnabled:t=>G(\"set_hotspot_enabled\",{enabled:t}),focusMainWindow:()=>G(\"focus_main_window\"),hotspotReady:()=>G(\"hotspot_ready\"),openPath:t=>G(\"open_path\",{path:t}),getDeviceId:()=>G(\"get_device_id\"),getMysteryUnlockGrants:()=>G(\"get_mystery_unlock_grants\"),mergeMysteryUnlockGrants:t=>G(\"merge_mystery_unlock_grants\",{grants:t}),getNotificationClientState:()=>G(\"get_notificati"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_hotspot_enabled",
+      "rowCount": 1,
+      "wrappers": [
+        "getHotspotEnabled"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31411,
+          "wrapper": "getHotspotEnabled",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "t}),loadToolAnalytics:(t=\"week\")=>G(\"load_tool_analytics\",{range:t}),loadChangeAnalytics:(t=\"week\")=>G(\"load_change_analytics\",{range:t}),hasNotch:()=>G(\"has_notch\").catch(()=>!1),getHotspotEnabled:()=>G(\"get_hotspot_enabled\"),setHotspotEnabled:t=>G(\"set_hotspot_enabled\",{enabled:t}),focusMainWindow:()=>G(\"focus_main_window\"),hotspotReady:()=>G(\"hotspot_ready\"),openPath:t=>G(\"open_path\",{path:t}),getDe"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_image_compat",
+      "rowCount": 1,
+      "wrappers": [
+        "getImageCompat"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24453,
+          "wrapper": "getImageCompat",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "eys:t}),logout:()=>G(\"logout\"),clean:()=>G(\"clean\"),rebuildRegistry:()=>G(\"rebuild_registry\"),forceKillCodex:()=>G(\"force_kill_codex\"),resetCodexConfig:()=>G(\"reset_codex_config\"),getImageCompat:()=>G(\"get_image_compat\"),setImageCompat:t=>G(\"set_image_compat\",{enabled:t}),importChatGptSessionAccount:(t,e=!1)=>G(\"import_chatgpt_session_account\",{sessionJson:t,overwriteExisting:e}),exportAccountsTo"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_mystery_unlock_grants",
+      "rowCount": 1,
+      "wrappers": [
+        "getMysteryUnlockGrants"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31666,
+          "wrapper": "getMysteryUnlockGrants",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "hotspot_enabled\",{enabled:t}),focusMainWindow:()=>G(\"focus_main_window\"),hotspotReady:()=>G(\"hotspot_ready\"),openPath:t=>G(\"open_path\",{path:t}),getDeviceId:()=>G(\"get_device_id\"),getMysteryUnlockGrants:()=>G(\"get_mystery_unlock_grants\"),mergeMysteryUnlockGrants:t=>G(\"merge_mystery_unlock_grants\",{grants:t}),getNotificationClientState:()=>G(\"get_notification_client_state\"),getSystemInfo:()=>G(\"get_system_info\"),l"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_notification_client_state",
+      "rowCount": 1,
+      "wrappers": [
+        "getNotificationClientState"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31796,
+          "wrapper": "getNotificationClientState",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "ath\",{path:t}),getDeviceId:()=>G(\"get_device_id\"),getMysteryUnlockGrants:()=>G(\"get_mystery_unlock_grants\"),mergeMysteryUnlockGrants:t=>G(\"merge_mystery_unlock_grants\",{grants:t}),getNotificationClientState:()=>G(\"get_notification_client_state\"),getSystemInfo:()=>G(\"get_system_info\"),loadBootstrapState:()=>G(\"load_bootstrap_state\"),loadPendingAutoSwitch:()=>G(\"load_pending_auto_switch\"),dismissPendingAutoSwitch:()=>G(\"di"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_or_create_remote_device_secret",
+      "rowCount": 1,
+      "wrappers": [],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeRaw",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 116540,
+          "wrapper": null,
+          "callee": "a",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "Storage.getItem(Ll))==null?void 0:o.trim():\"\";if(l){await a(\"import_remote_device_secret_if_empty\",{sensitive-field:l}).catch(()=>{});try{localStorage.removeItem(Ll)}catch{}}}catch{}return a(\"get_or_create_remote_device_secret\")}const t=typeof localStorage<\"u\"?(i=localStorage.getItem(Ll))==null?void 0:i.trim():\"\";if(t)return t;const e=OP();try{localStorage.setItem(Ll,e)}catch{}return e}const zx=\"https://"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_passthrough_audit_log",
+      "rowCount": 1,
+      "wrappers": [
+        "getPassthroughAuditLog"
+      ],
+      "argKeys": [
+        "limit"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1910,
+          "wrapper": "getPassthroughAuditLog",
+          "callee": "r",
+          "argKeys": [
+            "limit"
+          ],
+          "source": "minified",
+          "snippet": "t_relay_config\",{filePath:e,includeApiKeys:o}),importConfig:e=>r(\"import_relay_config\",{filePath:e}),setBlockOfficialPassthrough:e=>r(\"set_block_official_passthrough\",{blocked:e}),getPassthroughAuditLog:e=>r(\"get_passthrough_audit_log\",{limit:e??50})},u=[\"relay-state\"];function M(){return w({queryKey:u,queryFn:async()=>(await i.loadState()).data,staleTime:3e4})}function B(){const e=S(),o=()=>e.invalidateQueries("
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_plugin_config",
+      "rowCount": 1,
+      "wrappers": [
+        "getPluginConfig"
+      ],
+      "argKeys": [
+        "id"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 32315,
+          "wrapper": "getPluginConfig",
+          "callee": "G",
+          "argKeys": [
+            "id"
+          ],
+          "source": "minified",
+          "snippet": "rmPendingAutoSwitchAndRestartCodex:()=>G(\"confirm_pending_auto_switch_and_restart_codex\"),listPlugins:()=>G(\"list_plugins\"),togglePlugin:(t,e)=>G(\"toggle_plugin\",{id:t,enabled:e}),getPluginConfig:t=>G(\"get_plugin_config\",{id:t}),updatePluginConfig:(t,e)=>G(\"update_plugin_config\",{id:t,settings:e})},i1=\"codexmate.startup-cache.v1\",s1=10080*60*1e3;function Gl(t){return`${i1}:${t}`}function nc(t,e=s1"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_relay_active",
+      "rowCount": 1,
+      "wrappers": [
+        "getActive"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1494,
+          "wrapper": "getActive",
+          "callee": "r",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": ",{providerId:e,network:o}),test:e=>r(\"test_relay_provider\",{providerId:e}),testDraft:e=>r(\"test_relay_draft\",{input:e}),fetchModelsDraft:e=>r(\"fetch_relay_models_draft\",{input:e}),getActive:()=>r(\"get_relay_active\"),getProxyStatus:()=>r(\"get_relay_proxy_status\"),setCodexRouterEnabled:(e,o)=>r(\"set_codex_router_enabled\",{enabled:e,relaunch:o??!0}),restartCodexApp:()=>r(\"restart_codex\"),export"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_relay_proxy_status",
+      "rowCount": 1,
+      "wrappers": [
+        "getProxyStatus"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1530,
+          "wrapper": "getProxyStatus",
+          "callee": "r",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "(\"test_relay_provider\",{providerId:e}),testDraft:e=>r(\"test_relay_draft\",{input:e}),fetchModelsDraft:e=>r(\"fetch_relay_models_draft\",{input:e}),getActive:()=>r(\"get_relay_active\"),getProxyStatus:()=>r(\"get_relay_proxy_status\"),setCodexRouterEnabled:(e,o)=>r(\"set_codex_router_enabled\",{enabled:e,relaunch:o??!0}),restartCodexApp:()=>r(\"restart_codex\"),exportConfig:(e,o)=>r(\"export_relay_config\",{filePath"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_system_info",
+      "rowCount": 1,
+      "wrappers": [
+        "getSystemInfo"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31862,
+          "wrapper": "getSystemInfo",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "Grants:()=>G(\"get_mystery_unlock_grants\"),mergeMysteryUnlockGrants:t=>G(\"merge_mystery_unlock_grants\",{grants:t}),getNotificationClientState:()=>G(\"get_notification_client_state\"),getSystemInfo:()=>G(\"get_system_info\"),loadBootstrapState:()=>G(\"load_bootstrap_state\"),loadPendingAutoSwitch:()=>G(\"load_pending_auto_switch\"),dismissPendingAutoSwitch:()=>G(\"dismiss_pending_auto_switch\"),confirmPend"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "get_usage_refresh_interval",
+      "rowCount": 1,
+      "wrappers": [
+        "getUsageRefreshInterval"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25148,
+          "wrapper": "getUsageRefreshInterval",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "enabled:t}),configureAutoSwitch:(t,e)=>G(\"configure_auto_switch\",{threshold5hPercent:t,thresholdWeeklyPercent:e}),setApiProxyConfig:(t,e)=>G(\"set_api_proxy_config\",{mode:t,url:e}),getUsageRefreshInterval:()=>G(\"get_usage_refresh_interval\"),setUsageRefreshInterval:t=>G(\"set_usage_refresh_interval\",{interval:t}),testApiProxyConfig:(t,e)=>G(\"test_api_proxy_config\",{mode:t,url:e}),detectApiProxyConfig:()=>G(\"detect_api"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "graceful_restart_for_update",
+      "rowCount": 1,
+      "wrappers": [],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeRaw",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 114912,
+          "wrapper": null,
+          "callee": "P",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "ntentLength?(A=N.data.contentLength,u({total:A,downloaded:0})):N.event===\"Progress\"?(T+=N.data.chunkLength,u({total:A,downloaded:T})):N.event===\"Finished\"&&o(\"installing\")}),await P(\"graceful_restart_for_update\")}catch(P){m(DP(t,P)),o(\"error\")}},[t]);v.useEffect(()=>{if(!Di())return;const w=setTimeout(()=>{x()},1500);return()=>clearTimeout(w)},[x]);const y=v.useCallback(()=>{o(\"idle\"),m(n"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "has_notch",
+      "rowCount": 1,
+      "wrappers": [
+        "hasNotch"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31369,
+          "wrapper": "hasNotch",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "=\"week\")=>G(\"load_token_analytics\",{range:t}),loadToolAnalytics:(t=\"week\")=>G(\"load_tool_analytics\",{range:t}),loadChangeAnalytics:(t=\"week\")=>G(\"load_change_analytics\",{range:t}),hasNotch:()=>G(\"has_notch\").catch(()=>!1),getHotspotEnabled:()=>G(\"get_hotspot_enabled\"),setHotspotEnabled:t=>G(\"set_hotspot_enabled\",{enabled:t}),focusMainWindow:()=>G(\"focus_main_window\"),hotspotReady:()="
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "hotspot_ready",
+      "rowCount": 1,
+      "wrappers": [
+        "hotspotReady"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31559,
+          "wrapper": "hotspotReady",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": ")=>G(\"has_notch\").catch(()=>!1),getHotspotEnabled:()=>G(\"get_hotspot_enabled\"),setHotspotEnabled:t=>G(\"set_hotspot_enabled\",{enabled:t}),focusMainWindow:()=>G(\"focus_main_window\"),hotspotReady:()=>G(\"hotspot_ready\"),openPath:t=>G(\"open_path\",{path:t}),getDeviceId:()=>G(\"get_device_id\"),getMysteryUnlockGrants:()=>G(\"get_mystery_unlock_grants\"),mergeMysteryUnlockGrants:t=>G(\"merge_mystery_unlo"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "import_accounts_from_file",
+      "rowCount": 1,
+      "wrappers": [
+        "importAccountsFromFile"
+      ],
+      "argKeys": [
+        "filePath",
+        "overwriteExisting",
+        "selectedKeys"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24813,
+          "wrapper": "importAccountsFromFile",
+          "callee": "G",
+          "argKeys": [
+            "filePath",
+            "overwriteExisting",
+            "selectedKeys"
+          ],
+          "source": "minified",
+          "snippet": ",overwriteExisting:e}),exportAccountsToFile:(t,e)=>G(\"export_accounts_to_file\",{targetPath:t,accountKeys:e??null}),previewAccountImport:t=>G(\"preview_account_import\",{filePath:t}),importAccountsFromFile:(t,e,o)=>G(\"import_accounts_from_file\",{filePath:t,overwriteExisting:e,selectedKeys:o??null}),setAutoSwitch:t=>G(\"set_auto_switch\",{enabled:t}),configureAutoSwitch:(t,e)=>G(\"configure_auto_switch\",{threshold5hPercent:t"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "import_chatgpt_session_account",
+      "rowCount": 1,
+      "wrappers": [
+        "importChatGptSessionAccount"
+      ],
+      "argKeys": [
+        "overwriteExisting",
+        "sessionJson"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24546,
+          "wrapper": "importChatGptSessionAccount",
+          "callee": "G",
+          "argKeys": [
+            "sessionJson",
+            "overwriteExisting"
+          ],
+          "source": "minified",
+          "snippet": ",forceKillCodex:()=>G(\"force_kill_codex\"),resetCodexConfig:()=>G(\"reset_codex_config\"),getImageCompat:()=>G(\"get_image_compat\"),setImageCompat:t=>G(\"set_image_compat\",{enabled:t}),importChatGptSessionAccount:(t,e=!1)=>G(\"import_chatgpt_session_account\",{sessionJson:t,overwriteExisting:e}),exportAccountsToFile:(t,e)=>G(\"export_accounts_to_file\",{targetPath:t,accountKeys:e??null}),previewAccountImport:t=>G(\"preview_account_import\""
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "import_relay_config",
+      "rowCount": 1,
+      "wrappers": [
+        "importConfig"
+      ],
+      "argKeys": [
+        "filePath"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1777,
+          "wrapper": "importConfig",
+          "callee": "r",
+          "argKeys": [
+            "filePath"
+          ],
+          "source": "minified",
+          "snippet": "d:(e,o)=>r(\"set_codex_router_enabled\",{enabled:e,relaunch:o??!0}),restartCodexApp:()=>r(\"restart_codex\"),exportConfig:(e,o)=>r(\"export_relay_config\",{filePath:e,includeApiKeys:o}),importConfig:e=>r(\"import_relay_config\",{filePath:e}),setBlockOfficialPassthrough:e=>r(\"set_block_official_passthrough\",{blocked:e}),getPassthroughAuditLog:e=>r(\"get_passthrough_audit_log\",{limit:e??50})},u=[\"relay-stat"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "import_remote_device_secret_if_empty",
+      "rowCount": 1,
+      "wrappers": [],
+      "argKeys": [
+        "sensitive-field"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeRaw",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 116418,
+          "wrapper": null,
+          "callee": "a",
+          "argKeys": [
+            "sensitive-field"
+          ],
+          "source": "minified",
+          "snippet": "onst{invoke:l}=await Promise.resolve().then(()=>Wf);return{invoke:l}},void 0);try{const l=typeof localStorage<\"u\"?(o=localStorage.getItem(Ll))==null?void 0:o.trim():\"\";if(l){await a(\"import_remote_device_secret_if_empty\",{sensitive-field:l}).catch(()=>{});try{localStorage.removeItem(Ll)}catch{}}}catch{}return a(\"get_or_create_remote_device_secret\")}const t=typeof localStorage<\"u\"?(i=localStorage.getItem(Ll"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "import_skill",
+      "rowCount": 1,
+      "wrappers": [
+        "importSkill"
+      ],
+      "argKeys": [
+        "path"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30763,
+          "wrapper": "importSkill",
+          "callee": "G",
+          "argKeys": [
+            "path"
+          ],
+          "source": "minified",
+          "snippet": "ver_enabled\",{name:t,enabled:e}),removeMcpServer:t=>G(\"remove_mcp_server\",{name:t}),loadInstalledSkills:()=>G(\"load_installed_skills\"),loadSkillBackups:()=>G(\"load_skill_backups\"),importSkill:t=>G(\"import_skill\",{path:t}),removeSkill:t=>G(\"remove_skill\",{id:t}),restoreSkillBackup:t=>G(\"restore_skill_backup\",{id:t}),deleteSkillBackup:t=>G(\"delete_skill_backup\",{id:t}),restartCodex:()=>G(\"r"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "inject_voice_text",
+      "rowCount": 1,
+      "wrappers": [
+        "injectVoiceText"
+      ],
+      "argKeys": [
+        "expectedBundleId",
+        "text"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 29523,
+          "wrapper": "injectVoiceText",
+          "callee": "G",
+          "argKeys": [
+            "text",
+            "expectedBundleId"
+          ],
+          "source": "minified",
+          "snippet": "\"set_voice_processing_mode_id\",{modeId:t.modeId,processingMode:t.processingMode??null}),startVoiceCapture:()=>G(\"start_voice_capture\"),stopVoiceCapture:()=>G(\"stop_voice_capture\"),injectVoiceText:(t,e)=>G(\"inject_voice_text\",{text:t,expectedBundleId:e??null}),showVoiceSearchOverlay:t=>G(\"show_voice_search_overlay\",{query:t.query,output:t.output}),setVoiceModeShortcut:t=>G(\"set_voice_mode_shortcut\",{mo"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "list_plugins",
+      "rowCount": 1,
+      "wrappers": [
+        "listPlugins"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 32225,
+          "wrapper": "listPlugins",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "_pending_auto_switch\"),confirmPendingAutoSwitch:()=>G(\"confirm_pending_auto_switch\"),confirmPendingAutoSwitchAndRestartCodex:()=>G(\"confirm_pending_auto_switch_and_restart_codex\"),listPlugins:()=>G(\"list_plugins\"),togglePlugin:(t,e)=>G(\"toggle_plugin\",{id:t,enabled:e}),getPluginConfig:t=>G(\"get_plugin_config\",{id:t}),updatePluginConfig:(t,e)=>G(\"update_plugin_config\",{id:t,settings:e})},i1"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_bootstrap_state",
+      "rowCount": 1,
+      "wrappers": [
+        "loadBootstrapState"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31901,
+          "wrapper": "loadBootstrapState",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "\"),mergeMysteryUnlockGrants:t=>G(\"merge_mystery_unlock_grants\",{grants:t}),getNotificationClientState:()=>G(\"get_notification_client_state\"),getSystemInfo:()=>G(\"get_system_info\"),loadBootstrapState:()=>G(\"load_bootstrap_state\"),loadPendingAutoSwitch:()=>G(\"load_pending_auto_switch\"),dismissPendingAutoSwitch:()=>G(\"dismiss_pending_auto_switch\"),confirmPendingAutoSwitch:()=>G(\"confirm_pending_auto_switch\""
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_change_analytics",
+      "rowCount": 1,
+      "wrappers": [
+        "loadChangeAnalytics"
+      ],
+      "argKeys": [
+        "range"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31300,
+          "wrapper": "loadChangeAnalytics",
+          "callee": "G",
+          "argKeys": [
+            "range"
+          ],
+          "source": "minified",
+          "snippet": "=\"week\")=>G(\"load_session_analytics\",{range:t}),loadTokenAnalytics:(t=\"week\")=>G(\"load_token_analytics\",{range:t}),loadToolAnalytics:(t=\"week\")=>G(\"load_tool_analytics\",{range:t}),loadChangeAnalytics:(t=\"week\")=>G(\"load_change_analytics\",{range:t}),hasNotch:()=>G(\"has_notch\").catch(()=>!1),getHotspotEnabled:()=>G(\"get_hotspot_enabled\"),setHotspotEnabled:t=>G(\"set_hotspot_enabled\",{enabled:t}),focusMainWindow:()=>G"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_custom_instruction_state",
+      "rowCount": 1,
+      "wrappers": [
+        "loadCustomInstructionState"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25685,
+          "wrapper": "loadCustomInstructionState",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "n_add_account_attach_monitor\"),runDaemonOnce:()=>G(\"run_daemon_once\"),diagnose:()=>G(\"diagnose\"),loadSessions:()=>G(\"load_sessions\"),deleteSessions:t=>G(\"delete_sessions\",{ids:t}),loadCustomInstructionState:()=>G(\"load_custom_instruction_state\"),loadVoiceWorkspace:()=>G(\"load_voice_workspace\"),upsertVoiceTemplate:t=>G(\"upsert_voice_template\",{id:t.id??null,title:t.title,description:t.description,content:t.content}),remov"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_installed_skills",
+      "rowCount": 1,
+      "wrappers": [
+        "loadInstalledSkills"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30667,
+          "wrapper": "loadInstalledSkills",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": ",headers:t.headers??{},environment:t.environment??{}}),setMcpServerEnabled:(t,e)=>G(\"set_mcp_server_enabled\",{name:t,enabled:e}),removeMcpServer:t=>G(\"remove_mcp_server\",{name:t}),loadInstalledSkills:()=>G(\"load_installed_skills\"),loadSkillBackups:()=>G(\"load_skill_backups\"),importSkill:t=>G(\"import_skill\",{path:t}),removeSkill:t=>G(\"remove_skill\",{id:t}),restoreSkillBackup:t=>G(\"restore_skill_backup\",{id:"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_mcp_servers",
+      "rowCount": 1,
+      "wrappers": [
+        "loadMcpServers"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30384,
+          "wrapper": "loadMcpServers",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "e:t.templateTitle,source:t.source}),clearCustomInstructionBlock:()=>G(\"clear_custom_instruction_block\"),rollbackCustomInstruction:t=>G(\"rollback_custom_instruction\",{historyId:t}),loadMcpServers:()=>G(\"load_mcp_servers\"),upsertMcpServer:t=>G(\"upsert_mcp_server\",{...t,args:t.args??[],headers:t.headers??{},environment:t.environment??{}}),setMcpServerEnabled:(t,e)=>G(\"set_mcp_server_enabled\",{name:t"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_pending_auto_switch",
+      "rowCount": 1,
+      "wrappers": [
+        "loadPendingAutoSwitch"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31950,
+          "wrapper": "loadPendingAutoSwitch",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "nlock_grants\",{grants:t}),getNotificationClientState:()=>G(\"get_notification_client_state\"),getSystemInfo:()=>G(\"get_system_info\"),loadBootstrapState:()=>G(\"load_bootstrap_state\"),loadPendingAutoSwitch:()=>G(\"load_pending_auto_switch\"),dismissPendingAutoSwitch:()=>G(\"dismiss_pending_auto_switch\"),confirmPendingAutoSwitch:()=>G(\"confirm_pending_auto_switch\"),confirmPendingAutoSwitchAndRestartCodex:()=>G(\"confirm"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_quota_history",
+      "rowCount": 1,
+      "wrappers": [
+        "loadQuotaHistory"
+      ],
+      "argKeys": [
+        "accountKey"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31038,
+          "wrapper": "loadQuotaHistory",
+          "callee": "G",
+          "argKeys": [
+            "accountKey"
+          ],
+          "source": "minified",
+          "snippet": "ackup:t=>G(\"restore_skill_backup\",{id:t}),deleteSkillBackup:t=>G(\"delete_skill_backup\",{id:t}),restartCodex:()=>G(\"restart_codex\"),loadUsageAnalytics:()=>G(\"load_usage_analytics\"),loadQuotaHistory:t=>G(\"load_quota_history\",{accountKey:t}),loadSessionAnalytics:(t=\"week\")=>G(\"load_session_analytics\",{range:t}),loadTokenAnalytics:(t=\"week\")=>G(\"load_token_analytics\",{range:t}),loadToolAnalytics:(t=\"wee"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_relay_state",
+      "rowCount": 1,
+      "wrappers": [
+        "loadState"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 995,
+          "wrapper": "loadState",
+          "callee": "r",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "ackCount:0,skippedCount:0,targetProvider:null,targetModel:null,manifestPath:null},codexLaunchError:null}};default:throw new Error(`relay mock: unsupported command ${e}`)}}const i={loadState:()=>r(\"load_relay_state\"),upsert:e=>r(\"upsert_relay_provider\",{input:e}),delete:e=>r(\"delete_relay_provider\",{providerId:e}),activate:(e,o)=>r(\"activate_relay_provider\",{providerId:e,ide:o}),deactivate:(e"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_session_analytics",
+      "rowCount": 1,
+      "wrappers": [
+        "loadSessionAnalytics"
+      ],
+      "argKeys": [
+        "range"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31097,
+          "wrapper": "loadSessionAnalytics",
+          "callee": "G",
+          "argKeys": [
+            "range"
+          ],
+          "source": "minified",
+          "snippet": ":t=>G(\"delete_skill_backup\",{id:t}),restartCodex:()=>G(\"restart_codex\"),loadUsageAnalytics:()=>G(\"load_usage_analytics\"),loadQuotaHistory:t=>G(\"load_quota_history\",{accountKey:t}),loadSessionAnalytics:(t=\"week\")=>G(\"load_session_analytics\",{range:t}),loadTokenAnalytics:(t=\"week\")=>G(\"load_token_analytics\",{range:t}),loadToolAnalytics:(t=\"week\")=>G(\"load_tool_analytics\",{range:t}),loadChangeAnalytics:(t=\"week\")=>G(\"l"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_sessions",
+      "rowCount": 1,
+      "wrappers": [
+        "loadSessions"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25602,
+          "wrapper": "loadSessions",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "ility:()=>G(\"check_update_installability\"),beginAddAccountAttachMonitor:()=>G(\"begin_add_account_attach_monitor\"),runDaemonOnce:()=>G(\"run_daemon_once\"),diagnose:()=>G(\"diagnose\"),loadSessions:()=>G(\"load_sessions\"),deleteSessions:t=>G(\"delete_sessions\",{ids:t}),loadCustomInstructionState:()=>G(\"load_custom_instruction_state\"),loadVoiceWorkspace:()=>G(\"load_voice_workspace\"),upsertVoiceTempl"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_skill_backups",
+      "rowCount": 1,
+      "wrappers": [
+        "loadSkillBackups"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30718,
+          "wrapper": "loadSkillBackups",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "}}),setMcpServerEnabled:(t,e)=>G(\"set_mcp_server_enabled\",{name:t,enabled:e}),removeMcpServer:t=>G(\"remove_mcp_server\",{name:t}),loadInstalledSkills:()=>G(\"load_installed_skills\"),loadSkillBackups:()=>G(\"load_skill_backups\"),importSkill:t=>G(\"import_skill\",{path:t}),removeSkill:t=>G(\"remove_skill\",{id:t}),restoreSkillBackup:t=>G(\"restore_skill_backup\",{id:t}),deleteSkillBackup:t=>G(\"delete_skill_back"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_snapshot",
+      "rowCount": 1,
+      "wrappers": [
+        "loadSnapshot"
+      ],
+      "argKeys": [
+        "localOnly"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 23982,
+          "wrapper": "loadSnapshot",
+          "callee": "G",
+          "argKeys": [
+            "localOnly"
+          ],
+          "source": "minified",
+          "snippet": "c function G(t,e){if(Di()){const{invoke:o}=await ot(async()=>{const{invoke:i}=await Promise.resolve().then(()=>Wf);return{invoke:i}},void 0);return o(t,e)}return pf(t,e)}const We={loadSnapshot:(t=!1)=>G(\"load_snapshot\",{localOnly:t}),refreshUsageSnapshot:()=>G(\"refresh_usage_snapshot\"),switchAccount:t=>G(\"switch_account\",{accountKey:t}),switchAccountAndRestartCodex:t=>G(\"switch_account_and_resta"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_token_analytics",
+      "rowCount": 1,
+      "wrappers": [
+        "loadTokenAnalytics"
+      ],
+      "argKeys": [
+        "range"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31168,
+          "wrapper": "loadTokenAnalytics",
+          "callee": "G",
+          "argKeys": [
+            "range"
+          ],
+          "source": "minified",
+          "snippet": ",loadUsageAnalytics:()=>G(\"load_usage_analytics\"),loadQuotaHistory:t=>G(\"load_quota_history\",{accountKey:t}),loadSessionAnalytics:(t=\"week\")=>G(\"load_session_analytics\",{range:t}),loadTokenAnalytics:(t=\"week\")=>G(\"load_token_analytics\",{range:t}),loadToolAnalytics:(t=\"week\")=>G(\"load_tool_analytics\",{range:t}),loadChangeAnalytics:(t=\"week\")=>G(\"load_change_analytics\",{range:t}),hasNotch:()=>G(\"has_notch\").catch("
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_tool_analytics",
+      "rowCount": 1,
+      "wrappers": [
+        "loadToolAnalytics"
+      ],
+      "argKeys": [
+        "range"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31235,
+          "wrapper": "loadToolAnalytics",
+          "callee": "G",
+          "argKeys": [
+            "range"
+          ],
+          "source": "minified",
+          "snippet": "t=>G(\"load_quota_history\",{accountKey:t}),loadSessionAnalytics:(t=\"week\")=>G(\"load_session_analytics\",{range:t}),loadTokenAnalytics:(t=\"week\")=>G(\"load_token_analytics\",{range:t}),loadToolAnalytics:(t=\"week\")=>G(\"load_tool_analytics\",{range:t}),loadChangeAnalytics:(t=\"week\")=>G(\"load_change_analytics\",{range:t}),hasNotch:()=>G(\"has_notch\").catch(()=>!1),getHotspotEnabled:()=>G(\"get_hotspot_enabled\"),setHotspot"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_usage_analytics",
+      "rowCount": 1,
+      "wrappers": [
+        "loadUsageAnalytics"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30989,
+          "wrapper": "loadUsageAnalytics",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "veSkill:t=>G(\"remove_skill\",{id:t}),restoreSkillBackup:t=>G(\"restore_skill_backup\",{id:t}),deleteSkillBackup:t=>G(\"delete_skill_backup\",{id:t}),restartCodex:()=>G(\"restart_codex\"),loadUsageAnalytics:()=>G(\"load_usage_analytics\"),loadQuotaHistory:t=>G(\"load_quota_history\",{accountKey:t}),loadSessionAnalytics:(t=\"week\")=>G(\"load_session_analytics\",{range:t}),loadTokenAnalytics:(t=\"week\")=>G(\"load_token_ana"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_voice_asr_config",
+      "rowCount": 1,
+      "wrappers": [
+        "loadVoiceAsrConfig"
+      ],
+      "argKeys": [
+        "provider"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 27756,
+          "wrapper": "loadVoiceAsrConfig",
+          "callee": "G",
+          "argKeys": [
+            "provider"
+          ],
+          "source": "minified",
+          "snippet": "load_voice_llm_config\",{provider:t}),saveVoiceLlmConfig:t=>G(\"save_voice_llm_config\",{llmProvider:t.llmProvider,llmApiKey:t.llmApiKey,llmModel:t.llmModel,llmBaseUrl:t.llmBaseUrl}),loadVoiceAsrConfig:t=>G(\"load_voice_asr_config\",{provider:t}),saveVoiceAsrConfig:t=>G(\"save_voice_asr_config\",{asrProvider:t.asrProvider,asrApiKey:t.asrApiKey,asrModel:t.asrModel,asrBaseUrl:t.asrBaseUrl}),testVoiceAsrConfig:t=>"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_voice_llm_config",
+      "rowCount": 1,
+      "wrappers": [
+        "loadVoiceLlmConfig"
+      ],
+      "argKeys": [
+        "provider"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 27551,
+          "wrapper": "loadVoiceLlmConfig",
+          "callee": "G",
+          "argKeys": [
+            "provider"
+          ],
+          "source": "minified",
+          "snippet": ",asrErrorCode:t.asrErrorCode??null}),testVoiceLlmConfig:t=>G(\"test_voice_llm_config\",{llmProvider:t.llmProvider,llmApiKey:t.llmApiKey,llmModel:t.llmModel,llmBaseUrl:t.llmBaseUrl}),loadVoiceLlmConfig:t=>G(\"load_voice_llm_config\",{provider:t}),saveVoiceLlmConfig:t=>G(\"save_voice_llm_config\",{llmProvider:t.llmProvider,llmApiKey:t.llmApiKey,llmModel:t.llmModel,llmBaseUrl:t.llmBaseUrl}),loadVoiceAsrConfig:t=>"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_voice_runtime_status",
+      "rowCount": 1,
+      "wrappers": [
+        "loadVoiceRuntimeStatus"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 28170,
+          "wrapper": "loadVoiceRuntimeStatus",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "_voice_asr_config\",{asrProvider:t.asrProvider,asrApiKey:t.asrApiKey,asrModel:t.asrModel,asrBaseUrl:t.asrBaseUrl}),removeVoiceHistoryEntry:t=>G(\"remove_voice_history_entry\",{id:t}),loadVoiceRuntimeStatus:()=>G(\"load_voice_runtime_status\"),requestVoicePermissions:()=>G(\"request_voice_permissions\"),setVoiceGlobalShortcut:t=>G(\"set_voice_global_shortcut\",{shortcut:t??null}),captureVoiceTriggerKey:t=>G(\"capture_voice_"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "load_voice_workspace",
+      "rowCount": 1,
+      "wrappers": [
+        "loadVoiceWorkspace"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25751,
+          "wrapper": "loadVoiceWorkspace",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "e\"),diagnose:()=>G(\"diagnose\"),loadSessions:()=>G(\"load_sessions\"),deleteSessions:t=>G(\"delete_sessions\",{ids:t}),loadCustomInstructionState:()=>G(\"load_custom_instruction_state\"),loadVoiceWorkspace:()=>G(\"load_voice_workspace\"),upsertVoiceTemplate:t=>G(\"upsert_voice_template\",{id:t.id??null,title:t.title,description:t.description,content:t.content}),removeVoiceTemplate:t=>G(\"remove_voice_template\",{id:t"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "logout",
+      "rowCount": 1,
+      "wrappers": [
+        "logout"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24281,
+          "wrapper": "logout",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "t:t=>G(\"switch_account\",{accountKey:t}),switchAccountAndRestartCodex:t=>G(\"switch_account_and_restart_codex\",{accountKey:t}),removeAccounts:t=>G(\"remove_accounts\",{accountKeys:t}),logout:()=>G(\"logout\"),clean:()=>G(\"clean\"),rebuildRegistry:()=>G(\"rebuild_registry\"),forceKillCodex:()=>G(\"force_kill_codex\"),resetCodexConfig:()=>G(\"reset_codex_config\"),getImageCompat:()=>G(\"get_ima"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "merge_mystery_unlock_grants",
+      "rowCount": 1,
+      "wrappers": [
+        "mergeMysteryUnlockGrants"
+      ],
+      "argKeys": [
+        "grants"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31724,
+          "wrapper": "mergeMysteryUnlockGrants",
+          "callee": "G",
+          "argKeys": [
+            "grants"
+          ],
+          "source": "minified",
+          "snippet": "_main_window\"),hotspotReady:()=>G(\"hotspot_ready\"),openPath:t=>G(\"open_path\",{path:t}),getDeviceId:()=>G(\"get_device_id\"),getMysteryUnlockGrants:()=>G(\"get_mystery_unlock_grants\"),mergeMysteryUnlockGrants:t=>G(\"merge_mystery_unlock_grants\",{grants:t}),getNotificationClientState:()=>G(\"get_notification_client_state\"),getSystemInfo:()=>G(\"get_system_info\"),loadBootstrapState:()=>G(\"load_bootstrap_state\"),loadPendingAu"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "open_path",
+      "rowCount": 1,
+      "wrappers": [
+        "openPath"
+      ],
+      "argKeys": [
+        "path"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31595,
+          "wrapper": "openPath",
+          "callee": "G",
+          "argKeys": [
+            "path"
+          ],
+          "source": "minified",
+          "snippet": "otspotEnabled:()=>G(\"get_hotspot_enabled\"),setHotspotEnabled:t=>G(\"set_hotspot_enabled\",{enabled:t}),focusMainWindow:()=>G(\"focus_main_window\"),hotspotReady:()=>G(\"hotspot_ready\"),openPath:t=>G(\"open_path\",{path:t}),getDeviceId:()=>G(\"get_device_id\"),getMysteryUnlockGrants:()=>G(\"get_mystery_unlock_grants\"),mergeMysteryUnlockGrants:t=>G(\"merge_mystery_unlock_grants\",{grants:t}),getN"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "preview_account_import",
+      "rowCount": 1,
+      "wrappers": [
+        "previewAccountImport"
+      ],
+      "argKeys": [
+        "filePath"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24748,
+          "wrapper": "previewAccountImport",
+          "callee": "G",
+          "argKeys": [
+            "filePath"
+          ],
+          "source": "minified",
+          "snippet": "count:(t,e=!1)=>G(\"import_chatgpt_session_account\",{sessionJson:t,overwriteExisting:e}),exportAccountsToFile:(t,e)=>G(\"export_accounts_to_file\",{targetPath:t,accountKeys:e??null}),previewAccountImport:t=>G(\"preview_account_import\",{filePath:t}),importAccountsFromFile:(t,e,o)=>G(\"import_accounts_from_file\",{filePath:t,overwriteExisting:e,selectedKeys:o??null}),setAutoSwitch:t=>G(\"set_auto_switch\",{enabled:t}"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "preview_custom_instruction_apply",
+      "rowCount": 1,
+      "wrappers": [
+        "previewCustomInstructionApply"
+      ],
+      "argKeys": [
+        "content"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30007,
+          "wrapper": "previewCustomInstructionApply",
+          "callee": "G",
+          "argKeys": [
+            "content"
+          ],
+          "source": "minified",
+          "snippet": "yle,modifierMask:t.modifierMask??0}),removeVoiceModeShortcut:t=>G(\"remove_voice_mode_shortcut\",{modeId:t}),requestAccessibilityPermission:()=>G(\"request_accessibility_permission\"),previewCustomInstructionApply:t=>G(\"preview_custom_instruction_apply\",{content:t}),applyCustomInstruction:t=>G(\"apply_custom_instruction\",{content:t.content,templateCode:t.templateCode,templateTitle:t.templateTitle,source:t.source}),clearCustomInstr"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "rebuild_registry",
+      "rowCount": 1,
+      "wrappers": [
+        "rebuildRegistry"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24325,
+          "wrapper": "rebuildRegistry",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "chAccountAndRestartCodex:t=>G(\"switch_account_and_restart_codex\",{accountKey:t}),removeAccounts:t=>G(\"remove_accounts\",{accountKeys:t}),logout:()=>G(\"logout\"),clean:()=>G(\"clean\"),rebuildRegistry:()=>G(\"rebuild_registry\"),forceKillCodex:()=>G(\"force_kill_codex\"),resetCodexConfig:()=>G(\"reset_codex_config\"),getImageCompat:()=>G(\"get_image_compat\"),setImageCompat:t=>G(\"set_image_compat\",{enabled:t})"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "refresh_usage_snapshot",
+      "rowCount": 1,
+      "wrappers": [
+        "refreshUsageSnapshot"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24036,
+          "wrapper": "refreshUsageSnapshot",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "ync()=>{const{invoke:i}=await Promise.resolve().then(()=>Wf);return{invoke:i}},void 0);return o(t,e)}return pf(t,e)}const We={loadSnapshot:(t=!1)=>G(\"load_snapshot\",{localOnly:t}),refreshUsageSnapshot:()=>G(\"refresh_usage_snapshot\"),switchAccount:t=>G(\"switch_account\",{accountKey:t}),switchAccountAndRestartCodex:t=>G(\"switch_account_and_restart_codex\",{accountKey:t}),removeAccounts:t=>G(\"remove_accounts\",{ac"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "remove_accounts",
+      "rowCount": 1,
+      "wrappers": [
+        "removeAccounts"
+      ],
+      "argKeys": [
+        "accountKeys"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24226,
+          "wrapper": "removeAccounts",
+          "callee": "G",
+          "argKeys": [
+            "accountKeys"
+          ],
+          "source": "minified",
+          "snippet": "geSnapshot:()=>G(\"refresh_usage_snapshot\"),switchAccount:t=>G(\"switch_account\",{accountKey:t}),switchAccountAndRestartCodex:t=>G(\"switch_account_and_restart_codex\",{accountKey:t}),removeAccounts:t=>G(\"remove_accounts\",{accountKeys:t}),logout:()=>G(\"logout\"),clean:()=>G(\"clean\"),rebuildRegistry:()=>G(\"rebuild_registry\"),forceKillCodex:()=>G(\"force_kill_codex\"),resetCodexConfig:()=>G(\"reset_codex"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "remove_mcp_server",
+      "rowCount": 1,
+      "wrappers": [
+        "removeMcpServer"
+      ],
+      "argKeys": [
+        "name"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30616,
+          "wrapper": "removeMcpServer",
+          "callee": "G",
+          "argKeys": [
+            "name"
+          ],
+          "source": "minified",
+          "snippet": "rver:t=>G(\"upsert_mcp_server\",{...t,args:t.args??[],headers:t.headers??{},environment:t.environment??{}}),setMcpServerEnabled:(t,e)=>G(\"set_mcp_server_enabled\",{name:t,enabled:e}),removeMcpServer:t=>G(\"remove_mcp_server\",{name:t}),loadInstalledSkills:()=>G(\"load_installed_skills\"),loadSkillBackups:()=>G(\"load_skill_backups\"),importSkill:t=>G(\"import_skill\",{path:t}),removeSkill:t=>G(\"remove_skill\""
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "remove_skill",
+      "rowCount": 1,
+      "wrappers": [
+        "removeSkill"
+      ],
+      "argKeys": [
+        "id"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30805,
+          "wrapper": "removeSkill",
+          "callee": "G",
+          "argKeys": [
+            "id"
+          ],
+          "source": "minified",
+          "snippet": "Server:t=>G(\"remove_mcp_server\",{name:t}),loadInstalledSkills:()=>G(\"load_installed_skills\"),loadSkillBackups:()=>G(\"load_skill_backups\"),importSkill:t=>G(\"import_skill\",{path:t}),removeSkill:t=>G(\"remove_skill\",{id:t}),restoreSkillBackup:t=>G(\"restore_skill_backup\",{id:t}),deleteSkillBackup:t=>G(\"delete_skill_backup\",{id:t}),restartCodex:()=>G(\"restart_codex\"),loadUsageAnalytics:()=>G(\"l"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "remove_voice_history_entry",
+      "rowCount": 1,
+      "wrappers": [
+        "removeVoiceHistoryEntry"
+      ],
+      "argKeys": [
+        "id"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 28104,
+          "wrapper": "removeVoiceHistoryEntry",
+          "callee": "G",
+          "argKeys": [
+            "id"
+          ],
+          "source": "minified",
+          "snippet": "t.asrModel,asrBaseUrl:t.asrBaseUrl}),testVoiceAsrConfig:t=>G(\"test_voice_asr_config\",{asrProvider:t.asrProvider,asrApiKey:t.asrApiKey,asrModel:t.asrModel,asrBaseUrl:t.asrBaseUrl}),removeVoiceHistoryEntry:t=>G(\"remove_voice_history_entry\",{id:t}),loadVoiceRuntimeStatus:()=>G(\"load_voice_runtime_status\"),requestVoicePermissions:()=>G(\"request_voice_permissions\"),setVoiceGlobalShortcut:t=>G(\"set_voice_global_shortcut"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "remove_voice_mode_shortcut",
+      "rowCount": 1,
+      "wrappers": [
+        "removeVoiceModeShortcut"
+      ],
+      "argKeys": [
+        "modeId"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 29864,
+          "wrapper": "removeVoiceModeShortcut",
+          "callee": "G",
+          "argKeys": [
+            "modeId"
+          ],
+          "source": "minified",
+          "snippet": "utput}),setVoiceModeShortcut:t=>G(\"set_voice_mode_shortcut\",{modeId:t.modeId,keyCode:t.keyCode,keyLabel:t.keyLabel,keyKind:t.keyKind,style:t.style,modifierMask:t.modifierMask??0}),removeVoiceModeShortcut:t=>G(\"remove_voice_mode_shortcut\",{modeId:t}),requestAccessibilityPermission:()=>G(\"request_accessibility_permission\"),previewCustomInstructionApply:t=>G(\"preview_custom_instruction_apply\",{content:t}),applyCustom"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "remove_voice_template",
+      "rowCount": 1,
+      "wrappers": [
+        "removeVoiceTemplate"
+      ],
+      "argKeys": [
+        "id"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25924,
+          "wrapper": "removeVoiceTemplate",
+          "callee": "G",
+          "argKeys": [
+            "id"
+          ],
+          "source": "minified",
+          "snippet": "tate\"),loadVoiceWorkspace:()=>G(\"load_voice_workspace\"),upsertVoiceTemplate:t=>G(\"upsert_voice_template\",{id:t.id??null,title:t.title,description:t.description,content:t.content}),removeVoiceTemplate:t=>G(\"remove_voice_template\",{id:t}),upsertVoiceVocabulary:t=>G(\"upsert_voice_vocabulary\",{id:t.id??null,source:t.source,replacement:t.replacement,kind:t.kind,appBundleId:t.appBundleId??null,appName:t.appName"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "remove_voice_vocabulary",
+      "rowCount": 1,
+      "wrappers": [
+        "removeVoiceVocabulary"
+      ],
+      "argKeys": [
+        "id"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 26181,
+          "wrapper": "removeVoiceVocabulary",
+          "callee": "G",
+          "argKeys": [
+            "id"
+          ],
+          "source": "minified",
+          "snippet": "y:t=>G(\"upsert_voice_vocabulary\",{id:t.id??null,source:t.source,replacement:t.replacement,kind:t.kind,appBundleId:t.appBundleId??null,appName:t.appName??null,notes:t.notes??null}),removeVoiceVocabulary:t=>G(\"remove_voice_vocabulary\",{id:t}),replaceVoiceVocabularyKind:t=>G(\"replace_voice_vocabulary_kind\",{kind:t.kind,appBundleId:t.appBundleId??null,appName:t.appName??null,entries:t.entries.map(e=>({source:e.so"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "remove_voice_vocabulary_app_scope",
+      "rowCount": 1,
+      "wrappers": [
+        "removeVoiceVocabularyAppScope"
+      ],
+      "argKeys": [
+        "appBundleId"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 26469,
+          "wrapper": "removeVoiceVocabularyAppScope",
+          "callee": "G",
+          "argKeys": [
+            "appBundleId"
+          ],
+          "source": "minified",
+          "snippet": "vocabulary_kind\",{kind:t.kind,appBundleId:t.appBundleId??null,appName:t.appName??null,entries:t.entries.map(e=>({source:e.source,replacement:e.replacement,notes:e.notes??null}))}),removeVoiceVocabularyAppScope:t=>G(\"remove_voice_vocabulary_app_scope\",{appBundleId:t}),upsertVoiceVocabularyAppScope:t=>G(\"upsert_voice_vocabulary_app_scope\",{bundleId:t.bundleId,name:t.name,path:t.path}),resolveVoiceVocabularyAppInfo:t=>G(\"resolve_"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "replace_voice_vocabulary_kind",
+      "rowCount": 1,
+      "wrappers": [
+        "replaceVoiceVocabularyKind"
+      ],
+      "argKeys": [
+        "appBundleId",
+        "appName",
+        "entries",
+        "kind",
+        "notes",
+        "replacement",
+        "source"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 26242,
+          "wrapper": "replaceVoiceVocabularyKind",
+          "callee": "G",
+          "argKeys": [
+            "kind",
+            "appBundleId",
+            "appName",
+            "entries",
+            "source",
+            "replacement",
+            "notes"
+          ],
+          "source": "minified",
+          "snippet": "ce,replacement:t.replacement,kind:t.kind,appBundleId:t.appBundleId??null,appName:t.appName??null,notes:t.notes??null}),removeVoiceVocabulary:t=>G(\"remove_voice_vocabulary\",{id:t}),replaceVoiceVocabularyKind:t=>G(\"replace_voice_vocabulary_kind\",{kind:t.kind,appBundleId:t.appBundleId??null,appName:t.appName??null,entries:t.entries.map(e=>({source:e.source,replacement:e.replacement,notes:e.notes??null}))}),removeVoiceVocab"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "request_accessibility_permission",
+      "rowCount": 1,
+      "wrappers": [
+        "requestAccessibilityPermission"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 29934,
+          "wrapper": "requestAccessibilityPermission",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "modeId,keyCode:t.keyCode,keyLabel:t.keyLabel,keyKind:t.keyKind,style:t.style,modifierMask:t.modifierMask??0}),removeVoiceModeShortcut:t=>G(\"remove_voice_mode_shortcut\",{modeId:t}),requestAccessibilityPermission:()=>G(\"request_accessibility_permission\"),previewCustomInstructionApply:t=>G(\"preview_custom_instruction_apply\",{content:t}),applyCustomInstruction:t=>G(\"apply_custom_instruction\",{content:t.content,templateCode:t.templa"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "request_voice_permissions",
+      "rowCount": 1,
+      "wrappers": [
+        "requestVoicePermissions"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 28228,
+          "wrapper": "requestVoicePermissions",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "asrApiKey,asrModel:t.asrModel,asrBaseUrl:t.asrBaseUrl}),removeVoiceHistoryEntry:t=>G(\"remove_voice_history_entry\",{id:t}),loadVoiceRuntimeStatus:()=>G(\"load_voice_runtime_status\"),requestVoicePermissions:()=>G(\"request_voice_permissions\"),setVoiceGlobalShortcut:t=>G(\"set_voice_global_shortcut\",{shortcut:t??null}),captureVoiceTriggerKey:t=>G(\"capture_voice_trigger_key\",{style:t}),cancelVoiceTriggerCapture:()=>G(\"ca"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "reset_codex_config",
+      "rowCount": 1,
+      "wrappers": [
+        "resetCodexConfig"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24408,
+          "wrapper": "resetCodexConfig",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "moveAccounts:t=>G(\"remove_accounts\",{accountKeys:t}),logout:()=>G(\"logout\"),clean:()=>G(\"clean\"),rebuildRegistry:()=>G(\"rebuild_registry\"),forceKillCodex:()=>G(\"force_kill_codex\"),resetCodexConfig:()=>G(\"reset_codex_config\"),getImageCompat:()=>G(\"get_image_compat\"),setImageCompat:t=>G(\"set_image_compat\",{enabled:t}),importChatGptSessionAccount:(t,e=!1)=>G(\"import_chatgpt_session_account\",{sessionJson"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "resolve_voice_vocabulary_app_info",
+      "rowCount": 1,
+      "wrappers": [
+        "resolveVoiceVocabularyAppInfo"
+      ],
+      "argKeys": [
+        "path"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 26675,
+          "wrapper": "resolveVoiceVocabularyAppInfo",
+          "callee": "G",
+          "argKeys": [
+            "path"
+          ],
+          "source": "minified",
+          "snippet": "ope:t=>G(\"remove_voice_vocabulary_app_scope\",{appBundleId:t}),upsertVoiceVocabularyAppScope:t=>G(\"upsert_voice_vocabulary_app_scope\",{bundleId:t.bundleId,name:t.name,path:t.path}),resolveVoiceVocabularyAppInfo:t=>G(\"resolve_voice_vocabulary_app_info\",{path:t}),generateVoicePrompt:t=>G(\"generate_voice_prompt\",{templateId:t.templateId,rawText:t.rawText,selectedText:t.selectedText??null,clipboardText:t.clipboardText??null,targetB"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "restart_codex",
+      "rowCount": 2,
+      "wrappers": [
+        "restartCodex",
+        "restartCodexApp"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>",
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30953,
+          "wrapper": "restartCodex",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "l:t=>G(\"import_skill\",{path:t}),removeSkill:t=>G(\"remove_skill\",{id:t}),restoreSkillBackup:t=>G(\"restore_skill_backup\",{id:t}),deleteSkillBackup:t=>G(\"delete_skill_backup\",{id:t}),restartCodex:()=>G(\"restart_codex\"),loadUsageAnalytics:()=>G(\"load_usage_analytics\"),loadQuotaHistory:t=>G(\"load_quota_history\",{accountKey:t}),loadSessionAnalytics:(t=\"week\")=>G(\"load_session_analytics\",{range:t})"
+        },
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1663,
+          "wrapper": "restartCodexApp",
+          "callee": "r",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "{input:e}),getActive:()=>r(\"get_relay_active\"),getProxyStatus:()=>r(\"get_relay_proxy_status\"),setCodexRouterEnabled:(e,o)=>r(\"set_codex_router_enabled\",{enabled:e,relaunch:o??!0}),restartCodexApp:()=>r(\"restart_codex\"),exportConfig:(e,o)=>r(\"export_relay_config\",{filePath:e,includeApiKeys:o}),importConfig:e=>r(\"import_relay_config\",{filePath:e}),setBlockOfficialPassthrough:e=>r(\"set_block_offic"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "restore_skill_backup",
+      "rowCount": 1,
+      "wrappers": [
+        "restoreSkillBackup"
+      ],
+      "argKeys": [
+        "id"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30845,
+          "wrapper": "restoreSkillBackup",
+          "callee": "G",
+          "argKeys": [
+            "id"
+          ],
+          "source": "minified",
+          "snippet": "),loadInstalledSkills:()=>G(\"load_installed_skills\"),loadSkillBackups:()=>G(\"load_skill_backups\"),importSkill:t=>G(\"import_skill\",{path:t}),removeSkill:t=>G(\"remove_skill\",{id:t}),restoreSkillBackup:t=>G(\"restore_skill_backup\",{id:t}),deleteSkillBackup:t=>G(\"delete_skill_backup\",{id:t}),restartCodex:()=>G(\"restart_codex\"),loadUsageAnalytics:()=>G(\"load_usage_analytics\"),loadQuotaHistory:t=>G(\"load_quota"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "rollback_custom_instruction",
+      "rowCount": 1,
+      "wrappers": [
+        "rollbackCustomInstruction"
+      ],
+      "argKeys": [
+        "historyId"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30308,
+          "wrapper": "rollbackCustomInstruction",
+          "callee": "G",
+          "argKeys": [
+            "historyId"
+          ],
+          "source": "minified",
+          "snippet": "tom_instruction\",{content:t.content,templateCode:t.templateCode,templateTitle:t.templateTitle,source:t.source}),clearCustomInstructionBlock:()=>G(\"clear_custom_instruction_block\"),rollbackCustomInstruction:t=>G(\"rollback_custom_instruction\",{historyId:t}),loadMcpServers:()=>G(\"load_mcp_servers\"),upsertMcpServer:t=>G(\"upsert_mcp_server\",{...t,args:t.args??[],headers:t.headers??{},environment:t.environment??{}}),setMcp"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "run_codex_router_diagnostics",
+      "rowCount": 1,
+      "wrappers": [],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeRaw",
+          "file": "assets/<asset>",
+          "line": 32,
+          "column": 853,
+          "wrapper": null,
+          "callee": "s",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "(null);const d=Date.now();try{const{invoke:s}=await F(async()=>{const{invoke:y}=await import(\"./index-CL22l5v8.js\").then(f=>f.aT);return{invoke:y}},__vite__mapDeps([0,1])),g=await s(\"run_codex_router_diagnostics\");g!=null&&g.data?x(g.data):p(n(\"relay.diagnostic.dataFormatError\"))}catch(s){p(s instanceof Error?s.message:String(s))}finally{r||await H(d),b(!1)}},z=async r=>{P.flushSync(()=>N("
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "run_daemon_once",
+      "rowCount": 1,
+      "wrappers": [
+        "runDaemonOnce"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25536,
+          "wrapper": "runDaemonOnce",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "iProxyConfig:()=>G(\"detect_api_proxy_config\"),checkUpdateInstallability:()=>G(\"check_update_installability\"),beginAddAccountAttachMonitor:()=>G(\"begin_add_account_attach_monitor\"),runDaemonOnce:()=>G(\"run_daemon_once\"),diagnose:()=>G(\"diagnose\"),loadSessions:()=>G(\"load_sessions\"),deleteSessions:t=>G(\"delete_sessions\",{ids:t}),loadCustomInstructionState:()=>G(\"load_custom_instruction_state\"),lo"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "save_voice_asr_config",
+      "rowCount": 1,
+      "wrappers": [
+        "saveVoiceAsrConfig"
+      ],
+      "argKeys": [
+        "asrApiKey",
+        "asrBaseUrl",
+        "asrModel",
+        "asrProvider"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 27818,
+          "wrapper": "saveVoiceAsrConfig",
+          "callee": "G",
+          "argKeys": [
+            "asrProvider",
+            "asrApiKey",
+            "asrModel",
+            "asrBaseUrl"
+          ],
+          "source": "minified",
+          "snippet": "save_voice_llm_config\",{llmProvider:t.llmProvider,llmApiKey:t.llmApiKey,llmModel:t.llmModel,llmBaseUrl:t.llmBaseUrl}),loadVoiceAsrConfig:t=>G(\"load_voice_asr_config\",{provider:t}),saveVoiceAsrConfig:t=>G(\"save_voice_asr_config\",{asrProvider:t.asrProvider,asrApiKey:t.asrApiKey,asrModel:t.asrModel,asrBaseUrl:t.asrBaseUrl}),testVoiceAsrConfig:t=>G(\"test_voice_asr_config\",{asrProvider:t.asrProvider,asrApiKey"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "save_voice_llm_config",
+      "rowCount": 1,
+      "wrappers": [
+        "saveVoiceLlmConfig"
+      ],
+      "argKeys": [
+        "llmApiKey",
+        "llmBaseUrl",
+        "llmModel",
+        "llmProvider"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 27613,
+          "wrapper": "saveVoiceLlmConfig",
+          "callee": "G",
+          "argKeys": [
+            "llmProvider",
+            "llmApiKey",
+            "llmModel",
+            "llmBaseUrl"
+          ],
+          "source": "minified",
+          "snippet": "test_voice_llm_config\",{llmProvider:t.llmProvider,llmApiKey:t.llmApiKey,llmModel:t.llmModel,llmBaseUrl:t.llmBaseUrl}),loadVoiceLlmConfig:t=>G(\"load_voice_llm_config\",{provider:t}),saveVoiceLlmConfig:t=>G(\"save_voice_llm_config\",{llmProvider:t.llmProvider,llmApiKey:t.llmApiKey,llmModel:t.llmModel,llmBaseUrl:t.llmBaseUrl}),loadVoiceAsrConfig:t=>G(\"load_voice_asr_config\",{provider:t}),saveVoiceAsrConfig:t=>"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_api_proxy_config",
+      "rowCount": 1,
+      "wrappers": [
+        "setApiProxyConfig"
+      ],
+      "argKeys": [
+        "mode",
+        "url"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25082,
+          "wrapper": "setApiProxyConfig",
+          "callee": "G",
+          "argKeys": [
+            "mode",
+            "url"
+          ],
+          "source": "minified",
+          "snippet": "ng:e,selectedKeys:o??null}),setAutoSwitch:t=>G(\"set_auto_switch\",{enabled:t}),configureAutoSwitch:(t,e)=>G(\"configure_auto_switch\",{threshold5hPercent:t,thresholdWeeklyPercent:e}),setApiProxyConfig:(t,e)=>G(\"set_api_proxy_config\",{mode:t,url:e}),getUsageRefreshInterval:()=>G(\"get_usage_refresh_interval\"),setUsageRefreshInterval:t=>G(\"set_usage_refresh_interval\",{interval:t}),testApiProxyConfig:(t,e)=>G(\"te"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_auto_switch",
+      "rowCount": 1,
+      "wrappers": [
+        "setAutoSwitch"
+      ],
+      "argKeys": [
+        "enabled"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24930,
+          "wrapper": "setAutoSwitch",
+          "callee": "G",
+          "argKeys": [
+            "enabled"
+          ],
+          "source": "minified",
+          "snippet": "eviewAccountImport:t=>G(\"preview_account_import\",{filePath:t}),importAccountsFromFile:(t,e,o)=>G(\"import_accounts_from_file\",{filePath:t,overwriteExisting:e,selectedKeys:o??null}),setAutoSwitch:t=>G(\"set_auto_switch\",{enabled:t}),configureAutoSwitch:(t,e)=>G(\"configure_auto_switch\",{threshold5hPercent:t,thresholdWeeklyPercent:e}),setApiProxyConfig:(t,e)=>G(\"set_api_proxy_config\",{mode:t,url:e}"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_block_official_passthrough",
+      "rowCount": 1,
+      "wrappers": [
+        "setBlockOfficialPassthrough"
+      ],
+      "argKeys": [
+        "blocked"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1831,
+          "wrapper": "setBlockOfficialPassthrough",
+          "callee": "r",
+          "argKeys": [
+            "blocked"
+          ],
+          "source": "minified",
+          "snippet": "nch:o??!0}),restartCodexApp:()=>r(\"restart_codex\"),exportConfig:(e,o)=>r(\"export_relay_config\",{filePath:e,includeApiKeys:o}),importConfig:e=>r(\"import_relay_config\",{filePath:e}),setBlockOfficialPassthrough:e=>r(\"set_block_official_passthrough\",{blocked:e}),getPassthroughAuditLog:e=>r(\"get_passthrough_audit_log\",{limit:e??50})},u=[\"relay-state\"];function M(){return w({queryKey:u,queryFn:async()=>(await i.loadState()).dat"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_codex_router_enabled",
+      "rowCount": 1,
+      "wrappers": [
+        "setCodexRouterEnabled"
+      ],
+      "argKeys": [
+        "enabled",
+        "relaunch"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1577,
+          "wrapper": "setCodexRouterEnabled",
+          "callee": "r",
+          "argKeys": [
+            "enabled",
+            "relaunch"
+          ],
+          "source": "minified",
+          "snippet": "t:e=>r(\"test_relay_draft\",{input:e}),fetchModelsDraft:e=>r(\"fetch_relay_models_draft\",{input:e}),getActive:()=>r(\"get_relay_active\"),getProxyStatus:()=>r(\"get_relay_proxy_status\"),setCodexRouterEnabled:(e,o)=>r(\"set_codex_router_enabled\",{enabled:e,relaunch:o??!0}),restartCodexApp:()=>r(\"restart_codex\"),exportConfig:(e,o)=>r(\"export_relay_config\",{filePath:e,includeApiKeys:o}),importConfig:e=>r(\"import_relay_confi"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_hotspot_enabled",
+      "rowCount": 1,
+      "wrappers": [
+        "setHotspotEnabled"
+      ],
+      "argKeys": [
+        "enabled"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 31458,
+          "wrapper": "setHotspotEnabled",
+          "callee": "G",
+          "argKeys": [
+            "enabled"
+          ],
+          "source": "minified",
+          "snippet": "analytics\",{range:t}),loadChangeAnalytics:(t=\"week\")=>G(\"load_change_analytics\",{range:t}),hasNotch:()=>G(\"has_notch\").catch(()=>!1),getHotspotEnabled:()=>G(\"get_hotspot_enabled\"),setHotspotEnabled:t=>G(\"set_hotspot_enabled\",{enabled:t}),focusMainWindow:()=>G(\"focus_main_window\"),hotspotReady:()=>G(\"hotspot_ready\"),openPath:t=>G(\"open_path\",{path:t}),getDeviceId:()=>G(\"get_device_id\"),getMysteryUnlock"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_image_compat",
+      "rowCount": 1,
+      "wrappers": [
+        "setImageCompat"
+      ],
+      "argKeys": [
+        "enabled"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24494,
+          "wrapper": "setImageCompat",
+          "callee": "G",
+          "argKeys": [
+            "enabled"
+          ],
+          "source": "minified",
+          "snippet": "G(\"clean\"),rebuildRegistry:()=>G(\"rebuild_registry\"),forceKillCodex:()=>G(\"force_kill_codex\"),resetCodexConfig:()=>G(\"reset_codex_config\"),getImageCompat:()=>G(\"get_image_compat\"),setImageCompat:t=>G(\"set_image_compat\",{enabled:t}),importChatGptSessionAccount:(t,e=!1)=>G(\"import_chatgpt_session_account\",{sessionJson:t,overwriteExisting:e}),exportAccountsToFile:(t,e)=>G(\"export_accounts_to_file\","
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_mcp_server_enabled",
+      "rowCount": 1,
+      "wrappers": [
+        "setMcpServerEnabled"
+      ],
+      "argKeys": [
+        "enabled",
+        "name"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30542,
+          "wrapper": "setMcpServerEnabled",
+          "callee": "G",
+          "argKeys": [
+            "name",
+            "enabled"
+          ],
+          "source": "minified",
+          "snippet": "ction\",{historyId:t}),loadMcpServers:()=>G(\"load_mcp_servers\"),upsertMcpServer:t=>G(\"upsert_mcp_server\",{...t,args:t.args??[],headers:t.headers??{},environment:t.environment??{}}),setMcpServerEnabled:(t,e)=>G(\"set_mcp_server_enabled\",{name:t,enabled:e}),removeMcpServer:t=>G(\"remove_mcp_server\",{name:t}),loadInstalledSkills:()=>G(\"load_installed_skills\"),loadSkillBackups:()=>G(\"load_skill_backups\"),importSkill:"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_relay_provider_network",
+      "rowCount": 1,
+      "wrappers": [
+        "setNetwork"
+      ],
+      "argKeys": [
+        "network",
+        "providerId"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1266,
+          "wrapper": "setNetwork",
+          "callee": "r",
+          "argKeys": [
+            "providerId",
+            "network"
+          ],
+          "source": "minified",
+          "snippet": "=>r(\"delete_relay_provider\",{providerId:e}),activate:(e,o)=>r(\"activate_relay_provider\",{providerId:e,ide:o}),deactivate:(e,o)=>r(\"deactivate_relay_provider\",{providerId:e,ide:o}),setNetwork:(e,o)=>r(\"set_relay_provider_network\",{providerId:e,network:o}),test:e=>r(\"test_relay_provider\",{providerId:e}),testDraft:e=>r(\"test_relay_draft\",{input:e}),fetchModelsDraft:e=>r(\"fetch_relay_models_draft\",{input:e}),"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_usage_refresh_interval",
+      "rowCount": 1,
+      "wrappers": [
+        "setUsageRefreshInterval"
+      ],
+      "argKeys": [
+        "interval"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25208,
+          "wrapper": "setUsageRefreshInterval",
+          "callee": "G",
+          "argKeys": [
+            "interval"
+          ],
+          "source": "minified",
+          "snippet": "tch\",{threshold5hPercent:t,thresholdWeeklyPercent:e}),setApiProxyConfig:(t,e)=>G(\"set_api_proxy_config\",{mode:t,url:e}),getUsageRefreshInterval:()=>G(\"get_usage_refresh_interval\"),setUsageRefreshInterval:t=>G(\"set_usage_refresh_interval\",{interval:t}),testApiProxyConfig:(t,e)=>G(\"test_api_proxy_config\",{mode:t,url:e}),detectApiProxyConfig:()=>G(\"detect_api_proxy_config\"),checkUpdateInstallability:()=>G(\"check_upda"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_voice_global_shortcut",
+      "rowCount": 1,
+      "wrappers": [
+        "setVoiceGlobalShortcut"
+      ],
+      "argKeys": [
+        "shortcut"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 28287,
+          "wrapper": "setVoiceGlobalShortcut",
+          "callee": "G",
+          "argKeys": [
+            "shortcut"
+          ],
+          "source": "minified",
+          "snippet": "oveVoiceHistoryEntry:t=>G(\"remove_voice_history_entry\",{id:t}),loadVoiceRuntimeStatus:()=>G(\"load_voice_runtime_status\"),requestVoicePermissions:()=>G(\"request_voice_permissions\"),setVoiceGlobalShortcut:t=>G(\"set_voice_global_shortcut\",{shortcut:t??null}),captureVoiceTriggerKey:t=>G(\"capture_voice_trigger_key\",{style:t}),cancelVoiceTriggerCapture:()=>G(\"cancel_voice_trigger_capture\"),setVoiceTriggerListenerSuppr"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_voice_mode_shortcut",
+      "rowCount": 1,
+      "wrappers": [
+        "setVoiceModeShortcut"
+      ],
+      "argKeys": [
+        "keyCode",
+        "keyKind",
+        "keyLabel",
+        "modeId",
+        "modifierMask",
+        "style"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 29692,
+          "wrapper": "setVoiceModeShortcut",
+          "callee": "G",
+          "argKeys": [
+            "modeId",
+            "keyCode",
+            "keyLabel",
+            "keyKind",
+            "style",
+            "modifierMask"
+          ],
+          "source": "minified",
+          "snippet": "_capture\"),injectVoiceText:(t,e)=>G(\"inject_voice_text\",{text:t,expectedBundleId:e??null}),showVoiceSearchOverlay:t=>G(\"show_voice_search_overlay\",{query:t.query,output:t.output}),setVoiceModeShortcut:t=>G(\"set_voice_mode_shortcut\",{modeId:t.modeId,keyCode:t.keyCode,keyLabel:t.keyLabel,keyKind:t.keyKind,style:t.style,modifierMask:t.modifierMask??0}),removeVoiceModeShortcut:t=>G(\"remove_voice_mode_shortcut\",{"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_voice_processing_mode_id",
+      "rowCount": 1,
+      "wrappers": [
+        "setVoiceProcessingModeId"
+      ],
+      "argKeys": [
+        "modeId",
+        "processingMode"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 29313,
+          "wrapper": "setVoiceProcessingModeId",
+          "callee": "G",
+          "argKeys": [
+            "modeId",
+            "processingMode"
+          ],
+          "source": "minified",
+          "snippet": "ce_runtime_settings\",{enabled:t.enabled,shortcut:t.shortcut??null,speechModel:t.speechModel??null,processingMode:t.processingMode??null,processingModeId:t.processingModeId??null}),setVoiceProcessingModeId:t=>G(\"set_voice_processing_mode_id\",{modeId:t.modeId,processingMode:t.processingMode??null}),startVoiceCapture:()=>G(\"start_voice_capture\"),stopVoiceCapture:()=>G(\"stop_voice_capture\"),injectVoiceText:(t,e)=>G(\"inje"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_voice_trigger_bindings",
+      "rowCount": 1,
+      "wrappers": [
+        "setVoiceTriggerBindings"
+      ],
+      "argKeys": [
+        "activeStyle",
+        "holdKeyCode",
+        "holdKeyKind",
+        "holdKeyLabel",
+        "holdModifierMask",
+        "toggleKeyCode",
+        "toggleKeyKind",
+        "toggleKeyLabel",
+        "toggleModifierMask"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 28741,
+          "wrapper": "setVoiceTriggerBindings",
+          "callee": "G",
+          "argKeys": [
+            "activeStyle",
+            "holdKeyCode",
+            "holdKeyLabel",
+            "holdKeyKind",
+            "holdModifierMask",
+            "toggleKeyCode",
+            "toggleKeyLabel",
+            "toggleKeyKind",
+            "toggleModifierMask"
+          ],
+          "source": "minified",
+          "snippet": "suppressed\",{suppressed:t}),setVoiceTriggerKey:t=>G(\"set_voice_trigger_key\",{keyCode:t.keyCode,keyLabel:t.keyLabel,keyKind:t.keyKind,style:t.style,modifierMask:t.modifierMask??0}),setVoiceTriggerBindings:t=>G(\"set_voice_trigger_bindings\",{activeStyle:t.activeStyle,holdKeyCode:t.hold.keyCode,holdKeyLabel:t.hold.keyLabel,holdKeyKind:t.hold.keyKind,holdModifierMask:t.hold.modifierMask??0,toggleKeyCode:t.toggle.keyCod"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_voice_trigger_key",
+      "rowCount": 1,
+      "wrappers": [
+        "setVoiceTriggerKey"
+      ],
+      "argKeys": [
+        "keyCode",
+        "keyKind",
+        "keyLabel",
+        "modifierMask",
+        "style"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 28589,
+          "wrapper": "setVoiceTriggerKey",
+          "callee": "G",
+          "argKeys": [
+            "keyCode",
+            "keyLabel",
+            "keyKind",
+            "style",
+            "modifierMask"
+          ],
+          "source": "minified",
+          "snippet": "gger_key\",{style:t}),cancelVoiceTriggerCapture:()=>G(\"cancel_voice_trigger_capture\"),setVoiceTriggerListenerSuppressed:t=>G(\"set_voice_trigger_listener_suppressed\",{suppressed:t}),setVoiceTriggerKey:t=>G(\"set_voice_trigger_key\",{keyCode:t.keyCode,keyLabel:t.keyLabel,keyKind:t.keyKind,style:t.style,modifierMask:t.modifierMask??0}),setVoiceTriggerBindings:t=>G(\"set_voice_trigger_bindings\",{activeStyle:t.ac"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "set_voice_trigger_listener_suppressed",
+      "rowCount": 1,
+      "wrappers": [
+        "setVoiceTriggerListenerSuppressed"
+      ],
+      "argKeys": [
+        "suppressed"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 28494,
+          "wrapper": "setVoiceTriggerListenerSuppressed",
+          "callee": "G",
+          "argKeys": [
+            "suppressed"
+          ],
+          "source": "minified",
+          "snippet": "(\"set_voice_global_shortcut\",{shortcut:t??null}),captureVoiceTriggerKey:t=>G(\"capture_voice_trigger_key\",{style:t}),cancelVoiceTriggerCapture:()=>G(\"cancel_voice_trigger_capture\"),setVoiceTriggerListenerSuppressed:t=>G(\"set_voice_trigger_listener_suppressed\",{suppressed:t}),setVoiceTriggerKey:t=>G(\"set_voice_trigger_key\",{keyCode:t.keyCode,keyLabel:t.keyLabel,keyKind:t.keyKind,style:t.style,modifierMask:t.modifierMask??0}),setVoiceTri"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "show_voice_search_overlay",
+      "rowCount": 1,
+      "wrappers": [
+        "showVoiceSearchOverlay"
+      ],
+      "argKeys": [
+        "output",
+        "query"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 29603,
+          "wrapper": "showVoiceSearchOverlay",
+          "callee": "G",
+          "argKeys": [
+            "query",
+            "output"
+          ],
+          "source": "minified",
+          "snippet": "?null}),startVoiceCapture:()=>G(\"start_voice_capture\"),stopVoiceCapture:()=>G(\"stop_voice_capture\"),injectVoiceText:(t,e)=>G(\"inject_voice_text\",{text:t,expectedBundleId:e??null}),showVoiceSearchOverlay:t=>G(\"show_voice_search_overlay\",{query:t.query,output:t.output}),setVoiceModeShortcut:t=>G(\"set_voice_mode_shortcut\",{modeId:t.modeId,keyCode:t.keyCode,keyLabel:t.keyLabel,keyKind:t.keyKind,style:t.style,modifie"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "start_voice_capture",
+      "rowCount": 1,
+      "wrappers": [
+        "startVoiceCapture"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 29431,
+          "wrapper": "startVoiceCapture",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "cessingMode??null,processingModeId:t.processingModeId??null}),setVoiceProcessingModeId:t=>G(\"set_voice_processing_mode_id\",{modeId:t.modeId,processingMode:t.processingMode??null}),startVoiceCapture:()=>G(\"start_voice_capture\"),stopVoiceCapture:()=>G(\"stop_voice_capture\"),injectVoiceText:(t,e)=>G(\"inject_voice_text\",{text:t,expectedBundleId:e??null}),showVoiceSearchOverlay:t=>G(\"show_voice_search_overla"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "stop_voice_capture",
+      "rowCount": 1,
+      "wrappers": [
+        "stopVoiceCapture"
+      ],
+      "argKeys": [],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 29478,
+          "wrapper": "stopVoiceCapture",
+          "callee": "G",
+          "argKeys": [],
+          "source": "minified",
+          "snippet": "ModeId??null}),setVoiceProcessingModeId:t=>G(\"set_voice_processing_mode_id\",{modeId:t.modeId,processingMode:t.processingMode??null}),startVoiceCapture:()=>G(\"start_voice_capture\"),stopVoiceCapture:()=>G(\"stop_voice_capture\"),injectVoiceText:(t,e)=>G(\"inject_voice_text\",{text:t,expectedBundleId:e??null}),showVoiceSearchOverlay:t=>G(\"show_voice_search_overlay\",{query:t.query,output:t.output}),setVoiceM"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "switch_account",
+      "rowCount": 1,
+      "wrappers": [
+        "switchAccount"
+      ],
+      "argKeys": [
+        "accountKey"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24089,
+          "wrapper": "switchAccount",
+          "callee": "G",
+          "argKeys": [
+            "accountKey"
+          ],
+          "source": "minified",
+          "snippet": "()=>Wf);return{invoke:i}},void 0);return o(t,e)}return pf(t,e)}const We={loadSnapshot:(t=!1)=>G(\"load_snapshot\",{localOnly:t}),refreshUsageSnapshot:()=>G(\"refresh_usage_snapshot\"),switchAccount:t=>G(\"switch_account\",{accountKey:t}),switchAccountAndRestartCodex:t=>G(\"switch_account_and_restart_codex\",{accountKey:t}),removeAccounts:t=>G(\"remove_accounts\",{accountKeys:t}),logout:()=>G(\"logout\"),"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "switch_account_and_restart_codex",
+      "rowCount": 1,
+      "wrappers": [
+        "switchAccountAndRestartCodex"
+      ],
+      "argKeys": [
+        "accountKey"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 24141,
+          "wrapper": "switchAccountAndRestartCodex",
+          "callee": "G",
+          "argKeys": [
+            "accountKey"
+          ],
+          "source": "minified",
+          "snippet": "rn pf(t,e)}const We={loadSnapshot:(t=!1)=>G(\"load_snapshot\",{localOnly:t}),refreshUsageSnapshot:()=>G(\"refresh_usage_snapshot\"),switchAccount:t=>G(\"switch_account\",{accountKey:t}),switchAccountAndRestartCodex:t=>G(\"switch_account_and_restart_codex\",{accountKey:t}),removeAccounts:t=>G(\"remove_accounts\",{accountKeys:t}),logout:()=>G(\"logout\"),clean:()=>G(\"clean\"),rebuildRegistry:()=>G(\"rebuild_registry\"),forceKillCodex:()=>G(\""
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "test_api_proxy_config",
+      "rowCount": 1,
+      "wrappers": [
+        "testApiProxyConfig"
+      ],
+      "argKeys": [
+        "mode",
+        "url"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25280,
+          "wrapper": "testApiProxyConfig",
+          "callee": "G",
+          "argKeys": [
+            "mode",
+            "url"
+          ],
+          "source": "minified",
+          "snippet": "(t,e)=>G(\"set_api_proxy_config\",{mode:t,url:e}),getUsageRefreshInterval:()=>G(\"get_usage_refresh_interval\"),setUsageRefreshInterval:t=>G(\"set_usage_refresh_interval\",{interval:t}),testApiProxyConfig:(t,e)=>G(\"test_api_proxy_config\",{mode:t,url:e}),detectApiProxyConfig:()=>G(\"detect_api_proxy_config\"),checkUpdateInstallability:()=>G(\"check_update_installability\"),beginAddAccountAttachMonitor:()=>G(\"begin_add_"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "test_relay_draft",
+      "rowCount": 1,
+      "wrappers": [
+        "testDraft"
+      ],
+      "argKeys": [
+        "input"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1389,
+          "wrapper": "testDraft",
+          "callee": "r",
+          "argKeys": [
+            "input"
+          ],
+          "source": "minified",
+          "snippet": ",o)=>r(\"deactivate_relay_provider\",{providerId:e,ide:o}),setNetwork:(e,o)=>r(\"set_relay_provider_network\",{providerId:e,network:o}),test:e=>r(\"test_relay_provider\",{providerId:e}),testDraft:e=>r(\"test_relay_draft\",{input:e}),fetchModelsDraft:e=>r(\"fetch_relay_models_draft\",{input:e}),getActive:()=>r(\"get_relay_active\"),getProxyStatus:()=>r(\"get_relay_proxy_status\"),setCodexRouterEnabled:(e,"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "test_relay_provider",
+      "rowCount": 1,
+      "wrappers": [
+        "test"
+      ],
+      "argKeys": [
+        "providerId"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1341,
+          "wrapper": "test",
+          "callee": "r",
+          "argKeys": [
+            "providerId"
+          ],
+          "source": "minified",
+          "snippet": "ay_provider\",{providerId:e,ide:o}),deactivate:(e,o)=>r(\"deactivate_relay_provider\",{providerId:e,ide:o}),setNetwork:(e,o)=>r(\"set_relay_provider_network\",{providerId:e,network:o}),test:e=>r(\"test_relay_provider\",{providerId:e}),testDraft:e=>r(\"test_relay_draft\",{input:e}),fetchModelsDraft:e=>r(\"fetch_relay_models_draft\",{input:e}),getActive:()=>r(\"get_relay_active\"),getProxyStatus:()=>r(\""
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "test_voice_asr_config",
+      "rowCount": 1,
+      "wrappers": [
+        "testVoiceAsrConfig"
+      ],
+      "argKeys": [
+        "asrApiKey",
+        "asrBaseUrl",
+        "asrModel",
+        "asrProvider"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 27961,
+          "wrapper": "testVoiceAsrConfig",
+          "callee": "G",
+          "argKeys": [
+            "asrProvider",
+            "asrApiKey",
+            "asrModel",
+            "asrBaseUrl"
+          ],
+          "source": "minified",
+          "snippet": "load_voice_asr_config\",{provider:t}),saveVoiceAsrConfig:t=>G(\"save_voice_asr_config\",{asrProvider:t.asrProvider,asrApiKey:t.asrApiKey,asrModel:t.asrModel,asrBaseUrl:t.asrBaseUrl}),testVoiceAsrConfig:t=>G(\"test_voice_asr_config\",{asrProvider:t.asrProvider,asrApiKey:t.asrApiKey,asrModel:t.asrModel,asrBaseUrl:t.asrBaseUrl}),removeVoiceHistoryEntry:t=>G(\"remove_voice_history_entry\",{id:t}),loadVoiceRuntimeSt"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "test_voice_llm_config",
+      "rowCount": 1,
+      "wrappers": [
+        "testVoiceLlmConfig"
+      ],
+      "argKeys": [
+        "llmApiKey",
+        "llmBaseUrl",
+        "llmModel",
+        "llmProvider"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 27408,
+          "wrapper": "testVoiceLlmConfig",
+          "callee": "G",
+          "argKeys": [
+            "llmProvider",
+            "llmApiKey",
+            "llmModel",
+            "llmBaseUrl"
+          ],
+          "source": "minified",
+          "snippet": "t.asrProvider??null,asrModel:t.asrModel??null,asrLanguage:t.asrLanguage??null,asrEmotion:t.asrEmotion??null,asrDurationMs:t.asrDurationMs??null,asrErrorCode:t.asrErrorCode??null}),testVoiceLlmConfig:t=>G(\"test_voice_llm_config\",{llmProvider:t.llmProvider,llmApiKey:t.llmApiKey,llmModel:t.llmModel,llmBaseUrl:t.llmBaseUrl}),loadVoiceLlmConfig:t=>G(\"load_voice_llm_config\",{provider:t}),saveVoiceLlmConfig:t=>"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "toggle_plugin",
+      "rowCount": 1,
+      "wrappers": [
+        "togglePlugin"
+      ],
+      "argKeys": [
+        "enabled",
+        "id"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 32259,
+          "wrapper": "togglePlugin",
+          "callee": "G",
+          "argKeys": [
+            "id",
+            "enabled"
+          ],
+          "source": "minified",
+          "snippet": "ingAutoSwitch:()=>G(\"confirm_pending_auto_switch\"),confirmPendingAutoSwitchAndRestartCodex:()=>G(\"confirm_pending_auto_switch_and_restart_codex\"),listPlugins:()=>G(\"list_plugins\"),togglePlugin:(t,e)=>G(\"toggle_plugin\",{id:t,enabled:e}),getPluginConfig:t=>G(\"get_plugin_config\",{id:t}),updatePluginConfig:(t,e)=>G(\"update_plugin_config\",{id:t,settings:e})},i1=\"codexmate.startup-cache.v1\",s1=10080*"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "update_plugin_config",
+      "rowCount": 1,
+      "wrappers": [
+        "updatePluginConfig"
+      ],
+      "argKeys": [
+        "id",
+        "settings"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 32364,
+          "wrapper": "updatePluginConfig",
+          "callee": "G",
+          "argKeys": [
+            "id",
+            "settings"
+          ],
+          "source": "minified",
+          "snippet": "_pending_auto_switch_and_restart_codex\"),listPlugins:()=>G(\"list_plugins\"),togglePlugin:(t,e)=>G(\"toggle_plugin\",{id:t,enabled:e}),getPluginConfig:t=>G(\"get_plugin_config\",{id:t}),updatePluginConfig:(t,e)=>G(\"update_plugin_config\",{id:t,settings:e})},i1=\"codexmate.startup-cache.v1\",s1=10080*60*1e3;function Gl(t){return`${i1}:${t}`}function nc(t,e=s1){if(!(typeof window>\"u\"))try{const o=localStorage.getItem("
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "update_voice_runtime_settings",
+      "rowCount": 1,
+      "wrappers": [
+        "updateVoiceRuntimeSettings"
+      ],
+      "argKeys": [
+        "enabled",
+        "processingMode",
+        "processingModeId",
+        "shortcut",
+        "speechModel"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 29090,
+          "wrapper": "updateVoiceRuntimeSettings",
+          "callee": "G",
+          "argKeys": [
+            "enabled",
+            "shortcut",
+            "speechModel",
+            "processingMode",
+            "processingModeId"
+          ],
+          "source": "minified",
+          "snippet": "oldModifierMask:t.hold.modifierMask??0,toggleKeyCode:t.toggle.keyCode,toggleKeyLabel:t.toggle.keyLabel,toggleKeyKind:t.toggle.keyKind,toggleModifierMask:t.toggle.modifierMask??0}),updateVoiceRuntimeSettings:t=>G(\"update_voice_runtime_settings\",{enabled:t.enabled,shortcut:t.shortcut??null,speechModel:t.speechModel??null,processingMode:t.processingMode??null,processingModeId:t.processingModeId??null}),setVoiceProcessingMo"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "upsert_mcp_server",
+      "rowCount": 1,
+      "wrappers": [
+        "upsertMcpServer"
+      ],
+      "argKeys": [
+        "args",
+        "environment",
+        "headers"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 30425,
+          "wrapper": "upsertMcpServer",
+          "callee": "G",
+          "argKeys": [
+            "args",
+            "headers",
+            "environment"
+          ],
+          "source": "minified",
+          "snippet": "CustomInstructionBlock:()=>G(\"clear_custom_instruction_block\"),rollbackCustomInstruction:t=>G(\"rollback_custom_instruction\",{historyId:t}),loadMcpServers:()=>G(\"load_mcp_servers\"),upsertMcpServer:t=>G(\"upsert_mcp_server\",{...t,args:t.args??[],headers:t.headers??{},environment:t.environment??{}}),setMcpServerEnabled:(t,e)=>G(\"set_mcp_server_enabled\",{name:t,enabled:e}),removeMcpServer:t=>G(\"remove_"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "upsert_relay_provider",
+      "rowCount": 1,
+      "wrappers": [
+        "upsert"
+      ],
+      "argKeys": [
+        "input"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 2,
+          "column": 1031,
+          "wrapper": "upsert",
+          "callee": "r",
+          "argKeys": [
+            "input"
+          ],
+          "source": "minified",
+          "snippet": "ider:null,targetModel:null,manifestPath:null},codexLaunchError:null}};default:throw new Error(`relay mock: unsupported command ${e}`)}}const i={loadState:()=>r(\"load_relay_state\"),upsert:e=>r(\"upsert_relay_provider\",{input:e}),delete:e=>r(\"delete_relay_provider\",{providerId:e}),activate:(e,o)=>r(\"activate_relay_provider\",{providerId:e,ide:o}),deactivate:(e,o)=>r(\"deactivate_relay_provider\",{p"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "upsert_voice_template",
+      "rowCount": 1,
+      "wrappers": [
+        "upsertVoiceTemplate"
+      ],
+      "argKeys": [
+        "content",
+        "description",
+        "id",
+        "title"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25800,
+          "wrapper": "upsertVoiceTemplate",
+          "callee": "G",
+          "argKeys": [
+            "id",
+            "title",
+            "description",
+            "content"
+          ],
+          "source": "minified",
+          "snippet": "(\"load_sessions\"),deleteSessions:t=>G(\"delete_sessions\",{ids:t}),loadCustomInstructionState:()=>G(\"load_custom_instruction_state\"),loadVoiceWorkspace:()=>G(\"load_voice_workspace\"),upsertVoiceTemplate:t=>G(\"upsert_voice_template\",{id:t.id??null,title:t.title,description:t.description,content:t.content}),removeVoiceTemplate:t=>G(\"remove_voice_template\",{id:t}),upsertVoiceVocabulary:t=>G(\"upsert_voice_vocabu"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "upsert_voice_vocabulary",
+      "rowCount": 1,
+      "wrappers": [
+        "upsertVoiceVocabulary"
+      ],
+      "argKeys": [
+        "appBundleId",
+        "appName",
+        "id",
+        "kind",
+        "notes",
+        "replacement",
+        "source"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 25981,
+          "wrapper": "upsertVoiceVocabulary",
+          "callee": "G",
+          "argKeys": [
+            "id",
+            "source",
+            "replacement",
+            "kind",
+            "appBundleId",
+            "appName",
+            "notes"
+          ],
+          "source": "minified",
+          "snippet": "psertVoiceTemplate:t=>G(\"upsert_voice_template\",{id:t.id??null,title:t.title,description:t.description,content:t.content}),removeVoiceTemplate:t=>G(\"remove_voice_template\",{id:t}),upsertVoiceVocabulary:t=>G(\"upsert_voice_vocabulary\",{id:t.id??null,source:t.source,replacement:t.replacement,kind:t.kind,appBundleId:t.appBundleId??null,appName:t.appName??null,notes:t.notes??null}),removeVoiceVocabulary:t=>G(\"remo"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    },
+    {
+      "command": "upsert_voice_vocabulary_app_scope",
+      "rowCount": 1,
+      "wrappers": [
+        "upsertVoiceVocabularyAppScope"
+      ],
+      "argKeys": [
+        "bundleId",
+        "name",
+        "path"
+      ],
+      "files": [
+        "assets/<asset>"
+      ],
+      "sources": [
+        "minified"
+      ],
+      "examples": [
+        {
+          "kind": "tauriInvokeWrapper",
+          "file": "assets/<asset>",
+          "line": 86,
+          "column": 26557,
+          "wrapper": "upsertVoiceVocabularyAppScope",
+          "callee": "G",
+          "argKeys": [
+            "bundleId",
+            "name",
+            "path"
+          ],
+          "source": "minified",
+          "snippet": "tries:t.entries.map(e=>({source:e.source,replacement:e.replacement,notes:e.notes??null}))}),removeVoiceVocabularyAppScope:t=>G(\"remove_voice_vocabulary_app_scope\",{appBundleId:t}),upsertVoiceVocabularyAppScope:t=>G(\"upsert_voice_vocabulary_app_scope\",{bundleId:t.bundleId,name:t.name,path:t.path}),resolveVoiceVocabularyAppInfo:t=>G(\"resolve_voice_vocabulary_app_info\",{path:t}),generateVoicePrompt:t=>G(\"generate_voice_prompt\",{t"
+        }
+      ],
+      "evidence": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-contracts.jsonl",
+      "confidence": "quick_frontend_minified_ipc_contract"
+    }
+  ],
+  "gate": {
+    "gate_accepted": false,
+    "implementation_use": false,
+    "full_leaf_100": false,
+    "no_promotion": true
+  },
+  "produced_at": "2026-05-31T16:08:58.874544+08:00"
+}

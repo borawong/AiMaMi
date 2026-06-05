@@ -1,0 +1,26 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v1",
+  "leaf": "builtin__web_tools__plugin_info",
+  "platform": "windows-x64",
+  "owner": {
+    "addr": "0x1403ee200",
+    "decompile_ok": true,
+    "pseudocode_lines": 166,
+    "pseudocode_chars": 4914
+  },
+  "important_callees": "relay_web_tools_tool_pair_builder_sys",
+  "threading_model": "web-tools builtin DTO path",
+  "terminal_side_effect_classes": "web-tools builtin plugin info DTO/default enabled/settings",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current windows-x64 AiMaMi 1.0.9 plugins behavior from IDA owner/callee/DTO/side-effect evidence only."
+  },
+  "idb_saved": true
+}

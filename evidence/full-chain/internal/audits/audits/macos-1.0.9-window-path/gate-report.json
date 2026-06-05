@@ -1,0 +1,48 @@
+{
+  "schema": "restoration.cm.reverse.gate.v1",
+  "bundle": "macos-1.0.9-window-path",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_at": "2026-06-05",
+  "sha12": "1db044e8efab",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "gate_tier": "strictImplementationUse",
+  "gate_accepted": false,
+  "implementation_use": false,
+  "dim6_missing": true,
+  "ceiling": "strictImplementationUse",
+  "platform": "macos-arm64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "is_upstream": true,
+  "prewrite_gate_decision": "ALLOW",
+  "prewrite_gate_write_mode": "first",
+  "evidence_basis": "logic/WINDOW-PATH-DISTILLED-109.md <audit-session> + REVERSE-STATUS lines 251-252",
+  "leaves": {
+    "focus_main_window": {
+      "cmd_va": "0x10032e820",
+      "gate": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "dim6": "missing",
+      "is_upstream": true,
+      "gate_accepted": false,
+      "implementation_use": false
+    },
+    "open_path": {
+      "cmd_va": "0x1002644c0",
+      "gate": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "dim6": "missing",
+      "is_upstream": true,
+      "gate_accepted": false,
+      "implementation_use": false
+    }
+  },
+  "cluster_gate_summary": {
+    "strictImplementationUse": 2,
+    "consumerStartReady": 0,
+    "readyToImplement": 0,
+    "gap_needs_reducer": 0,
+    "blocked": 0,
+    "note": "dim6 not closed (source archive impl-side); ceiling: strictImplementationUse"
+  }
+}

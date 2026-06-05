@@ -1,0 +1,71 @@
+{
+  "schema": "restoration.cm.reverse.audit.v1",
+  "bundle": "macos-1.0.9-daemon-autoswitch",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "scope": "daemon + auto-switch",
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "produced_at": "2026-06-02T12:00:00Z",
+  "producer": "claude-sonnet-4-6",
+  "ida_session": "2026-06-02 fresh decompile+callees+xrefs all 13 VAs; IDB saved",
+  "gate": "readyToImplement",
+  "strict_count": 0,
+  "ready_count": 13,
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "platformScopeDeclared": "macOS confirmed; Windows Unknown",
+  "platformPolicy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  },
+  "raw_bundles": {
+    "daemon": [
+      "raw/aimami/1.0.9/macos/daemon/run_daemon_once",
+      "raw/aimami/1.0.9/macos/daemon/load_bootstrap_state",
+      "raw/aimami/1.0.9/macos/daemon/start_usage_refresh_watcher",
+      "raw/aimami/1.0.9/macos/daemon/note_usage_refresh_activity",
+      "raw/aimami/1.0.9/macos/daemon/schedule_full_runtime_refresh",
+      "raw/aimami/1.0.9/macos/daemon/update_usage_refresh_schedule"
+    ],
+    "auto_switch": [
+      "raw/aimami/1.0.9/macos/auto-switch/configure_auto_switch",
+      "raw/aimami/1.0.9/macos/auto-switch/confirm_pending_auto_switch",
+      "raw/aimami/1.0.9/macos/auto-switch/confirm_pending_auto_switch_and_restart_codex",
+      "raw/aimami/1.0.9/macos/auto-switch/dismiss_pending_auto_switch",
+      "raw/aimami/1.0.9/macos/auto-switch/load_pending_auto_switch",
+      "raw/aimami/1.0.9/macos/auto-switch/set_auto_switch",
+      "raw/aimami/1.0.9/macos/auto-switch/start_auto_switch_pending_watcher"
+    ],
+    "frontend": [
+      "raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app",
+      "raw/aimami/1.0.9/macos/frontend/system-ccf/SYSTEM-FRONTEND-CCF-109.md"
+    ]
+  },
+  "internal_reverse_files": [
+    "README.md",
+    "AI.md",
+    "SYSTEM-DIFF.md",
+    "manifest.json",
+    "gate-report.json",
+    "data/tier-matrix.json",
+    "logic/DAEMON-TRIGGER-AND-THREAD-MODEL-109.md",
+    "logic/DAEMON-AUTOSWITCH-FULLCHAIN-109.md",
+    "logic/ACCEPTANCE-MAPPING-109.md",
+    "interfaces/daemon-commands.md",
+    "interfaces/autoswitch-commands.md",
+    "reviews/CLAUDE.md",
+    "pointers/evidence-paths.md"
+  ],
+  "no_index_shard": true,
+  "no_version_span_path_components": true,
+  "no_internal_reverse_upstream": true,
+  "no_forbidden_path_tokens": true,
+  "clean_internal_reverse_bundle": true,
+  "zero_c_files": true,
+  "zero_log_files": true
+}

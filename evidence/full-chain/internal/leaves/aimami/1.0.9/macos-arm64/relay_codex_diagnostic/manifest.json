@@ -1,0 +1,21 @@
+{
+  "target": "relay::codex_diagnostic::fix_issue",
+  "platform": "macos-arm64",
+  "version": "1.0.9",
+  "owner_va": "0x100560f44",
+  "size_bytes": 15384,
+  "basic_blocks": 607,
+  "block_decomposed": true,
+  "gate_tier": "readyToImplement",
+  "genuine_ceiling": false,
+  "accepted_unknown": false,
+  "authoritative": true,
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "produced_at": "2026-06-04"
+  },
+  "evidence_files": [
+    "fix_issue-DISTILLED.md"
+  ]
+}

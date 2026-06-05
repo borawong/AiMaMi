@@ -1,0 +1,37 @@
+{
+  "schema": "restoration.cm.reverse.producer_ledger.v1",
+  "bundle": "macos-1.0.9-system-hotspot",
+  "produced_at": "2026-06-03",
+  "producer": "claude-sonnet-4-6",
+  "machine": "<workstation>",
+  "session": "<audit-session>", "leaves": {
+    "get_hotspot_enabled": {
+      "producer": "claude-sonnet-4-6",
+      "machine": "<workstation>",
+      "session": "<audit-session>", "sha": "1db044e8efab",
+      "gate": "pass",
+      "consumer_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "owner_addr": "0x10032eac0"
+    },
+    "set_hotspot_enabled": {
+      "producer": "claude-sonnet-4-6",
+      "machine": "<workstation>",
+      "session": "<audit-session>", "sha": "1db044e8efab",
+      "gate": "pass",
+      "consumer_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "owner_addr": "0x10032ecbc"
+    },
+    "hotspot_ready": {
+      "producer": "claude-sonnet-4-6",
+      "machine": "<workstation>",
+      "session": "<audit-session>", "sha": "1db044e8efab",
+      "gate": "pass",
+      "consumer_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "owner_addr": "0x10032e664",
+      "notes": "PLATFORM DIVERGENCE: mac returns void+acts on window; Win returns bool+checks state"
+    }
+  }
+}

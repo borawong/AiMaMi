@@ -1,0 +1,23 @@
+{
+  "target": "set_hotspot_enabled",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "scope": "dim2-5-win",
+  "addr_verified": "0x14027c6d0",
+  "function_name": "set_hotspot_enabled_owner_sys",
+  "binary_sha12": "a5822387fa3f",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "machine": "<workstation>",
+  "session": "<audit-session>", "produced_at": "2026-06-04",
+  "gate_tier": "strictImplementationUse",
+  "genuine_ceiling": false,
+  "real_body_found": true,
+  "block_decomposed": false,
+  "dims_closed": "dim2,dim3,dim4,dim5",
+  "dims_open": "dim1",
+  "dim1_note": "rodata string confirmed; frontend call-site not scraped (product/frontend-lane gap)",
+  "accepted_unknown": [],
+  "recovery_attempts": "N/A — no fake walls encountered",
+  "status": "complete"
+}

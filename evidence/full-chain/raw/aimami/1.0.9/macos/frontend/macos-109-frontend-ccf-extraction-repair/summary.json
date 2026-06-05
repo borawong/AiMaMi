@@ -1,0 +1,51 @@
+{
+  "schema": "raw-evidence.raw.frontend_ccf_extraction_repair.v1",
+  "produced_at": "2026-05-31T13:23:31.924828+00:00",
+  "batch": "lane-40 macos-109-frontend-ccf-extraction-repair",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos-universal",
+  "module": "frontend-ccf",
+  "source_app": "<source-location>/AiMaMi 1.0.9.app",
+  "source_app_exists": false,
+  "source_frontend_root": "<source-location>/AiMaMi 1.0.9.app/Contents/Resources",
+  "source_frontend_root_exists": false,
+  "source_binary": "<source-location>/AiMaMi 1.0.9.app/Contents/MacOS/AiMaMi",
+  "source_binary_exists": false,
+  "expected_source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "extractor": "<local-tool-path>/rust-reverse-pipeline/scripts/extract_component_control_flow.mjs",
+  "command": [
+    "node",
+    "<local-tool-path>/rust-reverse-pipeline/scripts/extract_component_control_flow.mjs",
+    "--frontend-root",
+    "<source-location>/AiMaMi 1.0.9.app/Contents/Resources",
+    "--out",
+    "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-extraction-repair/frontend-control-flow.jsonl",
+    "--api-map-out",
+    "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-extraction-repair/api-map.json"
+  ],
+  "timeout_seconds": 45,
+  "timed_out": false,
+  "exit_code": 1,
+  "status": "blocked_missing_macos_109_app_or_frontend_root",
+  "accepted_frontend_ccf": false,
+  "ccf_rows": 0,
+  "files": [
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-extraction-repair/extract-command.txt",
+      "size": 539,
+      "sha256": "389abada41ece8b5616bfa984e292cf290a13297c1e964f42219975bb8a5c3ee"
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-extraction-repair/extract-stdout.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-extraction-repair/extract-stderr.log",
+      "size": 978,
+      "sha256": "cd8e74ce4730cd8084971b5d035dd38e7292bb940721d2ed45d7277414a5d074"
+    }
+  ],
+  "failure_reason": "current tmp/binary/AiMaMi 1.0.9.app is absent, so extractor cannot read Contents/Resources; previous same-SHA pipeline fell back to Resources with no frontend JS assets and produced 0 rows."
+}

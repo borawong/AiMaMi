@@ -1,0 +1,27 @@
+{
+  "schema": "restoration.cm.reverse.producer_ledger.v1",
+  "bundle": "audits/macos-1.0.9-mcp",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "mcp",
+  "producer": "codex",
+  "machine": "<workstation>",
+  "machine_note": "backfilled by <workstation> consolidation 2026-06-05; machine field from manifest.json producer record",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "gate_status": "PASS",
+  "gate_accepted": true,
+  "readyToImplement": true,
+  "full_leaf_100": true,
+  "commands_total": 4,
+  "commands_ready": 4,
+  "produced_at": "2026-06-03T02:58:00+08:00",
+  "backfilled_at": "2026-06-05",
+  "idb_saved": true,
+  "commands": [
+    "load_mcp_servers",
+    "upsert_mcp_server",
+    "set_mcp_server_enabled",
+    "remove_mcp_server"
+  ]
+}

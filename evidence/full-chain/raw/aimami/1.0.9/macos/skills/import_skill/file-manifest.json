@@ -1,0 +1,35 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "files": [
+    {
+      "path": "AI.md",
+      "size": 940,
+      "sha256": "21e77375565f1c8be48daa84d6030e77dadddd4ae56d30e8268fcd5fbb7cd664"
+    },
+    {
+      "path": "README.md",
+      "size": 987,
+      "sha256": "dba6cb7204fd4eece2723e11e1678b33d53426d55a5922fb36419298bdc42436"
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "size": 282,
+      "sha256": "626a7f2ccc4910d768fc617aff29455452cc3f246a613cd60985b37471071909"
+    },
+    {
+      "path": "audits/import_skill-ida-closure.json",
+      "size": 2092,
+      "sha256": "566276000d176937e29cad5e414226a44c6086eb08cf392fd4b3cddffd5b8fde"
+    },
+    {
+      "path": "manifest.json",
+      "size": 1386,
+      "sha256": "6adb35442bff18d29719412b183f09e96115c2530a8c738b418f9f9be61d46df"
+    },
+    {
+      "path": "validation/result.json",
+      "size": 577,
+      "sha256": "7bc37d59aadac0b44c673f343cfe1a25c335a8ffda907e7dda158dfbaae0c898"
+    }
+  ]
+}

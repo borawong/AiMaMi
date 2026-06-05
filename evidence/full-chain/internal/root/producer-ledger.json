@@ -1,0 +1,23 @@
+{
+  "bundle": "win-ipc-28-closeout",
+  "owner": "<workstation>",
+  "machine": "<workstation>",
+  "session": "<audit-session>", "claim_basis": "first-write",
+  "timestamp": "'$TIMESTAMP'",
+  "scope": ["system","relay","hotspot","maintenance","ui","proxy-tools"],
+  "target_count": 28,
+  "gate_status": "ALLOW",
+  "gate_reason": "该 scope 无既有 owner (首写)",
+  "targets": {
+    "windows_ipc_28": {
+      "modules": ["system","relay","hotspot","maintenance","ui","proxy-tools"],
+      "count": 28,
+      "status": "claimed"
+    },
+    "macos_relay_core_3": {
+      "modules": ["relay-core"],
+      "count": 3,
+      "status": "claimed"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+    "schema":  "raw-evidence.raw.windows_plugin_config_static_bounded_evidence.v1",
+    "produced_at":  "2026-06-01T23:44:13.8719227+08:00",
+    "producer":  "codex",
+    "product":  "aimami",
+    "version":  "1.0.9",
+    "platform":  "windows-x64",
+    "raw_platform_path":  "windows",
+    "leaf":  "get_plugin_config",
+    "source_binary":  {
+                          "sot":  "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+                          "local_sot":  "<local-path> 1.0.9 win64.exe",
+                          "sha256":  "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+                          "size":  26821632,
+                          "verified_hash":  true,
+                          "verified_size":  true
+                      },
+    "precheck":  {
+                     "index_line_count":  540,
+                     "exact_current_raw_leaf_existed_before_write":  false,
+                     "exact_current_intermediate_leaf_existed_before_write":  false,
+                     "exact_current_internal_reverse_leaf_existed_before_write":  false,
+                     "handoff_platform_decision":  "windows-x64 because current sibling Windows 1.0.9 handoffs use windows-x64; raw/intermediate use path platform windows per storage tier and user-specified write scope"
+                 },
+    "frontend":  {
+                     "evidence_source":  "<source-location>/intermediate/aimami/1.0.9/windows/frontend-delta-classification/frontend-delta.json",
+                     "target_bundle_sha256":  "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+                     "command_retained_in_1_0_8_and_1_0_9":  true,
+                     "frontend_delta_status":  "retained_in_both_versions",
+                     "frontend_contract_evidence":  "quick_frontend_minified_ipc_contract only; not full UI/state acceptance",
+                     "argKeys":  [
+                                     "pluginId"
+                                 ],
+                     "limitation":  "config UI callsite/product acceptance remains unresolved for plugin config leaves"
+                 },
+    "pe_command_table":  {
+                             "evidence_source":  "<source-location>/intermediate/aimami/1.0.9/windows/load-relay-state-owner-pdata-calltree/disassembly/command-table-window.pD.txt",
+                             "table_file_offset":  "0x1267238",
+                             "table_va":  "0x141268c38",
+                             "command_file_offset":  "0x1267752",
+                             "command_table_offset":  "0x51a",
+                             "command_string_va":  "0x141269152",
+                             "surrounding_context":  "list_pluginstoggle_pluginget_plugin_configupdate_plugin_configmain\"[AiMaMi] startup: hotspot_enabled=",
+                             "status":  "exact_ascii_command_table_span_only",
+                             "accepted_backend_owner":  false
+                         },
+    "interface_boundary":  {
+                               "request_arg_keys":  [
+                                                        "pluginId"
+                                                    ],
+                               "response_boundary":  "PluginConfig or null; exact Windows 1.0.9 envelope not accepted",
+                               "side_effect_boundary":  "none expected; retrieval boundary unknown",
+                               "exact_error_envelope_accepted":  false,
+                               "exact_dto_parity_accepted":  false,
+                               "acceptance_mapping_accepted":  false
+                           },
+    "missing_full_leaf_100_dimensions":  [
+                                             "accepted same-platform backend owner body/pseudocode",
+                                             "deep call-tree to implementation leaves",
+                                             "strict DTO/defaults/error envelope parity",
+                                             "config UI absence or product decision acceptance",
+                                             "runtime/test acceptance mapping"
+                                         ],
+    "gate":  {
+                 "consumerStartReady":  false,
+                 "strictImplementationUse":  false,
+                 "readyToImplement":  false,
+                 "implementation_use":  false,
+                 "gate_accepted":  false,
+                 "full_leaf_100":  false,
+                 "no_promotion":  true
+             },
+    "blocker":  "Only bounded static Windows 1.0.9 evidence was produced. Promotion requires same-platform accepted owner/pseudocode, deep call-tree, interface/error/side-effect closure, UI/product acceptance, and tests."
+}

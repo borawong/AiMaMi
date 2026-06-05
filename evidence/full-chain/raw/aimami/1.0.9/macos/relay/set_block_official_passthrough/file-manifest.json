@@ -1,0 +1,15 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "bundle_path": "raw/aimami/1.0.9/macos/relay/set_block_official_passthrough",
+  "files": [
+    {"path": "AI.md", "sha256": "b667a488390056a35cf86484677886ba4971dbb08e26e62e55d01a58a58044", "size": 3270},
+    {"path": "README.md", "sha256": "c4f94d8195346de49ae6ebfb0cf7092e3eedfe5a1d78600fee99eeff06129a70", "size": 3307},
+    {"path": "SYSTEM-DIFF.md", "sha256": "d885182195ebfedc3e87182f875d0ea8d72ec7e429b754941957337aad4be9fa", "size": 1058},
+    {"path": "validation/result.json", "sha256": "e5a715f4538b4fbead3828cb2f794af27d9e2a6d992a36d274eab3dcb03433", "size": 1220},
+    {"path": "call-trees/codexmate_lib::commands::relay::set_block_official_passthrough.jsonl", "sha256": "e769b9da5552f47d87556530a5fa890b76b5e12696214be42fd08fa91d8b08af", "size": 2144},
+    {"path": "ida/pseudocode-manifest.jsonl", "sha256": "901ad97639cf6c79115091f53ea9c6416eff089937ec41b2759b9579c2ae7c", "size": 813},
+    {"path": "ida/pseudocode/0001_set_block_official_passthrough_owner_cmd_h74816319.c", "sha256": "56f42ba48c67cff59b511d70a8da9251e7e05a5daae26c11e3de77bf54d640c4", "size": 1804},
+    {"path": "ida/pseudocode/0002_set_block_passthrough_core_h351b4932.c", "sha256": "14e226ff470f42065880b37134ddfedfb8c933580ead40684f6205b6a52c0011", "size": 2740}
+  ],
+  "note": "manifest.json and file-manifest.json self-hashes excluded per spec"
+}

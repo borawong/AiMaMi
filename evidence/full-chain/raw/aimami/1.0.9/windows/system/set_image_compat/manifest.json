@@ -1,0 +1,27 @@
+{
+  "schema": "raw-evidence.raw.bundle.manifest.v1",
+  "command": "set_image_compat",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "module": "system",
+  "produced_at": "2026-06-02",
+  "source_binary": "AiMaM 1.0.9 win64.exe",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "owner_va": "0x14027a1b0",
+  "owner_name": "set_image_compat_handler",
+  "core_impl_va": "0x1400a5eb0",
+  "core_impl_name": "set_image_compat_impl",
+  "command_string_va": "0x141268d1c",
+  "param_string_va": "0x14126925b",
+  "tool": "ida-pro-mcp-win",
+  "gate": "strictImplementationUse",
+  "payload_hashes": {
+    "call-trees/set_image_compat.jsonl": "05daf3f2bd3c0ee6c0a047e4735877533970769c173e1ab0bcad0aac704a5717",
+    "ida/pseudocode-manifest.jsonl": "685bae4b5a405024106545f7c0961123ea273a4c440b4bf0e1c05dae47f0923b",
+    "ida/pseudocode/0001_set_image_compat_handler_owner_14027a1b0.c": "384f999b6d7920ae954e68462aa10ba8f598aa348080b0bedd0a25b55ff4d45a",
+    "ida/pseudocode/0002_set_image_compat_impl_core_1400a5eb0.c": "d31988e92670f5c036e0b3647340843779c4d91573419b66611a2b6ad90bf75e",
+    "ida/pseudocode/0003_image_compat_build_response_ok_bool_1404391d0.c": "599a550a885a718aa9eebfbf95bd03106af451db6d43ac2269fc743a2c39d800",
+    "validation/result.json": "aa6666063e5b93272552ac38f6f31df914de2dfaf076fae026bf87a23538ccac"
+  }
+}

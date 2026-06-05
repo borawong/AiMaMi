@@ -1,0 +1,22 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "set_codex_router_enabled",
+  "platform": "windows-x64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "produced_at": "2026-06-02",
+  "self_hash_excluded": true,
+  "files": [
+    {
+      "path": "evidence.md",
+      "size_bytes": 3794,
+      "sha256": "f8258adf013d07d42016962baabdc698f010b17929ca5dd0bd33d9773c6453ca"
+    },
+    {
+      "path": "manifest.json",
+      "size_bytes": 962,
+      "sha256": "e29de654d7d0751eee5f4f01e1d22d6b7db5dbef57fd66ce486c922436380761"
+    }
+  ]
+}

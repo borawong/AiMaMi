@@ -1,0 +1,61 @@
+{
+  "schema": "raw-evidence.reverse.plugins_frontend_acceptance_mapping.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "scope": "static frontend acceptance and test mapping only",
+  "commands": [
+    {
+      "command": "list_plugins",
+      "uiTriggerObserved": true,
+      "frontendConsumptionMapped": true,
+      "acceptanceDraftReady": true,
+      "unitTestable": true,
+      "e2eOrManualNeeded": true,
+      "blocked": false,
+      "notes": "PluginsPage query calls listPlugins and renders loading/empty/list display fields."
+    },
+    {
+      "command": "toggle_plugin",
+      "uiTriggerObserved": true,
+      "frontendConsumptionMapped": "partial",
+      "acceptanceDraftReady": true,
+      "unitTestable": true,
+      "e2eOrManualNeeded": true,
+      "blocked": false,
+      "notes": "Non-builtin Switch calls togglePlugin; optimistic update, rollback, and invalidation mapped. Toast/disabled/runtime proof missing."
+    },
+    {
+      "command": "get_plugin_config",
+      "uiTriggerObserved": false,
+      "frontendConsumptionMapped": false,
+      "acceptanceDraftReady": false,
+      "unitTestable": "api-wrapper-only-after-implementation",
+      "e2eOrManualNeeded": true,
+      "blocked": true,
+      "notes": "Wrapper row exists, but no visible config UI caller was observed."
+    },
+    {
+      "command": "update_plugin_config",
+      "uiTriggerObserved": false,
+      "frontendConsumptionMapped": false,
+      "acceptanceDraftReady": false,
+      "unitTestable": "api-wrapper-only-after-implementation",
+      "e2eOrManualNeeded": true,
+      "blocked": true,
+      "notes": "Wrapper row exists, but no visible config save UI caller was observed."
+    }
+  ],
+  "globalGate": {
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "reason": "Only list/toggle have frontend acceptance candidates. get/update have no visible UI trigger and backend/runtime evidence remains no-promotion."
+  },
+  "indexWrite": false
+}
+

@@ -1,0 +1,31 @@
+{
+  "schema": "restoration.cm.reverse.gate_report.consumer_gate.v1",
+  "bundle": "macos-1.0.9-system-hotspot",
+  "produced_at": "2026-06-03T00:00:00+08:00",
+  "platform": "macos",
+  "version": "1.0.9",
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "ida_session": "mcp__ida-pro-mcp-mac, 2026-06-03, sha_verified=true, hexrays_ready=true",
+  "dim6_mapping": null,
+  "ready_count": 0,
+  "strict_count": 3,
+  "is_upstream": false,
+  "task_plan": {
+    "schema": "restoration.cm.reverse.task_plan.consumer_gate.v1",
+    "readyToImplement": [],
+    "strictImplementationUse": [
+      "get_hotspot_enabled",
+      "set_hotspot_enabled",
+      "hotspot_ready"
+    ],
+    "consumerStartReady": [],
+    "reverseRequiredQueues": {
+      "forbiddenUntilReady": [],
+      "forbiddenUntilStrictImplementationUse": [],
+      "consumerStartBlocked": []
+    },
+    "platformPolicy": {
+      "macos": "strictImplementationUse ceiling (dim6 not assessed; source archive-extra commands)"
+    }
+  }
+}

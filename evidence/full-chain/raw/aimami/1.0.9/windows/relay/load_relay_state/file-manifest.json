@@ -1,0 +1,47 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "bundle_path": "raw/aimami/1.0.9/windows/relay/load_relay_state",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "79dc104f418d4bb3c60d86a2cae56f519b860fb77e6c4bffe68eff5291fbf0f9",
+      "size": 4733
+    },
+    {
+      "path": "README.md",
+      "sha256": "0a3c4ae60f0a615ee40d65d6aa73f598269db7935cd860a4c8fc6ed0f98f61ea",
+      "size": 3694
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "eac2f3b86974785a30d74cdf3395534f6f4eb6847d992cc97c6f3aee53891832",
+      "size": 1860
+    },
+    {
+      "path": "call-trees/codexmate_lib::commands::relay::load_relay_state.jsonl",
+      "sha256": "f1d38ae9dcdb50cc05fba4dc764e77afa885c86432078de55c6cf86bf09451",
+      "size": 2588
+    },
+    {
+      "path": "ida/pseudocode-manifest.jsonl",
+      "sha256": "57434d9cd7a2667036ba93733c78abda871fc2dee043ebea43bfe2a6b8dbb192",
+      "size": 590
+    },
+    {
+      "path": "ida/pseudocode/0001_load_relay_state_owner_sys_h27d660.c",
+      "sha256": "286771a24ee78d85fa25a4f8198eb846de08bdc28f683dc3af9f998fadc6b0e4",
+      "size": 1326
+    },
+    {
+      "path": "ida/pseudocode/0002_load_relay_state_core_reader_h43baa0.c",
+      "sha256": "67f2b96641e763756d38fa5d8a4b819e20aaafdadccced36c64a226c6ca8ca",
+      "size": 1460
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "d33178df2f1d40f0b6760f381866a89825d348b3adfe9b62a87859f92875",
+      "size": 1777
+    }
+  ],
+  "note": "manifest.json and file-manifest.json self-hashes excluded per spec"
+}

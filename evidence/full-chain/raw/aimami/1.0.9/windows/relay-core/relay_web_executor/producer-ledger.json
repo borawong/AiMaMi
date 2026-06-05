@@ -1,0 +1,110 @@
+{
+  "bundle": "aimami/1.0.9/windows/relay-core/relay_web_executor",
+  "produced_by": "<workstation>",
+  "session": "relay-missed-109",
+  "produced_at": "2026-06-03",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "binary_sha12": "a5822387fa3f",
+  "leaves": [
+    {
+      "name": "execute_proxy_tools_owner_sys",
+      "va": "0x1401DFC70",
+      "tier": "A",
+      "status": "decompiled",
+      "renamed": true,
+      "commented": true,
+      "call_tree_depth": ">=5",
+      "dims_closed": ["dim2", "dim3", "dim4"]
+    },
+    {
+      "name": "build_passthrough_response_owner_sys",
+      "va": "0x1401F9D60",
+      "tier": "A",
+      "status": "decompiled",
+      "renamed": true,
+      "commented": true,
+      "call_tree_depth": ">=5",
+      "dims_closed": ["dim2", "dim3", "dim4"]
+    },
+    {
+      "name": "web_dispatch_loop_owner_sys",
+      "va": "0x140840650",
+      "tier": "A",
+      "status": "decompiled",
+      "renamed": true,
+      "commented": true,
+      "call_tree_depth": ">=5",
+      "dims_closed": ["dim2", "dim3", "dim4"]
+    },
+    {
+      "name": "web_search_tool_def_builder_sys",
+      "va": "0x140214C30",
+      "tier": "A",
+      "status": "decompiled",
+      "renamed": true,
+      "commented": true,
+      "call_tree_depth": "2",
+      "dims_closed": ["dim2", "dim4"]
+    },
+    {
+      "name": "inject_web_search_system_prompt_sys",
+      "va": "0x14020EC80",
+      "tier": "A",
+      "status": "decompiled",
+      "renamed": false,
+      "commented": true,
+      "call_tree_depth": "3",
+      "dims_closed": ["dim2", "dim3", "dim4"]
+    },
+    {
+      "name": "append_assistant_and_tool_results_owner_sys",
+      "va": "0x1402395C0",
+      "tier": "A",
+      "status": "decompiled",
+      "renamed": true,
+      "commented": true,
+      "call_tree_depth": ">=5",
+      "dims_closed": ["dim2", "dim3", "dim4"]
+    },
+    {
+      "name": "execute_responses_stream_roundtrip_sys",
+      "va": "0x140137FE0",
+      "tier": "B",
+      "status": "decompiled_was_already_named",
+      "renamed": false,
+      "commented": true,
+      "call_tree_depth": ">=5",
+      "dims_closed": ["dim2", "dim3", "dim4"]
+    },
+    {
+      "name": "translate_responses_to_anthropic_stream_sys",
+      "va": "0x1401EEFA0",
+      "tier": "B",
+      "status": "named_prior_session",
+      "renamed": false,
+      "commented": false,
+      "dims_closed": ["dim2"]
+    },
+    {
+      "name": "translate_responses_to_chat_completion_sys",
+      "va": "0x140205540",
+      "tier": "B",
+      "status": "named_prior_session",
+      "renamed": false,
+      "commented": false,
+      "dims_closed": ["dim2"]
+    }
+  ],
+  "blocked": [
+    {
+      "name": "send_request_http_terminal",
+      "mac_va": "0x1000a7c0c",
+      "status": "blocked",
+      "reason": "ICF-folded into async tokio HTTP client; no direct string anchor; async Future pattern prevents locating synchronous send equivalent"
+    }
+  ],
+  "idb_saved": true,
+  "gate": "pre-gate",
+  "gate_accepted": false,
+  "implementation_use": false
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "produced_at": "2026-06-02T00:00:00+08:00",
+  "bundle_key": "aimami/1.0.9/windows/system/get_image_compat",
+  "bundle_path": "raw/aimami/1.0.9/windows/system/get_image_compat",
+  "self_hash_excluded": true,
+  "files": [
+    {
+      "path": "AI.md",
+      "size": 4523,
+      "sha256": "8e65adb22c2f1cc8b6ff2d0940e96cfadea8eee2fdcd950a386751c0955eb9"
+    },
+    {
+      "path": "README.md",
+      "size": 5198,
+      "sha256": "631047e37ccfab49fdbc23241f6ce9bdeb4b160084651f55953bf127de8c40cc"
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "size": 2271,
+      "sha256": "151976312a1c1640fbe4d6e3802265377b9d21f97bf741e13e9b8db26b330ed9"
+    },
+    {
+      "path": "call-trees/tauri_cmd_get_image_compat_handler.jsonl",
+      "size": 3355,
+      "sha256": "65873153089925b0108dc636cccda76717300500e1e952a036e7467a480469ec"
+    },
+    {
+      "path": "ida/pseudocode/0001_get_image_compat_handler_tauri_cmd_get_image_compat_handler_win64_a0b1c2d3.c",
+      "size": 3852,
+      "sha256": "345cc426fb7b92f5d699b2207f0040d072e546dcca5addd3db9e4b3441e6db99"
+    },
+    {
+      "path": "ida/pseudocode/0002_get_image_compat_core_image_compat_read_config_toml_features_win64_b1c2d3e4.c",
+      "size": 7617,
+      "sha256": "a96f61c7e26e93ae3f851ef7cd7d44023d31814434efb7227a03ee27ba9489ed"
+    },
+    {
+      "path": "ida/pseudocode/0003_get_image_compat_paths_codex_paths_build_from_env_win64_c2d3e4f5.c",
+      "size": 3157,
+      "sha256": "1e188958450638af620b2856aaa25e2d31ee7b20fc0c4799947ebba7294c08e1"
+    },
+    {
+      "path": "ida/pseudocode/0004_get_image_compat_response_image_compat_build_response_ok_bool_win64_d3e4f5a6.c",
+      "size": 4055,
+      "sha256": "cd4efc6c95e8a637bd2b9241a7c4b59e13a87010eda01d1cc7ac6618d8f80f93"
+    },
+    {
+      "path": "ida/pseudocode-manifest.jsonl",
+      "size": 1531,
+      "sha256": "cff6719d8c976d5e7714fbd499e0aacbcb40a6126b8686df9af0f171408a8b55"
+    },
+    {
+      "path": "validation/result.json",
+      "size": 1842,
+      "sha256": "48c771d6f2777ab23373336043b63d809dfcf153885bf0e9a4485babf7d3712d"
+    }
+  ]
+}

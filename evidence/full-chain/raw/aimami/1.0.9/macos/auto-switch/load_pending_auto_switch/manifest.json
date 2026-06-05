@@ -1,0 +1,23 @@
+{
+  "schema": "raw-evidence.raw.bundle.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "auto-switch",
+  "leaf": "load_pending_auto_switch",
+  "status": "strictImplementationUse",
+  "dim1_frontend_ccf": "accepted",
+  "dim2_backend_pseudocode": "accepted",
+  "dim3_call_tree": "accepted",
+  "dim4_interface": "accepted",
+  "dim5_platform_gate": "macOS_confirmed_Windows_Unknown",
+  "dim6_test_acceptance": "empty",
+  "owner_addr": "0x1002606fc",
+  "owner_name": "codexmate_lib::commands::system::load_pending_auto_switch",
+  "core_leaf_addr": "0x1005ea840",
+  "core_leaf_name": "codexmate_lib::core::repository::Repository::load_pending_auto_switch",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "produced_at": "2026-06-02",
+  "idb_comments_written": true,
+  "payload_hashes": {}
+}

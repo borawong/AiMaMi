@@ -1,0 +1,14 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "bundle_path": "raw/aimami/1.0.9/macos/relay/run_codex_router_diagnostics",
+  "files": [
+    {"path": "AI.md", "sha256": "c34156f95f881ae91a8e4e15f1a9625d262f476a53c071843011c6905f9844c3", "size": 3362},
+    {"path": "README.md", "sha256": "e0a4fc3970c86d929f49a1a5a1b8e72dded260a76bb4a401ef9539bf0ffa4551", "size": 3389},
+    {"path": "SYSTEM-DIFF.md", "sha256": "acd83a11ec0219a723af7b6fcad3333e6209c1e955997a6ef9c68b5b598ae07b", "size": 1218},
+    {"path": "validation/result.json", "sha256": "da91a3df702590187fe58eac8374da6da5572c1e72f51e1a573dd459f4884fef", "size": 1470},
+    {"path": "call-trees/codexmate_lib::commands::relay::run_codex_router_diagnostics.jsonl", "sha256": "ed60e4cd5ea0a11a74ca663c490183a4b355fff3b74a052870d0dffca0cafb", "size": 1327},
+    {"path": "ida/pseudocode-manifest.jsonl", "sha256": "8a044db23eb1a29005cfcb465da0ab94857cfa075c0950ec73758726ff39c00b", "size": 924},
+    {"path": "ida/pseudocode/0001_run_codex_router_diagnostics_owner_cmd_h0f4cc746.c", "sha256": "05cc4bcc905bc672f3b1d888baef22c11996ff7ceb5369f8214291572669f4", "size": 2716}
+  ],
+  "note": "manifest.json and file-manifest.json self-hashes excluded per spec"
+}

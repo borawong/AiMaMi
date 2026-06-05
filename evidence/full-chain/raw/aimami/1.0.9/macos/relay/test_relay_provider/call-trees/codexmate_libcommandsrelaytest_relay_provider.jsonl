@@ -1,0 +1,14 @@
+{"depth":1,"caller":"codexmate_lib::commands::relay::test_relay_provider (IPC async closure)","callee":"RelayManager::ensure_provider_loaded","addr_caller":"0x1000f03ac","addr_callee":"0x1001c9e2c","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::ensure_provider_loaded","callee":"mutex_lock","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::ensure_provider_loaded","callee":"provider_list_search_by_id","edge_type":"branch","note":"memcmp search through provider list"}
+{"depth":1,"caller":"codexmate_lib::commands::relay::test_relay_provider","callee":"health_check::test_provider_async","addr_callee":"0x10008ee30","edge_type":"call","terminated_reason":"external_call_recorded","note":"HTTP POST /v1/messages or /v1/chat/completions via reqwest"}
+{"depth":2,"caller":"health_check::test_provider_async","callee":"health_check::build_test_request","addr_callee":"0x10023a2b4","edge_type":"call","note":"builds JSON body: {model, messages, stream, max_tokens}"}
+{"depth":2,"caller":"health_check::test_provider_async","callee":"health_check::apply_extra_headers","addr_callee":"0x10023b6f4","edge_type":"call"}
+{"depth":2,"caller":"health_check::test_provider_async","callee":"reqwest_send","edge_type":"call","terminated_reason":"external_call_recorded"}
+{"depth":2,"caller":"health_check::test_provider_async","callee":"health_check::interpret_response_async","addr_callee":"0x10009075c","edge_type":"call"}
+{"depth":3,"caller":"interpret_response_async","callee":"health_check::should_retry_test","addr_callee":"0x100239f9c","edge_type":"call"}
+{"depth":3,"caller":"interpret_response_async","callee":"health_check::detect_body_error","addr_callee":"0x1002392b8","edge_type":"call"}
+{"depth":1,"caller":"codexmate_lib::commands::relay::test_relay_provider","callee":"mutex_lock (RelayManager)","edge_type":"call"}
+{"depth":1,"caller":"codexmate_lib::commands::relay::test_relay_provider","callee":"apply_health_result","addr_callee":"0x1001d0138","edge_type":"call"}
+{"depth":1,"caller":"codexmate_lib::commands::relay::test_relay_provider","callee":"RelayManager::persist","addr_callee":"0x1001cf304","edge_type":"call","terminated_reason":"persistence_commit"}
+{"depth":1,"caller":"codexmate_lib::commands::relay::test_relay_provider","callee":"CoreEnvelope::ok (RelayTestResult)","addr_callee":"0x1001d99f8","edge_type":"call","terminated_reason":"response_serialize"}

@@ -1,0 +1,93 @@
+{
+  "schema": "restoration.cm.consumer.producer_ledger.v1",
+  "bundle": "<source-location>/audits/macos-1.0.9-bootstrap",
+  "authoritative_producer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "produced_at": "2026-06-02",
+    "index_lines": [688, 689, 690, 691, 715]
+  },
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sha12": "1db044e8efab",
+  "platform": "macos",
+  "gate_summary": {
+    "consumerStartReady": 0,
+    "strictImplementationUse": 4,
+    "readyToImplement": 0,
+    "gap_needs_reducer": 0,
+    "blocked": 0
+  },
+  "upgrade": {
+    "from": "consumerStartReady",
+    "to": "strictImplementationUse",
+    "session": "<audit-session>", "machine": "<workstation>",
+    "produced_at": "2026-06-03",
+    "index_lines": [1268, 1269, 1270, 1271],
+    "distilled": "logic/BOOTSTRAP-DEEP-DISTILLED-109.md"
+  },
+  "leaves": [
+    {
+      "leaf": "app_run_entry",
+      "producer": "<workstation>",
+      "session": "<audit-session>",
+      "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+      "gate": "strictImplementationUse",
+      "status": "reduce-complete",
+      "evidence_path": "<source-location>/raw/aimami/1.0.9/macos/bootstrap/app_run_entry/",
+      "key_facts": [
+        "Tauri run() + setup hook decompiled (arch_only); 3 .manage() types: PluginRegistry/RelayManager/Repository",
+        "IPC dispatcher: per-command async closure (not big switch); 14+ RelayManager methods; 20+ Repository methods",
+        "6 Tauri plugins: log/window-state/single-instance/global-shortcut+Codex-specific; single-instance + window-state versions not confirmed",
+        "dim6 missing"
+      ],
+      "idb_saved": true
+    },
+    {
+      "leaf": "boot_spawn_threads",
+      "producer": "<workstation>",
+      "session": "<audit-session>",
+      "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+      "gate": "strictImplementationUse",
+      "status": "reduce-complete",
+      "evidence_path": "<source-location>/raw/aimami/1.0.9/macos/bootstrap/boot_spawn_threads/",
+      "key_facts": [
+        "3 watcher spawns confirmed: usage_refresh (60s), account_attach (2s/119s polling), auto_switch (WryHandle emit)",
+        "auto-switch watcher body deferred (separate cluster, decompile in accounts tier)",
+        "dim6 missing"
+      ],
+      "idb_saved": true
+    },
+    {
+      "leaf": "bootstrap_cache",
+      "producer": "<workstation>",
+      "session": "<audit-session>",
+      "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+      "gate": "strictImplementationUse",
+      "status": "reduce-complete",
+      "evidence_path": "<source-location>/raw/aimami/1.0.9/macos/bootstrap/bootstrap_cache/",
+      "key_facts": [
+        "Mutex(OnceBox) pattern confirmed; 5-field BootstrapStatePayload; fallback-to-empty pattern",
+        "Cache file path string not confirmed; BootstrapStatePayload field types not all confirmed",
+        "Consumed via load_bootstrap_state IPC (daemon tier-matrix, readyToImplement)",
+        "dim6 missing"
+      ],
+      "idb_saved": true
+    },
+    {
+      "leaf": "managed_state_registry",
+      "producer": "<workstation>",
+      "session": "<audit-session>",
+      "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+      "gate": "strictImplementationUse",
+      "status": "reduce-complete",
+      "evidence_path": "<source-location>/raw/aimami/1.0.9/macos/bootstrap/managed_state_registry/",
+      "key_facts": [
+        "3 .manage() types confirmed: PluginRegistry/RelayManager/Repository",
+        "PluginRegistry: 7 methods; RelayManager: 14+ methods; Repository: 20+ methods",
+        "PluginStoreSchema complete fields Unknown; all_builtin_plugins list Unknown",
+        "Repository constructor Unknown; dim6 missing"
+      ],
+      "idb_saved": true
+    }
+  ]
+}

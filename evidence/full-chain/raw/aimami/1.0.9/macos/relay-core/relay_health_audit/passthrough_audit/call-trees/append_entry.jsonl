@@ -1,0 +1,7 @@
+{"depth":0,"addr":"0x1001c2f0c","name":"codexmate_lib::core::relay::passthrough_audit::append_entry","role":"owner","evidence":"A-level","sha":"1db044e8efab"}
+{"depth":1,"addr":"std::path::Path::parent","role":"stdlib","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"std::fs::DirBuilder::create","role":"filesystem","terminated_reason":"persistence_commit"}
+{"depth":1,"addr":"std::sys::fs::metadata","role":"filesystem","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"std::fs::read_to_string::inner","role":"filesystem","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"Vec::from_iter / SpecFromIterNested","role":"runtime","note":"file rotation: keep last N lines","terminated_reason":"response_serialize"}
+{"depth":1,"addr":"file_write (append mode)","role":"filesystem","terminated_reason":"persistence_commit"}

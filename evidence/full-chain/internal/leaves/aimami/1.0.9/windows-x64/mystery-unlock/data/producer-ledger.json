@@ -1,0 +1,50 @@
+{
+  "bundle": "aimami/1.0.9/windows-x64/mystery-unlock",
+  "produced_by": "<workstation>",
+  "session": "<audit-session>", "produced_at": "2026-06-03",
+  "sha256_binary": "a5822387fa3f",
+  "gate_tier": "strictImplementationUse",
+  "authoritative": true,
+  "gate_accepted": false,
+  "implementation_use": false,
+  "dim6_missing": true,
+  "ceiling_note": "strictImplementationUse — dim6 test/acceptance mapping is source archive impl-side activity",
+  "leaves": [
+    {
+      "target": "get_mystery_unlock_grants",
+      "platform": "windows-x64",
+      "cmd_va": "0x14027e640",
+      "repo_mutex_va": "0x1400a8b70",
+      "repo_core_va": "0x140560640",
+      "dispatcher_va": "0x1402663e0",
+      "gate_tier": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "is_upstream": false,
+      "notes": "no input; returns filtered Vec<MysteryRouteGrant>; conditional save on count change; allowlist NOT applied in get path (epoch_ms filter only); INDEX line 1209"
+    },
+    {
+      "target": "merge_mystery_unlock_grants",
+      "platform": "windows-x64",
+      "cmd_va": "0x1402719b0",
+      "repo_mutex_va": "0x1400aa720",
+      "repo_core_va": "0x140564c90",
+      "dispatcher_va": "0x1402663e0",
+      "gate_tier": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "is_upstream": false,
+      "notes": "input param field=grants; allowlist inlined (9 routes); always save; sorted output; INDEX line 1210"
+    }
+  ],
+  "supporting_artifacts": [
+    {
+      "type": "raw-evidence",
+      "path": "raw/aimami/1.0.9/windows/mystery-unlock/MYSTERY-UNLOCK-WIN-109.md",
+      "index_line": 1209
+    },
+    {
+      "type": "distilled-consumer",
+      "path": "<source-location>/aimami/1.0.9/windows-x64/mystery-unlock/MYSTERY-UNLOCK-WIN-109-distilled.md",
+      "index_line": 1211
+    }
+  ]
+}

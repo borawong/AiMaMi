@@ -1,0 +1,39 @@
+{
+  "command": "set_auto_switch",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "owner_found": true,
+  "owner_addr": "0x140272080",
+  "owner_renamed": "set_auto_switch_owner_sys",
+  "core_impl_found": true,
+  "call_tree_depth": 3,
+  "call_tree_complete": true,
+  "terminal_leaves": [
+    "implementation_leaf: sub_1405565F0 (state write: autoSwitchEnabled)",
+    "implementation_leaf: WakeByAddressSingle",
+    "implementation_leaf: tauri_ipc_resolve_sys",
+    "implementation_leaf: sub_1400C8830 (cleanup)"
+  ],
+  "interface": {
+    "command_name": "set_auto_switch",
+    "argKeys": ["enabled"],
+    "arg_types": {"enabled": "bool"},
+    "response_ok": "()",
+    "response_err": "CoreError"
+  },
+  "side_effects": [
+    "Writes autoSwitchEnabled bool to shared bootstrap state via RwLock",
+    "Signals waiting threads via WakeByAddressSingle"
+  ],
+  "dim1_backend_owner": "Accepted",
+  "dim2_call_tree_implementation_leaves": "Accepted",
+  "dim3_interface_dto_error_side_effect": "Accepted",
+  "dim4_platform_gate_windows": "Accepted",
+  "dim5_boundary_error_path": "Accepted — poisoned lock error handled",
+  "dim6_test_acceptance": "empty_per_task_spec",
+  "gate": "strictImplementationUse",
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "no_gate_promotion_to_ready": true
+}

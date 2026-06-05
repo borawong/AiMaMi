@@ -1,0 +1,22 @@
+{
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "scope": "get_hotspot_enabled",
+  "addr_verified": "0x140285050",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "binary_sha12": "a5822387fa3f",
+  "gate_tier": "strictImplementationUse",
+  "gate_accepted": false,
+  "implementation_use": false,
+  "genuine_ceiling": false,
+  "block_decomposed": false,
+  "accepted_unknown": [],
+  "dims_closed": "1,2,3,4,5",
+  "dims_open": "6",
+  "dim6_note": "source archive implementation side — not in reverse scope",
+  "owner_machine": "<workstation>",
+  "owner_session": "<audit-session>",
+  "produced_at": "2026-06-04",
+  "authoritative": true
+}

@@ -1,0 +1,64 @@
+{
+  "bundle": "aimami/1.0.9/macos/mystery-unlock",
+  "produced_by": "<workstation>",
+  "session": "<audit-session>", "produced_at": "2026-06-03",
+  "gate_tier": "strictImplementationUse",
+  "authoritative": true,
+  "gate_accepted": false,
+  "implementation_use": false,
+  "dim6_missing": true,
+  "ceiling_note": "strictImplementationUse — dim6 test/acceptance mapping is source archive impl-side activity",
+  "leaves": [
+    {
+      "target": "get_mystery_unlock_grants",
+      "platform": "macos",
+      "cmd_va": "0x10026091c",
+      "cmd_size": "0x284",
+      "repo_va": "0x1005ec3e0",
+      "repo_size": "0x1c4",
+      "helper_va": "0x1005e9e08",
+      "dispatcher_va": "string-table@0x100f2ecf6",
+      "gate_tier": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "is_upstream": false,
+      "notes": "no input; returns filtered Vec<MysteryRouteGrant>; conditional save on count change; epoch_ms filter only (no allowlist in get path); INDEX line 1206"
+    },
+    {
+      "target": "merge_mystery_unlock_grants",
+      "platform": "macos",
+      "cmd_va": "0x1002620d4",
+      "cmd_size": "0x2d4",
+      "repo_va": "0x1005ef594",
+      "repo_size": "0x444",
+      "helper_va": "0x1005e9e08",
+      "dispatcher_va": "string-table@0x100f2ecf6",
+      "gate_tier": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "is_upstream": false,
+      "notes": "input param field=grants (len=6); allowlist separate fn mystery_route_allowed (9 routes); always save; sorted output; INDEX line 1207"
+    },
+    {
+      "target": "mystery_route_allowed",
+      "platform": "macos",
+      "va": "0x1005e9e08",
+      "size": "0x1b0",
+      "role": "allowlist-helper",
+      "gate_tier": "strictImplementationUse",
+      "dims_done": ["dim2", "dim3", "dim4"],
+      "is_upstream": false,
+      "notes": "trim+len-switch allowlist; 9 routes: mcp/skills/overview/accounts/sessions/settings/maintenance/subscription/customInstructions; xrefs from merge repo only; INDEX line 1208"
+    }
+  ],
+  "supporting_artifacts": [
+    {
+      "type": "raw-evidence",
+      "path": "raw/aimami/1.0.9/macos/mystery-unlock/MYSTERY-UNLOCK-MAC-109.md",
+      "index_lines": [1206, 1207, 1208]
+    },
+    {
+      "type": "distilled-consumer",
+      "path": "<source-location>/aimami/1.0.9/macos/mystery-unlock/MYSTERY-UNLOCK-MAC-109-distilled.md",
+      "index_line": 1221
+    }
+  ]
+}

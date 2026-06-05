@@ -1,0 +1,14 @@
+{
+  "schema": "raw-evidence.raw.validation.v1",
+  "command": "resolve_voice_vocabulary_app_info",
+  "platform": "macos",
+  "status": "PASS",
+  "checks": {
+    "required_files": true,
+    "json_valid": true,
+    "idb_saved": true,
+    "index_appended": true,
+    "gate_flags_highest": true,
+    "absence_substitute_explicit": true
+  }
+}

@@ -1,0 +1,12 @@
+{"depth":0,"addr":"0x1001dff6c","label":"codexmate_lib::commands::relay::load_relay_state::h8ced6f0d700b9817","role":"command_owner","size":540,"terminated_reason":null}
+{"depth":1,"addr":"0x1001c91c0","label":"codexmate_lib::core::relay::manager::RelayManager::ensure_proxy_started::h4c4f98ccc7e7cc46","role":"proxy_lifecycle_check","size":null,"parent":"0x1001dff6c","terminated_reason":null}
+{"depth":2,"addr":"external","label":"TcpStream::connect_timeout(127.0.0.1:port, 300ms timeout, retry 50ms)","role":"proxy_tcp_probe","size":null,"parent":"0x1001c91c0","terminated_reason":"external_call_recorded:tcp_probe"}
+{"depth":2,"addr":"0x1001d182c","label":"codexmate_lib::core::relay::storage::save::h263608cfb787c7","role":"persistence_write","size":null,"parent":"0x1001c91c0","terminated_reason":null}
+{"depth":3,"addr":"0x1006729f8","label":"atomic_write::write_atomic","role":"fs_write_leaf","size":null,"parent":"0x1001d182c","terminated_reason":"external_call_recorded:fs_write_relay_json"}
+{"depth":2,"addr":"external","label":"std::sys::pal::unix::sync::Mutex::lock/unlock","role":"mutex_guard","size":null,"parent":"0x1001c91c0","terminated_reason":"external_call_recorded:mutex_ops"}
+{"depth":1,"addr":"0x1001cfc44","label":"codexmate_lib::core::relay::manager::RelayManager::snapshot::h804b43a6068396ff","role":"state_read","size":null,"parent":"0x1001dff6c","terminated_reason":null}
+{"depth":2,"addr":"0x10020cc2c","label":"_$LT$codexmate_lib..core..relay..models..RelayState$u20$as$u20$core..clone..Clone$GT$::clone::hd5c3580fb112076a","role":"state_clone_leaf","size":null,"parent":"0x1001cfc44","terminated_reason":"implementation_leaf:RelayState_clone"}
+{"depth":1,"addr":"0x10020cc2c","label":"RelayState::clone (2nd — IPC serialization)","role":"ipc_clone","size":null,"parent":"0x1001dff6c","terminated_reason":"implementation_leaf:RelayState_clone"}
+{"depth":1,"addr":"inline","label":"apiKey scrub loop — *(_QWORD*)(provider+88)=0 per 208-byte entry (unrolled 4x for n>3)","role":"security_scrub_leaf","size":null,"parent":"0x1001dff6c","terminated_reason":"implementation_leaf:apikey_zero"}
+{"depth":1,"addr":"0x1001d9e60","label":"codexmate_lib::core::models::CoreEnvelope::ok::h6223b832e003ab5d","role":"response_envelope","size":null,"parent":"0x1001dff6c","terminated_reason":"implementation_leaf:ipc_response"}
+{"depth":1,"addr":"0x10020c20c","label":"CoreError::fmt (error path)","role":"error_path_leaf","size":null,"parent":"0x1001dff6c","terminated_reason":"implementation_leaf:error_fmt"}

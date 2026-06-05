@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "voice",
+  "command": "upsert_voice_vocabulary_app_scope",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "de79eb10fd63d443ff850a293c9f89cd5f8c24c67c677a76cb82b7c1347891d2",
+      "size": 777
+    },
+    {
+      "path": "README.md",
+      "sha256": "43d6603f88d81ddfe886047ad51357201d46cc652c2e5183589da646162e0c0f",
+      "size": 857
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "fff3bcfaeaa6c0c2c210623aaceb33bc99ee0caeb98a8b43d1a83e46fb4d2f",
+      "size": 394
+    },
+    {
+      "path": "audits/upsert_voice_vocabulary_app_scope-ida-closure.json",
+      "sha256": "a5fdf1f4d66f0c859c982a4c3c0a7f53d00849916f2be2f1865c245b0794583a",
+      "size": 2677
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "53590f7eb80b27fb14f7a4df6a3f1fae22f311d0693b8c382f948cc8679a0e05",
+      "size": 330
+    }
+  ],
+  "note": "manifest.json excluded to avoid circular digest; manifest carries this file-manifest digest"
+}

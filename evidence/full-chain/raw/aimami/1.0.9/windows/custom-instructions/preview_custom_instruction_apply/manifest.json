@@ -1,0 +1,31 @@
+{
+  "schema": "raw-evidence.raw.leaf.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "custom-instructions",
+  "command": "preview_custom_instruction_apply",
+  "status": "accepted_ready_absent_backend_orphan_ida_direct",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "idb_modified": true,
+  "idb_saved": true,
+  "absence_anchor": "0x1412804eb",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "accepted_substitute": "same_platform_ida_backend_absence_for_frontend_orphan_command"
+  },
+  "outputs": [
+    "AI.md",
+    "README.md",
+    "SYSTEM-DIFF.md",
+    "audits/preview_custom_instruction_apply-ida-closure.json",
+    "validation/result.json",
+    "file-manifest.json",
+    "manifest.json"
+  ]
+}

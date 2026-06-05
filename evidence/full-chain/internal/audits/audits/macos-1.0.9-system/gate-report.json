@@ -1,0 +1,245 @@
+{
+  "schema": "restoration.cm.reverse.gate_report.consumer_gate.v1",
+  "bundle": "macos-1.0.9-system",
+  "produced_at": "2026-06-02T08:00:00+08:00",
+  "platform": "macos",
+  "version": "1.0.9",
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "ida_session": "mcp__ida-pro-mcp-mac, 2026-06-02, sha_verified=true, hexrays_ready=true",
+  "dim6_mapping": "<source-location>/audits/macos-1.0.9-system/logic/ACCEPTANCE-MAPPING-109.md",
+  "ready_count": 6,
+  "strict_count": 0,
+  "task_plan": {
+    "schema": "restoration.cm.reverse.task_plan.consumer_gate.v1",
+    "readyToImplement": [
+      "force_kill_codex",
+      "reset_codex_config",
+      "get_image_compat",
+      "set_image_compat",
+      "get_system_info",
+      "check_update_installability"
+    ],
+    "strictImplementationUse": [],
+    "consumerStartReady": [
+      { "command": "note_usage_refresh_activity",       "startMode": "product_decision" },
+      { "command": "schedule_full_runtime_refresh",     "startMode": "product_decision" },
+      { "command": "start_auto_switch_pending_watcher", "startMode": "product_decision" },
+      { "command": "start_usage_refresh_watcher",       "startMode": "product_decision" },
+      { "command": "update_usage_refresh_schedule",     "startMode": "product_decision" }
+    ],
+    "reverseRequiredQueues": {
+      "forbiddenUntilReady": [],
+      "forbiddenUntilStrictImplementationUse": [],
+      "consumerStartBlocked": []
+    },
+    "platformPolicy": {
+      "windowsIndependent": true,
+      "doNotInferWindowsFromMacOS": true
+    }
+  },
+  "per_command_gate": {
+    "force_kill_codex": {
+      "dims_closed": ["dim1_frontend_ccf_ui_state", "dim2_backend_owner_pseudocode", "dim3_call_tree_to_leaves", "dim4_interface_dto_error_sideeffect", "dim5_platform_gate_macos", "dim6_test_acceptance_mapping"],
+      "dims_open": [],
+      "dim6_acceptance": {
+        "basis": "IDA fresh decompile 2026-06-02; owner 0x10025e654 confirmed same SHA",
+        "DTO_confirmed": "CoreEnvelope<Vec<u32>> — PIDs from pass-1 kill list",
+        "side_effects_confirmed": ["ps -ax -o pid=,command= ×2", "kill -9 <pid> per match ×N", "sleep 500ms", "sleep 1000ms"],
+        "error_variants_confirmed": ["ps spawn fail → CoreError propagated", "kill errors silently dropped"],
+        "assertions": [
+          "cargo: test_force_kill_codex_no_procs → Ok(vec![])",
+          "cargo: test_force_kill_codex_mock_proc → Ok(vec![pid])",
+          "cargo: test_force_kill_codex_ps_fail → Err(CoreError)",
+          "e2e: invoke with running AiMaMi → process gone",
+          "e2e: invoke with no codex procs → Ok([])"
+        ]
+      },
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "implementation_use": true,
+      "gate_accepted": true,
+      "full_leaf_100": true,
+      "accepted_unknowns": ["frontend_ccf_absent — accepted: backend-only command, no UI trigger surface"],
+      "platform_scope": "macOS confirmed; Windows Unknown"
+    },
+    "reset_codex_config": {
+      "dims_closed": ["dim1_frontend_ccf_ui_state", "dim2_backend_owner_pseudocode", "dim3_call_tree_to_leaves", "dim4_interface_dto_error_sideeffect", "dim5_platform_gate_macos", "dim6_test_acceptance_mapping"],
+      "dims_open": [],
+      "dim6_acceptance": {
+        "basis": "IDA fresh decompile 2026-06-02; owner 0x10025fbc8 confirmed same SHA; accepted_unknown(from_home_rename) IDA-resolved",
+        "DTO_confirmed": "CoreEnvelope<bool> — true=write succeeded, false=metadata fail or absent file",
+        "side_effects_confirmed": ["RelayManager::snapshot (read-only)", "CodexPaths::resolve_codex_home", "std::sys::fs::metadata (stat config.toml)", "std::fs::write(config.toml, b\"\") — truncate to 0 bytes"],
+        "resolved_unknowns": ["from_home_rename_exact_backup_path → IDA confirms NO rename/backup; write(0bytes) directly"],
+        "error_variants_confirmed": ["metadata Err → Ok(false)", "write Err → Err envelope with io::Error string"],
+        "assertions": [
+          "cargo: test_reset_codex_config_file_exists → Ok(true) → file 0 bytes",
+          "cargo: test_reset_codex_config_file_absent → Ok(false)",
+          "cargo: test_reset_codex_config_write_fail → Err with message",
+          "vitest: { data: true } or { data: false }",
+          "e2e: invoke → file truncated → fresh Codex config"
+        ]
+      },
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "implementation_use": true,
+      "gate_accepted": true,
+      "full_leaf_100": true,
+      "accepted_unknowns": ["from_home_rename_exact_backup_path — RESOLVED by IDA: no rename in function; frontend_ccf_absent — accepted"],
+      "platform_scope": "macOS confirmed; Windows Unknown"
+    },
+    "get_image_compat": {
+      "dims_closed": ["dim1_frontend_ccf_ui_state", "dim2_backend_owner_pseudocode", "dim3_call_tree_to_leaves", "dim4_interface_dto_error_sideeffect", "dim5_platform_gate_macos", "dim6_test_acceptance_mapping"],
+      "dims_open": [],
+      "dim6_acceptance": {
+        "basis": "IDA fresh decompile 2026-06-02; owner 0x10025e7c0 confirmed same SHA; rodata bytes at 0x100ee466f confirmed by get_bytes",
+        "DTO_confirmed": "CoreEnvelope<bool> — true=[features]/image_generation=false found; false=any fail",
+        "side_effects_confirmed": ["std::fs::read_to_string(config.toml) — read-only"],
+        "rodata_bytes_confirmed": "0x100ee466f: 'image_generation = false' 24 bytes hex 69 6d 61 67 65 5f 67 65 6e 65 72 61 74 69 6f 6e 20 3d 20 66 61 6c 73 65",
+        "parse_constants_confirmed": "[features] = 10-byte string (0x657275746165665B + 0x5D = '[features]'); image_generation = 16-byte prefix check",
+        "error_variants_confirmed": ["IO error → Ok(false) (no error propagation)"],
+        "assertions": [
+          "cargo: test_get_image_compat_true → [features]\\nimage_generation = false → Ok(true)",
+          "cargo: test_get_image_compat_false_missing → no file → Ok(false)",
+          "cargo: test_get_image_compat_false_no_section → no [features] → Ok(false)",
+          "cargo: test_get_image_compat_false_value_true → image_generation = true → Ok(false)",
+          "cargo: test_get_image_compat_false_wrong_case → Image_Generation = false → Ok(false)",
+          "vitest: component renders compat warning on false"
+        ]
+      },
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "implementation_use": true,
+      "gate_accepted": true,
+      "full_leaf_100": true,
+      "accepted_unknowns": ["frontend_ccf_dim1 — accepted: backend-only pass for this leaf"],
+      "platform_scope": "macOS confirmed; Windows Unknown (behavior may differ)"
+    },
+    "set_image_compat": {
+      "dims_closed": ["dim1_frontend_ccf_ui_state", "dim2_backend_owner_pseudocode", "dim3_call_tree_to_leaves", "dim4_interface_dto_error_sideeffect", "dim5_platform_gate_macos", "dim6_test_acceptance_mapping"],
+      "dims_open": [],
+      "dim6_acceptance": {
+        "basis": "IDA fresh decompile 2026-06-02; owner 0x10025ee14 confirmed same SHA; both accepted_unknowns IDA-resolved",
+        "DTO_confirmed": "CoreEnvelope<bool> — echoes input bool on success",
+        "side_effects_confirmed": ["std::fs::read_to_string (tolerates missing)", "memmove line mutation (insert/replace/remove)", "alloc::str::join_generic_copy + append newline", "std::fs::write (NON-ATOMIC full overwrite)"],
+        "resolved_unknowns": [
+          "toggle_vs_explicit_set_when_key_found → IDA: compat=true removes field via memmove delete; compat=false replaces/inserts 'image_generation = false' constant at 0x100ee466f",
+          "read_fail_path_write_error_silent_swallow → IDA: read fail starts from empty Vec (creates new file); write fail IS propagated as Err envelope with formatted io::Error"
+        ],
+        "error_variants_confirmed": ["write Err → Err envelope with io::Error formatted string"],
+        "assertions": [
+          "cargo: test_set_image_compat_false_creates → absent config → creates [features]\\nimage_generation = false\\n",
+          "cargo: test_set_image_compat_false_updates → [features] no field → field inserted",
+          "cargo: test_set_image_compat_true_removes → image_generation = false present → field removed",
+          "cargo: test_set_image_compat_write_fail → Err response",
+          "vitest: toggle → query invalidation → get_image_compat returns updated value",
+          "e2e: invoke(false) → read config.toml → image_generation = false present in [features]"
+        ]
+      },
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "implementation_use": true,
+      "gate_accepted": true,
+      "full_leaf_100": true,
+      "accepted_unknowns": ["toggle_vs_explicit_set_when_key_found — RESOLVED", "read_fail_path_write_error_silent_swallow — RESOLVED"],
+      "platform_scope": "macOS confirmed; Windows Unknown"
+    },
+    "get_system_info": {
+      "dims_closed": ["dim1_frontend_ccf_ui_state", "dim2_backend_owner_pseudocode", "dim3_call_tree_to_leaves", "dim4_interface_dto_error_sideeffect", "dim5_platform_gate_macos", "dim6_test_acceptance_mapping"],
+      "dims_open": [],
+      "dim6_acceptance": {
+        "basis": "IDA fresh decompile 2026-06-02; owner 0x10025d0b4 confirmed same SHA",
+        "DTO_confirmed": "{os:'macos', arch:'aarch64', hostname: hostname::get() | 'unknown', version: sw_vers -productVersion stdout trimmed | 'unknown'}",
+        "side_effects_confirmed": ["hostname::get() — gethostname syscall", "Command::new('sw_vers').arg('-productVersion').output()"],
+        "error_variants_confirmed": ["hostname fail → 'unknown' fallback", "sw_vers fail → 'unknown' fallback; no error envelope"],
+        "assertions": [
+          "cargo: test_get_system_info_basic → os=macos, arch=aarch64, hostname non-empty, version non-empty",
+          "cargo: test_get_system_info_hostname_fallback → hostname='unknown'",
+          "cargo: test_get_system_info_swvers_fallback → version='unknown'",
+          "vitest: component renders all 4 fields",
+          "e2e: version matches `sw_vers -productVersion` output"
+        ]
+      },
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "implementation_use": true,
+      "gate_accepted": true,
+      "full_leaf_100": true,
+      "accepted_unknowns": [],
+      "platform_scope": "macOS confirmed; Windows Unknown (os/arch literals differ)"
+    },
+    "check_update_installability": {
+      "dims_closed": ["dim1_frontend_ccf_ui_state", "dim2_backend_owner_pseudocode", "dim3_call_tree_to_leaves", "dim4_interface_dto_error_sideeffect", "dim5_platform_gate_macos", "dim6_test_acceptance_mapping"],
+      "dims_open": [],
+      "dim6_acceptance": {
+        "basis": "IDA fresh decompile 2026-06-02; platform_impl 0x100578128 confirmed same SHA; struct output offsets verified; ipc_cmd_rodata accepted_unknown resolved",
+        "DTO_confirmed": "{status_tag:String, exe_path:Option<String>, app_path:Option<String>, can_install:bool@a1+72, is_translocation:bool@a1+73, quarantine_cleared:bool@a1+74}",
+        "side_effects_confirmed": ["std::env::current_exe() — __NSGetExecutablePath", "xattr -p com.apple.quarantine <app_path> — read-only probe"],
+        "resolved_unknowns": [
+          "ipc_command_name_rodata_string_unconfirmed → find_regex returned 0 matches; Tauri inline compilation confirmed; closure 0x1003290d4→0x100578128 via decompile+xref; accepted_unknown(non_critical)"
+        ],
+        "error_variants_confirmed": ["current_exe fail → exe_path=None, app_path=None, can_install based on empty path", "xattr spawn fail → quarantine_cleared=false"],
+        "assertions": [
+          "cargo: test_check_update_installability_normal_app → status='ok', can_install=true, is_translocation=false, quarantine_cleared=true",
+          "cargo: test_check_update_installability_translocation → /AppTranslocation/ path → status='app_translocation', can_install=false",
+          "cargo: test_check_update_installability_volumes → /Volumes/ prefix → status='read_only_location', can_install=false",
+          "cargo: test_check_update_installability_xattr_fail → quarantine_cleared=false",
+          "e2e: AiMaMi from normal install → can_install=true, status='ok'",
+          "e2e: AiMaMi from DMG (translocation) → status='app_translocation', can_install=false"
+        ]
+      },
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "implementation_use": true,
+      "gate_accepted": true,
+      "full_leaf_100": true,
+      "accepted_unknowns": ["ipc_command_name_rodata_string_unconfirmed — RESOLVED as accepted_unknown(non_critical): Tauri inline compilation pattern; closure chain confirms dispatch"],
+      "platform_scope": "macOS confirmed; Windows Unknown (translocation is macOS-specific)"
+    },
+    "note_usage_refresh_activity": {
+      "consumerStartReady": true,
+      "startMode": "product_decision",
+      "strictImplementationUse": false,
+      "readyToImplement": false,
+      "productDecisionsRequired": ["source archive-local interface contract", "upstream IPC name confirmation"],
+      "sourceSurfaceDelta": "No upstream proof; source archive-local implementation"
+    },
+    "schedule_full_runtime_refresh": {
+      "consumerStartReady": true,
+      "startMode": "product_decision",
+      "strictImplementationUse": false,
+      "readyToImplement": false,
+      "productDecisionsRequired": ["source archive-local interface contract", "upstream IPC name confirmation"],
+      "sourceSurfaceDelta": "No upstream proof; source archive-local implementation"
+    },
+    "start_auto_switch_pending_watcher": {
+      "consumerStartReady": true,
+      "startMode": "product_decision",
+      "strictImplementationUse": false,
+      "readyToImplement": false,
+      "productDecisionsRequired": ["source archive-local interface contract", "upstream IPC name confirmation"],
+      "sourceSurfaceDelta": "No upstream proof; source archive-local implementation"
+    },
+    "start_usage_refresh_watcher": {
+      "consumerStartReady": true,
+      "startMode": "product_decision",
+      "strictImplementationUse": false,
+      "readyToImplement": false,
+      "productDecisionsRequired": ["source archive-local interface contract", "upstream IPC name confirmation"],
+      "sourceSurfaceDelta": "No upstream proof; source archive-local implementation"
+    },
+    "update_usage_refresh_schedule": {
+      "consumerStartReady": true,
+      "startMode": "product_decision",
+      "strictImplementationUse": false,
+      "readyToImplement": false,
+      "productDecisionsRequired": ["source archive-local interface contract", "upstream IPC name confirmation"],
+      "sourceSurfaceDelta": "No upstream proof; source archive-local implementation"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "bundle": "relay-image-compat",
+  "scope": "relay_image_compat_get_and_set_windows",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "date": "2026-06-04",
+  "binary_sha": "a5822387fa3f",
+  "owner_gate": {
+    "decision": "ALLOW",
+    "write_mode": "first",
+    "collision_status": "None",
+    "exit_code": 0,
+    "cwd": "<source-location>"
+  },
+  "authoritative": true,
+  "gate_accepted": false,
+  "gate_tier": "strictImplementationUse",
+  "implementation_use": false,
+  "real_body_found": true,
+  "genuine_ceiling": false,
+  "accepted_unknown": false,
+  "block_decomposed": false,
+  "addr_verified": "GET: 0x1402779b0=relay_image_compat_get_handler_sys; SET: 0x14027a1b0=relay_image_compat_set_handler_sys (both func_query exact match, has_type=true)",
+  "dims_closed": "dim2=CLOSED,dim3=CLOSED,dim4=CLOSED,dim5=CLOSED",
+  "dim1_status": "partial (command VAs confirmed; win frontend CCF = product/frontend-lane gap NOT binary ceiling)",
+  "dim6_status": "open",
+  "functions": [
+    {"name": "relay_image_compat_get_handler_sys", "addr": "0x1402779b0", "size": 627, "blocks": 25},
+    {"name": "relay_image_compat_get_core_impl_sys", "addr": "0x1400a7040", "size": 649, "blocks": 18},
+    {"name": "relay_image_compat_set_handler_sys", "addr": "0x14027a1b0", "size": 911},
+    {"name": "relay_image_compat_set_impl_sys", "addr": "0x1400a5eb0", "size": 3577, "blocks": 155},
+    {"name": "relay_image_compat_read_config_toml_sys", "addr": "0x1400a55f0", "size": 900},
+    {"name": "relay_image_compat_build_ok_bool_response_sys", "addr": "0x1404391d0", "size": 229}
+  ],
+  "distilled_files": {
+    "get": "<source-location>/aimami/1.0.9/windows-x64/relay-image-compat/AI.md",
+    "set": "<source-location>/aimami/1.0.9/windows-x64/relay-image-compat/SET_AI.md"
+  }
+}

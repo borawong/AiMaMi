@@ -1,0 +1,23 @@
+{
+  "function": "migrate_threads_for_router_with_scope",
+  "platform": "windows-x64",
+  "product": "AiMaMi",
+  "version": "1.0.9",
+  "addr": "0x1403e6f70",
+  "sha": "a5822387fa3f",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_date": "2026-06-04",
+  "status": "completed",
+  "gate_tier": "strictImplementationUse",
+  "genuine_ceiling": false,
+  "dims_covered": ["dim1", "dim2", "dim3", "dim4"],
+  "callees_decompiled": [
+    "migration_scope_read_sys@0x1403d6b90",
+    "scan_codex_process_list_sys@0x140254ce0",
+    "rollout_patch_parallel_sys@0x1403e3540",
+    "replace_first_session_meta_line_sys@0x1403e5b10",
+    "sub_1403D8FA0@0x1403d8fa0"
+  ],
+  "fake_wall_exhausted": true,
+  "recovery_attempts": "none required — all dims resolved from direct decompile"
+}

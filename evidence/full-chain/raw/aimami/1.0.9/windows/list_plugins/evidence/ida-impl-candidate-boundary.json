@@ -1,0 +1,103 @@
+{
+  "schema": "raw-evidence.reverse.raw.ida_impl_candidate_boundary.v1",
+  "produced_at": "2026-06-02T02:20:00+08:00",
+  "source": "ida_mcp",
+  "ida_instance": "127.0.0.1:13337",
+  "binary": {
+    "path": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+    "sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+    "size": 26821632,
+    "imagebase": "0x140000000",
+    "idb_path": "<local-path> 1.0.9 win64.exe.i64"
+  },
+  "leaf": "list_plugins",
+  "candidate": {
+    "name": "sub_140164BD0",
+    "addr": "0x140164bd0",
+    "size": "0x2b",
+    "prototype": "__int64 __fastcall(__int64)",
+    "decompile_ok": true,
+    "impl_leaf_accepted": false,
+    "reason": "candidate is a thin wrapper around registry-list and response-builder callees; deeper DTO, builtin/default field parity, runtime, frontend, and acceptance evidence remain open"
+  },
+  "owner_branch": {
+    "owner": "sub_1402663E0",
+    "owner_addr": "0x1402663e0",
+    "command_string": "list_plugins",
+    "command_string_addr": "0x141269139",
+    "command_xref": "0x140267f30",
+    "candidate_call": "0x140267fb4",
+    "registry_scope_string": "registry",
+    "resolver": "sub_1400FA340",
+    "error_serializer": "sub_140062230",
+    "result_shaper": "sub_14029CBB0"
+  },
+  "key_callees": [
+    {
+      "name": "sub_1403EE7A0",
+      "addr": "0x1403ee7a0",
+      "role": "plugin registry list source",
+      "evidence": [
+        "references string plugin store poisoned",
+        "references src<network-location>",
+        "locks store using interlocked byte at +56",
+        "copies vector entries using 152-byte stride"
+      ]
+    },
+    {
+      "name": "sub_140095ED0",
+      "addr": "0x140095ed0",
+      "role": "allocates output vector and delegates record mapping",
+      "evidence": [
+        "computes element count from begin/end",
+        "calls sub_14038B200"
+      ]
+    },
+    {
+      "name": "sub_14038B200",
+      "addr": "0x14038b200",
+      "role": "maps plugin records into response records",
+      "evidence": [
+        "iterates registry entries",
+        "copies nested string/config-like fields",
+        "writes 192-byte output records"
+      ]
+    },
+    {
+      "name": "sub_14043A010",
+      "addr": "0x14043a010",
+      "role": "success response builder",
+      "evidence": [
+        "allocates ok string",
+        "allocates Success string",
+        "embeds list payload"
+      ]
+    }
+  ],
+  "side_effect_hints": [
+    "read/lock/wake of plugin store",
+    "heap allocations for output vector and response strings",
+    "no fs/registry persistence write observed in bounded list path"
+  ],
+  "error_hints": [
+    "plugin store poisoned",
+    "allocation failure via sub_14120829B",
+    "panic/format path via sub_1412085B0",
+    "dispatcher resolver failure serializes through sub_140062230"
+  ],
+  "missing_for_acceptance": [
+    "field-level plugin DTO mapping",
+    "builtin/default plugin parity",
+    "frontend UI/control-flow and frontend consumption on Windows 1.0.9",
+    "runtime IPC or accepted same-platform gate evidence",
+    "upstream test/manual acceptance mapping"
+  ],
+  "gate": {
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false
+  }
+}

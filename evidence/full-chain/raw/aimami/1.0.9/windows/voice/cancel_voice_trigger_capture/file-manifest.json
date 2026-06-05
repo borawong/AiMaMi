@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "voice",
+  "command": "cancel_voice_trigger_capture",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "a05814f12acf7402d5fd8ee61007fdf78538b3f5e316506482a21911acab4012",
+      "size": 767
+    },
+    {
+      "path": "README.md",
+      "sha256": "643bafffa26cce6b05ee0da9e8dd76e2d2ec9a16ea997e601a840682217debdb",
+      "size": 852
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "71021e869b98fe0ea815360f25b0367920b2224493abc07087a70d3f4b0c9006",
+      "size": 389
+    },
+    {
+      "path": "audits/cancel_voice_trigger_capture-ida-closure.json",
+      "sha256": "02f7e49e2cd290b83fdcf5876c4e78294b2cf62042d60358bee1c4250acd8b07",
+      "size": 2638
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "64f107e5483a8f5bd6047400dceb79ca85b64782fb468b52b6d103a5808d43b0",
+      "size": 325
+    }
+  ],
+  "note": "manifest.json excluded to avoid circular digest; manifest carries this file-manifest digest"
+}

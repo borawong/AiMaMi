@@ -1,0 +1,67 @@
+{
+  "schema": "restoration.cm.reverse.audit.gate_report.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "module": "tray",
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "moduleExitAllowed": true,
+  "status": "accepted_full_leaf_100_windows_ida",
+  "strictBlockingDimensions": [],
+  "knownNotAbsent": true,
+  "acceptedTargets": [
+    "create_tray_icon_window",
+    "create_or_refresh_tray_menu",
+    "handle_tray_menu_event",
+    "tray_relay_usage_quota_model"
+  ],
+  "acceptedEvidence": {
+    "appOwners": {
+      "create_menu": "0x140009BB0",
+      "bootstrap_menu": "0x14000B710",
+      "snapshot_menu": "0x14000D710",
+      "router_section": "0x14000CA80",
+      "refresh_menu": "0x14000A1E0",
+      "runtime_refresh_menu": "0x14000F3E0",
+      "runtime_state_updated": "0x1400AF970",
+      "menu_event": "0x14000A410"
+    },
+    "nativeTerminals": [
+      "0x1406e3980",
+      "0x140e8c120",
+      "0x140e8d0a0",
+      "0x140e9dc20",
+      "0x140e9ffc0"
+    ],
+    "source archiveAcceptancePaths": [
+      "src-tauri/src/commands/tray_menu.rs",
+      "src-tauri/src/lib.rs",
+      "src/main-app.tsx",
+      "src/main-app.test.tsx"
+    ]
+  },
+  "verification": {
+    "cargoTray": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml tray",
+      "result": "pass",
+      "summary": "36 passed, 0 failed"
+    },
+    "frontendTrayNavigation": {
+      "command": "bun run test -- src/main-app.test.tsx -t \"tray navigation\"",
+      "result": "pass",
+      "summary": "24 passed, 39 skipped in filtered file"
+    }
+  },
+  "productDelta": [
+    {
+      "id": "tray_router_open",
+      "status": "source archive_extra_classifier_not_upstream_windows_menu_item",
+      "note": "Windows AiMaMi 1.0.9 IDA has router header/status only; current source archive defines tray_router_open classifier and tray:navigate relayModel path, but the stateful menu does not add a tray_router_open item."
+    }
+  ]
+}

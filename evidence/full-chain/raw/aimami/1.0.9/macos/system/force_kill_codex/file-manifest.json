@@ -1,0 +1,17 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "bundle_path": "raw/aimami/1.0.9/macos/system/force_kill_codex",
+  "files": [
+    {"path": "AI.md", "sha256": "9200aca7b7db758b3947a5fff74f63b121847012cc6f3758966c22929aaf782f", "size": 4000},
+    {"path": "README.md", "sha256": "0342003e7a6c79edaeef6f7bcd706d572a8a67f4a7f1ce79a0803e7b0ac4dafc", "size": 5387},
+    {"path": "SYSTEM-DIFF.md", "sha256": "62f861c6d6597f7d5d4c06c3fe6785a66fb6694268d6b20c0c4e816aabbd71c0", "size": 1927},
+    {"path": "validation/result.json", "sha256": "b95144ce4ed01a94d985945f04b901156dbcf039043cbf251a42926ca7638efd", "size": 1880},
+    {"path": "call-trees/codexmate_lib::commands::system::force_kill_codex.jsonl", "sha256": "dfcb88e39cbec96ce0635404dc8f9ad27e3a6f9ba4c48cc8c84ea68f2d1eaa", "size": 3512},
+    {"path": "ida/pseudocode-manifest.jsonl", "sha256": "10f1ffead62dab8924409503bbc32dc37c61bec0146ae4f32888812fd77a61d4", "size": 1925},
+    {"path": "ida/pseudocode/0001_force_kill_codex_owner_cmd_1b9b65a7.c", "sha256": "d29a4a36f1b9160758e1c314d8c904379ca8e7bd3d448f0153f3ff8a28a35e", "size": 3615},
+    {"path": "ida/pseudocode/0002_force_kill_codex_platform_force_kill_all_ha987baf7.c", "sha256": "96959da639c22bfb02d40887ad3b09874dd09c6a5f92e40555ab2d25614657b7", "size": 2099},
+    {"path": "ida/pseudocode/0003_force_kill_codex_platform_force_kill_pid_hcbcb471.c", "sha256": "0d9e28528b6c933f5cf04653ea25e6eae0a1d2c8e5b60b67739d8bd9f1240a3b", "size": 2078},
+    {"path": "ida/pseudocode/0004_force_kill_codex_platform_list_all_codex_hfa88ec1.c", "sha256": "c0ff2fdc631be4b31c6642aee221f2d7a3df64c4d4bf042f7352b19096025211", "size": 2321}
+  ],
+  "note": "manifest.json and file-manifest.json self-hashes excluded per spec"
+}

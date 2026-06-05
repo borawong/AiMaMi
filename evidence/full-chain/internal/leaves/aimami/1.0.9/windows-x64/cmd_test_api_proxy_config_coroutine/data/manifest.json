@@ -1,0 +1,32 @@
+{
+  "bundle": "aimami/1.0.9/windows-x64/cmd_test_api_proxy_config_coroutine",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "target": "cmd_test_api_proxy_config_coroutine",
+  "sha": "a5822387fa3f",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "date": "2026-06-04",
+  "owner_machine": "<workstation>",
+  "owner_session": "<audit-session>",
+  "authoritative": true,
+  "gate_accepted": true,
+  "implementation_use": true,
+  "gate_tier": "strict",
+  "dims_closed": "2,3,4,5",
+  "dim1_status": "frontend_lane_gap",
+  "addr_verified": "0x1408e8160",
+  "real_body_found": true,
+  "block_decomposed": false,
+  "genuine_ceiling": false,
+  "accepted_unknown": false,
+  "recovery_attempts": "none — no fake-wall encountered; all 8 taxonomy patterns inapplicable",
+  "ipc_command": "test_api_proxy_config",
+  "params": {
+    "mode": "u32 (4 bytes), extracted by sub_14045FAA0",
+    "url": "string (ptr+len), extracted by sub_140461E20"
+  },
+  "response_dto": "{schemaVersion, success, code, message, data}",
+  "side_effects": "TCP probe via sub_140609D60; AppState interval read; managed_state_register; broadcast via sub_140877B20; tauri_ipc_resolve_sys",
+  "notes": "Async coroutine state machine on a1[2672] (3 states). Shares infrastructure with cmd_detect_api_proxy_config_coroutine. Test variant uniquely: mode+url params, TCP probe launch, JSON response builder."
+}

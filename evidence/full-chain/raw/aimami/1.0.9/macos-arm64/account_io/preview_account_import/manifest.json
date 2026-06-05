@@ -1,0 +1,29 @@
+{
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos-arm64",
+  "module": "account_io",
+  "command": "preview_account_import",
+  "binary": "AiMaMi",
+  "binary_format": "macho",
+  "binary_sha256": "see-VERSION-BASELINE.md",
+  "idb_path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "scope": "single-command",
+  "implementation_targets_file": "implementation-targets.txt",
+  "owner_addr": "0x10032c93c",
+  "owner_name": "codexmate_lib::commands::account_io::preview_account_import::_{{closure}}_{{closure}}::he26a0966b629aaed",
+  "owner_size": "0x458",
+  "core_addr": "0x1005dd788",
+  "core_name": "codexmate_lib::core::account_io::preview_import::h99eba30fdd2c02a7",
+  "session": "wf-aimami109-fullsurface-audit",
+  "machine": "<workstation>",
+  "produced_at": "2026-06-04",
+  "gate_tier": "strictImplementationUse",
+  "genuine_ceiling": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "wf-aimami109-fullsurface-audit"
+  }
+}

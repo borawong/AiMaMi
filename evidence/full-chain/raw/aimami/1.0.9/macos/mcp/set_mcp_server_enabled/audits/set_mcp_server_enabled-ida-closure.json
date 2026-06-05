@@ -1,0 +1,27 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "mcp",
+  "command": "set_mcp_server_enabled",
+  "owner": "0x10015d360",
+  "owner_decompile_ok": true,
+  "threading_model": "sync mutex/load-find-upsert; no async/spawn",
+  "xrefs_wrapper_closed": true,
+  "callee_leaf_chain_closed": true,
+  "important_callees": [
+    "0x10015d360",
+    "0x100621F4C",
+    "0x10061FCC0",
+    "0x10061F480"
+  ],
+  "interface_dto_closed": true,
+  "error_envelope_closed": true,
+  "side_effect_boundary_closed": true,
+  "same_platform_gate_closed": true,
+  "acceptance_mapping_closed": true,
+  "idb_comments_written": true,
+  "idb_saved": true,
+  "conclusion": "accepted_full_leaf_100_ida_direct_mcp"
+}

@@ -1,0 +1,17 @@
+{
+  "leaf": "update_usage_refresh_schedule",
+  "owner_addr": "0x100262c90",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "validated_at": "2026-06-02T00:00:00Z",
+  "pseudocode_status": "accepted",
+  "call_tree_depth": 1,
+  "implementation_leaves": ["init_leaf:OnceLock_init","sync_leaf:mutex_lock","state_leaf:store_interval_secs","sync_leaf:condvar_notify_all"],
+  "gate_status": "strictImplementationUse",
+  "dim1": "accepted_native_callback",
+  "dim2": "accepted",
+  "dim3": "accepted",
+  "dim4": "accepted",
+  "dim5": "macos_confirmed_windows_unknown",
+  "dim6": "empty",
+  "blocker": null
+}

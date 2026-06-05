@@ -1,0 +1,17 @@
+{
+  "schema": "raw-evidence.raw.bundle.file_manifest.v1",
+  "bundle_key": "aimami/1.0.9/windows/system/get_system_info",
+  "files": [
+    {"path": "AI.md", "size": 4219, "sha256": "03d373c6fe22e42eb99d9a55dfa615feba4f74af6f55fa121568660269eec93f"},
+    {"path": "README.md", "size": 6784, "sha256": "e554d928b6aa01e39c2677e08f01b75ebfd0bd4339f61cdc78302b552d756538"},
+    {"path": "SYSTEM-DIFF.md", "size": 3298, "sha256": "65e420702cf3407312e33a83e51ad447e18dac3d6164338068eb28ba94810af2"},
+    {"path": "validation/result.json", "size": 1466, "sha256": "168d7b3be5a229bc2674a5259e0bae976fcea2c913b78b36ad153bdfbe12e28e"},
+    {"path": "call-trees/codexmate_lib__commands__system__get_system_info.jsonl", "size": 3138, "sha256": "494deaa55139ce88a9e78d30fd16b0765388ac671c43af2672d61465c45e85"},
+    {"path": "ida/pseudocode-manifest.jsonl", "size": 1366, "sha256": "ac45e5496e06db793fcd045363fa33dd931639a1e65078057e8776dff63493"},
+    {"path": "ida/pseudocode/0001_get_system_info_owner_cmd_140070050.c", "size": 4196, "sha256": "3448323556cf9e0dd6c64c6c63b3d3e1040f1bba359ca897021fd97fc2e74ada"},
+    {"path": "ida/pseudocode/0002_get_system_info_field_builder_1400BF440.c", "size": 3539, "sha256": "d60da6bbe553d95f2c6b9b234293071f788f90196245ec210f0ab557190b"},
+    {"path": "ida/pseudocode/0003_get_system_info_json_field_serializer_14041D2C0.c", "size": 2192, "sha256": "c8ba10868faefe6b96dc18c6cdc92913866ad02586952be59d297e7c9eae693d"},
+    {"path": "ida/pseudocode/0004_get_system_info_response_envelope_140062230.c", "size": 1368, "sha256": "2ca5a11072549683ead8d525d3ebcc6f2eabda5760308a040a247119a7ae87"}
+  ],
+  "self_hash_excluded": true
+}

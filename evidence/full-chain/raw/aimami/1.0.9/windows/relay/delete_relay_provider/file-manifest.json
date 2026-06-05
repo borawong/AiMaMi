@@ -1,0 +1,47 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "bundle_path": "raw/aimami/1.0.9/windows/relay/delete_relay_provider",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "ee8b72d0d897147a594da00a002aeb72372ec1525153ad594eb03ad0ec8ab1cc",
+      "size": 5208
+    },
+    {
+      "path": "README.md",
+      "sha256": "c8f873b4341dc059abb74b56b0fb9b897258339b26d6fe42ee84059b06b9f759",
+      "size": 2268
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "22d5bfa2e722f0190c9c873d6e6c84c2202e73ba6097ec0bddf2ea3d815f65cd",
+      "size": 1040
+    },
+    {
+      "path": "call-trees/codexmate_lib::commands::relay::delete_relay_provider.jsonl",
+      "sha256": "9af407f8f2c99cc9d1cf5e7a61a7b665f1cb227aec23e7ba2b6dda2c7a3fa0upstream",
+      "size": 2683
+    },
+    {
+      "path": "ida/pseudocode-manifest.jsonl",
+      "sha256": "3bc6b97724d9cf677c0b179f5ce506efdec8aa885679f4d207462e8c6f82b157",
+      "size": 901
+    },
+    {
+      "path": "ida/pseudocode/0001_delete_relay_provider_owner_sys_h274710.c",
+      "sha256": "423aef504ed239069a6811e6b00a08ea6a35d79824ab6189bcef9ef252a8ff31",
+      "size": 2024
+    },
+    {
+      "path": "ida/pseudocode/0002_delete_relay_provider_lookup_delete_h14f540.c",
+      "sha256": "caf45714ffdacfbddb9263e1755f14f76c82d780ce0c94f7ccd2b4928083b371",
+      "size": 2134
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "e728cfdd7e19e59c80224ebd28783d1bb91ca9dca5ffb4646387fbb3c7be5e34",
+      "size": 2098
+    }
+  ],
+  "note": "manifest.json and file-manifest.json self-hashes excluded per spec"
+}

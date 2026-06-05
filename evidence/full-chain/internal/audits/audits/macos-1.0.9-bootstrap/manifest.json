@@ -1,0 +1,39 @@
+{
+  "schema": "restoration.cm.reverse.audit.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "bootstrap",
+  "status": "authoritative_strictImplementationUse_upgrade",
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false,
+  "upgraded_from": "consumerStartReady",
+  "upgraded_by": {
+    "machine": "<workstation>",
+    "session": "<audit-session>", "produced_at": "2026-06-03",
+    "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+    "binary_format": "macho"
+  },
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "indexLines": [688, 689, 690, 691],
+    "reduceLine": 715
+  },
+  "primaryPointers": [
+    "data/task-plan.json",
+    "AI.md",
+    "pointers/evidence-paths.md",
+    "logic/BOOTSTRAP-DEEP-DISTILLED-109.md"
+  ],
+  "platformPolicy": {
+    "macosOnly": true,
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  }
+}

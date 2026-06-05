@@ -1,0 +1,10 @@
+{"depth":1,"addr":"0x140272080","name":"set_auto_switch_owner_sys","role":"command_owner","terminated_reason":null}
+{"depth":2,"addr":"0x1400DA7C0","name":"sub_1400DA7C0","role":"repo_state_check","terminated_reason":"implementation_leaf"}
+{"depth":2,"addr":"0x1404632D0","name":"sub_1404632D0","role":"param_deserialize: repo arg","terminated_reason":"implementation_leaf"}
+{"depth":2,"addr":"0x1400A4F60","name":"set_auto_switch_core_impl","role":"core_impl","terminated_reason":null}
+{"depth":3,"addr":"0x141206A60","name":"sub_141206A60","role":"mutex_wait_fallback","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x1405565F0","name":"sub_1405565F0","role":"state_write: autoSwitchEnabled bool","terminated_reason":"implementation_leaf: writes enabled flag to bootstrap state"}
+{"depth":3,"addr":"0x141206B20","name":"WakeByAddressSingle","role":"sync_wake","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x1400C8830","name":"sub_1400C8830","role":"cleanup_drop","terminated_reason":"implementation_leaf"}
+{"depth":2,"addr":"0x140067B50","name":"sub_140067B50","role":"response_build","terminated_reason":"implementation_leaf: IPC response ()"}
+{"depth":2,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","role":"ipc_resolve","terminated_reason":"implementation_leaf"}

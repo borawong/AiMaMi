@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "voice",
+  "command": "remove_voice_vocabulary_app_scope",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "ecaff76a544b573e2628b69e781c63621f416cea40edc1731d0d9908f8c9507c",
+      "size": 777
+    },
+    {
+      "path": "README.md",
+      "sha256": "0d85ad121e0ea7e31e5dafcbb28c4c7f06f1d86a0d88068ad7ddc97a95b21862",
+      "size": 857
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "391defdb8c43fd2ea38c43f280455f5753338d3277131340074e193de00c0cc0",
+      "size": 394
+    },
+    {
+      "path": "audits/remove_voice_vocabulary_app_scope-ida-closure.json",
+      "sha256": "275f9b62bfdd0e1fed78eca29cb7285cb607fc083bed6c1126c15e3a412a88ed",
+      "size": 2671
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "b20174bf98a10f5e18196db67699e24c83b5b7702194c21eff9400bca85b3a65",
+      "size": 330
+    }
+  ],
+  "note": "manifest.json excluded to avoid circular digest; manifest carries this file-manifest digest"
+}

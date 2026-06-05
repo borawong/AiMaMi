@@ -1,0 +1,11 @@
+{"from":"run_codex_router_diagnostics@0x1001e2ad4","to":"CodexPaths::resolve_codex_home@0x100526914","edge_type":"call","depth":1}
+{"from":"run_codex_router_diagnostics@0x1001e2ad4","to":"CodexPaths::from_home@0x100526a40","edge_type":"call","depth":1}
+{"from":"run_codex_router_diagnostics@0x1001e2ad4","to":"RelayManager::snapshot@0x1001cfc44","edge_type":"call","depth":1}
+{"from":"run_codex_router_diagnostics@0x1001e2ad4","to":"run_diagnostics@0x10054aa94","edge_type":"call","depth":1}
+{"from":"run_diagnostics@0x10054aa94","to":"std::sys::fs::metadata","edge_type":"call","depth":2,"note":"codex_home_writable check"}
+{"from":"run_diagnostics@0x10054aa94","to":"std::fs::read_to_string::inner@0x100d2c1f4","edge_type":"call","depth":2,"note":"read config.toml"}
+{"from":"run_diagnostics@0x10054aa94","to":"serde_json::de::from_trait@0x1003104bc","edge_type":"call","depth":2,"note":"parse auth.json files"}
+{"from":"run_diagnostics@0x10054aa94","to":"sqlite3 query","edge_type":"call","depth":2,"note":"catalog state check; sqlite3_stmt* in stack"}
+{"from":"run_diagnostics@0x10054aa94","to":"statvfs","edge_type":"call","depth":2,"note":"disk space check for codex_home_writable"}
+{"from":"run_diagnostics@0x10054aa94","to":"process spawn ps-ax-oetime,comm=","edge_type":"call","depth":2,"note":"Codex process running check"}
+{"from":"run_codex_router_diagnostics@0x1001e2ad4","to":"Ok{status,diagnostics}","edge_type":"response_serialize","depth":2,"terminated_reason":"response_serialize"}

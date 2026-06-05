@@ -1,0 +1,10 @@
+{"from":"rollback_rollouts_in_parallel@0x10056c984","to":"rayon_core::registry::Registry::new@0x1001548bc","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_rollouts_in_parallel@0x10056c984","to":"rayon_core::registry::Registry::in_worker@0x10015551c","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_rollouts_in_parallel@0x10056c984","to":"find_first_session_meta_line@0x10056b174","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_rollouts_in_parallel@0x10056c984","to":"replace_first_session_meta_line@0x10056dc48","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_rollouts_in_parallel@0x10056c984","to":"core::result::unwrap_failed@0x100db45b0","depth":1,"type":"call","terminated_reason":"error_return"}
+{"from":"rollback_rollouts_in_parallel@0x10056c984","to":"rayon_core::thread_pool::ThreadPool::drop@0x100817510","depth":1,"type":"call","terminated_reason":"external_call_recorded"}
+{"from":"rollback_rollouts_in_parallel@0x10056c984","to":"alloc::sync::Arc::drop_slow@0x100816354","depth":1,"type":"call","terminated_reason":"external_call_recorded"}
+{"from":"replace_first_session_meta_line@0x10056dc48","to":"std::sys::fs::rename@0x100d31eac","depth":2,"type":"call","terminated_reason":"persistence_commit"}
+{"from":"replace_first_session_meta_line@0x10056dc48","to":"std::io::Write::write_all@0x10038fdd0","depth":2,"type":"call","terminated_reason":"persistence_commit"}
+{"from":"find_first_session_meta_line@0x10056b174","to":"std::fs::File::open@0x100d2xxx","depth":2,"type":"call","terminated_reason":"external_call_recorded"}

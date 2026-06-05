@@ -1,0 +1,37 @@
+{
+  "schema": "restoration.cm.reverse.producer_ledger.v1",
+  "bundle": "aimami/1.0.9/macos-arm64/system/confirm_pending_auto_switch",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos-arm64",
+  "command": "confirm_pending_auto_switch",
+  "module": "system",
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb_path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "owner_va": "0x1002613d8",
+  "owner_size_bytes": 1100,
+  "session": "<audit-session>", "machine": "<workstation>",
+  "owner_gate": {"result": "ALLOW", "write_mode": "owner", "basis": "index_exact_path", "foreign_owners": "none", "takeover_token": null},
+  "gate_tier": "readyToImplement",
+  "real_body_found": true,
+  "genuine_ceiling": false,
+  "was_false_wall": "N/A",
+  "passes": [
+    {"pass": "deep-recovery-initial", "produced_at": "2026-06-03", "note": "first deep decompile dim2-4 all VAs, gate readyToImplement"},
+    {"pass": "deep-recovery-reverify", "produced_at": "2026-06-04", "model": "opus", "note": "independent live re-decompile of owner 0x1002613d8 + repo_leaf 0x1005eeb54 + switch_account 0x1005e3cd0 + refresh_full_runtime_snapshot 0x1001e6a1c + IPC dispatch 0x100320b18; every dim re-confirmed; 'progressive' reason literal (anon_813@0x100ee16e2 len11) + CoreError tag=2 (xmmword_100EDE9F0 byte-read) + all error/warning string lengths (30/29/26/63/41B) live-verified; xrefs_to owner = single caller 0x100320b18 (no ICF/ambiguity)"}
+  ],
+  "bodies_decompiled": [
+    {"va": "0x1002613d8", "size": "0x44c", "name": "codexmate_lib::commands::system::confirm_pending_auto_switch", "role": "cmd_owner"},
+    {"va": "0x1005eeb54", "size": "0x148", "name": "Repository::confirm_pending_auto_switch", "role": "core_leaf"},
+    {"va": "0x1005e3cd0", "size": "0xa24", "name": "Repository::switch_account", "role": "side_effect_engine"},
+    {"va": "0x1001e6a1c", "size": "0x1c8", "name": "accounts::refresh_full_runtime_snapshot", "role": "sidecar"},
+    {"va": "0x1001e3858", "size": "0x318", "name": "accounts::broadcast_runtime_snapshot", "role": "sidecar_dispatch_terminal"},
+    {"va": "0x100320b18", "size": "0x3a4", "name": "codexmate_lib::run::{{closure}}::{{closure}}", "role": "ipc_dispatch_closure"}
+  ],
+  "call_tree_depth": 5,
+  "terminal_reasons": ["persistence_commit", "sidecar_dispatch"],
+  "dims": {"dim1": "accepted", "dim2": "accepted", "dim3": "accepted", "dim4": "accepted", "dim5": "macos_confirmed_windows_unknown", "dim6": "accepted"},
+  "recovery_attempts": "None required. Synchronous IPC command (not async): no ::poll/resume body to chase, owner is direct call chain. Fake-wall taxonomy all excluded — drop_in_place: present only as cleanup, not body; architecture_only/budget: 0x44C+all callees within HexRays budget, no basic_blocks segmentation needed; async_decompile_failed: N/A (sync); wrong_VA: func_query confirms unique demangled symbol at 0x1002613d8, xrefs_to confirms single IPC caller; vtable: direct call chain, no dynamic dispatch; HTTP-terminal: no external transport, terminals are local fs persist + Tauri event emit; library_internal: all callees are codexmate_lib own functions. No accepted_unknown in this leaf.",
+  "produced_at": "2026-06-04",
+  "authoritative": true
+}

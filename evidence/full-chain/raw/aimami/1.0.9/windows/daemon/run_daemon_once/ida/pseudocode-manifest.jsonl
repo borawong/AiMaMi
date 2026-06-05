@@ -1,0 +1,3 @@
+{"file":"0001_run_daemon_once_owner_sys_a3a40.c","addr":"0x1402843E0","role":"command_owner","status":"accepted","sha":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}
+{"file":"0002_run_daemon_once_core_resolve_723d0.c","addr":"0x1400723D0","role":"core_resolve","status":"accepted","sha":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}
+{"file":"0003_run_daemon_once_core_impl_a3a40.c","addr":"0x1400A3A40","role":"core_impl","status":"accepted","sha":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}

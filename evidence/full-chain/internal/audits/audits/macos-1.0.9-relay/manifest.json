@@ -1,0 +1,56 @@
+{
+  "schema": "restoration.cm.reverse.conclusion_bundle.v1",
+  "produced_at": "2026-06-02",
+  "producer": "claude-sonnet-4-6",
+  "bundle_path": "<source-location>/audits/macos-1.0.9-relay",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos-arm64",
+  "module": "relay",
+  "scope": "18 relay commands full-chain IDA review",
+  "binary_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "idb_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>"
+  },
+  "ownershipTakeover": {
+    "from": "source archive",
+    "previous_owner_index_line": 598,
+    "sensitive-field": "EXPLICIT_TAKEOVER",
+    "authorized_by": "user",
+    "date": "2026-06-03",
+    "session": "<audit-session>",
+    "reason": "source archive ownership metadata redacted for public evidence index."
+  },
+  "gate_summary": {
+    "readyToImplement": 15,
+    "strictImplementationUse": 3,
+    "consumerStartReady": 0,
+    "blocked": 0
+  },
+  "evidence_root": "<source-location>/raw/aimami/1.0.9/macos/relay/",
+  "intermediate_root": "<source-location>/intermediate/aimami/1.0.9/macos/relay/",
+  "files": [
+    "README.md",
+    "AI.md",
+    "SYSTEM-DIFF.md",
+    "manifest.json",
+    "data/tier-matrix.json",
+    "data/gate-report.json",
+    "logic/RELAY-FULLCHAIN-109.md",
+    "logic/ACCEPTANCE-MAPPING-109.md",
+    "interfaces/relay-interface-map.md",
+    "pointers/evidence-paths.md",
+    "reviews/CLAUDE.md",
+    "logic/RELAY-TRANSLATOR-DEEP-INTERNAL-109.md",
+    "logic/RELAY-STREAM-HANDLE-EVENT-109.md"
+  ],
+  "no_c_files": true,
+  "no_log_files": true,
+  "no_version_span_path_components": true,
+  "platform_policy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  }
+}

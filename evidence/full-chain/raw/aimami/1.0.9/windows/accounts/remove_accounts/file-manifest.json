@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "remove_accounts",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "e7e5a7e40edaf90fe094db87c610f7f4caa37ebd1106810b7abd1da5a4e9c0ce",
+      "size": 351
+    },
+    {
+      "path": "README.md",
+      "sha256": "be29f3a891f1cc0c02577716e581027fee56726764c75488a4b7a2299e93f373",
+      "size": 737
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "171f9b5d2f6b129eb6b8ead364b32831fc64e2089fa77769214b4981e9558f76",
+      "size": 260
+    },
+    {
+      "path": "audits/remove_accounts-ida-closure.json",
+      "sha256": "3b1eff737f6a502ac64e0df0682057696eccb1a82ef2eb9e8944c8d5ad319f",
+      "size": 2659
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "639979548f11e476443f387bdcb3cf7921720f2fbb3ea17a2d1f21911f5961f9",
+      "size": 1683
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "8486eb855566066542b31d34060bb1f6468910af09d01046da4ebc9e1b9841",
+      "size": 3345
+    }
+  ]
+}

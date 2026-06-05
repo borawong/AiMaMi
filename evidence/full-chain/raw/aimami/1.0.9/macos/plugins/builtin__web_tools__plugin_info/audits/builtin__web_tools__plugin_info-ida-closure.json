@@ -1,0 +1,26 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v1",
+  "leaf": "builtin__web_tools__plugin_info",
+  "platform": "macos",
+  "owner": {
+    "addr": "0x100386780",
+    "decompile_ok": true,
+    "pseudocode_lines": 82,
+    "pseudocode_chars": 3045
+  },
+  "important_callees": "",
+  "threading_model": "web_tools plugin_info",
+  "terminal_side_effect_classes": "web-tools builtin plugin info DTO/default enabled/settings",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current macos AiMaMi 1.0.9 plugins behavior from IDA owner/callee/DTO/side-effect evidence only."
+  },
+  "idb_saved": true
+}

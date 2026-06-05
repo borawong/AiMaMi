@@ -1,0 +1,41 @@
+{
+  "schema": "raw-evidence.reverse.handoff.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "relay-core",
+  "cluster": "relay_image_compat",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sha12": "1db044e8efab",
+  "produced_at": "2026-06-03",
+  "session": "relay-image-compat-109",
+  "machine": "<workstation>",
+  "model": "claude-sonnet-4-6",
+  "idb_path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "idb_saved": true,
+  "leaves": [
+    {"leaf": "image_compat_enabled", "va": "0x1001bf94c", "size": "0x434", "tier": "A", "status": "decompiled"},
+    {"leaf": "read_image_compat_enabled", "va": "0x1001bfdd4", "size": "0x250", "tier": "A", "status": "decompiled"},
+    {"leaf": "make_relay_model_info_image_branch", "va": "0x1001c0d1c", "size": "full_fn", "tier": "A", "status": "decompiled"},
+    {"leaf": "forward_gate_call_site_v1", "va": "0x100099274", "size": "call_site", "tier": "B", "status": "disasm_extracted"},
+    {"leaf": "forward_gate_call_site_v2", "va": "0x10024856c", "size": "call_site", "tier": "B", "status": "disasm_extracted"},
+    {"leaf": "get_image_compat_ipc", "va": "0x10025e7c0", "size": "0x2cc", "tier": "A", "status": "decompiled"},
+    {"leaf": "set_image_compat_ipc", "va": "0x10025ee14", "size": "0xbf4", "tier": "A", "status": "decompiled"}
+  ],
+  "leaf_count": 7,
+  "ida_comments": 8,
+  "files": [
+    "pseudocode-manifest.jsonl",
+    "INTERFACE-MAP.md",
+    "handoff-manifest.json"
+  ],
+  "gate_preliminary": "consumerStartReady_candidate",
+  "consumer_tier_preliminary": "strictImplementationUse_candidate",
+  "windows_status": "not_analyzed",
+  "dim1_render_surface": "N/A (relay-core internal, no UI surface)",
+  "dim2_call_entry": "confirmed (forward_codex_responses_internal both variants)",
+  "dim3_dto_boundary": "confirmed (config_path ptr+len, bool return, v140 discriminant, cache fields)",
+  "dim4_happy_path": "confirmed (image_compat_enabled -> discriminant dispatch -> chat_body_has_image_url -> strip_image_url_cloned)",
+  "dim5_boundary_path": "confirmed (IO error -> false; mtime change -> cache invalidate; false -> no-image path)",
+  "dim6_acceptance": "missing (no upstream acceptance mapping yet)"
+}

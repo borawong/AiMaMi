@@ -1,0 +1,20 @@
+{
+  "schema": "raw-evidence.raw.bundle.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "leaf": "schedule_full_runtime_refresh",
+  "status": "strictImplementationUse_dim1_5_closed_dim6_empty",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "owner_addr": "0x100262aec",
+  "produced_at": "2026-06-02T00:00:00Z",
+  "producer": "ida-pro-mcp-mac",
+  "idb_sha": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "dim1_frontend_ccf": "accepted_native_callback_bootstrap_spawn",
+  "dim2_backend_owner_pseudocode": "accepted",
+  "dim3_call_tree": "accepted",
+  "dim4_interface_dto_error": "accepted",
+  "dim5_platform_gate": "macos_confirmed_windows_unknown",
+  "dim6_test_acceptance_mapping": "empty",
+  "payload_hashes": {}
+}

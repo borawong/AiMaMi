@@ -1,0 +1,33 @@
+{
+  "metadata": {
+    "generatedAt": "2026-06-05T11:27:42.789Z",
+    "importedFiles": 546,
+    "skippedFiles": 13,
+    "extensionDistribution": {
+      ".md": 390,
+      ".jsonl": 6,
+      ".json": 148,
+      ".txt": 2
+    },
+    "areaDistribution": {
+      "root": 6,
+      "logic": 7,
+      "data": 5,
+      "audit": 451,
+      "leaf": 61,
+      "version-diff": 7,
+      "frontend-map": 9
+    }
+  },
+  "generatedIndexes": [
+    "INDEX.md",
+    "audit-map.json",
+    "leaf-ledger-map.json",
+    "frontend-map/INDEX.md"
+  ],
+  "docs": [
+    "docs/reconstruction/full-chain-map.md",
+    "docs/reconstruction/consumer-facing-chain.md",
+    "docs/reconstruction/version-diff-map.md"
+  ]
+}

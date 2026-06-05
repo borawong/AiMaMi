@@ -1,0 +1,353 @@
+{
+  "schema": "restoration.cm.consumer.reduction_table.v1",
+  "generated_at": "2026-06-03T12:00:00+08:00",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "version": "1.0.9",
+  "note": "Consumer intake reduction table — all clusters from dual-platform deep evidence. gate=exit0-allowed, write_mode=first. | Residuals cracked <audit-session> 2026-06-03: all 5 accepted_unknown/budget-rule items resolved to strictImplementationUse. residual_ceilings now empty. honest_remaining_ceilings=[].",
+  "cc_switch_substitutes": [
+    "test_relay_provider",
+    "test_relay_draft",
+    "fetch_relay_models_draft"
+  ],
+  "residual_ceilings": [],
+  "open_questions": [
+    "set_api_proxy_config (mac): settings JSON (NOT config.toml) — confirm source archive impl writes to correct path; mac uses save_settings, win uses settings_serialize_with_usage_refresh, both targeting ~/.codex/ settings JSON",
+    "hotspot_ready PLATFORM DIVERGENCE: mac is an ACTION (apply native props + alpha=1.0, returns void), win is a QUERY (returns bool, discriminant==18=Ready); source archive consumer must handle two different return shapes",
+    "detect_api_proxy_config PLATFORM DIVERGENCE: mac uses networksetup subprocess + 18 static candidates + TCP probe; win uses env vars only (no networksetup, no static candidates) — source archive impl needs platform-specific branches",
+    "restart_codex (mac): blocking ~8s stop+launch; (win): blocking stop via atomic signal+WakeByAddressSingle+taskkill+check_update_installability registry scan — both confirmed CCF wrappers restartCodex+restartCodexApp",
+    "mystery-unlock allowlist: 9 routes confirmed (mcp/skills/overview/accounts/sessions/settings/maintenance/subscription/customInstructions) — source archive impl must NOT expand this list without product decision",
+    "load_snapshot appears in both maintenance cluster AND system-shell-init cluster — same IPC command 'load_snapshot', same owner VA, referenced in both contexts; consumer should treat as single command"
+  ],
+  "table": [
+    {
+      "name": "get_device_id",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Idempotent: generates+persists UUID v4 deviceId if absent in CodexMateSettings JSON. Pure file I/O. No HTTP/spawn. xrefs_to impl: exactly 1 caller each platform.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "get_or_create_remote_device_secret",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Generates '{uuid4}-{uuid4}' (~73 chars) if remoteDeviceSecret absent/empty after trim. Writes settings JSON. Idempotent on subsequent calls. source archive-extra.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "import_remote_device_secret_if_empty",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Additive-only guard: writes remoteDeviceSecret only if (a) input non-empty after trim AND (b) field currently empty. Never overwrites. Frontend also attempts localStorage removal after invoke on win.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "get_mystery_unlock_grants",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Returns Vec<MysteryRouteGrant> (stride 40B). Filter by epoch_ms predicate. Conditional save_settings only if filtered count changed. Allowlist NOT applied in get path. source archive-extra.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "merge_mystery_unlock_grants",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Param field='grants'. Merge logic: HashMap from existing allowed + incoming filtered by 9-route allowlist (mcp/skills/overview/accounts/sessions/settings/maintenance/subscription/customInstructions) + sentinel=2 break. Sort insertion_sort(<21)/driftsort(>=21). ALWAYS save_settings (unconditional). Win allowlist inlined (functionally identical 9-route set).",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "get_notification_client_state",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Returns {deviceId: UUID-v4, notificationsSince: u64-epoch-secs}. CREATE PATH (first call / zeroed field): generates UUID+timestamp, writes settings JSON. READ PATH (existing): no disk write. Frontend must multiply notificationsSince*1000 for JS Date. Win uses GetSystemTimePreciseAsFileTime+FILETIME delta for epoch. source archive-extra.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "get_hotspot_enabled",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Read-only. Returns bool from CodexMateSettings.hotspot_enabled. Mac reads Repository::load_settings. Win reads HotspotConfig from UsageRefresh settings blob. source archive-extra.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "set_hotspot_enabled",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Param: {enabled:bool}. Mac: load+save_settings; enabled=true creates NSAppKit WebviewWindow overlay (level=25/OverlayWindowLevel); enabled=false sends tao Proxy::send_event(discriminant=33, Close/Hide). Win: read-modify-write UsageRefresh blob; enabled=true triggers post-write notifier sub_140163CE0 (hotspot watcher signal); Win state==3/None early-return. PLATFORM DIVERGENCE on state-check path.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "hotspot_ready",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "CRITICAL PLATFORM DIVERGENCE: mac is ACTION (apply_native_hotspot_properties + set_window_alpha(1.0), returns void); win is QUERY (reads runtime combined-state struct 896B, returns bool, discriminant==18='Ready'). source archive consumer must handle two different return shapes per platform.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "focus_main_window",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Mac: posts WryUserEvent(discriminant=28, focus=true) via send_user_message. Also called from tray_menu::handle_tray_menu_event for tray_open_main/tray_active_title/tray_active_subtitle/tray_boot_strap events. Win: reads settings discriminant; discriminant==3 direct IPC resolve; discriminant!=3 clones AppHandle Arc + dispatches focus event. No params, no file I/O.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "open_path",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Param: {path:String}. Mac: spawns /usr/bin/open <path> — fire-and-forget. Win: spawns explorer.exe <path> via CreateProcess+GetEnvironmentStringsW. PLATFORM DIVERGENCE: mac=open, win=explorer.exe. No path validation visible in function — relies on caller context for allowlist.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "clean",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Mac: no params; deletes sessions/*.json + intermediate/*.json; rewrites registry.json (7d prune hardcoded=604800s); writes quota snapshot. Returns {deleted_sessions:u32, deleted_intermediate:u32, registry_delta:i32}. Win: no params; reads+rewrites account registry via accounts_write_back_sys; returns {authBackupsRemoved:number, registryBackupsRemoved:number, staleEntriesRemoved:number}. PLATFORM DIVERGENCE in return DTO field names.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "rebuild_registry",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Mac: scans snapshots_dir/*.json + active auth.json; copies auth->snapshot; overwrites registry.json; carry_over_registry_state preserves session/plan state; RegistryItem=360B. Returns CoreEnvelope<RegistryPayload>. Win: guard check at entry; rebuilds in-memory+on-disk registry via accounts_write_back_sys; returns {registryUpdated:bool, accountCount:number, activeAccountKey:string|null, lastScanAt:string|null, + full registry snapshot fields}. PLATFORM DIVERGENCE in response shape.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "load_snapshot",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Param: {localOnly:bool}. Mac async: load_snapshot_local+load_local_state_synced+make_status_payload_with_service_state; daemon-repair side-effect if flag set; service label 'dev.aimami.auto-switch' hardcoded. Win async coroutine: reads usage refresh interval+hotspot state; builds runtime snapshot via build_runtime_snapshot_and_emit_sys; emits runtime-state-updated; tray_refresh_menu. Returns CoreEnvelope<CoreSnapshotPayload>. Both: localOnly=true=boot path.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "refresh_usage_snapshot",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Mac: param upstream:bool; upstream=true triggers 200ms sleep+retry; HTTP usage API per account; fs persist; emits load_snapshot event; quota_store upsert. Win: CEILING CRACKED <audit-session>; real_body@0x1408CDB20; was_drop_in_place_only=false; genuine_ceiling=false; 4-outer×4-inner×6-HTTP×4-body state machine; 28 callees decompiled; get_usage_refresh_interval_core_read+HTTP GET Codex API (active account only)+runtime_state_updated_emit_and_tray_refresh_sys(mode=progressive)+WakeByAddressSingle condvar. Returns CoreEnvelope<AccountListPayload>. CCF: main-app.tsx:647. Both platforms strictImplementationUse.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "get_usage_refresh_interval",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Read-only. Returns one of '1m'(60s)|'3m'(180s)|'5m'(300s)|'30s'(30s). Default='1m' when field missing. Mac: reads CodexMateSettings via Mutex<Repository>. Win: reads CodexMateSettings.usageRefreshInterval via Repository snapshot at repo+144 offset.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "set_usage_refresh_interval",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Param: {interval:String}. Valid: '1m'|'3m'|'5m'|'30s'. Invalid→CoreError tag=8. Mac: writes config.toml (usageRefreshInterval field); Condvar::notify_all wakes usage refresh watcher thread — same condvar as note_usage_refresh_activity. Win: atomic settings write via settings_serialize_*; WakeByAddressSingle on usage_refresh_watcher condvar. PLATFORM DIVERGENCE: mac writes config.toml, win writes settings JSON.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "graceful_restart_for_update",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Mac: no params; current_exe()->parent*3->bundle; spawn sh -c sleep 1 open bundle; AppHandle::exit(0). Win: CEILING CRACKED <audit-session>; real_body sub_1402A5030@0x1402A5030 (Tauri AppHandle::restart_in_place, tauri-2.10.3/src/app.rs); was_drop_in_place_only=false; genuine_ceiling=false; restart-once atomic guard; main-thread: teardown+exec-replace+exit; separate-thread: event-discriminant=29+WakeByAddressSingle+same chain. Thin wrapper sub_1400AA6D0 (confirm_pending_auto_switch_and_restart_codex case45). CCF: index-CL22l5v8.js:86:114912. Both platforms strictImplementationUse.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "restart_codex",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Mac: two-phase stop(osascript 'tell application Codex to quit'+poll 50ms+kill fallback, 8s blocking timeout)+launch(open -b 2 candidates->stat ~/AiMaMi.app->stat /Applications/Codex.app; poll 80ms; sleep 250ms). Error: 'CODEX_APP_QUIT_TIMEOUT: Codex did not quit in time; please quit Codex manually and try again'. Win: atomic quit-signal (byte_14187C368 via InterlockedCompareExchange8)+WakeByAddressSingle+force_kill_codex_by_imagename_sys+check_update_installability_core_sys (scans LOCALAPPDATA/PROGRAMFILES + registry HKCU+HKLM + powershell/reg). Both CCF: restartCodex+restartCodexApp wrappers.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "diagnose_codex_router",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": "G1 NAMING CONFLICT: frontend CCF calls invoke('run_codex_router_diagnostics') NOT 'diagnose_codex_router'. Binary has both. source archive implementation side must confirm canonical IPC command string. Do NOT write as alias of run_codex_router_diagnostics.",
+      "consumer_note": "STANDALONE COMMAND (not alias). Read-only diagnostic. Mac returns DiagnoseCodexRouterResult 0x140B: summary:Option<String>, config_toml_has_router:bool, config_toml_has_catalog:bool, config_toml_has_relay_profile:bool, has_router_thread_migration:bool, relay_providers_count:usize, user_profile_path_matches_router:bool, port:u16. codex_config_stale_reason checks 7 staleness conditions. Win returns health-check struct with 4 Chinese diagnostic strings + bool flags + XOR-checks aimami catalog 0x616D6961. source archive-extra relay module command.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "diagnose",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Mac: DiagnoseResult 0x1A0B — full Codex state snapshot (accounts RegistryItem stride=360B, settings, plugins stride=168B, sessions context, active account info). Read-only; load_local_state_synced. Win: repository_diagnose_core_impl_sys@0x14055DEA0 CEILING CRACKED <audit-session>; 225BB cyclomatic=108; was_drop_in_place_only=false; genuine_ceiling=false; RegistryItem(360B) field-by-field diff loop ~15 string fields/item; 32 callees all internal; read-only snapshot+in-memory quota diff; zero HTTP/spawn/disk-write. DiagnoseResult 0x1A0B; CURRENT_AUTH_SYNC_FAILED+LEGACY_QUOTA_MIGRATION_FAILED diagnostic tags. CCF: We.diagnose()=G(diagnose) wrapper.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "set_api_proxy_config",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "Param: {mode:u8 (0=direct,1=manual,10=system), url:Option<String>}. Mac: writes ~/.codex/settings.json (NOT config.toml) via Repository::save_settings; sanitize validates scheme (http/https/socks5/socks5h) + mode=1 requires url. Win: reads+writes settings JSON via settings_deserialize_usage_refresh+settings_serialize_with_usage_refresh+disk write; acquires relay state Mutex + WakeByAddressSingle. Both: settings JSON target confirmed.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "detect_api_proxy_config",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "PLATFORM DIVERGENCE: Mac: scans env vars + networksetup subprocess + 18 static localhost candidates (ports 7890/7891/7892/10808/10809/8080/1080/7893/20171/9090 http/socks5) + TCP probe 200ms each + HTTP GET test chatgpt_check_url. Win: env vars only (https_proxy/HTTPS_PROXY/http_proxy/HTTP_PROXY/all_proxy/ALL_PROXY) — no networksetup, no 18 static candidates; skips 127.0.0.1+localhost; TCP probe 200ms. Error on not-found: 118-char message. Returns DetectedProxy {mode:u8, url:String, code:'ok'|'not_found', message:String}.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "test_api_proxy_config",
+      "is_upstream": true,
+      "mac_tier": "classified-but-capped",
+      "win_tier": "classified-but-capped",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "RELAY HTTP-3 CEILING — classified-but-capped. Param: {mode:u8, url:Option<String>}. Mac: load_context->sanitize->reqwest Client (OnceLock keyed by proxy url)→GET chatgpt_check_url with Bearer sensitive-field. Returns TestResult {code:'ok'|'network_error'|'client_build_failed'|'invalid_config', ok:bool, status_code:u16, message:String}. Win: sub_140609D60 probe; broadcasts sub_140877B20 on success (distinct from detect). Product decision required for implementation ceiling.",
+      "ceiling": "classified-but-capped"
+    },
+    {
+      "name": "app_run_entry",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": false,
+      "naming_note": null,
+      "consumer_note": "NOT an IPC command — native bootstrap entry. Mac: run() FULL BODY decompiled (419 BB, 3283 insn <audit-session>); was_budget_rule_only=false; was_drop_in_place_only=false; genuine_ceiling=false. 3 managed states + setup hook shim@0x100334ce8 (6768 BB, 11 steps) + 28-case IPC dispatcher + LaunchAgent dev.aimami.auto-switch + 3 OS thread spawns + 1 tokio task. Win: app_cli_dispatcher_sys@0x1400010D0 + bootstrap@0x140004B30 (116 BB) full decompile; 3 managed states + 7 plugins + 41-cmd dispatcher@0x1402663E0 + single-instance Global<network-share> was_budget_rule_only=false; genuine_ceiling=false. PLATFORM DIVERGENCE: mac LaunchAgent vs win schtasks (CodexMateAutoSwitch in boot_spawn_threads).",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "boot_spawn_threads",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": false,
+      "naming_note": null,
+      "consumer_note": "NOT a standalone IPC command — bootstrap side-effect. Mac: 3 spawners (usage_refresh@0x10026254c, begin_add_account_attach_monitor@0x100262db4, start_auto_switch_pending_watcher@0x100263444). NOTE: begin_add_account_attach_monitor IS ALSO IPC-callable (Group B dispatch). Win: 1 watcher fn + schtasks CodexMateAutoSwitch (/SC MINUTE /MO 5). PLATFORM DIVERGENCE: mac 3 threads vs win 1 thread+schtasks. source archive-extra.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "bootstrap_cache",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "IPC command: 'load_bootstrap_state'. No params. Returns CoreEnvelope<BootstrapStatePayload> — 5 JSON fields: writtenAt, snapshotProgressive, usageAnalytics, mcpServers, installedSkills. File: $CODEX_HOME/bootstrap-cache.json. IO/parse error→empty BootstrapStatePayload (no frontend error). Sync IPC. Sub-structs: McpServerSummary(9 fields), InstalledSkillSummary(8 fields), UsageAnalyticsPayload(3 fields). Win: matches macOS behavior (no behavioral divergence).",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "managed_state_registry",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": false,
+      "naming_note": null,
+      "consumer_note": "NOT an IPC command — 3 managed state types: Mutex<Repository>, RelayManager, PluginRegistry. Mac: PluginRegistry::new+save_store_static+all_builtin_plugins+RelayManager::bootstrap 7-step chain at setup; plugins.json boot read+merge+write. Win: same 3 types; managed_state_register_sys@0x141208810 shim. Poison errors: 'state poisoned'/'relay state poisoned'/'plugin store poisoned'. RelayManager+PluginRegistry are source archive-extra.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "broadcast_runtime_snapshot",
+      "is_upstream": true,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": false,
+      "naming_note": null,
+      "consumer_note": "NOT an IPC command — internal emitter. Emits 'runtime-state-updated' Tauri event with CoreSnapshotPayload. Updates DISPLAY_SNAPSHOT_CACHE OnceLock. Calls refresh_tray_menu_with_snapshot+note_usage_refresh_activity. Win: tray_refresh_menu_from_snapshot+WakeByAddressSingle condvar wake. Called from multiple paths outside system-shell-init.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "auto_switch_pending_emitter",
+      "is_upstream": false,
+      "mac_tier": "strictImplementationUse",
+      "win_tier": "strictImplementationUse",
+      "command_layer_entry": false,
+      "naming_note": null,
+      "consumer_note": "NOT an IPC command — watcher thread emitter. Mac: CEILING CRACKED <audit-session>; real body @0x1005280f4 (107 BB, 0x744 bytes); was_drop_in_place_only=false; genuine_ceiling=false. 5s poll; fs::read_to_string(auto-switch-pending.json); LAST_PENDING_REQUEST_AT@0x101396f10 atomic change-detection; tao::Proxy::send_event(discriminant=28) + tauri::Emitter::emit(\"auto-switch-pending\", PendingAutoSwitchPayload). Win: background watcher emits auto-switch-pending events. Frontend registers listener during init. Both platforms strictImplementationUse.",
+      "ceiling": "strictImplementationUse"
+    },
+    {
+      "name": "test_relay_provider",
+      "is_upstream": true,
+      "mac_tier": "classified-but-capped",
+      "win_tier": "classified-but-capped",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "RELAY HTTP-3 — classified-but-capped. HTTP terminal transport ceiling. Product decision required: cc_switch_substitutes=['test_relay_provider','test_relay_draft','fetch_relay_models_draft']. Frontend CCF confirmed (relay-page 600ms min busy guard). Backend HTTP terminal reqwest not fully decompiled to response contract.",
+      "ceiling": "classified-but-capped"
+    },
+    {
+      "name": "test_relay_draft",
+      "is_upstream": true,
+      "mac_tier": "classified-but-capped",
+      "win_tier": "classified-but-capped",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "RELAY HTTP-3 — classified-but-capped. HTTP terminal transport ceiling. Product decision required. Frontend CCF confirmed (relay-page dialog/form test path). cc_switch_substitutes required from product side.",
+      "ceiling": "classified-but-capped"
+    },
+    {
+      "name": "fetch_relay_models_draft",
+      "is_upstream": true,
+      "mac_tier": "classified-but-capped",
+      "win_tier": "classified-but-capped",
+      "command_layer_entry": true,
+      "naming_note": null,
+      "consumer_note": "RELAY HTTP-3 — classified-but-capped. HTTP terminal transport ceiling. Product decision required. Frontend CCF confirmed (relay-page model-fetch button, user-triggered only — NOT a mount invoke). cc_switch_substitutes required from product side.",
+      "ceiling": "classified-but-capped"
+    }
+  ]
+}

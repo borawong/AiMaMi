@@ -1,0 +1,26 @@
+{
+  "session": "<audit-session>", "machine": "<workstation>",
+  "date": "2026-06-04",
+  "target": "rebuild_registry",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "steps_completed": [
+    "prewrite-owner-gate: ALLOW first-write",
+    "func_query addr_verified: 0x140275e60 = rebuild_registry_handler_sys (975B)",
+    "decompile handler 0x140275e60",
+    "decompile lock 0x1400a5a30",
+    "decompile core 0x140558780",
+    "callees enumerated all 3 functions",
+    "xrefs_to handler: auto_switch_multiplex_dispatcher_sys + 2 data ptrs",
+    "dim2 closed: real body not shim, synchronous chain",
+    "dim3 closed: 33 core callees + IPC dispatch caller",
+    "dim4 closed: DTO/error/side-effects confirmed",
+    "dim5 closed: IPC string + dispatch + registration confirmed",
+    "fake-wall taxonomy: 8/8 checked, 0 applicable",
+    "gate_tier: strictImplementationUse (dim1 gap: frontend)",
+    "DISTILLED AI.md written",
+    "manifest.json written",
+    "producer-ledger.json written"
+  ],
+  "final_state": "completed"
+}

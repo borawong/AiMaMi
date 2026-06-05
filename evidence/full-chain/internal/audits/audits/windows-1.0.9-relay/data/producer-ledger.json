@@ -1,0 +1,17 @@
+{
+  "schema": "restoration.cm.consumer.producer_ledger.v1",
+  "bundle": "<source-location>/audits/windows-1.0.9-relay",
+  "authoritative_producer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>", "backfill_note": "backfilled by <workstation> 3-lane consolidation 2026-06-05; unified ledger derived from per-command ledger files + task-plan.json; no re-reverse performed"
+  },
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "sha12": "a5822387fa3f",
+  "platform": "windows-x64",
+  "produced_at": "2026-06-05",
+  "overall_gate": "readyToImplement",
+  "target_count": 18,
+  "readyToImplement_count": 15,
+  "strictImplementationUse_count": 3,
+  "note": "15 readyToImplement + 3 strictImplementationUse (test_relay_provider/test_relay_draft/fetch_relay_models_draft — dim1 CCF not closed on Windows); per-command ledger files for the 3 capfilled commands remain in data/"
+}

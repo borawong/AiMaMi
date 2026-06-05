@@ -1,0 +1,19 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "produced_at": "2026-06-02T00:00:00+08:00",
+  "bundle": "raw/aimami/1.0.9/macos/system/check_update_installability",
+  "self_excluded": true,
+  "files": {
+    "AI.md": {"path": "AI.md", "size": 6984, "sha256": "72878c998b11c77c1a0c02f1aa7a86bf15194efc7101d45611df3fdc798b8484"},
+    "README.md": {"path": "README.md", "size": 8379, "sha256": "c2ab7cbeed577d4cb767424aa3be9dd4d021b2f673613423c9294003a6d75f6a"},
+    "SYSTEM-DIFF.md": {"path": "SYSTEM-DIFF.md", "size": 2681, "sha256": "8d10a3f8f2be55c18e904b9f7255c2a8ce18c989e659048bbb630874297892"},
+    "manifest.json": {"path": "manifest.json", "size": 7859, "sha256": "fff408716451a349181c718b536dbf61f6c081fa84f10659824ad0297ef6da9b"},
+    "validation/result.json": {"path": "validation/result.json", "size": 3542, "sha256": "853196b1632e920ac2616609cb6f8763e3b0ee5e72844d96c37ca254223ba856"},
+    "call-trees/codexmate_lib::platform::update::check_update_installability.jsonl": {"path": "call-trees/codexmate_lib::platform::update::check_update_installability.jsonl", "size": 3814, "sha256": "e42c1562afcdf393c0316295c72ca7387f133ede0c264e2873b85957aebc2726"},
+    "ida/pseudocode-manifest.jsonl": {"path": "ida/pseudocode-manifest.jsonl", "size": 1473, "sha256": "d05e0daf9a672f1f4cd38947284b0cea546078986033662baae05a8f4ef953b6"},
+    "ida/pseudocode/0001_check_update_installability_tauri_closure_he40ace9.c": {"path": "ida/pseudocode/0001_check_update_installability_tauri_closure_he40ace9.c", "size": 4259, "sha256": "bb999d477ca6339575905dc3631d625c2328882f1ad38b512751572490175aupstream"},
+    "ida/pseudocode/0002_check_update_installability_platform_impl_h67162043.c": {"path": "ida/pseudocode/0002_check_update_installability_platform_impl_h67162043.c", "size": 12436, "sha256": "162b69ce3dec19fe053c68214d614910b089759d64149e8bbe5e3c2c492bb110"},
+    "ida/pseudocode/0003_check_update_installability_platform_is_translocation_h98e6351.c": {"path": "ida/pseudocode/0003_check_update_installability_platform_is_translocation_h98e6351.c", "size": 2492, "sha256": "e61211a26989ce692cb28f951a15148aebac306f540a3290e24cf48802cc7085"},
+    "file-manifest.json": {"path": "file-manifest.json", "sha256": "SELF_EXCLUDED", "size": "SELF_EXCLUDED"}
+  }
+}

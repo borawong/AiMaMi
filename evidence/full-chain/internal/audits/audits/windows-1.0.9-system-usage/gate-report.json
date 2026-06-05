@@ -1,0 +1,60 @@
+{
+  "schema": "restoration.cm.reverse.gate.v1",
+  "bundle": "windows-1.0.9-system-usage",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_at": "2026-06-05",
+  "sha12": "a5822387fa3f",
+  "sha256_binary": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "gate_tier": "strictImplementationUse",
+  "gate_accepted": false,
+  "implementation_use": false,
+  "dim6_missing": true,
+  "ceiling": "strictImplementationUse",
+  "platform": "windows-x64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "is_upstream": false,
+  "prewrite_gate_decision": "ALLOW",
+  "prewrite_gate_write_mode": "owner",
+  "evidence_basis": "manifest.json + logic/WIN-USAGE-CLUSTER-DISTILLED-109.md <audit-session> + logic/WIN-REFRESH-USAGE-SNAPSHOT-CEILING-CRACK-109.md <audit-session> + REVERSE-STATUS line 350",
+  "leaves": {
+    "get_usage_refresh_interval": {
+      "owner_va": "0x1402663e0",
+      "core_va": "0x1402dcbc0",
+      "gate": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "dim6": "missing",
+      "is_upstream": false,
+      "gate_accepted": false,
+      "implementation_use": false
+    },
+    "set_usage_refresh_interval": {
+      "owner_va": "0x14027f690",
+      "gate": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "dim6": "missing",
+      "is_upstream": false,
+      "gate_accepted": false,
+      "implementation_use": false
+    },
+    "refresh_usage_snapshot": {
+      "owner_va": "0x1408cdb20",
+      "gate": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "dim6": "missing",
+      "is_upstream": false,
+      "gate_accepted": false,
+      "implementation_use": false,
+      "ceiling_crack_session": "<audit-session>",
+      "ceiling_crack_notes": "drop_in_place ceiling cracked; true async poll body confirmed"
+    }
+  },
+  "cluster_gate_summary": {
+    "strictImplementationUse": 3,
+    "consumerStartReady": 0,
+    "readyToImplement": 0,
+    "gap_needs_reducer": 0,
+    "blocked": 0,
+    "note": "dim6 not closed (source archive impl-side); ceiling: strictImplementationUse"
+  }
+}

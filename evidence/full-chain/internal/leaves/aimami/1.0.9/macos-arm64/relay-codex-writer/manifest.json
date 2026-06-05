@@ -1,0 +1,20 @@
+{
+  "product": "AiMaMi",
+  "version": "1.0.9",
+  "platform": "macos-arm64",
+  "module": "relay::codex_writer",
+  "scope": "relay::codex_writer::strip_all_managed_blocks",
+  "owner_addr": "0x1004b11dc",
+  "owner_size_bytes": 6936,
+  "idb": "AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "gate_tier": "strictImplementationUse"
+  },
+  "authoritative": true,
+  "owner_gate_result": "ALLOW",
+  "owner_gate_mode": "first",
+  "created_at": "2026-06-04"
+}

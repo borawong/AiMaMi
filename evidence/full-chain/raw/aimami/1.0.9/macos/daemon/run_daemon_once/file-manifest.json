@@ -1,0 +1,13 @@
+{
+  "leaf": "run_daemon_once",
+  "files": [
+    {"path": "manifest.json", "type": "manifest"},
+    {"path": "file-manifest.json", "type": "file_manifest"},
+    {"path": "AI.md", "type": "ai_handoff"},
+    {"path": "README.md", "type": "readme"},
+    {"path": "SYSTEM-DIFF.md", "type": "system_diff"},
+    {"path": "call-trees/run_daemon_once.jsonl", "type": "call_tree"},
+    {"path": "validation/result.json", "type": "validation"},
+    {"path": "ida/pseudocode/run_daemon_once.c", "type": "pseudocode"}
+  ]
+}

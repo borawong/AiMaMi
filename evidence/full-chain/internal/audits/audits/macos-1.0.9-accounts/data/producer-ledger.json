@@ -1,0 +1,17 @@
+{
+  "schema": "restoration.cm.consumer.producer_ledger.v1",
+  "bundle": "<source-location>/audits/macos-1.0.9-accounts",
+  "authoritative_producer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>", "backfill_note": "backfilled by <workstation> 3-lane consolidation 2026-06-05; per-command reverify ledger files in data/ (export_accounts_to_file, import_chatgpt_session_account) remain as supplemental evidence"
+  },
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sha12": "1db044e8efab",
+  "platform": "macos-arm64",
+  "produced_at": "2026-06-02",
+  "overall_gate": "readyToImplement",
+  "target_count": 9,
+  "readyToImplement_count": 0,
+  "strictImplementationUse_count": 9,
+  "note": "9 accounts commands at strictImplementationUse; per-command reverify files for export_accounts_to_file and import_chatgpt_session_account in data/ (2026-06-03 reverify); unified ledger supersedes per-command files for compliance"
+}

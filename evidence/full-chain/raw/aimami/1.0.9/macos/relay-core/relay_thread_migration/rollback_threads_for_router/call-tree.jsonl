@@ -1,0 +1,14 @@
+{"from":"rollback_threads_for_router@0x10056837c","to":"std::path::Path::_join@0x100d38cc4","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_threads_for_router@0x10056837c","to":"read_manifest@0x100565594","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_threads_for_router@0x10056837c","to":"std::sys::fs::metadata@0x100d322dc","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_threads_for_router@0x10056837c","to":"find_first_session_meta_line@0x10056b174","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_threads_for_router@0x10056837c","to":"replace_first_session_meta_line@0x10056dc48","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_threads_for_router@0x10056837c","to":"rollback_rollouts_in_parallel@0x10056c984","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_threads_for_router@0x10056837c","to":"rayon_core::registry::Registry::new@0x1001548bc","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_threads_for_router@0x10056837c","to":"rayon_core::registry::Registry::in_worker@0x10015551c","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_threads_for_router@0x10056837c","to":"rusqlite::transaction::Transaction::commit@0x1005a2cf8","depth":1,"type":"call","terminated_reason":"persistence_commit"}
+{"from":"rollback_threads_for_router@0x10056837c","to":"hashbrown::map::HashMap::insert@0x1004d92fc","depth":1,"type":"call","terminated_reason":null}
+{"from":"rollback_threads_for_router@0x10056837c","to":"core::result::unwrap_failed@0x100db45b0","depth":1,"type":"call","terminated_reason":"error_return"}
+{"from":"replace_first_session_meta_line@0x10056dc48","to":"std::sys::fs::rename@0x100d31eac","depth":2,"type":"call","terminated_reason":"persistence_commit"}
+{"from":"replace_first_session_meta_line@0x10056dc48","to":"std::io::Write::write_all@0x10038fdd0","depth":2,"type":"call","terminated_reason":"persistence_commit"}
+{"from":"replace_first_session_meta_line@0x10056dc48","to":"std::fs::File::sync_data@0x100d2e0","depth":2,"type":"call","terminated_reason":"persistence_commit"}

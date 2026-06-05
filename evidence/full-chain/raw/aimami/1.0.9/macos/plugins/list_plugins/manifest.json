@@ -1,0 +1,47 @@
+{
+  "schema": "raw-evidence.raw.leaf.manifest.v2",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "plugins",
+  "command": "list_plugins",
+  "kind": "command",
+  "produced_at": "2026-06-03T02:12:09+08:00",
+  "producer": "codex",
+  "machine": "<workstation>",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb": {
+    "path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+    "idb_modified": true,
+    "idb_saved": true
+  },
+  "owner": {
+    "addr": "0x1003262b8",
+    "decompile_ok": true,
+    "pseudocode_lines": 56,
+    "pseudocode_chars": 2212
+  },
+  "important_callees": "0x10015bd38",
+  "threading_model": "dispatcher branch -> PluginRegistry::list",
+  "terminal_side_effect_classes": "read registry, map PluginEntry DTO, CoreEnvelope ok list, no durable write",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current macos AiMaMi 1.0.9 plugins behavior from IDA owner/callee/DTO/side-effect evidence only."
+  },
+  "output_files": [
+    "AI.md",
+    "README.md",
+    "SYSTEM-DIFF.md",
+    "audits/list_plugins-ida-closure.json",
+    "validation/result.json",
+    "file-manifest.json",
+    "manifest.json"
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "schema": "raw-evidence.reverse.plugins_frontend_ui_state_facts.v1",
+  "produced_at": "2026-06-02T03:52:39+08:00",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "leaf": "plugins_frontend_ui_state",
+  "status": "plugins_frontend_ui_state_static_no_gate_promotion",
+  "source": {
+    "frontend_ccf_bootstrap": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap",
+    "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+    "source_binary_size": 26821632,
+    "platform": "windows-x64",
+    "bootstrap_status": "complete_quick_frontend_ccf_ipc_only_no_gate_promotion",
+    "compared": false,
+    "gate_accepted": false,
+    "implementation_use": false,
+    "full_leaf_100": false
+  },
+  "ccf_records": [
+    {
+      "row": 102,
+      "command": "list_plugins",
+      "wrapper": "listPlugins",
+      "argKeys": [],
+      "file": "frontend/frontend-control-flow.jsonl",
+      "component_file": "assets/index-CL22l5v8.js",
+      "line": 86,
+      "kind": "tauriInvokeWrapper",
+      "extraction": "minified-ipc-contract-fallback",
+      "evidence": "wrapper terminal call G(\"list_plugins\") in API wrapper table"
+    },
+    {
+      "row": 103,
+      "command": "toggle_plugin",
+      "wrapper": "togglePlugin",
+      "argKeys": [
+        "id",
+        "enabled"
+      ],
+      "argObject": "{id:t,enabled:e}",
+      "file": "frontend/frontend-control-flow.jsonl",
+      "component_file": "assets/index-CL22l5v8.js",
+      "line": 86,
+      "kind": "tauriInvokeWrapper",
+      "extraction": "minified-ipc-contract-fallback",
+      "evidence": "wrapper terminal call G(\"toggle_plugin\", { id, enabled }) in API wrapper table"
+    },
+    {
+      "row": 104,
+      "command": "get_plugin_config",
+      "wrapper": "getPluginConfig",
+      "argKeys": [
+        "id"
+      ],
+      "argObject": "{id:t}",
+      "file": "frontend/frontend-control-flow.jsonl",
+      "component_file": "assets/index-CL22l5v8.js",
+      "line": 86,
+      "kind": "tauriInvokeWrapper",
+      "extraction": "minified-ipc-contract-fallback",
+      "evidence": "wrapper terminal call G(\"get_plugin_config\", { id }) in API wrapper table only"
+    },
+    {
+      "row": 105,
+      "command": "update_plugin_config",
+      "wrapper": "updatePluginConfig",
+      "argKeys": [
+        "id",
+        "settings"
+      ],
+      "argObject": "{id:t,settings:e}",
+      "file": "frontend/frontend-control-flow.jsonl",
+      "component_file": "assets/index-CL22l5v8.js",
+      "line": 86,
+      "kind": "tauriInvokeWrapper",
+      "extraction": "minified-ipc-contract-fallback",
+      "evidence": "wrapper terminal call G(\"update_plugin_config\", { id, settings }) in API wrapper table only"
+    }
+  ],
+  "plugins_page": {
+    "component": "PluginsPage",
+    "chunk": "assets/plugins-page-BOi_QT1c.js",
+    "export": "PluginsPage",
+    "source": "Windows 1.0.9 dumped frontend asset",
+    "route_or_surface": "plugins page",
+    "query": {
+      "queryKey": "[\"plugins-list\"]",
+      "queryFn": "async() => (await u.listPlugins()).data",
+      "wrapper": "u.listPlugins",
+      "command": "list_plugins",
+      "staleTime": "Infinity",
+      "dataDefault": "l.data ?? []",
+      "loadingEmptyState": "m.length===0 renders plugins.loading when l.isLoading else plugins.empty"
+    },
+    "listRender": {
+      "condition": "m.length===0 empty/loading branch; m.map(plugin => <w plugin onToggle ...>) for list",
+      "visibleFields": [
+        "plugin.name",
+        "plugin.version",
+        "plugin.description",
+        "plugin.enabled running badge",
+        "plugin.category icon"
+      ],
+      "builtinBehavior": "!plugin.builtin condition gates Switch rendering; builtin plugins have no visible toggle switch"
+    },
+    "toggleMutation": {
+      "mutationFn": "async({ id, enabled }) => await u.togglePlugin(id, enabled)",
+      "command": "toggle_plugin",
+      "action": "Switch onCheckedChange -> onToggle -> c.mutate({ id: plugin.id, enabled })",
+      "optimisticUpdate": "cancelQueries([\"plugins-list\"]); previous list captured; setQueryData maps matching id to enabled value",
+      "errorRollback": "onError restores previous list with setQueryData when context.prev exists",
+      "refresh": "onSettled invalidates [\"plugins-list\"]",
+      "visibleControl": "Switch checked=plugin.enabled; aria-label uses Enable/Disable plus plugin name",
+      "guard": "No extra frontend preflight beyond !plugin.builtin switch visibility was observed"
+    },
+    "configConsumers": {
+      "getPluginConfig": "not observed outside API wrapper table",
+      "updatePluginConfig": "not observed outside API wrapper table",
+      "negativeSearch": [
+        "rg getPluginConfig/updatePluginConfig excluding assets/index-CL22l5v8.js returned no hits",
+        "rg get_plugin_config/update_plugin_config excluding assets/index-CL22l5v8.js returned no hits",
+        "ast-facts wrapper usage rows exist for listPlugins/togglePlugin in PluginsPage, but no PluginsPage wrapper usage rows for getPluginConfig/updatePluginConfig"
+      ]
+    }
+  },
+  "backend_reference_rows": [
+    {
+      "index_row": 553,
+      "leaf": "list_plugins",
+      "status": "registry_list_boundary_no_gate_promotion",
+      "use": "reference only; backend registry/list boundary evidence, not reproduced here"
+    },
+    {
+      "index_row": 554,
+      "leaf": "update_plugin_config",
+      "status": "save_store_boundary_no_gate_promotion",
+      "use": "reference only; backend mutation/save-store boundary evidence, not reproduced here"
+    },
+    {
+      "index_row": 555,
+      "leaf": "toggle_plugin",
+      "status": "ida_toggle_save_store_boundary_static_no_gate_promotion",
+      "use": "reference only; backend toggle save-store/error/persistence static evidence, not reproduced here"
+    },
+    {
+      "index_row": 556,
+      "leaf": "get_plugin_config",
+      "status": "ida_get_config_boundary_static_no_gate_promotion",
+      "use": "reference only; backend config lookup/default/error static evidence, not reproduced here"
+    },
+    {
+      "index_row": 587,
+      "leaf": "plugin_response_error_envelope",
+      "status": "shared_response_error_envelope_ledger_correction_no_gate_promotion",
+      "use": "reference only; shared response/error envelope facts, not modified"
+    },
+    {
+      "index_row": 588,
+      "leaf": "plugins_json_persistence_error",
+      "status": "plugins_json_persistence_error_static_ida_no_gate_promotion",
+      "use": "reference only; plugins.json persistence/error facts, not modified"
+    }
+  ],
+  "macos_evidence_policy": {
+    "macos_used_for_windows_gate": false,
+    "note": "macOS evidence may be listed as non-authoritative history only; this leaf uses Windows 1.0.9 frontend bootstrap evidence for Windows UI-state facts"
+  },
+  "blocked_dimensions": [
+    "No runtime acceptance trace executed",
+    "No accepted same-version IPC/runtime harness",
+    "get_plugin_config/update_plugin_config have wrapper/command facts only; no acceptable visible config UI consumer was found",
+    "Gate remains blocked because this leaf closes only a static frontend UI-state dimension for list/toggle"
+  ],
+  "gate": {
+    "renderSurfaceReady": false,
+    "uiCallEntryReady": false,
+    "dtoBoundaryReady": false,
+    "happyPathReady": false,
+    "boundaryPathReady": false,
+    "sideEffectReady": false,
+    "frontendConsumptionReady": false,
+    "acceptanceDraftReady": false,
+    "platformScopeDeclared": false,
+    "consumerStartReady": false,
+    "consumerUse": false,
+    "strictParityReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false
+  }
+}

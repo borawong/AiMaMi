@@ -1,0 +1,20 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "leaf": "force_kill_codex",
+  "platform": "windows",
+  "version": "1.0.9",
+  "files": [
+    {"path": "AI.md", "role": "handoff", "sha256": null},
+    {"path": "README.md", "role": "human_report", "sha256": null},
+    {"path": "SYSTEM-DIFF.md", "role": "platform_diff", "sha256": null},
+    {"path": "manifest.json", "role": "bundle_manifest", "sha256": "excluded_self"},
+    {"path": "file-manifest.json", "role": "file_manifest", "sha256": "excluded_self"},
+    {"path": "call-trees/force_kill_codex.jsonl", "role": "call_tree", "sha256": "2c615acea738aa682cc253bc32fa3336290b2d7c00f60bd1262747383ad24a58"},
+    {"path": "ida/pseudocode/0001_force_kill_codex_by_imagename_owner.c", "role": "pseudocode_owner", "sha256": "fa65d03492431f9abf5f9a45a37d58612129983f0ae5a436876fa7e2a57bf0a0"},
+    {"path": "ida/pseudocode/0002_quit_codex_wait_fallback_kill.c", "role": "pseudocode_caller1", "sha256": "7c484390381bc15d67ba7d3204e452cd5684843ce19aa0997e1766dbdeca5940"},
+    {"path": "ida/pseudocode/0003_notify_quit_codex_wait_fallback_kill.c", "role": "pseudocode_caller1_variant", "sha256": "268ea75951766b218618a223b4cc9abd6d62f2b8b5652e3b12bd6880894722"},
+    {"path": "ida/pseudocode/0004_scan_codex_process_list.c", "role": "pseudocode_companion_leaf", "sha256": "e0ccf498aa308ef42fd8cb7dd1ea5d4e7ab430810818494c0a08f6b81414ce91"},
+    {"path": "ida/pseudocode-manifest.jsonl", "role": "pseudocode_index", "sha256": "bac7b208b7a1263f9dc26da06ee124b67885a557ecb4de302721b05fac8354"},
+    {"path": "validation/result.json", "role": "validation", "sha256": null}
+  ]
+}

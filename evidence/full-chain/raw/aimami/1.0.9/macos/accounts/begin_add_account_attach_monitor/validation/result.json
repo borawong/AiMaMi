@@ -1,0 +1,32 @@
+{
+  "schema": "raw-evidence.raw.validation.v1",
+  "command": "begin_add_account_attach_monitor",
+  "result": "PASS",
+  "checks": {
+    "threading_first": true,
+    "ida_mcp_only_backend": true,
+    "frontend_from_tauri_dumper_contract": true,
+    "raw_leaf_has_no_c_files": true,
+    "raw_leaf_has_no_call_trees": true,
+    "raw_leaf_has_no_pseudocode_manifest": true,
+    "raw_leaf_ida_only": true,
+    "gate_not_promoted": true,
+    "index_unique_expected": true,
+    "json_parse": true,
+    "raw_leaf_template_7_files": true,
+    "source_binary_under_raw_binary": true,
+    "idb_saved": true,
+    "macos_only": true,
+    "no_gate_promotion": true
+  },
+  "status": "PASS_static_ida_raw_leaf_no_gate_promotion",
+  "currentAccountsReducer": "logic/ACCOUNTS-IDB-WRITEBACK-CURRENT-SYNC-109.md",
+  "platformBoundary": "macos_only",
+  "strictImplementationUse": false,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false,
+  "updated_at": "2026-06-02T23:12:00+08:00"
+}

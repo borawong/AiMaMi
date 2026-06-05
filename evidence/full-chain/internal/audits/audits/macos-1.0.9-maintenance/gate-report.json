@@ -1,0 +1,55 @@
+{
+  "schema": "restoration.cm.reverse.gate.v1",
+  "bundle": "macos-1.0.9-maintenance",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_at": "2026-06-03",
+  "sha12": "1db044e8efab",
+  "gate_tier": "strictImplementationUse",
+  "gate_accepted": false,
+  "implementation_use": false,
+  "dim6_missing": true,
+  "ceiling": "strictImplementationUse",
+  "leaves": {
+    "clean": {
+      "owner_va": "0x100263ebc",
+      "core_va": "0x1005f1140",
+      "dim1": "pass",
+      "dim2": "pass",
+      "dim3": "pass",
+      "dim4": "pass",
+      "dim5": "pass",
+      "dim6": "missing",
+      "gate_tier": "strictImplementationUse",
+      "is_upstream": true,
+      "ida_comments": 2
+    },
+    "rebuild_registry": {
+      "owner_va": "0x10025eb00",
+      "core_va": "0x1005e7334",
+      "dim1": "pass",
+      "dim2": "pass",
+      "dim3": "pass",
+      "dim4": "pass",
+      "dim5": "pass",
+      "dim6": "missing",
+      "gate_tier": "strictImplementationUse",
+      "is_upstream": true,
+      "ida_comments": 2
+    },
+    "load_snapshot": {
+      "owner_va": "0x10032d430",
+      "core_va": "0x1005e8e58",
+      "helper_va": "0x1005ea2c8",
+      "dim1": "pass",
+      "dim2": "pass",
+      "dim3": "pass",
+      "dim4": "pass",
+      "dim5": "pass",
+      "dim6": "missing",
+      "gate_tier": "strictImplementationUse",
+      "is_upstream": true,
+      "module_note": "commands::accounts not commands::system",
+      "ida_comments": 3
+    }
+  }
+}

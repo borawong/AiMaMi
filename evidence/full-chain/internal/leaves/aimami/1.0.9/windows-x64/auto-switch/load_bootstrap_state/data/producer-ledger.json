@@ -1,0 +1,28 @@
+{
+  "target": "load_bootstrap_state",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "completed_at": "2026-06-04",
+  "binary_sha": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "owner_gate_result": "ALLOW",
+  "owner_gate_write_mode": "first",
+  "steps_completed": [
+    "func_query owner verify",
+    "decompile owner_sys 0x140272e80 (32 blocks, full)",
+    "decompile core_serialize 0x140451160 (full)",
+    "callees dim3",
+    "xrefs_to dim3",
+    "decompile sub_1400DA7C0 (state acquire/spinlock)",
+    "decompile sub_1411CE640 (err result build)",
+    "decompile sub_140071070 (error resolve + IPC)",
+    "DTO confirmed from rodata strings",
+    "fake-wall taxonomy exhausted",
+    "owner-gate run (exit 0 ALLOW)",
+    "DISTILLED.md written",
+    "manifest.json written",
+    "producer-ledger.json written"
+  ],
+  "gate_tier_final": "strictImplementationUse",
+  "dims_closed": ["dim2", "dim3", "dim4", "dim5"]
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "raw-evidence.raw.bundle.validation.v1",
+  "command": "set_relay_provider_network",
+  "platform": "macos-arm64",
+  "version": "1.0.9",
+  "session": "relay-A-state-crud-20260602",
+  "idb_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sot_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "gate": "strictImplementationUse",
+  "dim1_frontend_ccf": {"status": "Unknown", "note": "accepted_unknown"},
+  "dim2_backend_owner_pseudocode": {"status": "Accepted", "dispatch_closure_addr": "0x10031d8c8", "owner_addr": "0x1001e28e4", "core_addr": "0x1001c99d8", "symbol": "codexmate_lib::commands::relay::set_relay_provider_network::hfd713d2139c85809", "note": "dispatch closure resolved; prior recon had owner as TBD — now CORRECTED to 0x1001e28e4"},
+  "dim3_call_tree_impl_leaves": {"status": "Accepted", "depth": 7, "terminal_leaves": ["state_extract(StateManager::try_get)", "arg_deser(from_command::hdb947155c825df06)", "Mutex_lock_RelayState_clone", "provider_lookup_memcmp_loop", "idempotent_early_return(network==new_network)", "*u8(provider+205)=new_network(WRITE)", "chrono_now", "*i64(provider+192)=chrono_ms(WRITE)", "atomic_write::write_atomic(relay.json)", "memmove(state+32,0x128)", "breaker::record_success(0x1001592a0)", "CoreEnvelope_ok(0x120bytes)", "CoreError_fmt"]},
+  "dim4_interface_dto_error_sideeffect": {"status": "Accepted", "argKeys": ["managerId(implicit)", "providerId(String)", "network(u8/enum)"], "network_field": "u8 at RelayProvider+205 (208-byte struct)", "idempotent": "if provider.network == new_network -> early return clone(no mutation)", "response": "CoreEnvelope<RelayProvider> (0x120 bytes) — updated provider", "errors": ["CoreError(provider_not_found:'relay provider {id} not found')", "CoreError(persist_IO_fail)"], "side_effects": ["RelayProvider_network_write@+205", "RelayProvider_updated_at_write@+192(chrono_ms)", "relay.json_atomic_write", "breaker_record_success"], "NO_side_effects": ["NO_keychain", "NO_tray_refresh", "NO_config_toml"]},
+  "dim5_platform_gate": {"status": "Accepted", "macos": "CONFIRMED", "windows": "Unknown", "note": "no platform-specific OS APIs; circuit breaker is pure in-memory"},
+  "dim6_test_acceptance": {"status": "empty_per_task_spec"},
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "no_gate_promotion_to_ready": true
+}

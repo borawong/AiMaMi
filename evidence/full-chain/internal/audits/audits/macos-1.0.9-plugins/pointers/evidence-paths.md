@@ -1,0 +1,13 @@
+- raw/aimami/1.0.9/macos/plugins/list_plugins/manifest.json
+- raw/aimami/1.0.9/macos/plugins/toggle_plugin/manifest.json
+- raw/aimami/1.0.9/macos/plugins/get_plugin_config/manifest.json
+- raw/aimami/1.0.9/macos/plugins/update_plugin_config/manifest.json
+- raw/aimami/1.0.9/macos/plugins/PluginRegistry__list/manifest.json
+- raw/aimami/1.0.9/macos/plugins/PluginRegistry__set_enabled/manifest.json
+- raw/aimami/1.0.9/macos/plugins/PluginRegistry__get_config/manifest.json
+- raw/aimami/1.0.9/macos/plugins/PluginRegistry__update_settings/manifest.json
+- raw/aimami/1.0.9/macos/plugins/PluginRegistry__save_store_static/manifest.json
+- raw/aimami/1.0.9/macos/plugins/PluginStoreSchema__serialize/manifest.json
+- raw/aimami/1.0.9/macos/plugins/builtin__all_builtin_plugins/manifest.json
+- raw/aimami/1.0.9/macos/plugins/builtin__web_tools__plugin_info/manifest.json
+- raw/aimami/1.0.9/macos/plugins/builtin__image_support__plugin_info/manifest.json

@@ -1,0 +1,23 @@
+{
+  "schema": "raw-evidence.reverse.validation.result.v1",
+  "status": "PASS",
+  "command": "remove_skill",
+  "platform": "macos",
+  "checks": {
+    "frontend_control_flow": true,
+    "backend_owner_ida_decompile": true,
+    "callee_leaf_chain": true,
+    "interface_error_side_effect": true,
+    "same_platform_gate": true,
+    "acceptance_mapping": true,
+    "idb_saved": true
+  },
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true
+  }
+}

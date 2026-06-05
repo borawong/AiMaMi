@@ -1,0 +1,30 @@
+{
+  "schema": "restoration.cm.reverse.audit.v1",
+  "bundle": "windows-1.0.9-bootstrap",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "module": "bootstrap",
+  "produced_at": "2026-06-03T00:00:00+08:00",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "binary_path": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "idb_path": "<source-location><network-share>",
+  "authoritative": true,
+  "gate_accepted": false,
+  "implementation_use": false,
+  "consumer_tier": "strictImplementationUse",
+  "leaf_count": 4,
+  "leaves": ["app_run_entry", "boot_spawn_threads", "bootstrap_cache", "managed_state_registry"],
+  "raw_evidence_root": "<source-location>/raw/aimami/1.0.9/windows/bootstrap/",
+  "consumed_bundles": [
+    "<source-location>/audits/windows-1.0.9-bootstrap/data/task-plan.json (prior: consumerStartReady_candidate session deep-win-bootstrap-20260602)",
+    "raw/aimami/1.0.9/windows/bootstrap/*/ida/ (session win-bootstrap-residual-20260603)"
+  ],
+  "upgrade_from": "consumerStartReady_candidate",
+  "upgrade_to": "strictImplementationUse",
+  "upgrade_session": "<audit-session>",
+  "upgrade_evidence": "logic/WIN-BOOTSTRAP-DEEP-DISTILLED-109.md",
+  "takeover_token": null,
+  "note": "Owner sensitive-field not required: gate upgrade from prior candidate state to full dim1-5 closure. No canonical override; existing prior session evidence consumed as base. dim6 is source archive implementation-side ceiling."
+}

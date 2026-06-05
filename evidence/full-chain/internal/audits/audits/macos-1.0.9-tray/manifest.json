@@ -1,0 +1,29 @@
+{
+  "schema": "restoration.cm.reverse.audit.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "tray",
+  "produced_at": "2026-06-02T23:39:05+08:00",
+  "status": "accepted_full_leaf_100_ida_dim6_macos_tray_via_system_shell_init",
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "moduleExitAllowed": true,
+  "currentReducer": "../macos-1.0.9-system-shell-init/logic/SYSTEM-SHELL-INIT-FULL-LEAF-100-IDA-ACCEPTED-109.md",
+  "primaryPointers": [
+    "../macos-1.0.9-system-shell-init/logic/SYSTEM-SHELL-INIT-FULL-LEAF-100-IDA-ACCEPTED-109.md",
+    "AI.md",
+    "pointers/evidence-paths.md"
+  ],
+  "platformPolicy": {
+    "macosOnly": true,
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  },
+  "machine": "<workstation>",
+  "machine_backfill_date": "2026-06-05"
+}

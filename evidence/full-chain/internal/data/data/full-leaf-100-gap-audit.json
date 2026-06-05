@@ -1,0 +1,80 @@
+{
+  "schema": "restoration.cm.reverse.full_leaf_100_gap_audit.v2",
+  "generated_at": "2026-06-01T00:00:00+08:00",
+  "currentEntrypoint": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/",
+  "gateDefinition": "full_leaf_100_definition_v2",
+  "totals": {
+    "consumerStartReady": 21,
+    "consumerStartBlocked": 16,
+    "strictImplementationUse": 4,
+    "readyToImplement": 0,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "totalRows": 37
+  },
+  "modules": {
+    "accounts": {
+      "rows": 9,
+      "consumerStartReady": 9,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0,
+      "legacyEightReducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/ACCOUNTS-SIX-DIM-MIGRATION-109.md",
+      "chatgptSessionImportReducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/ACCOUNTS-CHATGPT-SESSION-IMPORT-DIFF-109.md",
+      "fullLeafBlockers": [
+        "accepted runtime IPC request/response/error envelopes missing",
+        "durable side-effect and rollback fixtures missing",
+        "executed source archive acceptance mapping missing",
+        "Windows independent closure missing",
+        "import_chatgpt_session_account is Gate1 only; exact runtime envelopes and side-effect byte parity remain missing"
+      ],
+      "moduleExitAllowed": true,
+      "status": "accounts_gate1_closed_for_module_exit_strict_highest_still_blocked",
+      "historicalClosureQueue": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/ACCOUNTS-CURRENT-CLOSURE-QUEUE-109.md"
+    },
+    "plugins": {
+      "rows": 13,
+      "consumerStartReady": 2,
+      "consumerStartBlocked": 11,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0,
+      "reducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/PLUGINS-SIX-DIM-MIGRATION-109.md",
+      "activeModuleLock": true,
+      "moduleExitAllowed": false,
+      "gate1Ledger": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/PLUGINS-GATE1-13ROW-LEDGER-109.md",
+      "status": "plugins_active_2_of_13_start_ready_11_blocked"
+    },
+    "relay_targeted": {
+      "rows": 3,
+      "consumerStartReady": 3,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0,
+      "reducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/RELAY-TARGETED-SIX-DIM-MIGRATION-109.md"
+    },
+    "system": {
+      "rows": 9,
+      "consumerStartReady": 4,
+      "consumerStartBlocked": 5,
+      "strictImplementationUse": 4,
+      "readyToImplement": 0,
+      "reducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/SYSTEM-SIX-DIM-MIGRATION-109.md"
+    },
+    "tray": {
+      "rows": 3,
+      "consumerStartReady": 3,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0,
+      "reducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/TRAY-SIX-DIM-MIGRATION-109.md"
+    }
+  },
+  "nonActions": [
+    "root data support sync only",
+    "no rule/spec edit",
+    "no gate promotion",
+    "no product code or product test execution"
+  ],
+  "updated_at": "2026-06-01T23:20:00+08:00"
+}

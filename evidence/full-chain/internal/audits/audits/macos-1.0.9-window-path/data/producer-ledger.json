@@ -1,0 +1,33 @@
+{
+  "bundle": "macos-1.0.9-window-path",
+  "platform": "macos-arm64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "producer": "<workstation>",
+  "session": "<audit-session>", "produced_at": "2026-06-03",
+  "gate": "strictImplementationUse",
+  "authoritative": true,
+  "leaves": [
+    {
+      "command": "focus_main_window",
+      "owner_va": "0x10032e820",
+      "gate": "strictImplementationUse",
+      "is_upstream": true,
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "ceiling": "strictImplementationUse",
+      "evidence_path": "raw/aimami/1.0.9/macos-arm64/window-path/focus_main_window/leaf.md",
+      "produced_at": "2026-06-03"
+    },
+    {
+      "command": "open_path",
+      "owner_va": "0x1002644c0",
+      "gate": "strictImplementationUse",
+      "is_upstream": true,
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "ceiling": "strictImplementationUse",
+      "evidence_path": "raw/aimami/1.0.9/macos-arm64/window-path/open_path/leaf.md",
+      "produced_at": "2026-06-03"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "restoration.cm.consumer.producer_ledger.v1",
+  "bundle": "<source-location>/audits/macos-1.0.9-tray",
+  "authoritative_producer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "backfill_note": "backfilled by <workstation> 3-lane consolidation 2026-06-05; derived from task-plan.json; no re-reverse performed"
+  },
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sha12": "1db044e8efab",
+  "platform": "macos-arm64",
+  "produced_at": "2026-06-02",
+  "overall_gate": "readyToImplement",
+  "target_count": 4,
+  "readyToImplement_count": 0,
+  "strictImplementationUse_count": 4,
+  "note": "4 tray commands at strictImplementationUse; dim6 deferred to source archive team; primaryReducer shared with system-shell-init package"
+}

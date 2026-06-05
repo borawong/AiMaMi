@@ -1,0 +1,26 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v1",
+  "leaf": "PluginStoreSchema__serialize",
+  "platform": "macos",
+  "owner": {
+    "addr": "0x100673ed0",
+    "decompile_ok": true,
+    "pseudocode_lines": 103,
+    "pseudocode_chars": 3019
+  },
+  "important_callees": "",
+  "threading_model": "PluginStoreSchema serialize",
+  "terminal_side_effect_classes": "schemaVersion/plugins JSON serialization field order",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current macos AiMaMi 1.0.9 plugins behavior from IDA owner/callee/DTO/side-effect evidence only."
+  },
+  "idb_saved": true
+}

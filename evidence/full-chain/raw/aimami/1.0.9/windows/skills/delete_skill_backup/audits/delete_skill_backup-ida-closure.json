@@ -1,0 +1,38 @@
+{
+  "schema": "raw-evidence.reverse.ida_closure.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "skills",
+  "command": "delete_skill_backup",
+  "status": "accepted_full_leaf_100_ida_direct_skills",
+  "source_binary": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "idb": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe.i64",
+  "frontend_contract_pointer": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/",
+  "thread_model": "synchronous repo mutex / recursive filesystem IO; no async spawn, no callback thread, no process handoff",
+  "wrapper": "0x140271280",
+  "owner": "0x140577810",
+  "callees": [
+    "0x14024CDD0 delete helper",
+    "join skill-backups/id",
+    "metadata/not-found branch",
+    "remove path",
+    "reload backup list"
+  ],
+  "interface": "{ id: string }",
+  "side_effect": "mutating FS: join skill-backups/id, metadata/not-found check, remove backup dir/file, reload backup count",
+  "error_surface": "Tauri/CoreEnvelope ok/error. Error branches include missing repo/state, poisoned lock, invalid/missing SKILL.md, not-found id, metadata read/parse failure, create/copy/remove IO failure, canonicalize failure where applicable.",
+  "acceptance_mapping": "manual/unit: delete existing backup decrements count; missing id returns not-found/error; remove failure surfaces error",
+  "idb_comments_written": true,
+  "idb_saved": true,
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true
+  },
+  "produced_at": "2026-06-03T00:00:00+08:00"
+}

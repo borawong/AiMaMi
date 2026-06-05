@@ -1,0 +1,143 @@
+{
+  "schema": "restoration.cm.reverse.module_gate.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "plugins",
+  "status": "accepted_full_leaf_100_ida_direct_plugins_13_of_13",
+  "produced_at": "2026-06-03T02:12:09+08:00",
+  "producer": "codex",
+  "machine": "<workstation>",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "idb_saved": true,
+  "commands": [
+    "list_plugins",
+    "toggle_plugin",
+    "get_plugin_config",
+    "update_plugin_config",
+    "PluginRegistry__list",
+    "PluginRegistry__set_enabled",
+    "PluginRegistry__get_config",
+    "PluginRegistry__update_settings",
+    "PluginRegistry__save_store_static",
+    "PluginStoreSchema__serialize",
+    "builtin__all_builtin_plugins",
+    "builtin__web_tools__plugin_info",
+    "builtin__image_support__plugin_info"
+  ],
+  "command_count": 13,
+  "leaves": [
+    {
+      "command": "list_plugins",
+      "kind": "command",
+      "owner": "0x1003262b8",
+      "decompile_ok": true,
+      "manifest_sha256": "47bcsource archivee2d61f046696d6a1e0a5307be9d57b0d89c720bec4f7148f90a5b2abb7",
+      "file_manifest_sha256": "c65bdad53f9049d9ba19308be38f62ec8ee5ea300dceeb3b6b8dc1f91e744e05"
+    },
+    {
+      "command": "toggle_plugin",
+      "kind": "command",
+      "owner": "0x10015f064",
+      "decompile_ok": true,
+      "manifest_sha256": "8ed988e9bae9407d60fe08f4e255d05ead48b57b6cee49343a65572bf0d92f65",
+      "file_manifest_sha256": "8abb4629357b10237c38c0888b243ce21fe520a8ed16b66c833ec3ab1b1d78a6"
+    },
+    {
+      "command": "get_plugin_config",
+      "kind": "command",
+      "owner": "0x10015f338",
+      "decompile_ok": true,
+      "manifest_sha256": "8d7e1b60338c6a407394330edb82d8cefa316ba67255b6d8fa5d346c703eb2da",
+      "file_manifest_sha256": "27cd89be058b11a135d8cb0dda30b68786eb0f24a238e5242615542b1f9ac6f3"
+    },
+    {
+      "command": "update_plugin_config",
+      "kind": "command",
+      "owner": "0x10015f440",
+      "decompile_ok": true,
+      "manifest_sha256": "4e4a9abb83227fa171bebdd6297c0743070568fdd808ef8e08d62c663866source archive15",
+      "file_manifest_sha256": "cb73b37e47db4c6672670198a03e4acbc6389019a66be0617683731768dbd629"
+    },
+    {
+      "command": "PluginRegistry__list",
+      "kind": "registry",
+      "owner": "0x10015bd38",
+      "decompile_ok": true,
+      "manifest_sha256": "a0de59caa0e0f53770527d0f3da57ae424551308b25a8f849f63e108384d7c1f",
+      "file_manifest_sha256": "8b32868f53e367dd095022c4159b23b9de32fdffa62eeb19c7db7db045a0bf80"
+    },
+    {
+      "command": "PluginRegistry__set_enabled",
+      "kind": "registry",
+      "owner": "0x10015b18c",
+      "decompile_ok": true,
+      "manifest_sha256": "e746549fe6449ef6d1fdd3dbfd39f7ebe2d88cb33bee3bc40f7b2ab303189367",
+      "file_manifest_sha256": "d173713bfe481e9f21b2f6d506a05117f9bf3bd64de4db90521f28dd12f95cf5"
+    },
+    {
+      "command": "PluginRegistry__get_config",
+      "kind": "registry",
+      "owner": "0x10015ac24",
+      "decompile_ok": true,
+      "manifest_sha256": "1d4a2cabba26e56875efa8aba35782bcb08c7c649c4d48ec858585121311e75d",
+      "file_manifest_sha256": "f7a6b08d0b2a04c9b53e794d487593041b0483359bec2b60adf37a58fec399d1"
+    },
+    {
+      "command": "PluginRegistry__update_settings",
+      "kind": "registry",
+      "owner": "0x10015b42c",
+      "decompile_ok": true,
+      "manifest_sha256": "1df2d052b4235a7a82e0d06030e12230e535e243ec92213ff9ee2bcb2387a86d",
+      "file_manifest_sha256": "0939e4218662431c40109c4b96011b89a4f2cb03e369b647e7a990ab78d0d1c4"
+    },
+    {
+      "command": "PluginRegistry__save_store_static",
+      "kind": "store",
+      "owner": "0x10015b6fc",
+      "decompile_ok": true,
+      "manifest_sha256": "ff8afcc75017ed10f506bf217408689d32ce4ff3571fe39a382f959f96871a31",
+      "file_manifest_sha256": "8ffbba43dfb35ff1533fa4c3abe7db79438fbf855c6283be361desource archive83016e7ff"
+    },
+    {
+      "command": "PluginStoreSchema__serialize",
+      "kind": "models",
+      "owner": "0x100673ed0",
+      "decompile_ok": true,
+      "manifest_sha256": "47bdcff1c624d93c89791cfbc492089a0370a721e1e14c3c683aae2d7a869080",
+      "file_manifest_sha256": "bc03ccc9697eeb569f7f2a0c0e781cf2ea6a18a2fb2029fa9ee580319792df59"
+    },
+    {
+      "command": "builtin__all_builtin_plugins",
+      "kind": "builtin",
+      "owner": "0x100386660",
+      "decompile_ok": true,
+      "manifest_sha256": "48ce181f9b85d4e471d432c74b03c929b3f4a6a24da09b680ec195dc74ca3494",
+      "file_manifest_sha256": "624028937cd1ce2fb6521c0bd105cbce2571476c9a27002688d40bcd591773ae"
+    },
+    {
+      "command": "builtin__web_tools__plugin_info",
+      "kind": "builtin",
+      "owner": "0x100386780",
+      "decompile_ok": true,
+      "manifest_sha256": "73b4f2377da6f7a52b5ef3d9080bdbcab51584182329b5811126d5559ae0a5e0",
+      "file_manifest_sha256": "82ef927683d907f0dcbfce94cc80cf6d5b99a4f8e5fb551f82aaad19dccfa2ff"
+    },
+    {
+      "command": "builtin__image_support__plugin_info",
+      "kind": "builtin",
+      "owner": "0x1003863bc",
+      "decompile_ok": true,
+      "manifest_sha256": "56ba1bb6775ea924a34bsource archive025f91f7ff7b438abd086b19831e22d5e8c971f51c",
+      "file_manifest_sha256": "a192bd44e48a2f7e573ec2405f83f986source archive537e6cc75c8a0e8546de1f7dd48dd0"
+    }
+  ],
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "moduleExitAllowed": true
+}

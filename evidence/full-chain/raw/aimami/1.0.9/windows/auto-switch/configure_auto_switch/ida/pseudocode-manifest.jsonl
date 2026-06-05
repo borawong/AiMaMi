@@ -1,0 +1,2 @@
+{"file":"0001_configure_auto_switch_owner_sys_27be90.c","addr":"0x14027BE90","role":"command_owner","status":"accepted","sha":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}
+{"file":"0002_configure_auto_switch_core_impl_a7c00.c","addr":"0x1400A7C00","role":"core_impl","status":"accepted","sha":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}

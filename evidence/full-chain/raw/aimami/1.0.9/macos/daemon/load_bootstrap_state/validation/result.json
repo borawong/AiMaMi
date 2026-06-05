@@ -1,0 +1,17 @@
+{
+  "leaf": "load_bootstrap_state",
+  "owner_addr": "0x10025fe54",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "validated_at": "2026-06-02T00:00:00Z",
+  "pseudocode_status": "accepted",
+  "call_tree_depth": 2,
+  "implementation_leaves": ["fs_leaf:read_to_string_bootstrap_cache","parse_leaf:serde_json_BootstrapState","response_leaf:CoreEnvelope_ok"],
+  "gate_status": "strictImplementationUse",
+  "dim1": "accepted_native_callback",
+  "dim2": "accepted",
+  "dim3": "accepted",
+  "dim4": "accepted",
+  "dim5": "macos_confirmed_windows_unknown",
+  "dim6": "empty",
+  "blocker": null
+}

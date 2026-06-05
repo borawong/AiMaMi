@@ -1,0 +1,12 @@
+{"depth":1,"addr":"0x140280810","name":"get_relay_active_owner_sys","role":"command_owner","grade":"A","string_bound":"aGetRelayActive@0x14126906f"}
+{"depth":2,"addr":"0x1400DA320","name":"sub_1400DA320","role":"ipc_arg_deserializer_auth_guard","grade":"B","terminated_reason":null}
+{"depth":2,"addr":"0x1411CE640","name":"sub_1411CE640","role":"json_state_dispatcher","grade":"B","terminated_reason":null}
+{"depth":2,"addr":"0x14043B940","name":"sub_14043B940","role":"get_relay_active_bool_reader","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x140147AB0","name":"sub_140147AB0","role":"mutex_acquire_and_bool_read","grade":"B","note":"reads bool at relay_lock_struct+17; encodes Ok as tag=2 str-pair ok/enabled"}
+{"depth":4,"addr":"0x1400F3970","name":"sub_1400F3970","role":"read_active_field_from_relay_lock","grade":"B","terminated_reason":null}
+{"depth":4,"addr":"0x141206B20","name":"WakeByAddressSingle","role":"lock_release_primitive","grade":"B","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x14006C340","name":"sub_14006C340","role":"response_serialize","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x14044A4B0","name":"sub_14044A4B0","role":"json_envelope_builder","grade":"C","note":"schemaVersion/success/code/message/data"}
+{"depth":3,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","role":"http_terminal","grade":"A","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x140298200","name":"sub_140298200","role":"ipc_context_finalize","grade":"B","terminated_reason":"response_serialize"}
+{"call_tree_depth":4,"terminated_reason":"external_call_recorded","terminal":"WakeByAddressSingle@depth4+tauri_ipc_resolve_sys@depth3","complete":true,"source_binary_sha256":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}

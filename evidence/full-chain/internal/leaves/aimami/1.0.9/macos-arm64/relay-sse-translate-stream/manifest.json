@@ -1,0 +1,23 @@
+{
+  "target": "relay::proxy_server::sse_translate_stream (Unfold::poll_next)",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos-arm64",
+  "addr_audit_stated": "0x100246ff0",
+  "addr_verified": "0x100541db4",
+  "addr_mismatch_note": "Audit-stated 0x100246ff0 owns sse_chat_to_responses_stream (neighbor). True sse_translate_stream Unfold::poll_next is at 0x100541db4. Pass-3 anti-cheat caught the misidentification.",
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>", "date": "2026-06-04"
+  },
+  "authoritative": true,
+  "gate_tier": "consumerStartReady",
+  "implementation_use": false,
+  "gate_accepted": false,
+  "files": [
+    "AI.md",
+    "gate-report.json",
+    "manifest.json"
+  ],
+  "description": "sse_translate_stream: Unfold-based SSE cross-protocol translation stream. Bidirectional: AnthropicToOpenAi (TranslatorState=0x8000000000000000) and OpenAiToAnthropic (else). Per-frame UTF-8 parsing, newline splitting, feed_line/flush pattern. Line buffer limit 0x100000. Error path: std::io::Error wrapping reqwest::Error. consumerStartReady: behavior fully traced but dim1 frontend CCF absent."
+}

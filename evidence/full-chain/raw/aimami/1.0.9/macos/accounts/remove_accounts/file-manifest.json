@@ -1,0 +1,55 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "accounts",
+  "command": "remove_accounts",
+  "target": "remove_accounts",
+  "files": [
+    {
+      "path": "AI.md",
+      "size": 1662,
+      "sha256": "235c1a53e7cef5d301d129449c8c8d92138202a798de675dd069dca9f5900d9a"
+    },
+    {
+      "path": "README.md",
+      "size": 2519,
+      "sha256": "648a5e030a642c9e59147047167c7bd4927138ce848467b295a45d9a98e974be"
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "size": 1149,
+      "sha256": "f13257ae233a84aa4c1a8ad08cc6ecc803e753698a529e44bef05c96c01abff8"
+    },
+    {
+      "path": "audits/remove_accounts-ida-closure.json",
+      "size": 3663,
+      "sha256": "ba1a6253df63f576415f98cca21ce14baafc7b526b04a986b7ac07edbce741bb"
+    },
+    {
+      "path": "validation/result.json",
+      "size": 1640,
+      "sha256": "a52d265b2bc2842355d8fb657db770a52a858678011b998ce184023c0fcb33fe"
+    },
+    {
+      "path": "file-manifest.json",
+      "size": 1020,
+      "sha256": "a64d927db0da345287752083125da7a96ee5b0422f7ef4bd28890b4fd3289414"
+    },
+    {
+      "path": "manifest.json",
+      "size": 5368,
+      "sha256": "443e76f8f5b34056d67fd928e1014baadc8ca765389d40725d2de55284c7a20c"
+    }
+  ],
+  "currentAccountsReducer": "logic/ACCOUNTS-IDB-WRITEBACK-CURRENT-SYNC-109.md",
+  "platformBoundary": "macos_only",
+  "updated_at": "2026-06-02T23:12:00+08:00",
+  "strictImplementationUse": false,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false
+}

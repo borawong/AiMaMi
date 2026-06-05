@@ -1,0 +1,10 @@
+{"depth":1,"caller":"codexmate_lib::commands::relay::activate_relay_provider","callee":"codexmate_lib::core::relay::manager::RelayManager::activate","addr_caller":"0x1001e23c8","addr_callee":"0x1001cf510","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::activate","callee":"RelayManager::snapshot","addr_callee":"0x1001cfc44","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::activate","callee":"RelayManager::ensure_provider_loaded","addr_callee":"0x1001c9e2c","edge_type":"call"}
+{"depth":3,"caller":"RelayManager::ensure_provider_loaded","callee":"mutex_lock_unlock","addr_callee":"std::sys::pal::unix::sync::mutex::Mutex::lock","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::activate","callee":"RelayManager::ensure_proxy_started","addr_callee":"0x1001c91c0","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::activate","callee":"RelayActiveByIde::add","addr_callee":"0x1001c62a0","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::activate","callee":"RelayManager::persist","addr_callee":"0x1001cf304","edge_type":"call","terminated_reason":"persistence_commit"}
+{"depth":2,"caller":"RelayManager::activate","callee":"RelayManager::sync_codex_config_with_outcome","addr_callee":"0x1001cc828","edge_type":"call","terminated_reason":"persistence_commit"}
+{"depth":1,"caller":"codexmate_lib::commands::relay::activate_relay_provider","callee":"CoreEnvelope::ok","addr_callee":"0x1001d9e60","edge_type":"call","terminated_reason":"response_serialize"}
+{"depth":1,"caller":"codexmate_lib::commands::relay::activate_relay_provider","callee":"rust_dealloc","edge_type":"call","terminated_reason":"error_return"}

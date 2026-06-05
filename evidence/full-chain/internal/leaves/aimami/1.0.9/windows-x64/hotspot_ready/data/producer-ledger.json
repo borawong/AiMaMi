@@ -1,0 +1,16 @@
+{
+  "schema": "restoration.cm.producer-ledger.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "leaf": "hotspot_ready",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_at": "2026-06-04",
+  "sha12": "a5822387fa3f",
+  "owner_va": "0x14026def0",
+  "final_status": "strictImplementationUse",
+  "dims_closed": ["dim2", "dim3", "dim4", "dim5"],
+  "tools_used": ["mcp__ida-pro-mcp-win__entity_query", "mcp__ida-pro-mcp-win__decompile", "mcp__ida-pro-mcp-win__callees", "mcp__ida-pro-mcp-win__xrefs_to"],
+  "owner_gate_result": "ALLOW",
+  "owner_gate_write_mode": "first"
+}

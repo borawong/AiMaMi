@@ -1,0 +1,28 @@
+{
+  "schema": "restoration.cm.producer.ledger.v1",
+  "produced_at": "2026-06-04T00:00:00+08:00",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "producer": "claude-sonnet-4-6",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "leaf": "dismiss_pending_auto_switch",
+  "status": "completed",
+  "gate": "strictImplementationUse",
+  "owner_addr": "0x14027F120",
+  "core_addr": "0x1400AA290",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "steps": [
+    {"step": "owner-gate", "result": "ALLOW/first-write"},
+    {"step": "func_query addr_verify", "result": "confirmed 0x14027F120=dismiss_pending_auto_switch_owner_sys size=0x36F"},
+    {"step": "decompile owner_sys 0x14027F120", "result": "accepted"},
+    {"step": "decompile core_impl 0x1400AA290", "result": "accepted"},
+    {"step": "callees both functions", "result": "12+8 callees, complete"},
+    {"step": "xrefs_to both functions", "result": "owner: 1 code xref from auto_switch_multiplex_dispatcher_sys; core: 1 code xref from owner_sys"},
+    {"step": "fake_wall_taxonomy", "result": "all 7 categories excluded; genuine_ceiling=false"},
+    {"step": "write DISTILLED.md", "result": "written to <source-location>/aimami/1.0.9/windows-x64/auto-switch/dismiss_pending_auto_switch/DISTILLED.md"},
+    {"step": "write manifest.json + producer-ledger.json", "result": "written"},
+    {"step": "INDEX.jsonl append", "result": "pending"},
+    {"step": "REVERSE-STATUS.md backfill", "result": "pending"}
+  ]
+}

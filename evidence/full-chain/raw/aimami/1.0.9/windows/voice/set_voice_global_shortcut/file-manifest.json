@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "voice",
+  "command": "set_voice_global_shortcut",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "3fbf7aa7849139d4594070d1c266a95afd35b6117770cced9ffeb18aaae531",
+      "size": 761
+    },
+    {
+      "path": "README.md",
+      "sha256": "f2f1cac8d67ccaf65fc8c60ec35322a805d6abd98cc82eb17ffdf8d2afb79e64",
+      "size": 849
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "c1754ed3c2e78c4195dd69e6914185fec242394edc16455dfbe28232db49c951",
+      "size": 386
+    },
+    {
+      "path": "audits/set_voice_global_shortcut-ida-closure.json",
+      "sha256": "496ae9e1cc251b4cb804c0b70daf4fa1a827d407f2021ccca8872bb1aa0d77f1",
+      "size": 2675
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "a9c774e0e22f49f421b3bdd8029a47a46301d7520e776626f56ae631f2ccceaa",
+      "size": 322
+    }
+  ],
+  "note": "manifest.json excluded to avoid circular digest; manifest carries this file-manifest digest"
+}

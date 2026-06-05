@@ -1,0 +1,396 @@
+{
+  "schema": "restoration.cm.gate_report.v1",
+  "bundle": "macos-1.0.9-relay-core",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "produced_at": "2026-06-03",
+  "machine": "<workstation>",
+  "sessions": [
+    "reduce-macos-1.0.9-relay-core-20260602",
+    "relay-missed-109",
+    "relay-closeout-109",
+    "relay-mac-closeout-109",
+    "relay-image-compat-109",
+    "relay-transport-closeout-109",
+    "relay-transport-closeout-109-cluster6",
+    "<audit-session> (ceiling-crack: relay_fetch_models + relay_sse + relay_proxy_server vtable)"
+  ],
+  "gate_summary": {
+    "readyToImplement": 5,
+    "strictImplementationUse": 14,
+    "consumerStartReady": 0,
+    "consumerStartReady_icf_candidate": 0,
+    "gap_needs_reducer": 0,
+    "blocked": 0,
+    "total_clusters": 19,
+    "summary_basis": "cluster_gates array count (19 unique clusters per relay-transport-closeout-109 cluster6 relay_proxy_config)",
+    "notes": [
+      "<audit-session>: relay_sse moved from consumerStartReady_icf_candidate→strictImplementationUse (already counted in strictImplementationUse=14); relay_fetch_models ceiling-cracked (strictImplementationUse, pending dim6 for readyToImplement); relay_proxy_server vtable closed (strictImplementationUse unchanged); cc_crosscheck added to all 3.",
+      "<audit-session> 2026-06-04: relay_models dim2 FULL (serde visit_str+serialize all structs) -> strictImplementationUse->readyToImplement; gate_summary synced to actual cluster_gates counts.",
+      "<audit-session> 2026-06-05: relay_sse gate corrected consumerStartReady_icf_candidate→strictImplementationUse (ceiling_crack_updates evidence); relay_proxy_config gate corrected pass→strictImplementationUse (consumer_tier authoritative); gate_summary counts resynced.",
+      "<audit-session> 2026-06-05: relay_image_compat promoted consumerStartReady→strictImplementationUse. OnceLock mtime-invalidation chain byte-confirmed from live IDA decompile: 5-condition cache-hit logic, LABEL_45 miss-and-update, metadata-error sentinel path, TOML byte constants all proven. All 8 fake-wall taxonomy excluded. dims_closed=2,3,4,5. dim6 open (product decision). gate_summary: consumerStartReady 1→0, strictImplementationUse 13→14."
+    ]
+  },
+  "updated_at": "2026-06-05",
+  "cluster_gates": [
+    {
+      "cluster": "relay_codex_writer",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-mac-closeout-109 phase-reduce",
+      "gate_change": "consumerStartReady→strictImplementationUse",
+      "phase": "relay-mac-closeout-109 PHASE 5",
+      "notes": "dim1=product_decision_accepted; dim2=24 fns closed; dim3=closed; dim4=TOML block markers+export schema+atomic write confirmed; CodexPaths offsets=accepted_unknown (source archive implement via struct field access); dim5=macOS confirmed; dim6=closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §7. strictImplementationUse. readyToImplement eligible for TOML/export/migration/cleanup leaves; CodexPaths leaves=accepted_unknown ceiling."
+    },
+    {
+      "cluster": "relay_diagnostic",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-mac-closeout-109 phase-reduce",
+      "gate_change": "consumerStartReady→strictImplementationUse",
+      "phase": "relay-mac-closeout-109 PHASE 4",
+      "notes": "dim1=IPC confirmed (run_codex_router_diagnostics/fix_codex_router_issue); dim2=10 VAs all pinned; run_diagnostics 284KB=accepted_unknown; dim3=depth≥5; dim4=DiagnosticsItem 104B+FixResult+9 check kinds+8 itemId dispatch confirmed; dim5=macOS confirmed; dim6=closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §8. strictImplementationUse. readyToImplement for fix_issue dispatch leaves; run_diagnostics=accepted_unknown ceiling."
+    },
+    {
+      "cluster": "relay_health_audit",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "gate_change": "consumerStartReady→strictImplementationUse",
+      "dim4_closed": "relay-mac-closeout-109",
+      "notes": "RelayTestResult 4-field DTO CONFIRMED B-level (serialize@0x1001c7194+drop@0x1000d26fc): modelsSample@+0(Opt<Vec<Str>>),errorMessage@+24(Opt<Str>),latencyMs@+48(i64),ok@+56(bool). healthScore is NOT in RelayTestResult — it is RelayProvider.healthScore. PassthroughAuditEntry 7-field layout confirmed (Windows relay-closeout-109 + macOS append_entry evidence). Both known dim4 gaps closed. dim6 still missing.",
+      "dim6_session": "relay-mac-closeout-109 phase-reduce",
+      "dim6_ref": "RELAY-CORE-ACCEPTANCE-MAPPING-109 §9"
+    },
+    {
+      "cluster": "relay_manager",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim2_supplemented": "relay-mac-closeout-109",
+      "notes": "dim1=confirmed; dim2=17 fns closed (activate/bootstrap/.../upsert); dim3=closed; dim4=RelayProvider 15 fields confirmed (Windows cross-platform corroboration); keychain chain confirmed; dim5=macOS confirmed; dim6=closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §10. strictImplementationUse. readyToImplement eligible for all 17 sub-leaves; accepted_unknown on constructor call sequence.",
+      "dim6_session": "relay-mac-closeout-109 phase-reduce",
+      "gate_change": "consumerStartReady→strictImplementationUse",
+      "phase": "relay-mac-closeout-109 PHASE 1"
+    },
+    {
+      "cluster": "relay_proxy_server",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-mac-closeout-109 phase-reduce",
+      "gate_change": "consumerStartReady→strictImplementationUse",
+      "phase": "relay-mac-closeout-109 PHASE 3",
+      "notes": "dim1=confirmed; dim2=9+16 pseudocode; dim3=depth≥6; dim4=ProxyContext 6 Arc fields CLOSED ([0]Runtime,[8]RelayState,[16]RelayManager,[24]reqwest::Client,[32]PluginRegistry,[40]CodexPaths via drop_in_place@0x1002837b8; vtable body=accepted_unknown); dim5=macOS confirmed; dim6=closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §11. strictImplementationUse. readyToImplement for 8/9 sub-leaves; stream_sse_body_to_ws vtable=accepted_unknown."
+    },
+    {
+      "cluster": "relay_thread_migration",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-mac-closeout-109 phase-reduce",
+      "gate_change": "consumerStartReady→strictImplementationUse",
+      "phase": "relay-mac-closeout-109 PHASE 4",
+      "notes": "dim1=confirmed; dim2=7 fns closed; migrate_threads 42829B=accepted_unknown (MCP limit, not IDA failure); dim3=depth≥5; dim4=ThreadRouterMigrationManifest 7 fields+Entry 10 fields+4 SQL variants+error discriminants 10/9/2/3/8+scope+subagent skip; dim5=macOS confirmed; dim6=closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §12. strictImplementationUse. readyToImplement for 6/7 sub-leaves; migrate_threads full body=accepted_unknown."
+    },
+    {
+      "cluster": "relay_translator",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-mac-closeout-109 phase-reduce",
+      "gate_change": "consumerStartReady→strictImplementationUse",
+      "phase": "relay-mac-closeout-109 PHASE 5",
+      "notes": "dim1=confirmed; dim2=18 fns (anthropic_to_openai_chat_request@0x1006477e8 A+openai_chat_to_anthropic_request@0x100648a78 A+translate_anthropic_message_to_openai@0x10064ed14 B+translate_openai_message_to_anthropic@0x100651604 B newly added); dim3=depth≥6; dim4=tool_choice(any→required,tool→function)+tool_use→tool_calls+tool_result→tool_role+bge-host+max_tokens(max_completion_tokens fallback)+web_search ALL CONFIRMED; dim5=macOS confirmed (Windows separate scope); dim6=partial (tool_result leaf mapped; non-tool_result 13 leaves eligible). strictImplementationUse. readyToImplement: non-tool_result leaves eligible; tool_result=product_decision_or_spec_follow."
+    },
+    {
+      "cluster": "relay_breaker",
+      "gate": "readyToImplement",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "consumerStartReady→readyToImplement",
+      "notes": "5 leaves, all decompile ok; BreakerStore/BreakerState layout closed; backoff 5s/30s/300s; no frontend CCF (internal); dim6 acceptance mapping closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §5; gate_accepted=true; implementation_use=true"
+    },
+    {
+      "cluster": "relay_fetch_models",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "missing",
+      "notes": "7/7 leaves RESOLVED; ICF fold confirmed: fetch_async+fetch_openai_async poll bodies in respond_async_serialized_inner@0x100114ab0; Anthropic x-api-field+anthropic-version/OpenAI bearer paths; retry+parse_model_ids closed; IDB saved; gate_change: gap_needs_reducer→strictImplementationUse"
+    },
+    {
+      "cluster": "relay_translator_stream",
+      "gate": "readyToImplement",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "windows": "readyToImplement (relay-closeout-109 closed Windows gate; 4 state machines + 2 feed_line + 2 flush + 3 helpers; logic/WIN-RELAY-CLOSEOUT-109.md)",
+      "notes": "macOS: 4 state machines fully decompiled + 9 support functions; ToolItemState struct closed; interface/DTO/error/side-effect closed; dim6 acceptance mapping closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §1; Windows gate now independently closed (relay-closeout-109) — both platforms closed → readyToImplement; gate_accepted=true; implementation_use=true"
+    },
+    {
+      "cluster": "relay_web_executor",
+      "gate": "readyToImplement",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "windows": "readyToImplement (cross-ref windows-1.0.9-relay-core)",
+      "notes": "7 leaves; Tier-A owners commented; call-tree proxy_server→reqwest::Client::execute_request terminal; DTO closed; side-effect in-memory only; dim6 acceptance closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §2; gate_accepted=true; implementation_use=true"
+    },
+    {
+      "cluster": "relay_web_tools",
+      "gate": "readyToImplement",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "windows": "readyToImplement (cross-ref windows-1.0.9-relay-core)",
+      "notes": "12 leaves; fetch/search/definitions all closed; truncate=8000chars (mac Unicode) vs 8000B (win byte); tool schemas closed; inject_tool_definitions guard confirmed; dim6 acceptance closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §3; gate_accepted=true; implementation_use=true"
+    },
+    {
+      "cluster": "relay_models",
+      "gate": "readyToImplement",
+      "session": "<audit-session>",
+      "dim6": "closed",
+      "dim6_session": "relay-mac-closeout-109 phase-reduce",
+      "gate_change": "consumerStartReady→strictImplementationUse",
+      "dim4_closed": "relay-mac-closeout-109 (RelayTestResult D→B via relay-closeout-109 supplement)",
+      "notes": "RelayProvider 14→15 fields (struct_size=208; id/name/baseUrl/apiKey/model/extraHeaders/lastError as Strings at 0-144; latencyMs/lastTestedAt/createdAt/updatedAt/healthScore/apiKeyStored/wireApi/network/ide as scalars at 168-207). RelayTestResult 4-field B-level (serialize@0x1001c7194+drop@0x1000013ec): ok/errorMessage/modelsSample/latencyMs. NOTE: healthScore is in RelayProvider not RelayTestResult. RelayProxyStatus=struct(5 fields). RelayIde=1 variant(codex). dim2=partial (3 logic fns + 12 struct shapes; NOT full decompile). dim6 closed per RELAY-CORE-ACCEPTANCE-MAPPING-109 §4. readyToImplement blocked: dim2 partial. DIM2 CLOSED 2026-06-04: all struct field names A-level byte-proven (15 RelayProvider / 6 RelayState / 9 RelayDraftTestInput / 6 RelayFetchModelsInput / 9 RelayUpsertInput / 5 RelayProxyStatus / 8 CodexRouteDiagnostic). field corrections: FetchModelsInput was atMs/requestedModel/etc (WRONG) -> {providerId,baseUrl,apiKey,wireApi,extraHeaders,network} (A); DraftTestInput candidates (WRONG) -> {providerId,ide,name,baseUrl,apiKey,model,wireApi,extraHeaders,network} (A); ProxyStatus 3-field (WRONG) -> 5-field incl baseUrl+lastError (A); CodexRouteDiagnostic transport/command/etc (WRONG) -> {atMs,endpoint,requestedModel,providerId,providerName,upstreamUrl,error,...} (A).",
+      "gate_change_dim2": "strictImplementationUse->readyToImplement: dim2 FULL (serde visit_str+serialize for all structs, <audit-session> 2026-06-04)",
+      "dim2_closed": "<audit-session> 2026-06-04 (visit_str@0x1001ee2b4/0x1001edec4/0x1001ee778/0x1001ee990/0x1001ee0a0 + serialize@0x1001c663c/0x1001c6edc/0x1001c75cc/0x1001c7c4c)"
+    },
+    {
+      "cluster": "relay_try_dispatch",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "missing",
+      "gate_change": "not_started→strictImplementationUse",
+      "notes": "6 leaves analyzed. drop_in_place@0x1000a79c8=dtor only (state machine discriminant a1+480, states 0-10); true poll ICF-folded into forward_codex_responses_internal@0x1000987a0. TOPOLOGY: forward_codex_responses_internal→(web_tools@0x10009becc / web_tools_streaming@0x10009d710 / translation@0x10009c38c); forward_with_candidates@0x100244c00→try_pass_through@0x100240018. web_tools: execute_with_web_tools; record_codex_route; chat_to_responses_response; HTTP200 on success; 502 on web-tools error; gate=A. web_tools_streaming: same+stream=true removal; SSE Content-Type:text/event-stream; x-aimami-reason; responses_to_sse_payload; gate=A. translation: reqwest /v1/chat/completions; chat_to_responses_response; 5xx→upstream_error_with_reason; gate=B. try_pass_through: build_upstream_headers+reqwest send; strips 8 hop-by-hop headers (confirmed byte-level); bytes_stream; atomic provider refcount; 5xx→error; gate=A. forward_with_candidates: candidate iterator; join_url per candidate; all-fail→upstream_error_with_reason. dim1=accepted_unknown(internal dispatch, no direct UI trigger); dim2=5 VAs decompiled (drop+4 closures+forward_with_candidates); dim3=closed (execute_with_web_tools/reqwest/responses_to_sse_payload/upstream_error_with_reason confirmed); dim4=closed (error envelopes 502/500/net; hop-by-hop headers; SSE structure; model str); dim5=macOS confirmed/Windows not analyzed; dim6=missing. strictImplementationUse. IDA comments+renames applied; IDB saved.",
+      "raw_path": "raw/aimami/1.0.9/macos/relay-core/relay_try_dispatch/relay-transport-closeout-109-RELAY-TRY-DISPATCH-MAC-109.md",
+      "leaf_count": 6,
+      "idb_comments": 6,
+      "idb_saved": true,
+      "windows_status": "not_analyzed",
+      "key_vas": {
+        "drop_dtor": "0x1000a79c8",
+        "try_codex_via_web_tools": "0x10009becc",
+        "try_codex_via_web_tools_streaming": "0x10009d710",
+        "try_codex_via_translation": "0x10009c38c",
+        "try_pass_through": "0x100240018",
+        "forward_with_candidates": "0x100244c00"
+      }
+    },
+    {
+      "cluster": "relay_sse",
+      "gate": "strictImplementationUse",
+      "session": "<audit-session>",
+      "dim6": "missing",
+      "gate_change": "not_started→consumerStartReady_icf_candidate",
+      "notes": "deep-mac cluster3. 4 leaves investigated. stream_sse_body_to_ws: INLINED into bridge_http_response_to_codex_ws@0x100097208 state machine (states 3-6); SSE line buf frame+0x1B0 1MB limit; [DONE] sentinel W28=0x4E4F445B/W9=0x5D45; sse_event_data_payload@0x100244410; WS send via axum::WebSocket::send::closure@0x1000a5848; x-aimami-reason header@0x1002ef688; dyn Stream poll_next via vtable[0x18]. sse_translate_stream: ICF-blocked — 0x100268e28=drop_in_place<TranslatorState> only; true unfold poll body merged into bridge_http_response_to_codex_ws; TranslatorState drop layout confirmed (hashbrown+String bufs; 2-discriminant; alloc at [1]/[2]/[4]/[5]/[7]-16*[8]-16). sse_chat_to_responses_stream@0x100246ff0: A-level constructor; ChatToResponsesStream::with_tool_name_map@0x10065d030; Box<WsSender> alloc 16B; struct sret+328=Box ptr +336=flag; called from try_codex_via_translation@0x10009d1c8+StreamExt::boxed@0x10054396c. sse_anthropic_direct_to_responses_stream@0x100256174: A-level constructor; AnthropicDirectToResponsesStream::new@0x1006722d8; no tool_name_map; struct sret+272=extra +280=Box<WsSender> +288=flag; called from try_codex_via_translation@0x10009d114. dim1=N/A(internal stream builder); dim2=constructors A/inlined body confirmed; dim3=closed (SSE parse/WS send/[DONE]/buffer); dim4=closed; dim5=macOS confirmed/Windows not analyzed; dim6=missing. consumerStartReady_icf_candidate: source archive can implement SSE→WS forwarding from inlined evidence; stream_sse_body_to_ws ICF-blocked blocks full_leaf_100. 14 IDA comments appended. IDB saved.",
+      "raw_path": "raw/aimami/1.0.9/macos/relay-core/relay_sse/RELAY-SSE-DEEP-MAC-CLUSTER3-109.md",
+      "leaf_count": 4,
+      "idb_comments": 14,
+      "idb_saved": true,
+      "windows_status": "not_analyzed",
+      "key_vas": {
+        "stream_sse_body_to_ws_inlined_in": "0x100097208 (bridge_http_response_to_codex_ws)",
+        "stream_sse_body_to_ws_closure_drop": "0x1000a83a4",
+        "sse_translate_stream_state_drop": "0x100268e28 (ICF-blocked)",
+        "sse_chat_to_responses_stream": "0x100246ff0",
+        "sse_anthropic_direct_to_responses_stream": "0x100256174",
+        "sse_event_data_payload": "0x100244410",
+        "ws_send_closure": "0x1000a5848",
+        "anthropic_direct_stream_new": "0x1006722d8",
+        "chat_responses_stream_with_tool_name_map": "0x10065d030"
+      },
+      "call_tree_depth": 5,
+      "gate_change_integrity_update": "consumerStartReady_icf_candidate→strictImplementationUse (<audit-session>: ceiling_crack_updates confirms <audit-session> promotion)"
+    },
+    {
+      "cluster": "relay_image_compat",
+      "gate": "strictImplementationUse",
+      "gate_prev": "consumerStartReady",
+      "gate_change": "consumerStartReady→strictImplementationUse",
+      "session": "<audit-session>",
+      "gate_promotion_session": "<audit-session>",
+      "gate_promotion_date": "2026-06-05",
+      "dim6": "missing",
+      "notes": "7 leaves analyzed (image_compat_enabled@0x1001bf94c/read_image_compat_enabled@0x1001bfdd4/make_relay_model_info_image_branch@0x1001c0d1c/forward_gate_v1@0x100099274/forward_gate_v2@0x10024856c/get_image_compat@0x10025e7c0/set_image_compat@0x10025ee14). Gate logic: OnceLock<Mutex> cache on config mtime+path; TOML [features] image_generation=false->enabled=true; discriminant v140=*(RelayModelInfo+206) drives web_search_tool_type+supports_image_detail_original; false gate->no-image path; true+body_has_image_url->strip_image_url_cloned. IPC commands in commands::system (not core::relay). dim1=N/A (internal no UI, dormant wrapper accepted); dim2=CLOSED (both functions fully decompiled); dim3=CLOSED (xrefs_to more=false, 2 callers, chain depth>=5); dim4=CLOSED (OnceLock mtime-invalidation chain byte-confirmed: 5-condition cache-hit, LABEL_45 miss-and-update, metadata-error sentinel path, TOML byte constants, semantic inversion image_generation=false->enabled=true); dim5=CLOSED (synchronous, unix Mutex, no async/vtable/HTTP, all globals at verified VAs); dim6=missing (product decision). strictImplementationUse: all binary-side dims closed. dim6 blocks readyToImplement. Windows: not_analyzed (separate scope). Raw evidence: raw/aimami/1.0.9/macos/relay-core/relay_image_compat/. Strict distilled: <source-location>/audits/macos-1.0.9-relay-core/logic/IMAGE-COMPAT-ENABLED-STRICT-DISTILLED-109.md. 8 IDA comments appended. IDB saved.",
+      "raw_path": "raw/aimami/1.0.9/macos/relay-core/relay_image_compat/",
+      "strict_distilled": "<source-location>/audits/macos-1.0.9-relay-core/logic/IMAGE-COMPAT-ENABLED-STRICT-DISTILLED-109.md",
+      "leaf_count": 7,
+      "idb_comments": 8,
+      "idb_saved": true,
+      "windows_status": "not_analyzed"
+    },
+    {
+      "cluster": "relay_ws_handlers",
+      "gate": "strictImplementationUse",
+      "dim6": "missing",
+      "leaf_count": 6,
+      "leaves": [
+        "handle_codex_by_provider_ws_true_body",
+        "handle_codex_router_ws_featureA_decision_tree",
+        "codex_router_lookup_model",
+        "official_takeover_candidates",
+        "record_codex_openai_passthrough_route",
+        "featureA_relay_state_field_offsets"
+      ],
+      "evidence": "IDA decompile+disasm; 14 IDA comments; IDB saved; INDEX +6 (lines 1176-1181)",
+      "session": "<audit-session>",
+      "produced_at": "2026-06-03",
+      "notes": "handle_codex_by_provider_ws true poll body@0x100095390; handle_codex_router_ws feature-A 3-condition decision (codexRouterEnabled@0x794+activeByIde@0x840+blockOfficialPassthrough@0x795); 4 paths A/B/C/D; codex_router_lookup_model@0x100245de8; official_takeover_candidates@0x100246b80; record_codex_openai_passthrough_route@0x100251fe0 (4 call sites)"
+    },
+    {
+      "cluster": "relay_passthrough_helpers",
+      "gate": "strictImplementationUse",
+      "leaf_count": 4,
+      "leaves": [
+        "error_response",
+        "is_bearer_likely_missing",
+        "copy_response_headers_to_builder",
+        "build_passthrough_request_headers"
+      ],
+      "dim2": "CLOSED (all 4 A-level IDA decompile)",
+      "dim3": "CLOSED (call-tree depth >=5 via caller chains)",
+      "dim4": "CLOSED (params/return/error paths traced)",
+      "dim5": "macOS CLOSED / Windows Unknown",
+      "dim6": "missing",
+      "notes": "4 helper functions in proxy_passthrough.rs. Called from forward_to_openai_closure (x2 variants) and forward_codex_responses_internal_closure (x2 variants). relay-transport-closeout-109",
+      "session": "<audit-session>",
+      "idb_saved": true,
+      "index_lines": "1182-1185"
+    },
+    {
+      "cluster": "relay_proxy_config",
+      "consumer_tier": "strictImplementationUse",
+      "gate": "strictImplementationUse",
+      "leaf_count": 13,
+      "platform": "macos",
+      "session": "<audit-session>",
+      "produced_at": "2026-06-03",
+      "index_lines": "1187-1199",
+      "dim6_missing": true,
+      "notes": "13 leaves: http_client/sanitize_proxy_config/test_api_connectivity/detect_api_proxy_config/try_connect_local_proxy (api_client) + detect_system_proxy_candidates/dedupe/push_url (platform::proxy) + cmd_set/test/detect (commands::system) + repo_set + load_context; call-tree depth>=5; interface/DTO/error all closed; Windows: strictImplementationUse supplement from relay-transport-closeout-109",
+      "gate_change_integrity_update": "pass→strictImplementationUse (<audit-session>: consumer_tier field authoritative, gate field was non-standard)"
+    }
+  ],
+  "platform_policy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true,
+    "platformScopeDeclared": "macOS confirmed; Windows see windows-1.0.9-relay-core bundle"
+  },
+  "owner_check": {
+    "gate_decision": "ALLOW",
+    "write_mode": "owner",
+    "basis": "bundle_manifest (<workstation>) — relay-transport-closeout-109 deep-mac-cluster3",
+    "takeover_token": null,
+    "last_write_session": "relay-transport-closeout-109",
+    "last_write_date": "2026-06-03"
+  },
+  "forbidden_until_strict": [
+    "Claiming upstream 100% parity for any cluster",
+    "relay_translator: claiming Windows gate closed (separate scope)",
+    "relay_translator: claiming Windows gate closed (separate scope)"
+  ],
+  "ceiling_crack_updates": {
+    "relay_fetch_models": {
+      "session": "<audit-session>", "date": "2026-06-03",
+      "was_drop_in_place_only": true,
+      "genuine_ceiling": false,
+      "true_body_va": "0x100114ab0",
+      "async_states_confirmed": 5,
+      "retry_max": 2,
+      "http_contract_confirmed": true,
+      "dim2_now": "fully_closed (true body + all helpers confirmed)",
+      "dim3_now": "closed (depth >= 5: get_api_key -> keychain -> reqwest::Pending -> json -> parse_model_ids)",
+      "dim4_now": "closed (HTTP contract + retry + DTO + error-map all confirmed)",
+      "gate_upgrade_path": "strictly_implementation_use -> readyToImplement pending dim6 (test/acceptance mapping)",
+      "cc_crosscheck": "divergence",
+      "cc_crosscheck_summary": "cc-switch uses single global client + always Bearer. AiMaMi: DIRECT/SYSTEM OnceLock pair; Anthropic x-api-field+anthropic-version:2023-06-01; retry_max=2 transient. Consumer must implement DIRECT/SYSTEM selection + Anthropic auth headers.",
+      "gate_upgrade_final": "strictImplementationUse → readyToImplement pending dim6 only"
+    },
+    "relay_sse": {
+      "session": "<audit-session>", "date": "2026-06-03",
+      "true_body_va": "0x10023db54",
+      "was_drop_in_place_only": true,
+      "genuine_ceiling": false,
+      "prior_tier": "consumerStartReady_icf_candidate",
+      "new_tier": "strictImplementationUse",
+      "async_states": 5,
+      "streams": [
+        "OpenAiToAnthropicStream::new@0x10066783c",
+        "AnthropicToOpenAiStream::new@0x100662570"
+      ],
+      "cc_crosscheck": "divergence",
+      "cc_crosscheck_summary": "cc-switch is HTTP proxy only (no WS bridge). AiMaMi has WS relay: blockOfficialPassthrough/activeByIde/handle_codex_router_ws_core_sys. is_openai_to_anthropic boolean dispatch vs cc-switch ProviderType adapter. tool_name_map has no cc-switch counterpart. restoration AI must implement WS bridge + boolean dispatch independently.",
+      "gate_blocker": "dim6 only"
+    },
+    "relay_proxy_server_vtable": {
+      "session": "<audit-session>", "date": "2026-06-03",
+      "vtable_variants": [
+        "0x10132FFA8 (timeout+content)",
+        "0x10132FF48 (no-timeout)",
+        "0x10132FFD8 (deadline+timeout)"
+      ],
+      "innermost": "0x1009E3A70",
+      "genuine_ceiling": false,
+      "cc_crosscheck": "consistent",
+      "cc_crosscheck_summary": "reqwest MapErr<BoxBody> vtable is reqwest/hyper internal. cc-switch uses same reqwest crate so body-layer behavior is consistent. circuit_breaker.rs and forwarder.rs in cc-switch provide equivalent failure-tracking + active_connections RAII. No dangerous TLS in either.",
+      "gate_change_note": "Supplement only — relay_proxy_server base tier remains strictImplementationUse (dim6 missing)."
+    }
+  },
+  "forbidden_until_ready": [
+    "relay_models: readyToImplement — dim2 partial (3 logic fns, not full decompile)",
+    "relay_health_audit: readyToImplement — timeout unknown + 2 PassthroughAuditEntry fields accepted_unknown",
+    "relay_fetch_models: readyToImplement — dim6 (test/acceptance mapping) still missing; ceiling crack resolved async ICF blocker (<audit-session>)",
+    "relay_translator: readyToImplement — Windows not analyzed; dim6 partial",
+    "relay_codex_writer: readyToImplement for CodexPaths-dependent leaves — CodexPaths offsets=accepted_unknown",
+    "relay_thread_migration: readyToImplement for migrate_threads — full body accepted_unknown"
+  ],
+  "remaining_blockers": [
+    "relay_fetch_models: [RESOLVED <audit-session>] true body at 0x100114ab0; dim6 (test/acceptance) still missing for readyToImplement",
+    "relay_models: dim2 partial (3 logic fns; struct/enum shapes only for 12 entries) — prevents full_leaf_100",
+    "relay_health_audit: timeout behavior unknown; 2/7 PassthroughAuditEntry fields accepted_unknown",
+    "relay_translator: Windows not analyzed; dim6 partial for tool_result leaf (product_decision or Anthropic spec follow)",
+    "relay_codex_writer: CodexPaths exact offsets accepted_unknown (accepted — source archive implements via struct fields)",
+    "relay_thread_migration: migrate_threads 42829B truncated body accepted_unknown (accepted — behavior impl from schema evidence)"
+  ],
+  "readyToImplement_promotions": [
+    {
+      "cluster": "relay_breaker",
+      "gate_change": "consumerStartReady→readyToImplement",
+      "session": "<audit-session>",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109 §5"
+    },
+    {
+      "cluster": "relay_web_executor",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "session": "<audit-session>",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109 §2"
+    },
+    {
+      "cluster": "relay_web_tools",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "session": "<audit-session>",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109 §3"
+    },
+    {
+      "cluster": "relay_translator_stream",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "session": "<audit-session>",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109 §1; Windows gate closed relay-closeout-109"
+    },
+    {
+      "note": "No new readyToImplement promotions this session (relay-mac-closeout-109 phase-reduce). 6 clusters promoted to strictImplementationUse. All 4 readyToImplement clusters remain from relay-closeout-109 phase-reduce."
+    }
+  ],
+  "last_session": "<audit-session>",
+  "integrity_update_session": "<audit-session>"
+}

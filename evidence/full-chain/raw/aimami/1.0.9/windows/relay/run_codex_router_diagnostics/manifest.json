@@ -1,0 +1,16 @@
+{
+  "command": "run_codex_router_diagnostics",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "binary": "AiMaM 1.0.9 win64.exe",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "session": "C-config-passthrough-diag-20260602",
+  "produced_at": "2026-06-02T06:23:45Z",
+  "gate_tier": "strictImplementationUse",
+  "dims_closed": ["owner_bound", "pseudocode", "call_tree", "interface", "side_effect", "error_path"],
+  "dims_open": ["frontend_ccf", "test_acceptance_mapping"],
+  "implementation_use": false,
+  "gate_accepted": false,
+  "evidence_file": "evidence.md"
+}

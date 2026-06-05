@@ -1,0 +1,9 @@
+{"from":"write_manifest@0x100565710","to":"std::path::Path::parent@0x100d39010","depth":1,"type":"call","terminated_reason":null}
+{"from":"write_manifest@0x100565710","to":"std::fs::DirBuilder::_create@0x100d2b910","depth":1,"type":"call","terminated_reason":null}
+{"from":"write_manifest@0x100565710","to":"serde_core::ser::SerializeMap::serialize_entry@0x1005d44e8","depth":1,"type":"call","terminated_reason":null}
+{"from":"write_manifest@0x100565710","to":"serde_core::ser::SerializeMap::serialize_entry@0x1005d03d0","depth":1,"type":"call","terminated_reason":null}
+{"from":"write_manifest@0x100565710","to":"serde_core::ser::SerializeMap::serialize_entry@0x1005d6cb0","depth":1,"type":"call","terminated_reason":null}
+{"from":"write_manifest@0x100565710","to":"serde_json::ser::Compound::serialize_field@0x1005a2f90","depth":1,"type":"call","terminated_reason":null}
+{"from":"write_manifest@0x100565710","to":"serde_json::ser::Compound::end@0x1005a2fb0","depth":1,"type":"call","terminated_reason":null}
+{"from":"write_manifest@0x100565710","to":"atomic_write::write_atomic@0x1006729f8","depth":1,"type":"call","terminated_reason":"persistence_commit"}
+{"from":"atomic_write::write_atomic@0x1006729f8","to":"std::sys::fs::rename@0x100d31eac","depth":2,"type":"call","terminated_reason":"persistence_commit"}

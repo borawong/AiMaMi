@@ -1,0 +1,13 @@
+{"depth":0,"addr":"0x1402663E0","name":"auto_switch_multiplex_dispatcher_sys","type":"dispatcher","terminated_reason":null}
+{"depth":1,"addr":"0x140564060","name":"load_pending_auto_switch_core_impl","type":"core_impl","terminated_reason":null}
+{"depth":2,"addr":"0x14055D390","name":"load_auto_switch_state_sys","type":"read_state","terminated_reason":null}
+{"depth":3,"addr":"0x14104DEE0","name":"sub_14104DEE0","type":"sqlite_read_state_5","terminated_reason":"external_call_recorded — reads auto-switch row from state_5.sqlite"}
+{"depth":3,"addr":"0x140263830","name":"sub_140263830","type":"parse_auto_switch_json_blob","terminated_reason":"external_call_recorded — JSON parse of 'dev.aimami.auto-switch'"}
+{"depth":2,"addr":"0x141036640","name":"sub_141036640","type":"get_local_datetime_for_serialization","terminated_reason":"external_call_recorded — chrono local time"}
+{"depth":2,"addr":"0x140419670","name":"sub_140419670","type":"serialize_field_currentAccountKey","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x140419670","name":"sub_140419670","type":"serialize_field_candidateAccountKey","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x1404173A0","name":"sub_1404173A0","type":"serialize_field_dismissedAt","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x140336350","name":"sub_140336350","type":"write_json_to_sqlite","terminated_reason":"external_call_recorded — writes serialized JSON to state_5.sqlite"}
+{"depth":2,"addr":"0x141046BE0","name":"sub_141046BE0","type":"get_current_account_key","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x1404F5930","name":"sub_1404F5930","type":"validate_account_key","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","type":"ipc_resolve","terminated_reason":"external_call_recorded"}

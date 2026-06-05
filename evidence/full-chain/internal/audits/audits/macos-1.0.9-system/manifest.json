@@ -1,0 +1,83 @@
+{
+  "schema": "restoration.cm.reverse.audit.v1",
+  "bundle": "macos-1.0.9-system",
+  "bundle_path": "<source-location>/audits/macos-1.0.9-system",
+  "produced_at": "2026-06-02T08:00:00+08:00",
+  "producer": "claude-sonnet-4-6",
+  "machine": "<workstation>",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "arch": "arm64",
+  "module": "system",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "thin_binary_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "ida_session_2026_06_02": "mcp__ida-pro-mcp-mac, sha_verified=true, hexrays_ready=true; fresh decompile × 6 owners + platform_impl; set_comments × 6; idb_save pending",
+  "dim6_upgrade": "strict → readyToImplement for all 6 primary commands; dim6 acceptance mapped in logic/ACCEPTANCE-MAPPING-109.md",
+  "bundle_type": "consumer_conclusion_ready_to_implement",
+  "target_gate": "readyToImplement",
+  "ready_count": 6,
+  "strict_count": 0,
+  "consumerStartReady_count": 5,
+  "primary_commands": [
+    "force_kill_codex",
+    "reset_codex_config",
+    "get_image_compat",
+    "set_image_compat",
+    "get_system_info",
+    "check_update_installability"
+  ],
+  "helper_watchers": [
+    "note_usage_refresh_activity",
+    "schedule_full_runtime_refresh",
+    "start_auto_switch_pending_watcher",
+    "start_usage_refresh_watcher",
+    "update_usage_refresh_schedule"
+  ],
+  "gate_results": {
+    "force_kill_codex":             { "consumerStartReady": true, "strictImplementationUse": true, "readyToImplement": true, "implementation_use": true, "gate_accepted": true, "full_leaf_100": true, "dim6_test_acceptance": true },
+    "reset_codex_config":           { "consumerStartReady": true, "strictImplementationUse": true, "readyToImplement": true, "implementation_use": true, "gate_accepted": true, "full_leaf_100": true, "dim6_test_acceptance": true, "accepted_unknowns_resolved": ["from_home_rename_exact_backup_path"] },
+    "get_image_compat":             { "consumerStartReady": true, "strictImplementationUse": true, "readyToImplement": true, "implementation_use": true, "gate_accepted": true, "full_leaf_100": true, "dim6_test_acceptance": true },
+    "set_image_compat":             { "consumerStartReady": true, "strictImplementationUse": true, "readyToImplement": true, "implementation_use": true, "gate_accepted": true, "full_leaf_100": true, "dim6_test_acceptance": true, "accepted_unknowns_resolved": ["toggle_vs_explicit_set_when_key_found", "read_fail_path_write_error_silent_swallow"] },
+    "get_system_info":              { "consumerStartReady": true, "strictImplementationUse": true, "readyToImplement": true, "implementation_use": true, "gate_accepted": true, "full_leaf_100": true, "dim6_test_acceptance": true },
+    "check_update_installability":  { "consumerStartReady": true, "strictImplementationUse": true, "readyToImplement": true, "implementation_use": true, "gate_accepted": true, "full_leaf_100": true, "dim6_test_acceptance": true, "accepted_unknowns_resolved": ["ipc_command_name_rodata_string_unconfirmed"] },
+    "note_usage_refresh_activity":       { "consumerStartReady": true, "startMode": "product_decision", "strictImplementationUse": false },
+    "schedule_full_runtime_refresh":     { "consumerStartReady": true, "startMode": "product_decision", "strictImplementationUse": false },
+    "start_auto_switch_pending_watcher": { "consumerStartReady": true, "startMode": "product_decision", "strictImplementationUse": false },
+    "start_usage_refresh_watcher":       { "consumerStartReady": true, "startMode": "product_decision", "strictImplementationUse": false },
+    "update_usage_refresh_schedule":     { "consumerStartReady": true, "startMode": "product_decision", "strictImplementationUse": false }
+  },
+  "platform_policy": {
+    "macOS_confirmed": true,
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true,
+    "windows_status": "Unknown"
+  },
+  "frontend_ccf_source": "raw/aimami/1.0.9/macos/frontend/system-ccf/SYSTEM-FRONTEND-CCF-109.md",
+  "raw_leaves_covered": [
+    "raw/aimami/1.0.9/macos/system/force_kill_codex",
+    "raw/aimami/1.0.9/macos/system/reset_codex_config",
+    "raw/aimami/1.0.9/macos/system/get_image_compat",
+    "raw/aimami/1.0.9/macos/system/set_image_compat",
+    "raw/aimami/1.0.9/macos/system/get_system_info",
+    "raw/aimami/1.0.9/macos/system/check_update_installability"
+  ],
+  "files": [
+    "README.md",
+    "AI.md",
+    "SYSTEM-DIFF.md",
+    "manifest.json",
+    "gate-report.json",
+    "logic/SYSTEM-FULLCHAIN-109.md",
+    "logic/ACCEPTANCE-MAPPING-109.md",
+    "interfaces/system-interface-map.md",
+    "reviews/CLAUDE.md",
+    "pointers/evidence-paths.md",
+    "data/tier-matrix.json"
+  ],
+  "no_raw_in_internal_reverse": true,
+  "no_version_span_path_components": true,
+  "no_forbidden_path_tokens": true,
+  "no_index_shard": true,
+  "append_only_index": true
+}

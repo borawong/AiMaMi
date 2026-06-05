@@ -1,0 +1,12 @@
+{
+  "gate": "strictImplementationUse",
+  "dims_closed": ["dim1", "dim2", "dim3", "dim4", "dim5_macos"],
+  "dims_empty": ["dim6"],
+  "dims_blocked": [],
+  "call_tree_depth": 6,
+  "call_tree_terminated_reason": "persist_registry_daemon_state_leaf",
+  "owner_addr": "0x1002603c8",
+  "core_leaf_addr": "0x1005e9a5c",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "validated_at": "2026-06-02"
+}

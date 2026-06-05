@@ -1,0 +1,18 @@
+{
+  "schema": "raw-evidence.raw.bundle.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "leaf": "check_update_installability",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "files": [
+    {"path": "README.md", "sha256": "d3def3a90625d184084f9c06aaa5607a9d660f1934e75eeca93bc929e3af5f", "size": 3944},
+    {"path": "AI.md", "sha256": "acf09f2d88e5c4aece5b082066fff6dd0eb6c4c4ab0efce470ace0f2410028cb", "size": 5237},
+    {"path": "SYSTEM-DIFF.md", "sha256": "ca5a17d9d45d5414a3c9a0582bcc66c457e663b4737d1f9c045ff72fb5a6c1dd", "size": 2477},
+    {"path": "ida/pseudocode/sub_14026F140_cmd_wrapper.c", "sha256": "f0d15541c18dc103c8126c37a80f58b195814cd022b6ea4ba6a8e29a4a011f", "size": 3936},
+    {"path": "ida/pseudocode/sub_1400A2DE0_async_wrapper.c", "sha256": "f4fb366485143119336bb2aee75b67c65562edc628a5c4f74aad098fbe446c", "size": 3057},
+    {"path": "ida/pseudocode-manifest.jsonl", "sha256": "39f58b27c2ab632e3e2c7ed57515551e05d34ff8c1633257ad13a9459ba4dd53", "size": 520},
+    {"path": "call-trees/check_update_installability.jsonl", "sha256": "fbba7db35f8a74d6e74a09fc83886c4579eba185b16101c7cf17ef35fe1e7cc8", "size": 4054}
+  ],
+  "self_excluded": true
+}

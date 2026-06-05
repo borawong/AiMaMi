@@ -1,0 +1,52 @@
+{
+  "target": "cmd_set_theme",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "date": "2026-06-04",
+  "addr_verified": "0x1408adf90",
+  "func_name": "cmd_set_theme_coroutine_owner_sys",
+  "func_size_bytes": 2871,
+  "gate_tier": "strictImplementationUse",
+  "implementation_use": false,
+  "gate_accepted": false,
+  "accepted_unknown": false,
+  "genuine_ceiling": false,
+  "dims_closed": "dim2,dim3,dim4,dim5",
+  "dims_gap": "dim1",
+  "dim1_gap_reason": "frontend-lane gap — windows IDB has no frontend bundle; not a binary cap",
+  "callees_count": 23,
+  "key_callees": [
+    "get_usage_refresh_interval_repo_snapshot@0x1400f61a0",
+    "settings_apply_theme_to_window_sys@0x140078ad0",
+    "settings_persist_write_sys@0x140864220",
+    "tauri_ipc_resolve_sys@0x140062230",
+    "focus_main_window_dispatch_sys@0x140638240"
+  ],
+  "ipc_invoke_key": "set_theme",
+  "input_fields": ["label:Option<String>", "value:Option<bool>"],
+  "side_effects": [
+    "Repository Arc snapshot read",
+    "display/theme state snapshot read",
+    "IPC payload label+value field lookup",
+    "theme label resolution",
+    "theme bool value resolution",
+    "theme merge with display state",
+    "main window theme apply (Win32 msg code 71)",
+    "waker registration on Pending",
+    "listener list notification on resume",
+    "settings persist to disk",
+    "IPC resolve to frontend",
+    "Arc decrements + buffer cleanup"
+  ],
+  "error_codes": [
+    "0x8000000000000000 Err generic",
+    "0x8000000000000020 no-window-handle",
+    "0x800000000000000F unknown-window-error",
+    "0x8000000000000025 Pending",
+    "0x8000000000000026 theme-merge-locked",
+    "0x800000000000001A snapshot-arc-conflict"
+  ],
+  "status": "completed"
+}

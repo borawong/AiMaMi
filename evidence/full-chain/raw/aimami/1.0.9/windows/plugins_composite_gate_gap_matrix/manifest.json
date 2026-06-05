@@ -1,0 +1,68 @@
+{
+  "schema": "raw-evidence.raw.plugins_composite_gate_gap_matrix.v1",
+  "produced_at": "2026-06-02T00:00:00+08:00",
+  "producer": "codex",
+  "role": "execution/producer/reducer",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "arch": "x64",
+  "leaf": "plugins_composite_gate_gap_matrix",
+  "status": "blocked_no_promotion_composite_matrix",
+  "source_binary": {
+    "task_declared_sot": "<source-location>/source-binary/AiMaMi 1.0.9 win64.exe",
+    "visible_existing_evidence_sot": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+    "sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+    "size": 26821632,
+    "storage_discrepancy_recorded": true
+  },
+  "paths": {
+    "raw": "<source-location>/raw/aimami/1.0.9/windows/plugins_composite_gate_gap_matrix",
+    "intermediate": "<source-location>/intermediate/aimami/1.0.9/windows/plugins_composite_gate_gap_matrix",
+    "handoff_root": "<source-location>/aimami/1.0.9/windows-x64/plugins_composite_gate_gap_matrix"
+  },
+  "deliverables": [
+    "README.md",
+    "AI.md",
+    "SYSTEM-DIFF.md",
+    "manifest.json",
+    "evidence/composite-gate-matrix.md",
+    "evidence/composite-gate-matrix.json",
+    "evidence/evidence-ledger.md"
+  ],
+  "consumed_index_rows": [541,542,543,544,545,546,547,548,549,550,551,552,553,554,555,556,584,587,588,589,590,591,592,593,594,595,596,597,598,599,600],
+  "module_gate": {
+    "consumerStartReady": false,
+    "consumerUse": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "no_gate_promotion": true
+  },
+  "consumerStartCandidateCommands": ["list_plugins", "toggle_plugin"],
+  "next_executable_prerequisites": [
+    "user authorization to close or clean up real AiMaMi process",
+    "disposable CODEX_HOME/HOME/USERPROFILE/APPDATA/LOCALAPPDATA/WEBVIEW2_USER_DATA_FOLDER/TEMP/TMP",
+    "ETW/logman/WPR capture harness execution with abort-on-real-profile-access",
+    "fixture assertions for list/toggle/get/update and persistence/error/side-channel surfaces",
+    "config UI product decision or explicit upstream self-developed delta statement",
+    "reducer/validator over executed runtime outputs before gate movement"
+  ],
+  "writes": {
+    "index_jsonl": false,
+    "task_plan": false,
+    "consumer_gate_promoted": false,
+    "runtime_execution": false,
+    "backend_reverse": false
+  },
+  "compliance": {
+    "canonical_root_only": true,
+    "no_forbidden_path_components": true,
+    "no_version_span_path_components": true,
+    "no_internal_reverse_raw_artifacts": true,
+    "no_macos_extrapolation": true,
+    "raw_hidden_noise_checked": true
+  }
+}

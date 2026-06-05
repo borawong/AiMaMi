@@ -1,0 +1,73 @@
+{
+  "schema": "restoration.cm.reverse.audit_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "binary": "AiMaM 1.0.9 win64.exe",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "binary_format": "pe",
+  "scope": "relay",
+  "command_count": 18,
+  "produced_at": "2026-06-02",
+  "sessions": [
+    "2026-06-02-relay-A-state-crud",
+    "B-router-test-http",
+    "C-config-passthrough-diag-20260602",
+    "C-config-passthrough-diag-dim6-closure-20260602"
+  ],
+  "idb_path": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe.i64",
+  "ida_server": "mcp__ida-pro-mcp-win",
+  "tier_counts": {
+    "readyToImplement": 14,
+    "strictImplementationUse": 4,
+    "consumerStartReady": 0,
+    "blocked": 0
+  },
+  "tier_counts_note": "14 readyToImplement (A:6 + B:2 + C:6); 4 strictImplementationUse (B HTTP terminal: set_codex_router_enabled + test_relay_provider + test_relay_draft + fetch_relay_models_draft). C-cluster dim6 closed 2026-06-02.",
+  "platform_policy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  },
+  "gate_spec_ref": "<source-location>/GATE-SPEC.md",
+  "output_spec_ref": "<source-location>/OUTPUT-SPEC.md",
+  "source archive_test_surface": {
+    "vitest_api_contract": "src/lib/api.test.ts",
+    "relay_describe_block": "api contract — Intelligent Routing (Relay)",
+    "commands_with_vitest_coverage": [
+      "load_relay_state",
+      "get_relay_active",
+      "get_relay_proxy_status",
+      "upsert_relay_provider",
+      "delete_relay_provider",
+      "set_relay_provider_network",
+      "activate_relay_provider",
+      "deactivate_relay_provider",
+      "set_codex_router_enabled",
+      "test_relay_provider",
+      "test_relay_draft",
+      "fetch_relay_models_draft",
+      "export_relay_config",
+      "import_relay_config",
+      "fix_codex_router_issue"
+    ],
+    "commands_without_vitest_coverage": [
+      "set_block_official_passthrough",
+      "get_passthrough_audit_log",
+      "run_codex_router_diagnostics"
+    ]
+  },
+  "source archive_source_ref": "src-tauri/src/commands/relay.rs"
+  ,
+  "consumer_entry": {
+    "mode": "top_level_matrix_only",
+    "current_files": [
+      "README.md",
+      "gate-report.json",
+      "data/tier-matrix.json",
+      "interfaces/relay-interface-map.md",
+      "pointers/evidence-paths.md"
+    ],
+    "relocated_legacy_handoff_root": "<source-location>/intermediate/aimami/1.0.9/windows/relay/audit-diagnostic-bundles/",
+    "relocated_index": "logic/AUDIT-DIAGNOSTIC-BUNDLES.md"
+  }
+}

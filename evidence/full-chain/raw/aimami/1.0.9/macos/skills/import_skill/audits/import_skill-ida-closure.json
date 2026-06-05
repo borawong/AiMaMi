@@ -1,0 +1,39 @@
+{
+  "schema": "raw-evidence.reverse.ida_closure.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "skills",
+  "command": "import_skill",
+  "status": "accepted_full_leaf_100_ida_direct_skills",
+  "source_binary": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "frontend_contract_pointer": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/",
+  "thread_model": "synchronous repo mutex / recursive filesystem IO; no async spawn, no callback thread, no process handoff",
+  "wrapper": "0x10015d9b4",
+  "owner": "0x1001dbbdc",
+  "callees": [
+    "0x1001df318 backup_skill_directory",
+    "0x1001db848 copy_dir_all",
+    "0x1001dd6d8 load_skill_summary",
+    "std::fs::DirBuilder::_create",
+    "std::sys::fs::remove_dir_all",
+    "canonicalize"
+  ],
+  "interface": "{ path: string }",
+  "side_effect": "mutating FS: ensure skills and skill-backups dirs, validate directory or SKILL.md file, canonicalize, optional backup existing target, remove existing, recursive copy, reload summary",
+  "error_surface": "Tauri/CoreEnvelope ok/error. Error branches include missing repo/state, poisoned lock, invalid/missing SKILL.md, not-found id, metadata read/parse failure, create/copy/remove IO failure, canonicalize failure where applicable.",
+  "acceptance_mapping": "manual/unit: import directory and single SKILL.md source; replace existing creates backup; invalid source errors; imported summary returned and installed query invalidated",
+  "idb_comments_written": true,
+  "idb_saved": true,
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true
+  },
+  "produced_at": "2026-06-03T00:00:00+08:00"
+}

@@ -1,0 +1,46 @@
+{
+  "schema": "raw-evidence.producer.ledger.v1",
+  "produced_at": "2026-06-04T00:00:00Z",
+  "machine": "<workstation>",
+  "session": "wf-aimami109-fullsurface-audit",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "relay-core",
+  "cluster": "relay_diagnostic",
+  "leaf": "fix_issue",
+  "owner_addr": "0x100560f44",
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb_sha": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "gate_tier": "strictImplementationUse",
+  "real_body_found": true,
+  "genuine_ceiling": false,
+  "accepted_unknown": false,
+  "was_false_wall": "N/A-component-chain-gap-not-a-ceiling",
+  "recovery_attempts": "not_needed-direct-single-pass-decompile-succeeded-all-8-taxonomy-excluded",
+  "call_tree_edges": 10,
+  "terminated_reason": [
+    "external_call_recorded",
+    "persistence_commit"
+  ],
+  "dims_closed": [
+    "owner_bound",
+    "pseudocode",
+    "call_tree",
+    "interface",
+    "side_effect",
+    "error_path"
+  ],
+  "dims_open": [
+    "frontend_ccf_policy",
+    "test_acceptance"
+  ],
+  "fake_wall_taxonomy_excluded": true,
+  "component_chain_gap_resolved": true,
+  "owner_gate": "ALLOW-first-write",
+  "ida_comments": 1,
+  "idb_saved": true,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "note": "fix_issue is internal-impl callee within relay_diagnostic cluster (strictImplementationUse); closes component-chain-gap for fix_codex_router_issue->fix_issue link; dim6 still open for cluster"
+}

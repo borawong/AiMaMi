@@ -1,0 +1,49 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "leaf": "confirm_pending_auto_switch_and_restart_codex",
+  "platform": "windows",
+  "version": "1.0.9",
+  "produced_at": "2026-06-02",
+  "files": [
+    {
+      "path": ".DS_Store",
+      "sha256": "4961a6b1b403594199deb4a12bdd01b5760959ba91aee32036d1402d6518c6c2",
+      "size": 6148
+    },
+    {
+      "path": "AI.md",
+      "sha256": "32725f504503f27f5f1c2b60b1341c615730df935e1779f1e2e494fbb6367352",
+      "size": 3022
+    },
+    {
+      "path": "README.md",
+      "sha256": "8fbd6d98fb2ad3f1b6a512175a093e783b050198c01251052b2118ac35421b43",
+      "size": 934
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "9c8b8fc65028cd19266d93a822dbaabcac99d01188c86496d7d0e16b91ebee",
+      "size": 893
+    },
+    {
+      "path": "call-trees/call-tree.jsonl",
+      "sha256": "1e30be4bceb39e8cbdb4174c8d219c14a51ad58ec0b829e204814dc09ab08526",
+      "size": 1987
+    },
+    {
+      "path": "ida/pseudocode.c",
+      "sha256": "613ec7e9a2a2951c1088ff6367e2ebe205daefa9bca8d7bf10f37acc8f182dff",
+      "size": 3564
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "18a8d1e2d5c30c1393b919c7396ed9f4eb708ad6476fa2ecee2fd4656d66ad5d",
+      "size": 1666
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "d1c7628417dcd7d0b4178d39e4979afefe1a4b3c28a766a19a573a982d48bf48",
+      "size": 663
+    }
+  ]
+}

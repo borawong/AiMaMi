@@ -1,0 +1,64 @@
+{
+  "schema": "restoration.cm.reverse.audit.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "module": "tray",
+  "produced_at": "2026-06-03T00:00:00+08:00",
+  "producer": "Codex",
+  "status": "windows_tray_app_owner_menu_event_refresh_closed_by_ida",
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "moduleExitAllowed": true,
+  "sourceBinary": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "idb": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe.i64",
+  "idbCommentWrite": {
+    "attempted": true,
+    "addresses": [
+      "0x1406e3980",
+      "0x1406b46e0",
+      "0x140e8c120",
+      "0x140e8d0a0",
+      "0x140e9dc20",
+      "0x140e9ffc0",
+      "0x140009BB0",
+      "0x14000B710",
+      "0x14000D710",
+      "0x14000CA80",
+      "0x14000A1E0",
+      "0x14000F3E0",
+      "0x1400AF970",
+      "0x14000A410",
+      "0x140277240",
+      "0x14028F5F0"
+    ],
+    "renamedFunctions": {
+      "0x140009BB0": "tray_create_menu_snapshot_or_bootstrap",
+      "0x14000CA80": "tray_append_codex_router_section",
+      "0x14000A1E0": "tray_refresh_menu_from_repository",
+      "0x14000F3E0": "tray_refresh_menu_from_snapshot",
+      "0x140277240": "tray_menu_event_callback_wrapper_a",
+      "0x14028F5F0": "tray_menu_event_callback_wrapper_b"
+    },
+    "idbSaved": true,
+    "note": "IDB comments and selected function names were written through IDA MCP and saved."
+  },
+  "fullLeaf100DefinitionV2": {
+    "frontendControlFlowUiState": "closed_native_tray_callback_plus_source_frontend_event_mapping",
+    "backendOwnerIdaDecompile": "closed_windows_1_0_9_ida",
+    "calleesXrefsImplementationLeaves": "closed_menu_builder_event_refresh_shell_notify_set_menu_dialog_focus_exit_restart",
+    "interfaceDtoErrorSideEffectBoundary": "closed_menu_ids_event_id_strings_dialog_error_lock_noop_side_effects",
+    "samePlatformGate": "windows_x64_confirmed_no_macos_inference",
+    "testAcceptanceMapping": "mapped_to_src_tauri_tray_unit_tests_and_main_app_tray_navigation_tests"
+  },
+  "platformPolicy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  },
+  "machine": "<workstation>",
+  "machine_backfill_date": "2026-06-05"
+}

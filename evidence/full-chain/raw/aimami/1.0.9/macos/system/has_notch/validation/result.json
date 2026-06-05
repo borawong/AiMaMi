@@ -1,0 +1,27 @@
+{
+  "schema": "raw-evidence.raw.validation_result.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "system",
+  "command": "has_notch",
+  "produced_at": "2026-06-03T10:00:00+08:00",
+  "checks": {
+    "binary_sot_matched": true,
+    "ida_decompile_owner": true,
+    "ida_decompile_platform_leaf": true,
+    "threading_model_closed": true,
+    "interface_closed": true,
+    "side_effect_boundary_closed": true,
+    "frontend_control_flow_closed": true,
+    "acceptance_mapping_closed": true,
+    "idb_saved": true,
+    "raw_leaf_shape_valid": true
+  },
+  "acceptance_mapping": [
+    "src/lib/api.test.ts hasNotch no-arg invoke contract",
+    "src/components/settings/settings-page.test.tsx covers true/false/rejection fallback",
+    "manual macOS Settings/startup hotspot guard"
+  ],
+  "result": "PASS"
+}

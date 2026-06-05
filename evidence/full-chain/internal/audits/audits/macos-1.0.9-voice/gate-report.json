@@ -1,0 +1,237 @@
+{
+  "schema": "restoration.cm.reverse.gate_report.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "voice",
+  "generated_at": "2026-06-03T03:48:32+08:00",
+  "target_count": 34,
+  "accepted_count": 34,
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "moduleExitAllowed": true,
+  "accepted_substitute": "ida_backend_command_absence",
+  "commands": {
+    "load_voice_workspace": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "load_voice_runtime_status": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "load_voice_llm_config": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "save_voice_llm_config": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "test_voice_llm_config": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "load_voice_asr_config": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "save_voice_asr_config": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "test_voice_asr_config": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "upsert_voice_template": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "remove_voice_template": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "upsert_voice_vocabulary": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "remove_voice_vocabulary": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "replace_voice_vocabulary_kind": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "upsert_voice_vocabulary_app_scope": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "remove_voice_vocabulary_app_scope": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "resolve_voice_vocabulary_app_info": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "generate_voice_prompt": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "remove_voice_history_entry": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "request_voice_permissions": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "request_accessibility_permission": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "set_voice_global_shortcut": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "capture_voice_trigger_key": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "cancel_voice_trigger_capture": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "set_voice_trigger_listener_suppressed": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "set_voice_trigger_key": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "set_voice_trigger_bindings": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "update_voice_runtime_settings": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "set_voice_processing_mode_id": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "start_voice_capture": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "stop_voice_capture": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "inject_voice_text": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "show_voice_search_overlay": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "set_voice_mode_shortcut": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    },
+    "remove_voice_mode_shortcut": {
+      "status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+      "readyToImplement": true,
+      "full_leaf_100": true,
+      "backend_owner": "absent"
+    }
+  },
+  "frontendConsumerHandoff": {
+    "status": "complete_current_source_removed_orphan_chain",
+    "logic": "logic/FRONTEND-CONSUMER-CHAIN-109.md",
+    "noGatePromotion": true,
+    "currentSourceFrontendStatus": "removed_or_orphan_not_live"
+  },
+  "currentSourceFrontendStatus": "removed_or_orphan_not_live",
+  "productDecisionBoundary": "Do not restore or implement voice as live current source archive chain without Product decision; upstream proof is IDA absence substitute.",
+  "frontendValidatorNotes": [
+    "Current source archive voice is removed/orphan, not live: Route/ALL_APP_ROUTES exclude voice, sidebar has no voice nav item, and main-app has no VoicePage render case.",
+    "src/lib/api.ts has no voice wrappers and src/lib/voice-adapter.ts is absent; residual voice components import/call missing wrappers.",
+    "Accepted substitute closes AiMaMi 1.0.9 backend command absence/orphan proof only. Restoring voice requires Product decision plus route/api/adapter/DTO/mock/test work."
+  ]
+}

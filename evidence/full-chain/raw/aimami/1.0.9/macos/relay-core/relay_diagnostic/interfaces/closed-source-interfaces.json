@@ -1,0 +1,97 @@
+[
+  {
+    "command": "run_codex_router_diagnostics",
+    "tauri_cmd": "run_codex_router_diagnostics",
+    "owner_addr": "0x1001e2ad4",
+    "owner_sym": "codexmate_lib::commands::relay::run_codex_router_diagnostics",
+    "argKeys": [],
+    "request_fields": [],
+    "response_fields": [
+      {"name": "status", "type": "String", "note": "always 'ok' on success"},
+      {"name": "diagnostics", "type": "Vec<DiagnosticsItem>", "note": "list of diagnostic results"},
+      {"name": "success", "type": "bool"}
+    ],
+    "DiagnosticsItem_fields": [
+      {"name": "issue_kind", "type": "String", "values": ["config_stale", "config_toml_syntax", "config_third_party", "config_profile_conflict", "auth_integrity", "db_orphan_providers", "catalog_path_validity", "residual_cache", "auth_token_expiry", "config_third_party"]},
+      {"name": "status", "type": "String", "values": ["ok", "medium", "error"]},
+      {"name": "details", "type": "Option<String>"}
+    ],
+    "DiagnosticsItem_size_bytes": 104,
+    "errors": ["CoreError serialized to Err(String) on frontend"],
+    "confidence": "medium",
+    "idaSymbols": ["codexmate_lib::core::relay::codex_diagnostic::run_diagnostics"],
+    "pseudocode": ["intermediate/aimami/1.0.9/macos/relay-core/relay_diagnostic/ida/pseudocode-manifest.jsonl"],
+    "callTreeRows": [
+      "run_codex_router_diagnostics -> CodexPaths::resolve_codex_home",
+      "run_codex_router_diagnostics -> CodexPaths::from_home",
+      "run_codex_router_diagnostics -> RelayManager::snapshot",
+      "run_codex_router_diagnostics -> run_diagnostics",
+      "run_diagnostics -> std::sys::fs::metadata (codex_home writable)",
+      "run_diagnostics -> std::fs::read_to_string (config.toml)",
+      "run_diagnostics -> serde_json::de::from_trait (auth.json)",
+      "run_diagnostics -> sqlite3 query (catalog state)",
+      "run_diagnostics -> std::process::Command (ps-ax)",
+      "run_codex_router_diagnostics -> Ok{status='ok',diagnostics}"
+    ],
+    "serverEvidencePath": "<source-location>/raw/aimami/1.0.9/macos/relay-core/relay_diagnostic/run_diagnostics/evidence.md",
+    "needsServerEvidencePath": false,
+    "platformScopeDeclared": "macOS confirmed; Windows Unknown"
+  },
+  {
+    "command": "fix_codex_router_issue",
+    "tauri_cmd": "fix_codex_router_issue",
+    "owner_addr": "0x1001e1b9c",
+    "owner_sym": "codexmate_lib::commands::relay::fix_codex_router_issue",
+    "argKeys": ["itemId"],
+    "request_fields": [
+      {"name": "itemId", "type": "String", "note": "issue_kind string or 'all'"}
+    ],
+    "response_fields": [
+      {"name": "status", "type": "String", "note": "'ok' on success"},
+      {"name": "fixes", "type": "Vec<FixResult>"},
+      {"name": "errors", "type": "Vec<String>"}
+    ],
+    "FixResult_fields": [
+      {"name": "issue_kind", "type": "String"},
+      {"name": "message", "type": "String"},
+      {"name": "success", "type": "bool"}
+    ],
+    "dispatch_logic": "if itemId=='all' -> fix_all; else -> fix_issue(itemId)",
+    "post_fix_behavior": "if Codex app running (is_process_running) and file touched belongs to Codex -> stop_codex_app_gracefully",
+    "issue_kinds_supported": [
+      "all",
+      "config_stale",
+      "auth_integrity",
+      "db_orphan_providers",
+      "residual_cache",
+      "config_toml_syntax",
+      "config_third_party",
+      "config_profile_conflict",
+      "catalog_path_validity"
+    ],
+    "errors": ["CoreError{kind=2} = IoError", "CoreError display -> Err(String) to frontend"],
+    "confidence": "medium",
+    "idaSymbols": ["codexmate_lib::commands::relay::fix_codex_router_issue", "codexmate_lib::core::relay::codex_diagnostic::fix_all", "codexmate_lib::core::relay::codex_diagnostic::fix_issue"],
+    "callTreeRows": [
+      "fix_codex_router_issue -> fix_all [if 'all']",
+      "fix_codex_router_issue -> fix_issue [if specific]",
+      "fix_all -> run_diagnostics",
+      "fix_all -> fix_auth_integrity",
+      "fix_all -> fix_config_stale_text",
+      "fix_all -> fix_config_toml_syntax_text",
+      "fix_all -> fix_config_third_party_text",
+      "fix_all -> fix_config_profile_conflict_text",
+      "fix_all -> resync_codex_config",
+      "fix_issue -> [dispatch by issue_kind len]",
+      "fix_issue -> fix_config_stale_text [config_stale]",
+      "fix_issue -> fix_auth_integrity [auth_integrity] (tail-call)",
+      "fix_issue -> fs::remove_file [db_orphan_providers, residual_cache]",
+      "fix_issue -> resync_codex_config [if sync_on_fix]",
+      "fix_codex_router_issue -> platform::process::is_process_running",
+      "fix_codex_router_issue -> platform::process::stop_codex_app_gracefully [conditional]"
+    ],
+    "serverEvidencePath": "<source-location>/raw/aimami/1.0.9/macos/relay-core/relay_diagnostic/fix_issue/evidence.md",
+    "needsServerEvidencePath": false,
+    "platformScopeDeclared": "macOS confirmed; Windows Unknown"
+  }
+]

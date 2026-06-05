@@ -1,0 +1,64 @@
+{
+  "schema": "raw-evidence.reverse.address_table.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "arch": "x64",
+  "leaf": "plugins_settings_decode_write_failure_paths",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "ida": {
+    "host": "127.0.0.1",
+    "port": 13337,
+    "health": "ok",
+    "module": "AiMaM 1.0.9 win64.exe",
+    "imagebase": "0x140000000"
+  },
+  "chain": [
+    {"role": "dispatcher", "addr": "0x1402663E0", "name": "sub_1402663E0"},
+    {"role": "settings_decoder", "addr": "0x1404F1950", "name": "sub_1404F1950"},
+    {"role": "value_copier", "addr": "0x140473090", "name": "sub_140473090"},
+    {"role": "update_wrapper", "addr": "0x140165130", "name": "sub_140165130"},
+    {"role": "store_mutator", "addr": "0x1403EDAA0", "name": "sub_1403EDAA0"},
+    {"role": "save_helper", "addr": "0x1403EDEC0", "name": "sub_1403EDEC0"},
+    {"role": "write_helper", "addr": "0x14104E390", "name": "sub_14104E390"}
+  ],
+  "anchors": {
+    "update_plugin_config_string": "0x141269163",
+    "registry_string": "0x141269243",
+    "id_string": "0x141269253",
+    "settings_string": "0x141269279",
+    "settings_xref": "0x140267109",
+    "settings_decoder_call": "0x14026713e",
+    "settings_success_tag_check": "0x140267159",
+    "wrapper_call": "0x14026b1b9",
+    "mutator_call": "0x140165174",
+    "mutator_old_settings_clear": "0x1403edc62",
+    "mutator_new_settings_copy_start": "0x1403edc77",
+    "mutator_new_settings_copy_end": "0x1403edc7b",
+    "save_call": "0x1403edc90",
+    "serialize_call": "0x1403edf4e",
+    "serialize_prefix_ref": "0x1403edf9b",
+    "serialize_prefix_string": "0x141278be9",
+    "write_call": "0x1403ee048",
+    "write_prefix_ref": "0x1403ee085",
+    "write_prefix_string": "0x141278c04",
+    "save_serialize_error_tag_9": "0x1403ee012",
+    "save_write_error_tag_9": "0x1403ee0b3",
+    "save_success_tag_10": "0x1403ee0bf",
+    "wrapper_success_tag_10_check": "0x14016517e",
+    "wrapper_success_response_builder": "0x140165186",
+    "wrapper_error_formatter": "0x14016525e",
+    "wrapper_error_return_discriminant": "0x1401652ae",
+    "poisoned_lock_string": "0x141278b50",
+    "poisoned_lock_update_xref": "0x1403edd17"
+  },
+  "gate": {
+    "implementation_use": false,
+    "gate_accepted": false,
+    "readyToImplement": false,
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "full_leaf_100": false
+  }
+}
+

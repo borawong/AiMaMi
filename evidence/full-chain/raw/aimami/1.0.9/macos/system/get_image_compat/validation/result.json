@@ -1,0 +1,23 @@
+{
+  "schema": "raw-evidence.raw.validation.result.v1",
+  "validated_at": "2026-06-02",
+  "validator": "ida-pro-mcp-mac",
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "thin_binary_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "checks": {
+    "owner_found": true,
+    "owner_addr": "0x10025e7c0",
+    "owner_name": "codexmate_lib::commands::system::get_image_compat",
+    "decompile_succeeded": true,
+    "call_tree_depth_reached": 2,
+    "call_tree_terminated_reasons": ["external_call_recorded", "response_serialize", "error_return", "fs"],
+    "implementation_leaves_reached": true,
+    "leaf_types_covered": ["fs", "parse", "platform_leaf", "response_serialize", "cleanup"],
+    "string_literals_decoded": true,
+    "interface_extracted": true,
+    "no_internal_reverse_contamination": true,
+    "no_version_span_path_components": true,
+    "no_forbidden_tokens_in_paths": true
+  },
+  "result": "pass"
+}

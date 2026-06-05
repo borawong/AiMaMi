@@ -1,0 +1,7 @@
+batch: lane-60 macos-109-frontend-ccf-rerun-with-found-app
+app: <source-location>/source-binary/AiMaMi 1.0.9.app
+binary: <source-location>/source-binary/AiMaMi 1.0.9.app/Contents/MacOS/AiMaMi
+created_at: 2026-05-31T13:33:45Z
+sha256: 1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482
+tauri-dumper: tauri-dumper --input "<source-location>/source-binary/AiMaMi 1.0.9.app/Contents/MacOS/AiMaMi" --output "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped"
+minified-ccf: node "<local-tool-path>/rust-reverse-pipeline/scripts/extract_component_control_flow.mjs" --frontend-root <resolved> --out "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/frontend-control-flow.jsonl" --api-map-out "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/api-map.json"

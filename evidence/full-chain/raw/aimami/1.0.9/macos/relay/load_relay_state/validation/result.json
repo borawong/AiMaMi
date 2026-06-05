@@ -1,0 +1,22 @@
+{
+  "schema": "raw-evidence.raw.bundle.validation.v1",
+  "command": "load_relay_state",
+  "platform": "macos-arm64",
+  "version": "1.0.9",
+  "session": "relay-A-state-crud-20260602",
+  "idb_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sot_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "gate": "strictImplementationUse",
+  "dim1_frontend_ccf": {"status": "Unknown", "note": "frontend CCF not analyzed this session; not blocking strictImplementationUse"},
+  "dim2_backend_owner_pseudocode": {"status": "Accepted", "owner_addr": "0x1001dff6c", "symbol": "codexmate_lib::commands::relay::load_relay_state::h8ced6f0d700b9817", "pseudocode_file": "ida/pseudocode/0001_load_relay_state_owner_cmd_h8ced6f0.c"},
+  "dim3_call_tree_impl_leaves": {"status": "Accepted", "depth": 6, "terminal_leaves": ["TcpStream::connect_timeout(proxy_probe)", "atomic_write::write_atomic(relay.json)", "RelayState::clone(ipc_copy)", "apiKey_zero_scrub_loop", "CoreEnvelope::ok", "CoreError::fmt"], "call_tree_file": "call-trees/codexmate_lib::commands::relay::load_relay_state.jsonl"},
+  "dim4_interface_dto_error_sideeffect": {"status": "Accepted", "argKeys": [], "response": "RelayState(scrubbed: apiKey@+88=0)", "errors": ["CoreError(proxy_start_fail)", "CoreError(storage_save_fail)", "unwrap_failed(mutex_poisoned)"], "side_effects": ["proxy_auto_start_tcp_probe", "storage::save_on_proxy_start", "apiKey_scrub_in_response"]},
+  "dim5_platform_gate": {"status": "Accepted", "macos": "CONFIRMED", "windows": "Unknown", "note": "platform-independent: no keychain; proxy_start has OS-level socket calls"},
+  "dim6_test_acceptance": {"status": "empty_per_task_spec"},
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "no_gate_promotion_to_ready": true
+}

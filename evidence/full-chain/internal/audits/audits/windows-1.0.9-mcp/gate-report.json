@@ -1,0 +1,65 @@
+{
+  "schema": "restoration.cm.reverse.module_gate_report.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "mcp",
+  "status": "PASS",
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "moduleExitAllowed": true,
+  "commands_total": 4,
+  "commands_ready": 4,
+  "commands": [
+    {
+      "command": "load_mcp_servers",
+      "owner": "0x1402758d0",
+      "threading_model": "sync mutex/TOML parse; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/mcp/load_mcp_servers",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "upsert_mcp_server",
+      "owner": "0x140277e50",
+      "threading_model": "sync mutex/TOML parse-edit-save; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/mcp/upsert_mcp_server",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "set_mcp_server_enabled",
+      "owner": "0x14027ff70",
+      "threading_model": "sync mutex/load-find-upsert; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/mcp/set_mcp_server_enabled",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "remove_mcp_server",
+      "owner": "0x140279ad0",
+      "threading_model": "sync mutex/TOML remove-save; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/mcp/remove_mcp_server",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    }
+  ],
+  "idb_saved": true,
+  "machine": "<workstation>",
+  "machine_note": "backfilled by <workstation> consolidation 2026-06-05; value from manifest.json producer record",
+  "frontendConsumerHandoff": {
+    "status": "complete_current_source_frontend_chain",
+    "logic": "logic/FRONTEND-CONSUMER-CHAIN-109.md",
+    "noGatePromotion": true,
+    "currentSourceFrontendStatus": "live"
+  },
+  "frontendValidatorNotes": [
+    "MCP edit save currently submits enabled: true in the upsert payload, so editing a disabled server can implicitly enable it unless implementation changes that behavior deliberately.",
+    "Most successful MCP mutations signal completion through dialog close/cache refresh rather than success toast.",
+    "Current fast validation is source-level; mutation E2E/mock coverage is not comprehensive in this handoff."
+  ]
+}

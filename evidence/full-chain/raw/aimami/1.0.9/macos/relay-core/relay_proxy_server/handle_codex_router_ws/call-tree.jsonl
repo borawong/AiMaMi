@@ -1,0 +1,20 @@
+{"from": "handle_codex_router_ws::{{closure}}", "from_addr": "0x100091a44", "to": "strip_websocket_request_headers", "to_addr": "0x100247554", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_router_ws::{{closure}}", "from_addr": "0x100091a44", "to": "read_normalized_codex_ws_body::{{closure}}", "to_addr": "0x100096684", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_router_ws::{{closure}}", "from_addr": "0x100091a44", "to": "forward_codex_responses_internal::{{closure}}", "to_addr": "0x1000987a0", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_router_ws::{{closure}}", "from_addr": "0x100091a44", "to": "bridge_http_response_to_codex_ws::{{closure}}", "to_addr": "0x100097208", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_router_ws::{{closure}}", "from_addr": "0x100091a44", "to": "bridge_http_error_to_codex_ws::{{closure}}", "to_addr": "0x100095c48", "depth": 1, "edge_type": "direct_call"}
+{"from": "strip_websocket_request_headers", "from_addr": "0x100247554", "to": "is_hop_by_hop_header", "to_addr": "0x100241d84", "depth": 2, "edge_type": "direct_call"}
+{"from": "strip_websocket_request_headers", "from_addr": "0x100247554", "to": "is_responses_websocket_beta_header", "to_addr": "0x10024d770", "depth": 2, "edge_type": "direct_call"}
+{"from": "strip_websocket_request_headers", "from_addr": "0x100247554", "to": "http::header::map::HeaderMap::try_insert2", "to_addr": "0x1002850e4", "depth": 2, "edge_type": "direct_call"}
+{"from": "forward_codex_responses_internal::{{closure}}", "from_addr": "0x1000987a0", "to": "collect_body_bytes_limited::{{closure}}", "to_addr": "0x100094f88", "depth": 2, "edge_type": "direct_call"}
+{"from": "forward_codex_responses_internal::{{closure}}", "from_addr": "0x1000987a0", "to": "upstream_error_with_reason", "to_addr": "0x1002464c4", "depth": 2, "edge_type": "direct_call"}
+{"from": "bridge_http_response_to_codex_ws::{{closure}}", "from_addr": "0x100097208", "to": "collect_body_bytes_limited::{{closure}}", "to_addr": "0x100094f88", "depth": 2, "edge_type": "direct_call"}
+{"from": "bridge_http_response_to_codex_ws::{{closure}}", "from_addr": "0x100097208", "to": "take_next_sse_event", "to_addr": "0x100241b90", "depth": 2, "edge_type": "direct_call"}
+{"from": "bridge_http_response_to_codex_ws::{{closure}}", "from_addr": "0x100097208", "to": "sse_event_data_payload", "to_addr": "0x100244410", "depth": 2, "edge_type": "direct_call"}
+{"from": "bridge_http_response_to_codex_ws::{{closure}}", "from_addr": "0x100097208", "to": "extract_error_message_and_code", "to_addr": "0x100247124", "depth": 2, "edge_type": "direct_call"}
+{"from": "bridge_http_response_to_codex_ws::{{closure}}", "from_addr": "0x100097208", "to": "send_ws_error::{{closure}}", "to_addr": "0x10009129c", "depth": 2, "edge_type": "direct_call"}
+{"from": "bridge_http_response_to_codex_ws::{{closure}}", "from_addr": "0x100097208", "to": "axum::extract::ws::WebSocket::send::{{closure}}", "to_addr": "0x1000a5848", "depth": 2, "edge_type": "terminal_send", "terminated_reason": "response_serialize"}
+{"from": "collect_body_bytes_limited::{{closure}}", "from_addr": "0x100094f88", "to": "bytes::Bytes::from", "to_addr": "0x100d04f60", "depth": 3, "edge_type": "direct_call", "terminated_reason": "external_call_recorded"}
+{"from": "take_next_sse_event", "from_addr": "0x100241b90", "to": "core::str::pattern::StrSearcher::next_match", "to_addr": "0x1002a0e90", "depth": 3, "edge_type": "direct_call", "terminated_reason": "external_call_recorded"}
+{"from": "bridge_http_error_to_codex_ws::{{closure}}", "from_addr": "0x100095c48", "to": "codex_ws_error_payload", "to_addr": "0x100095900", "depth": 2, "edge_type": "direct_call"}
+{"from": "bridge_http_error_to_codex_ws::{{closure}}", "from_addr": "0x100095c48", "to": "axum::extract::ws::WebSocket::send::{{closure}}", "to_addr": "0x1000a5848", "depth": 2, "edge_type": "terminal_send", "terminated_reason": "response_serialize"}

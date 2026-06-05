@@ -1,0 +1,48 @@
+{
+  "schema": "raw-evidence.reverse.leaf_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "leaf": "plugins_frontend_acceptance_mapping",
+  "status": "static_frontend_acceptance_mapping_no_gate_promotion",
+  "produced_at": "2026-06-02T00:00:00+08:00",
+  "source_binary": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "inputs": [
+    "<source-location>/raw/aimami/1.0.9/windows/plugins_frontend_ui_state",
+    "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap",
+    "repo:src",
+    "repo:e2e"
+  ],
+  "outputs": {
+    "raw": "<source-location>/raw/aimami/1.0.9/windows/plugins_frontend_acceptance_mapping",
+    "intermediate": "<source-location>/intermediate/aimami/1.0.9/windows/plugins_frontend_acceptance_mapping",
+    "internal_reverse": "<source-location>/aimami/1.0.9/windows-x64/plugins_frontend_acceptance_mapping"
+  },
+  "commands": [
+    "list_plugins",
+    "toggle_plugin",
+    "get_plugin_config",
+    "update_plugin_config"
+  ],
+  "gate": {
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false
+  },
+  "writes": {
+    "index_jsonl": false,
+    "task_plan": false,
+    "backend_artifacts": false,
+    "ai_mami_runtime": false
+  },
+  "forbidden_path_check": {
+    "no_date_machine_pass_retry_attempt_producer_dirs": true,
+    "no_version_span_path_components": true,
+    "no_forbidden_roots": true
+  }
+}
+

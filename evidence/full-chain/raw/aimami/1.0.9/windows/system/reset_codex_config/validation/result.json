@@ -1,0 +1,33 @@
+{
+  "schema": "raw-evidence.raw.bundle.validation.v1",
+  "bundle": "raw/aimami/1.0.9/windows/system/reset_codex_config",
+  "validated_at": "2026-06-02",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "binary_sha_verified": true,
+  "binary_sha_required": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "binary_sha_actual": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "command_string_found": true,
+  "command_string_va": "0x141268d0a",
+  "owner_addr": "0x14026F590",
+  "owner_name": "tauri_cmd_reset_codex_config_handler",
+  "icf_folding_detected": false,
+  "pseudocode_count": 5,
+  "pseudocode_status": "decompiled",
+  "call_tree_depth": 5,
+  "call_tree_complete": true,
+  "fs_leaf_reached": true,
+  "fs_leaf_type": "MoveFileExW",
+  "red_line_checks": {
+    "no_c_files_in_internal_reverse": "PASS",
+    "no_log_files_in_internal_reverse": "PASS",
+    "platform_evidence_independent": "PASS (windows-only)",
+    "no_version_span_path_components": "PASS",
+    "binary_sot_used": "PASS"
+  },
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": false
+  },
+  "post_bundle_check": "find upstream -name '*.c' -o -name '*.log' = MUST BE 0 (not applicable to raw/ tier)"
+}

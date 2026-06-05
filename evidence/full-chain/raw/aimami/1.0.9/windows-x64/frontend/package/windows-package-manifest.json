@@ -1,0 +1,63 @@
+{
+  "schema": "rust-reverse-pipeline.windows-package.v1",
+  "generatedAt": "2026-06-05T05:40:08.639732+00:00",
+  "installer": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "installerName": "AiMaM 1.0.9 win64.exe",
+  "installerSize": 26821632,
+  "installerSha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "fileType": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe: PE32+ executable (GUI) x86-64, for MS Windows",
+  "packageFormat": "pe-executable-or-installer",
+  "platform": "windows",
+  "executedInstaller": false,
+  "extractorUsed": "7zz",
+  "extractStatus": "ok",
+  "extractedRoot": "<source-location>/raw/aimami/1.0.9/windows-x64/frontend/package/extracted",
+  "extractedFileCount": 14,
+  "tauriDumpRoot": "<source-location>/raw/aimami/1.0.9/windows-x64/frontend/package/tauri-dumped-assets",
+  "tauriDumpAttempts": [],
+  "attempts": [
+    {
+      "tool": "7zz",
+      "available": true,
+      "list": {
+        "cmd": [
+          "7zz",
+          "l",
+          "-slt",
+          "<source-location>/source-binary/AiMaM 1.0.9 win64.exe"
+        ],
+        "exit": 0,
+        "log": "<source-location>/raw/aimami/1.0.9/windows-x64/frontend/package/logs/7zz-list.log"
+      },
+      "extract": {
+        "cmd": [
+          "7zz",
+          "x",
+          "-y",
+          "-o<source-location>/raw/aimami/1.0.9/windows-x64/frontend/package/extracted",
+          "<source-location>/source-binary/AiMaM 1.0.9 win64.exe"
+        ],
+        "exit": 0,
+        "log": "<source-location>/raw/aimami/1.0.9/windows-x64/frontend/package/logs/7zz-extract.log"
+      },
+      "newFileCount": 14
+    }
+  ],
+  "peFiles": [
+    {
+      "path": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+      "relativePath": "AiMaM 1.0.9 win64.exe",
+      "role": "installer",
+      "size": 26821632,
+      "sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+      "fileType": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe: PE32+ executable (GUI) x86-64, for MS Windows"
+    }
+  ],
+  "candidateAppBinaries": [],
+  "frontendCandidates": [],
+  "resourceCandidates": [],
+  "gaps": [
+    "no extracted candidate app PE binary found",
+    "no extracted frontend asset directory found"
+  ]
+}

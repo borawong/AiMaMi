@@ -1,0 +1,51 @@
+{
+  "schema": "raw-evidence.raw.validation.result.v2",
+  "command": "switch_account_and_restart_codex",
+  "status": "PASS",
+  "checks": {
+    "json_parse": "PASS",
+    "raw_template_entries": "PASS",
+    "ida_owner_decompile": "PASS",
+    "same_platform_windows": "PASS",
+    "idb_saved": "PASS",
+    "terminal_side_effect_map": "PASS",
+    "acceptance_mapping": "PASS",
+    "current_ida_input_only": "PASS"
+  },
+  "gate": {
+    "renderSurfaceReady": true,
+    "uiCallEntryReady": true,
+    "dtoBoundaryReady": true,
+    "happyPathReady": true,
+    "boundaryPathReady": true,
+    "sideEffectReady": true,
+    "frontendConsumptionReady": true,
+    "acceptanceDraftReady": true,
+    "platformScopeDeclared": true,
+    "consumerStartReady": true,
+    "consumerUse": true,
+    "startMode": "reverse_guided",
+    "strictParityReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "unknownsBlockingStart": [],
+    "unknownsAcceptedForStart": [],
+    "productDecisionsRequired": [],
+    "upstreamSurfaceDelta": [],
+    "allowedImplementationMode": "Implement same-platform Windows AiMaMi 1.0.9 accounts behavior from IDA owner/callee/DTO/side-effect evidence only; current Windows IDA proof only.",
+    "forbiddenAssumptions": [
+      "Use same-platform Windows owner evidence.",
+      "Use current Windows owner evidence.",
+      "Do not treat scheduler-only evidence as side-effect proof without the terminal helper map."
+    ],
+    "leaf": "switch_account_and_restart_codex",
+    "product": "aimami",
+    "version": "1.0.9",
+    "platform": "windows-x64",
+    "module": "accounts"
+  }
+}

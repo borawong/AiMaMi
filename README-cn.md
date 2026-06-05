@@ -1,12 +1,4 @@
-<p align="center">
-  <img src="assets/app-icon-composed.png" alt="AiMaMi" width="128" height="128" />
-</p>
-
 <h1 align="center">AiMaMi</h1>
-
-<p align="center">
-  <strong>面向 OpenAI Codex 的原生桌面伴侣 —— 统一管理账号、路由、会话与本地配置。</strong>
-</p>
 
 <p align="center">
   <a href="./README.md">English</a> · 简体中文
@@ -14,57 +6,72 @@
 
 ---
 
-## 概述
+## 为什么公开
 
-Codex 的账号、会话、MCP、Skills、智能路由与中转配置分散在 `~/.codex` 下的多个文件里。多账号切换、额度耗尽、第三方模型接入与路由维护、会话清理和配置漂移，都会把日常操作变成手改 TOML / JSON / SQLite。
+AiMaMi 经历过很多个人迭代。项目的一部分资料过去没有放在公开源码树里，
+这会让使用者和贡献者更难判断它如何处理本地 Codex 数据。
 
-AiMaMi 基于 **Tauri 2 + React + Rust**，把这些高频操作 —— 含智能路由与中转管理 —— 收敛到一个桌面应用里，在本地安全读写 Codex 数据，减少手工改文件带来的风险。
+现在把这些资料放到公开仓库里，是为了让项目可以被审阅、还原和继续改进。
 
----
+核心原因很简单：
 
-## 核心能力
+- 方便个人继续迭代，也方便日常本地工作流使用；
+- 继续沿用 **Apache License 2.0**；
+- 让代码和还原资料可以被直接检查，用起来更放心；
+- 减少隐私顾虑，避免依赖不透明的本地包或机器状态。
 
-| 模块 | 解决的痛点 |
-| --- | --- |
-| **账号管理** | 多账号切换靠手改 `auth.json`；额度分散、导入导出麻烦 |
-| **自动切换** | 5 小时 / 周额度触顶后任务中断，需自动找可用账号并重启 Codex |
-| **智能路由** | 在 Codex 桌面内使用中转模型，同时尽量保留历史线程可续聊 |
-| **中转管理** | Provider 配置、连通性测试、导入导出与路由诊断 |
-| **会话管理** | 基于真实索引安全查看、统计与批量清理本地线程 |
-| **MCP / Skills** | 图形化管理 MCP 条目与 Skills 生命周期，支持备份恢复 |
-| **插件** | 统一管理内置扩展（如 web tools、image support） |
-| **自定义指令** | 仅管理 `~/.codex/AGENTS.md` 中的 AiMaMi 受控区块，支持预览与回滚 |
-| **系统维护** | 诊断、清理、重建 registry、强杀 Codex、修复常见配置问题 |
-| **设置与运行时** | 主题、语言、额度刷新、API 代理、更新检查；托盘与 macOS 刘海额度展示 |
-
-**智能路由说明：** 中转模型经 AiMaMi 本地代理转发，使用期间需保持 AiMaMi 运行。
-
-<p align="center">
-  <img src="assets/console.png" alt="AiMaMi" width="1200" height="812" />
-</p>
-<p align="center">
-  <img src="assets/qr1.png" alt="AiMaMi 社区群二维码" width="400" height="300" />
-</p>
+如果你能还原出更完整的代码，欢迎直接提交 PR。
 
 ---
 
-## 平台支持
+## 仓库内容
 
-| 平台 | 说明 |
-| --- | --- |
-| macOS | Universal（Apple Silicon + Intel），macOS 12+ |
-| Windows | x64，NSIS 安装包 |
-| Linux | 部分能力为尽力支持 |
+- `src/` 和 `src-tauri/`：公开的 Tauri 2 + React + Rust 源码。
+- `docs/reconstruction/`：根据公开文件还原项目的映射和说明。
+- `evidence/full-chain/internal/`：经过整理的链条摘要、审阅映射、前端映射、
+  叶级归纳和数据汇总。
+- `evidence/full-chain/raw/`：raw 链条文本、命令索引、manifest 和验证摘要。
+- `evidence/binary-manifests/`：发布在本仓库之外的大文件参考资产大小和哈希清单。
+- 外部 IDB 归档：
+  [MapleEve/OpenAiMami-IDB](https://github.com/MapleEve/OpenAiMami-IDB) 的
+  `1.0.9/AiMaMi-1.0.9-i64-databases.zip`，包含 macOS 和 Windows 的 `.i64`
+  文件。
+- `LICENSE`：Apache License 2.0。
+
+理解公开还原流程不需要依赖本机专属路径或未发布状态。
 
 ---
 
-## 技术栈
+## 给 AI 的还原 Prompt
 
-Tauri 2 · React 18 · TypeScript · Vite 6 · Tailwind CSS · shadcn/ui · Rust
+可以把下面这段直接交给 AI 编程 Agent：
+
+```text
+请只使用这个公开仓库，把 AiMaMi 还原为完整的 Tauri 2 + React + Rust
+桌面应用。
+
+优先读取这些仓库相对路径：README.md、README-cn.md、
+docs/reconstruction/、evidence/full-chain/internal/、evidence/full-chain/raw/、
+evidence/binary-manifests/、src/、src-tauri/、package.json、src-tauri/Cargo.toml。
+
+保留 Apache License 2.0。根据公开源码树和 full-chain 还原证据，补齐完整
+应用行为、UI、Tauri command surface、Rust 后端、打包元数据和验证流程。先读
+docs/reconstruction/full-chain-map.md、evidence/full-chain/internal/INDEX.md、
+evidence/full-chain/raw/INDEX.md、evidence/full-chain/raw/command-index.json、
+evidence/full-chain/raw/validation-summary.json。
+
+如果需要参考数据库，从 https://github.com/MapleEve/OpenAiMami-IDB 获取外部归档
+1.0.9/AiMaMi-1.0.9-i64-databases.zip，并使用里面的 macOS 和 Windows .i64 文件。以
+evidence/binary-manifests/1.0.9/i64-databases.json 作为资产状态、大小和
+哈希的依据。
+
+不要依赖本机专属路径、机器状态、未发布文件、凭据或用户数据。如果完成了
+更完整的还原，请以 Pull Request 形式提交。
+```
 
 ---
 
-## 快速开始
+## 构建
 
 **环境要求：** Node.js · pnpm · Rust · [Tauri 系统依赖](https://v2.tauri.app/start/prerequisites/)
 
@@ -76,39 +83,17 @@ pnpm tauri dev
 ```
 
 ```bash
-pnpm build                                      # 前端构建检查
-cargo check --manifest-path src-tauri/Cargo.toml  # Rust 检查
-pnpm tauri build                                # 生产构建
-```
-
----
-
-## 项目结构
-
-```text
-src/           React 前端
-src-tauri/     Tauri 壳与 Rust 后端
-src/locales/   国际化（中 / 英）
-scripts/       构建与发布脚本
-assets/        品牌与文档素材
-```
-
----
-
-## 架构
-
-```text
-React UI ── invoke() ──▶ Tauri commands ──▶ core/
-                                              ├── ~/.codex          (Codex 原生)
-                                              └── ~/.codex/codexmate/ (AiMaMi 数据)
-                         platform/            macOS / Windows 差异实现
+pnpm build
+cargo check --manifest-path src-tauri/Cargo.toml
+pnpm tauri build
 ```
 
 ---
 
 ## 参与贡献
 
-欢迎提交 Issue 与 Pull Request。请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)，了解开发环境、提交前检查以及本地 Codex 数据安全注意事项。较大改动建议先开 Issue 讨论方案。
+欢迎提交 Issue 和 Pull Request。完整还原、模块整理、隐私审阅、文档改进，
+都可以通过 PR 提交。
 
 ---
 
@@ -120,4 +105,5 @@ React UI ── invoke() ──▶ Tauri commands ──▶ core/
 
 ## 免责声明
 
-AiMaMi 是独立的 Codex 本地工作流工具，与 OpenAI 无隶属、背书或赞助关系。使用第三方中转服务请自行评估风险并遵守相应条款。
+AiMaMi 是面向本地 Codex 工作流的独立工具，不隶属于 OpenAI，也不代表
+OpenAI 背书或赞助。

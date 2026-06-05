@@ -1,0 +1,2 @@
+{"index":1,"addr":"0x1001e28e4","label":"codexmate_lib::commands::relay::set_relay_provider_network::hfd713d2139c85809","role":"command_owner","file":"ida/pseudocode/0001_set_relay_provider_network_owner_cmd_hfd713d21.c","decompile_status":"success","session":"relay-A-state-crud-20260602","sha12":"1db044e8efab"}
+{"index":2,"addr":"0x10031d8c8","label":"dispatch_closure::set_relay_provider_network","role":"dispatch_closure","file":"inline_in_call_tree","decompile_status":"resolved_via_call_tree","session":"relay-A-state-crud-20260602","sha12":"1db044e8efab"}

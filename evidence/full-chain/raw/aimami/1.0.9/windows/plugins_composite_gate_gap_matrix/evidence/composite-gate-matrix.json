@@ -1,0 +1,108 @@
+{
+  "schema": "raw-evidence.raw.plugins_composite_gate_matrix.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "module_gate": {
+    "consumerStartReady": false,
+    "consumerUse": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "no_gate_promotion": true
+  },
+  "consumerStartCandidateCommands": ["list_plugins", "toggle_plugin"],
+  "matrix": [
+    {
+      "surface": "list_plugins",
+      "frontend_ccf_ui_state": "accepted",
+      "backend_owner_pseudocode": "candidate",
+      "call_tree_depth": "candidate",
+      "interface_error_side_effect": "candidate",
+      "acceptance_mapping": "candidate_not_executed",
+      "windows_platform_boundary": "accepted",
+      "gate_conclusion": "blocked_no_promotion",
+      "evidence_leaves": ["list_plugins", "plugins_frontend_ui_state", "plugins_frontend_acceptance_mapping", "plugin_response_error_envelope"]
+    },
+    {
+      "surface": "toggle_plugin",
+      "frontend_ccf_ui_state": "accepted",
+      "backend_owner_pseudocode": "candidate",
+      "call_tree_depth": "candidate",
+      "interface_error_side_effect": "candidate",
+      "acceptance_mapping": "candidate_not_executed",
+      "windows_platform_boundary": "accepted",
+      "gate_conclusion": "blocked_no_promotion",
+      "evidence_leaves": ["toggle_plugin", "plugins_json_persistence_error", "plugins_settings_decode_write_failure_paths", "plugins_frontend_ui_state", "plugins_frontend_acceptance_mapping", "plugins_web_tools_sidechannel_ordering"]
+    },
+    {
+      "surface": "get_plugin_config",
+      "frontend_ccf_ui_state": "blocked_missing_visible_config_ui",
+      "backend_owner_pseudocode": "candidate",
+      "call_tree_depth": "candidate",
+      "interface_error_side_effect": "candidate",
+      "acceptance_mapping": "blocked_missing_visible_ui_and_not_executed",
+      "windows_platform_boundary": "accepted",
+      "gate_conclusion": "blocked_no_promotion",
+      "evidence_leaves": ["get_plugin_config", "plugins_config_error_dto_boundaries", "plugin_response_error_envelope", "plugins_frontend_acceptance_mapping"]
+    },
+    {
+      "surface": "update_plugin_config",
+      "frontend_ccf_ui_state": "blocked_missing_visible_config_ui",
+      "backend_owner_pseudocode": "candidate",
+      "call_tree_depth": "candidate",
+      "interface_error_side_effect": "candidate",
+      "acceptance_mapping": "blocked_missing_visible_ui_and_not_executed",
+      "windows_platform_boundary": "accepted",
+      "gate_conclusion": "blocked_no_promotion",
+      "evidence_leaves": ["update_plugin_config", "plugins_config_error_dto_boundaries", "plugins_settings_decode_write_failure_paths", "plugins_json_persistence_error", "plugins_frontend_acceptance_mapping"]
+    },
+    {
+      "surface": "web-tools side-channel",
+      "frontend_ccf_ui_state": "unknown",
+      "backend_owner_pseudocode": "candidate",
+      "call_tree_depth": "candidate_static_ordering_only",
+      "interface_error_side_effect": "candidate",
+      "acceptance_mapping": "blocked_not_executed",
+      "windows_platform_boundary": "accepted",
+      "gate_conclusion": "blocked_static_only_no_promotion",
+      "evidence_leaves": ["plugins_web_tools_sidechannel_ordering", "plugins_builtin_web_tools_defaults_settings", "plugins_runtime_acceptance_preflight_harness"]
+    },
+    {
+      "surface": "builtin defaults/settings",
+      "frontend_ccf_ui_state": "unknown",
+      "backend_owner_pseudocode": "candidate",
+      "call_tree_depth": "candidate",
+      "interface_error_side_effect": "candidate_defaults_unknown",
+      "acceptance_mapping": "blocked_not_executed",
+      "windows_platform_boundary": "accepted",
+      "gate_conclusion": "blocked_no_promotion",
+      "evidence_leaves": ["plugins_builtin_web_tools_defaults_settings", "list_plugins", "plugins_json_persistence_error"]
+    },
+    {
+      "surface": "persistence error",
+      "frontend_ccf_ui_state": "unknown_failure_consumption",
+      "backend_owner_pseudocode": "candidate",
+      "call_tree_depth": "candidate",
+      "interface_error_side_effect": "accepted_static_candidate_runtime_unknown",
+      "acceptance_mapping": "blocked_failure_fixtures_not_executed",
+      "windows_platform_boundary": "accepted",
+      "gate_conclusion": "blocked_no_promotion",
+      "evidence_leaves": ["plugins_json_persistence_error", "plugin_response_error_envelope", "plugins_settings_decode_write_failure_paths", "plugins_path_root_resolution"]
+    },
+    {
+      "surface": "runtime preflight",
+      "frontend_ccf_ui_state": "not_applicable",
+      "backend_owner_pseudocode": "not_applicable",
+      "call_tree_depth": "not_applicable",
+      "interface_error_side_effect": "blocked_runtime_not_executed",
+      "acceptance_mapping": "blocked_not_executed",
+      "windows_platform_boundary": "accepted_preflight_boundary_declared",
+      "gate_conclusion": "blocked_runtime_preflight_can_run_now_false",
+      "evidence_leaves": ["plugins_runtime_isolation_preflight_readiness", "plugins_runtime_acceptance_preflight_harness"]
+    }
+  ]
+}

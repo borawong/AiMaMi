@@ -1,0 +1,15 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "bundle_path": "raw/aimami/1.0.9/macos/relay/import_relay_config",
+  "files": [
+    {"path": "AI.md", "sha256": "9054266f92fc4c3f20e39bcf98fe98469bb62d73f6cf950cd1ee2b7710e7ae7e", "size": 3014},
+    {"path": "README.md", "sha256": "18880e0bda38ebcfe18ffc0d9f9c9cc69a2560c9e58a88429f591ce1d145ae48", "size": 3399},
+    {"path": "SYSTEM-DIFF.md", "sha256": "11eb9eacbead611b2aa78bd7d3f3f016b19f66baa312a977cbf613bd81806159", "size": 1176},
+    {"path": "validation/result.json", "sha256": "5d7acc0637a089ccb1f12fdc40886a824728ec90d1da9d636ebf2fb36284a4c4", "size": 1139},
+    {"path": "call-trees/codexmate_lib::commands::relay::import_relay_config.jsonl", "sha256": "539a9f27cca86b2937816e6b8cb1310068bae7dac3f8a211a2316df1c4189b51", "size": 2695},
+    {"path": "ida/pseudocode-manifest.jsonl", "sha256": "67fa33eb519c2cc17c4f98e8bd71760085d0152a4f686fc6d00a3db57e298b62", "size": 784},
+    {"path": "ida/pseudocode/0001_import_relay_config_owner_cmd_h4b907bb9.c", "sha256": "5426a37e5ce94895007229fa4d982e215b7baf19cbf5cbcfe38f8b950af83a3a", "size": 2431},
+    {"path": "ida/pseudocode/0002_import_relay_config_manager_import_config_h5d3840f6.c", "sha256": "2dc874cf63e1bef3e5ecc8443b394379440de749994fa0438b5d1dfd22abcd2a", "size": 2339}
+  ],
+  "note": "manifest.json and file-manifest.json self-hashes excluded per spec"
+}

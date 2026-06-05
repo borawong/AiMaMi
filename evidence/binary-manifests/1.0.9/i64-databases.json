@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "project": "AiMaMi",
+  "release": "1.0.9",
+  "license": "Apache-2.0",
+  "stack": "Tauri 2 + React + Rust",
+  "policy": {
+    "content_imported": true,
+    "publication_shape": "zip archive containing only macOS and Windows .i64 reference database files",
+    "notes": "The archive is published outside this main source repository. This repository publishes metadata only."
+  },
+  "archive": {
+    "external_repository": "https://github.com/MapleEve/OpenAiMami-IDB",
+    "external_path": "1.0.9/AiMaMi-1.0.9-i64-databases.zip",
+    "external_url": "https://github.com/MapleEve/OpenAiMami-IDB/blob/main/1.0.9/AiMaMi-1.0.9-i64-databases.zip",
+    "size_bytes": 858599362,
+    "sha256": "7fce9b1e319b5eca8ab6216974b069b57baea3d9f177699f0383d5ea46d39825",
+    "status": "external",
+    "entries": [
+      {
+        "platform": "macos",
+        "archive_path": "macos/AiMaMi-1.0.9-macos.i64",
+        "size_bytes": 313398168,
+        "sha256": "975b54474da25006f6f123f4f331f6645bd474921964f0aac420cf2b4286107f"
+      },
+      {
+        "platform": "windows",
+        "archive_path": "windows/AiMaMi-1.0.9-windows.i64",
+        "size_bytes": 545069885,
+        "sha256": "d766bf2aef648775ecbcf7703a91fa12ca95b9af30bc8aa817396caee08507e7"
+      }
+    ]
+  },
+  "notes": [
+    "Public large-asset release contains only this zip archive.",
+    "Expanded companion database files are intentionally not published."
+  ]
+}
