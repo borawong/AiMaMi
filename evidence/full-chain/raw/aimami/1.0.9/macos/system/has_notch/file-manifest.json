@@ -1,0 +1,32 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "produced_at": "2026-06-03T10:00:00+08:00",
+  "root": "raw/aimami/1.0.9/macos/system/has_notch",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "614f508dcacfa0f54fe46f023397cdedc38d2702daa2a8f7fb4880587d994742",
+      "size": 2302
+    },
+    {
+      "path": "README.md",
+      "sha256": "4ce772d37fcabbca4aacfc9b5a4976822cba6a3f3f7b3cba98e2723eabdc4ba6",
+      "size": 2335
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "7104138cbe3c35641b80d92ca3d97edb6036768a1a82492451acf3b745b3b70c",
+      "size": 690
+    },
+    {
+      "path": "audits/has_notch-ida-closure.json",
+      "sha256": "912f149bd9e3dfa06a5cf448cf8ee25b2575b8abc6fe60a75308bdcd2710df8f",
+      "size": 1741
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "d43bb5c2064ece0b0b5af5e1ea587f109f197e31d94017de01f189561f76f6f7",
+      "size": 830
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "raw-evidence.raw.validation.result.v2",
+  "command": "builtin__all_builtin_plugins",
+  "status": "PASS",
+  "checks": {
+    "json_parse": "PASS",
+    "raw_template_entries": "PASS",
+    "ida_owner_decompile": "PASS",
+    "same_platform_ida": "PASS",
+    "idb_saved": "PASS",
+    "terminal_side_effect_map": "PASS",
+    "acceptance_mapping": "PASS"
+  },
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current macos AiMaMi 1.0.9 plugins behavior from IDA owner/callee/DTO/side-effect evidence only."
+  }
+}

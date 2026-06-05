@@ -1,0 +1,19 @@
+{
+  "schema": "restoration.cm.consumer.producer_ledger.v1",
+  "bundle": "<source-location>/audits/macos-1.0.9-relay",
+  "authoritative_producer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>", "backfill_note": "backfilled by <workstation> 3-lane consolidation 2026-06-05; derived from task-plan.json + gate-report.json; no re-reverse performed",
+    "takeover_token": "EXPLICIT_TAKEOVER",
+    "authorized_by": "user"
+  },
+  "binary_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "sha12": "985dae00be62",
+  "platform": "macos-arm64",
+  "produced_at": "2026-06-05",
+  "overall_gate": "readyToImplement",
+  "target_count": 18,
+  "readyToImplement_count": 18,
+  "strictImplementationUse_count": 0,
+  "note": "18 relay commands all readyToImplement; 3 HTTP-terminal commands (test_relay_provider/test_relay_draft/fetch_relay_models_draft) capfilled via <audit-session>"
+}

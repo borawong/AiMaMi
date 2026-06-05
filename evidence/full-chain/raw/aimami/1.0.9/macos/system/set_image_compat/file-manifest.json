@@ -1,0 +1,18 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "bundle_path": "raw/aimami/1.0.9/macos/system/set_image_compat",
+  "files": [
+    {"path": "AI.md", "sha256": "2a4e4e1645c90788127290de620539f99b83e394d7c1a6219352c81a060222f6", "size": 6337},
+    {"path": "README.md", "sha256": "2c9386558ebc041eb19fa3372cefc0494ed5478402be89d029e3afb2c8b7b2", "size": 8611},
+    {"path": "SYSTEM-DIFF.md", "sha256": "20c993f0679b6277b305de5ce2538300156227bbf0081ddc8bea01364f6a495e", "size": 2977},
+    {"path": "call-trees/set_image_compat_owner_sys.jsonl", "sha256": "c6eb1a521eca676de67a64c9f01ea25adc6d52bce5b7ca793ff9f4e770aeb883", "size": 3708},
+    {"path": "ida/pseudocode-manifest.jsonl", "sha256": "dae7ef6c14e91c81a6efb534349ec16655c34dcc8f931d2d095e06e84e15fbf4", "size": 2713},
+    {"path": "ida/pseudocode/0001_set_image_compat_owner_sys.c", "sha256": "a4e2efa73841be4c6d1567961b20d47a8799aa81b4807ef008b40470a4f4b271", "size": 6002},
+    {"path": "ida/pseudocode/0002_resolve_codex_home_leaf.c", "sha256": "5fd1c661adac869b44c46e20e35f23075053955384b03dbc6ef64ed6e6d521cd", "size": 1987},
+    {"path": "ida/pseudocode/0003_read_to_string_inner_leaf.c", "sha256": "087fb5aa6943bbbd3c30f9435fbdd212882078007df4f25a7aeb94174fec3d", "size": 2383},
+    {"path": "ida/pseudocode/0004_write_inner_leaf.c", "sha256": "1a92b846d59ce9e115b4c029885738ebaacfe537b91d47d4ff73d4f6a29cdb15", "size": 2308},
+    {"path": "ida/pseudocode/0005_core_envelope_ok_leaf.c", "sha256": "ba5714ea9c48daf0ed8df6ddff0556e2017d67d611b56e0d705ee9e120300d93", "size": 2266},
+    {"path": "ida/pseudocode/0006_tauri_wrapper.c", "sha256": "77a7abc9c8a33548adb2209f14b745f95590aa13552f47cf574a72831b76fc2e", "size": 2238}
+  ],
+  "note": "manifest.json and file-manifest.json self-hashes excluded per spec"
+}

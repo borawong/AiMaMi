@@ -1,0 +1,76 @@
+{
+    "schema":  "raw-evidence.raw.bundle_manifest.v1",
+    "produced_at":  "2026-05-31T16:02:43.7830297+08:00",
+    "producer":  "codex",
+    "machine":  "<workstation>",
+    "product":  "aimami",
+    "version":  "1.0.9",
+    "platform":  "windows-x64",
+    "module":  "source-binary",
+    "kind":  "source_binary_canonical_bootstrap",
+    "status":  "complete_source_binary_copied_to_canonical_raw_no_reverse_no_gate_promotion",
+    "canonical_bundle_path":  "<source-location>/raw/aimami/1.0.9/windows/source-binary/source-binary-bootstrap",
+    "canonical_local_bundle_path":  "<local-path>",
+    "source_binary":  {
+                          "path":  "<source-location>/raw/aimami/1.0.9/windows/source-binary/source-binary-bootstrap/AiMaM 1.0.9 win64.exe",
+                          "local_path":  "<local-path> 1.0.9 win64.exe",
+                          "sha256":  "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+                          "size":  26821632,
+                          "product_version":  "1.0.9",
+                          "file_version":  "1.0.9",
+                          "product_name":  "AiMaMi",
+                          "company_name":  "aimami",
+                          "original_filename":  ""
+                      },
+    "input_source":  {
+                         "path":  "${REPO_ROOT}/tmp/binary/AiMaM 1.0.9 win64.exe",
+                         "local_path":  "<local-path> 1.0.9 win64.exe",
+                         "sha256":  "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+                         "size":  26821632,
+                         "role":  "incoming_staging_source_only_not_evidence_root"
+                     },
+    "files":  [
+                  {
+                      "path":  "<source-location>/raw/aimami/1.0.9/windows/source-binary/source-binary-bootstrap/AiMaM 1.0.9 win64.exe",
+                      "sha256":  "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+                      "size":  26821632,
+                      "role":  "canonical_source_binary_copy"
+                  },
+                  {
+                      "path":  "<source-location>/raw/aimami/1.0.9/windows/source-binary/source-binary-bootstrap/source-hash.json",
+                      "sha256":  "c40b2958d81f6e1b5c6db08fd4b179378178b788ee5803f9e6537fffdddcf0",
+                      "size":  2150,
+                      "role":  "hash_and_version_metadata"
+                  },
+                  {
+                      "path":  "<source-location>/raw/aimami/1.0.9/windows/source-binary/source-binary-bootstrap/README.md",
+                      "sha256":  "24c164d075320dd8839ac2e3c23b873ef00712ae91cb56d4046ed317148c2aef",
+                      "size":  1492,
+                      "role":  "human_readme"
+                  }
+              ],
+    "policy":  {
+                   "copied_source_binary_to_canonical_raw":  true,
+                   "no_ghidra":  true,
+                   "no_rizin":  true,
+                   "no_internal_write":  true,
+                   "no_win_raw-evidence_tmp":  true,
+                   "no_index_shard":  true,
+                   "staging_tmp_binary_not_evidence_root":  true,
+                   "readyToImplement":  false,
+                   "implementation_use":  false,
+                   "gate_accepted":  false,
+                   "full_leaf_100":  false
+               },
+    "canonicalization":  {
+                             "canonicalized_at":  "2026-05-31T17:11:08.4266413+08:00",
+                             "reason":  "dateless canonical raw/intermediate path migration",
+                             "supersedes_path":  "<source-location>/raw/aimami/1.0.9/windows/source-binary/source-binary-bootstrap-20260531",
+                             "supersedes_local_path":  "<local-path>",
+                             "old_dated_directory_retained":  false,
+                             "no_gate_promotion":  true,
+                             "implementation_use":  false,
+                             "gate_accepted":  false,
+                             "full_leaf_100":  false
+                         }
+}

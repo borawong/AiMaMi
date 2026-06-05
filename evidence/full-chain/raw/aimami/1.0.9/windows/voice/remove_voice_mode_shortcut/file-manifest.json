@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "voice",
+  "command": "remove_voice_mode_shortcut",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "b15fb2d063f1b448edb67a23a341622c887720a786a5d9ccd6ba651635eb79d8",
+      "size": 763
+    },
+    {
+      "path": "README.md",
+      "sha256": "834c30953720f5f300b8ee4aba1a2a2cc6f27119ad960e9548976e13cb2821f2",
+      "size": 850
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "75b926ba16c456d1a276f6e8c7181b0630e26f9bc419ed2f35ef1e110f874a34",
+      "size": 387
+    },
+    {
+      "path": "audits/remove_voice_mode_shortcut-ida-closure.json",
+      "sha256": "bfb5da48b61b529431e5981496547a3caf6c99f5287612f088e1db006af9548e",
+      "size": 2672
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "8f6093647e5cff877b7365bde4129b039b18afb08143235ff74cac3a7f840cac",
+      "size": 323
+    }
+  ],
+  "note": "manifest.json excluded to avoid circular digest; manifest carries this file-manifest digest"
+}

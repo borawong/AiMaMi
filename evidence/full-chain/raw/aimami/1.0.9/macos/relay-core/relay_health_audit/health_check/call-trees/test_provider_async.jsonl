@@ -1,0 +1,15 @@
+{"depth":0,"addr":"0x10008ee30","name":"codexmate_lib::core::relay::health_check::test_provider_async::{{closure}}","role":"owner","evidence":"A-level","sha":"1db044e8efab"}
+{"depth":1,"addr":"0x10023cbe8","name":"codexmate_lib::core::relay::health_check::build_anthropic_headers","role":"helper","evidence":"A-level","sha":"1db044e8efab","call_site":"0x10008fa84"}
+{"depth":2,"addr":"http::header::map::HeaderMap::try_insert2","role":"stdlib","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x100090fd8","name":"codexmate_lib::core::relay::health_check::post_openai_endpoint_async::{{closure}}","role":"owner","evidence":"A-level","sha":"1db044e8efab","call_sites":["0x10008f12c","0x10008f3a4","0x10008f480"]}
+{"depth":2,"addr":"0x10023c440","name":"codexmate_lib::core::relay::health_check::build_openai_headers","role":"helper","evidence":"A-level","sha":"1db044e8efab","call_site":"0x100091058"}
+{"depth":3,"addr":"http::header::map::HeaderMap::try_insert2","role":"stdlib","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"reqwest::async_impl::client::Client::request","role":"http_client","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"reqwest::async_impl::request::RequestBuilder::headers","role":"http_client","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"reqwest::async_impl::request::RequestBuilder::json","role":"http_client","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"reqwest::async_impl::request::RequestBuilder::send","role":"http_client","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x100239490","name":"codexmate_lib::core::relay::health_check::responses_payload","role":"helper","evidence":"B-level","sha":"1db044e8efab","call_site":"0x10008f0c4"}
+{"depth":2,"addr":"serde_json parse / str pattern search","role":"json_parse","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x10023c99c","name":"codexmate_lib::core::relay::health_check::resolve_responses_urls","role":"helper","evidence":"B-level","sha":"1db044e8efab","call_site":"0x10008f0b4"}
+{"depth":2,"addr":"alloc::fmt::format","role":"stdlib","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"tokio runtime OnceLock / async_runtime","role":"runtime","terminated_reason":"response_serialize"}

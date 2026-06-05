@@ -1,0 +1,43 @@
+{
+  "command": "run_daemon_once",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "owner_found": true,
+  "owner_addr": "0x1402843E0",
+  "owner_renamed": "run_daemon_once_owner_sys",
+  "core_impl_found": true,
+  "call_tree_depth": 5,
+  "call_tree_complete": true,
+  "terminal_leaves": [
+    "implementation_leaf: WakeByAddressSingle (Windows sync)",
+    "implementation_leaf: sub_14056B7F0 (schtask_trigger)",
+    "implementation_leaf: sub_140451160 (JSON response serialize)",
+    "implementation_leaf: tauri_ipc_resolve_sys",
+    "implementation_leaf: sub_1400CA120 (arena drop)",
+    "implementation_leaf: sub_1400A4E70 (Err envelope)"
+  ],
+  "interface": {
+    "command_name": "run_daemon_once",
+    "argKeys": [],
+    "response_ok": "BootstrapState JSON: {schemaVersion, success, code, message, data{executedAt, runOnce, autoSwitchEnabled, activeAccountKey, switchedAccountKey, pendingSwitchAccountKey}}",
+    "response_err": "CoreError via tauri_ipc_resolve_sys"
+  },
+  "side_effects": [
+    "Reads daemon bootstrap state from memory-mapped shared RwLock",
+    "If run_once=false: triggers scheduled task execution (sub_14056B7F0)",
+    "Updates schedule state (sub_14055D580)",
+    "Signals waiting threads via WakeByAddressSingle"
+  ],
+  "daemon_trigger": "schtasks /Create /SC MINUTE /MO 5 /TN CodexMateAutoSwitch /TR <exe> /F (via daemon_schtasks_register 0x1403FB450)",
+  "dim1_backend_owner": "Accepted",
+  "dim2_call_tree_implementation_leaves": "Accepted",
+  "dim3_interface_dto_error_side_effect": "Accepted",
+  "dim4_platform_gate_windows": "Accepted",
+  "dim5_boundary_error_path": "Accepted",
+  "dim6_test_acceptance": "empty_per_task_spec",
+  "gate": "strictImplementationUse",
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "no_gate_promotion_to_ready": true
+}

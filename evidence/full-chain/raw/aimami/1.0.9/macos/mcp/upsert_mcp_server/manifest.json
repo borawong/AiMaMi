@@ -1,0 +1,62 @@
+{
+  "schema": "raw-evidence.raw.leaf.manifest.v2",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "mcp",
+  "command": "upsert_mcp_server",
+  "kind": "command",
+  "produced_at": "2026-06-03T02:58:00+08:00",
+  "producer": "codex",
+  "machine": "<workstation>",
+  "claim_id": "claim-20260603T025800-<workstation>-aimami-109-mcp",
+  "source_binary_path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb": {
+    "path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+    "idb_modified": true,
+    "idb_saved": true
+  },
+  "owner": {
+    "addr": "0x10015c8d4",
+    "decompile_ok": true
+  },
+  "threading_model": "sync mutex/TOML parse-edit-save; no async/spawn",
+  "important_callees": [
+    "0x10015c8d4",
+    "0x10061FCC0",
+    "0x10061F480"
+  ],
+  "interface": {
+    "arguments": "name, transport/mode, command/args/url/headers/environment/open/path fields",
+    "dto_boundary": "server form DTO, optional headers/environment/args, success/error envelope",
+    "error_envelope": "CoreError/poisoned-lock/parse/IO/write failures are formatted through invoke-visible IPC resolve envelope; success returns CoreEnvelope ok payload."
+  },
+  "terminal_side_effect_classes": "insert or replace MCP server block then durable config.toml write",
+  "frontend_contract_pointer": "<source-location>/audits/cross-1.0.9-sessions-analytics-mcp-skills-custom-voice/frontend/FRONTEND-FULL-CHAIN-109.md",
+  "acceptance_mapping": {
+    "unit": "validate request DTO shape and success/error envelope for command",
+    "manual": "verify MCP page loading/result/error state for command",
+    "e2e": "mock invoke command, assert parameter assembly and rendered consumption path from frontend inventory"
+  },
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current macos AiMaMi 1.0.9 MCP behavior from same-platform IDA owner/callee/DTO/error/side-effect evidence."
+  },
+  "output_files": [
+    "AI.md",
+    "README.md",
+    "SYSTEM-DIFF.md",
+    "audits/upsert_mcp_server-ida-closure.json",
+    "validation/result.json",
+    "file-manifest.json",
+    "manifest.json"
+  ]
+}

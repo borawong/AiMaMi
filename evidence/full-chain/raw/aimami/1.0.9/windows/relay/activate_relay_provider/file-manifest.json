@@ -1,0 +1,37 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "activate_relay_provider",
+  "platform": "windows-x64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "produced_at": "2026-06-02",
+  "self_hash_excluded": true,
+  "files": [
+    {
+      "path": "evidence.md",
+      "size_bytes": 2833,
+      "sha256": "31b146303dcd8ac8bd3efae4ca15c428d9be80a37ba6e2b14511e2898f6482"
+    },
+    {
+      "path": "manifest.json",
+      "size_bytes": 961,
+      "sha256": "a7ecd8f436006d5599780560a90ee9f41e5bdd10efcf64c166f8c73fcbe58abe"
+    },
+    {
+      "path": "call-trees/activate_relay_provider.jsonl",
+      "size_bytes": 2446,
+      "sha256": "efc8291d710f99f3d9ee784cc8e5bd6c49e078fa6c33ef97d9582170a3948c8b"
+    },
+    {
+      "path": "ida/pseudocode/core_impl.c",
+      "size_bytes": 2500,
+      "sha256": "99588676fc6a05ca0ab1e4102c3dde06f469258ce2fd94116c16fa83567ff639"
+    },
+    {
+      "path": "ida/pseudocode/path_resolver.c",
+      "size_bytes": 3099,
+      "sha256": "527d04df940eef5269a31d4710781332248d2b925ec186819700f98fd0b79f07"
+    }
+  ]
+}

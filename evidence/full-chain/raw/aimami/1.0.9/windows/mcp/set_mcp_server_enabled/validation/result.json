@@ -1,0 +1,27 @@
+{
+  "schema": "raw-evidence.raw.validation.v1",
+  "status": "PASS",
+  "checks": {
+    "owner_ida_decompile": "PASS",
+    "threading_model": "PASS",
+    "wrapper_xref": "PASS",
+    "callee_leaf_chain": "PASS",
+    "interface_dto": "PASS",
+    "error_envelope": "PASS",
+    "side_effect_boundary": "PASS",
+    "same_platform_gate": "PASS",
+    "acceptance_mapping": "PASS",
+    "idb_saved": "PASS"
+  },
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current windows AiMaMi 1.0.9 MCP behavior from same-platform IDA owner/callee/DTO/error/side-effect evidence."
+  }
+}

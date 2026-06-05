@@ -1,0 +1,75 @@
+{
+  "schema": "restoration.cm.reverse.audit.v1",
+  "bundle": "macos-1.0.9-system-hotspot",
+  "bundle_path": "<source-location>/audits/macos-1.0.9-system-hotspot",
+  "produced_at": "2026-06-03T00:00:00+08:00",
+  "producer": "claude-sonnet-4-6",
+  "machine": "<workstation>",
+  "session": "<audit-session>", "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "arch": "arm64",
+  "module": "system",
+  "cluster": "hotspot",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "thin_binary_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "ida_session": "mcp__ida-pro-mcp-mac, 2026-06-03, sha_verified=true, hexrays_ready=true; decompile x3 owners; set_comments x3; idb_saved=true",
+  "is_upstream": false,
+  "upstream_note": "source archive-extra; codexmate_lib::commands::hotspot module not in upstream codex-cli",
+  "bundle_type": "consumer_conclusion_strict_implementation_use",
+  "target_gate": "strictImplementationUse",
+  "ready_count": 0,
+  "strict_count": 3,
+  "consumerStartReady_count": 0,
+  "primary_commands": [
+    "get_hotspot_enabled",
+    "set_hotspot_enabled",
+    "hotspot_ready"
+  ],
+  "gate_results": {
+    "get_hotspot_enabled": {
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "implementation_use": false,
+      "gate_accepted": false,
+      "full_leaf_100": false,
+      "dim6_test_acceptance": false,
+      "owner_addr": "0x10032eac0",
+      "dims_closed": ["dim1", "dim2", "dim3", "dim4", "dim5"]
+    },
+    "set_hotspot_enabled": {
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "implementation_use": false,
+      "gate_accepted": false,
+      "full_leaf_100": false,
+      "dim6_test_acceptance": false,
+      "owner_addr": "0x10032ecbc",
+      "dims_closed": ["dim1", "dim2", "dim3", "dim4", "dim5"]
+    },
+    "hotspot_ready": {
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "implementation_use": false,
+      "gate_accepted": false,
+      "full_leaf_100": false,
+      "dim6_test_acceptance": false,
+      "owner_addr": "0x10032e664",
+      "dims_closed": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "notes": "PLATFORM DIVERGENCE: mac hotspot_ready returns () and acts on window (apply native props + alpha=1.0); Windows returns bool and checks discriminant==18 runtime state. Different semantics."
+    }
+  },
+  "platform_divergence": {
+    "hotspot_ready": {
+      "mac_return_type": "Result<(), CoreError>",
+      "win_return_type": "Result<bool, CoreError>",
+      "mac_semantics": "action: apply NSAppKit window properties + set alpha=1.0 (show window)",
+      "win_semantics": "query: check runtime discriminant==18 (Ready network state)",
+      "mac_owner_addr": "0x10032e664",
+      "win_owner_addr": "0x14026DEF0"
+    }
+  }
+}

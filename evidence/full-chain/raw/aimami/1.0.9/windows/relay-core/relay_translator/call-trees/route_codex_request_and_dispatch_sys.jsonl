@@ -1,0 +1,14 @@
+{"edge":0,"caller":"route_codex_request_and_dispatch_sys","callee":"build_upstream_url_and_headers_sys","addr":"0x14013c9f0","depth":1,"role":"url_header_builder"}
+{"edge":1,"caller":"route_codex_request_and_dispatch_sys","callee":"passthrough_to_chatgpt_upstream_sys","addr":"0x140145610","depth":1,"role":"chatgpt_official_path"}
+{"edge":2,"caller":"route_codex_request_and_dispatch_sys","callee":"stream_codex_responses_native_sys","addr":"0x14012ae30","depth":1,"role":"relay_provider_path"}
+{"edge":3,"caller":"route_codex_request_and_dispatch_sys","callee":"sub_140129280","addr":"0x140129280","depth":1,"role":"http_error_builder"}
+{"edge":4,"caller":"route_codex_request_and_dispatch_sys","callee":"sub_140120EC0","addr":"0x140120ec0","depth":1,"role":"send_response_to_client"}
+{"edge":5,"caller":"route_codex_request_and_dispatch_sys","callee":"sub_140134DC0","addr":"0x140134dc0","depth":1,"role":"compact_local_response"}
+{"edge":6,"caller":"stream_codex_responses_native_sys","callee":"execute_responses_stream_roundtrip_sys","addr":"0x140137fe0","depth":2,"role":"stream_roundtrip"}
+{"edge":7,"caller":"stream_codex_responses_native_sys","callee":"inject_web_search_system_prompt_sys","addr":"0x14020ec80","depth":2,"role":"web_tools_inject"}
+{"edge":8,"caller":"execute_responses_stream_roundtrip_sys","callee":"translate_responses_to_chat_completion_sys","addr":"0x140205540","depth":3,"role":"chat_format_path1"}
+{"edge":9,"caller":"execute_responses_stream_roundtrip_sys","callee":"translate_responses_to_anthropic_stream_sys","addr":"0x1401eefa0","depth":3,"role":"anthropic_format_path2"}
+{"edge":10,"caller":"translate_responses_to_anthropic_stream_sys","callee":"convert_anthropic_message_to_openai_chat_sys","addr":"0x140214fd0","depth":4,"role":"msg_format_converter"}
+{"edge":11,"caller":"translate_responses_to_anthropic_stream_sys","callee":"emit_anthropic_stream_events_delta_sys","addr":"0x140232060","depth":4,"role":"stream_event_emitter"}
+{"edge":12,"caller":"passthrough_to_chatgpt_upstream_sys","callee":"build_aimami_proxy_error_response_sys","addr":"0x140144c60","depth":2,"role":"proxy_error_builder","terminated_reason":"error_return"}
+{"edge":13,"caller":"convert_anthropic_message_to_openai_chat_sys","callee":"sub_140471890","addr":"0x140471890","depth":5,"role":"json_serialize_tool_input","terminated_reason":"external_call_recorded"}

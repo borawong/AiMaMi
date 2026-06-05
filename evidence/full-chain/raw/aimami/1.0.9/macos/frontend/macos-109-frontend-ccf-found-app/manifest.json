@@ -1,0 +1,416 @@
+{
+  "schema": "raw-evidence.reverse.frontend_ccf_rerun.v1",
+  "batch": "lane-60 macos-109-frontend-ccf-rerun-with-found-app",
+  "produced_at": "2026-05-31T13:36:13.034Z",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos-universal",
+  "module": "frontend-ccf",
+  "app_identity": {
+    "app_path": "<source-location>/source-binary/AiMaMi 1.0.9.app",
+    "executable_path": "<source-location>/source-binary/AiMaMi 1.0.9.app/Contents/MacOS/AiMaMi",
+    "bundle_identifier": "dev.aimami.desktop",
+    "bundle_short_version": "1.0.9",
+    "bundle_version": "1.0.9",
+    "binary_format": "Mach-O universal x86_64+arm64",
+    "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+    "expected_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+    "sha256_match": true,
+    "derived_arm64_thin_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+    "derived_arm64_thin_lineage": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/binary-lineage.json"
+  },
+  "extraction": {
+    "status": "completed_valid_rows_partial_universe",
+    "tauri_dumper_universal_exit": "1",
+    "tauri_dumper_universal_failure": "Unsupported file format for universal Mach-O; rerun used lipo arm64 thin derivative",
+    "tauri_dumper_thin_exit": "0",
+    "dumped_asset_count": 31,
+    "ipc_rows": 128,
+    "ipc_unique": 127,
+    "ccf_rows": 97,
+    "ccf_unique": 79,
+    "invalid_rows": 0,
+    "missing_unique_count": 50,
+    "extra_unique_count": 2,
+    "rows_with_trigger": 45,
+    "rows_with_guard": 15,
+    "missing_unique": [
+      "apply_custom_instruction",
+      "begin_add_account_attach_monitor",
+      "cancel_voice_trigger_capture",
+      "capture_voice_trigger_key",
+      "clean",
+      "clear_custom_instruction_block",
+      "diagnose",
+      "generate_voice_prompt",
+      "get_passthrough_audit_log",
+      "get_plugin_config",
+      "get_relay_active",
+      "get_relay_proxy_status",
+      "inject_voice_text",
+      "load_custom_instruction_state",
+      "load_voice_asr_config",
+      "load_voice_llm_config",
+      "load_voice_runtime_status",
+      "load_voice_workspace",
+      "logout",
+      "preview_custom_instruction_apply",
+      "rebuild_registry",
+      "remove_voice_history_entry",
+      "remove_voice_mode_shortcut",
+      "remove_voice_template",
+      "remove_voice_vocabulary",
+      "remove_voice_vocabulary_app_scope",
+      "replace_voice_vocabulary_kind",
+      "request_accessibility_permission",
+      "request_voice_permissions",
+      "resolve_voice_vocabulary_app_info",
+      "rollback_custom_instruction",
+      "run_daemon_once",
+      "save_voice_asr_config",
+      "save_voice_llm_config",
+      "set_voice_global_shortcut",
+      "set_voice_mode_shortcut",
+      "set_voice_processing_mode_id",
+      "set_voice_trigger_bindings",
+      "set_voice_trigger_key",
+      "set_voice_trigger_listener_suppressed",
+      "show_voice_search_overlay",
+      "start_voice_capture",
+      "stop_voice_capture",
+      "test_voice_asr_config",
+      "test_voice_llm_config",
+      "update_plugin_config",
+      "update_voice_runtime_settings",
+      "upsert_voice_template",
+      "upsert_voice_vocabulary",
+      "upsert_voice_vocabulary_app_scope"
+    ],
+    "extra_unique": [
+      "custom_instructions_entry_enabled",
+      "recharge_entry_enabled"
+    ]
+  },
+  "files": {
+    "raw_bundle": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app",
+    "frontend_control_flow": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/frontend-control-flow.jsonl",
+    "ipc_contracts": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/ipc-contracts.jsonl",
+    "api_map": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/api-map.json",
+    "coverage_summary": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/ccf-coverage-summary.json",
+    "dumped_files": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped-files.txt"
+  },
+  "gate_decision": {
+    "accepted_frontend_ccf": false,
+    "reason": "bounded minified extraction produced valid non-empty rows, but full IPC universe is partial: 79/127 unique commands covered; 50 unique IPC commands lack frontend CCF rows; backend/pseudocode/call-tree/interface/acceptance dimensions not evaluated",
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "no_promotion": true
+  },
+  "route_correction": {
+    "canonical_upstream_version_root": "<source-location>/upstream/aimami/1.0.9",
+    "wrote_internal_reverse_upstream": false,
+    "internal_reverse_upstream_forbidden": true,
+    "raw_under_allowed_root": true
+  },
+  "files_manifest": [
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/AiMaMi.arm64.thin",
+      "sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+      "size": 26093360
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/binary-lineage.json",
+      "sha256": "76a3d968758d5f9924f43a69d0c6edd7b3ad6a5dd35d4e51678be2a1c3e5cd03",
+      "size": 439
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/accounts-page-CJFT2P5o.js",
+      "sha256": "e340c64f7d8fa05ce8215efba75684dad64e33dac1ad3f5c6bdccbd0e31f27cf",
+      "size": 55265
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/analytics-panel-D01GGJ7u.js",
+      "sha256": "a5aaa4ea6b3c31225090ba6d4607305b31d16d0447721470f861c333254b18",
+      "size": 31271
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/app-C4jGp0lC.js",
+      "sha256": "a2b01cf17373cfa1ee4165665edec4fd177a90a2a38a711119b7f04ed4741752",
+      "size": 1225
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/badge-lO7WXF4P.js",
+      "sha256": "a1a51238293a9c15fcc287c3fcc10778bef98c92600ba534762a34e15027ebe8",
+      "size": 722
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/bento-card-Dmmk84Fo.js",
+      "sha256": "eb5753700b4dc21284b739b19ef3d1011a24f454198eead723f648b23e763b0f",
+      "size": 549
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/chevron-down-BeWDzAuc.js",
+      "sha256": "2eddd547bec4b8f4386b9fed1af92fdc001e9ba382c25d1479d858044b1d4b",
+      "size": 296
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/chevron-right-UPip_PAp.js",
+      "sha256": "eab2e3d6cb14b4c77332db4d36d30dcd25c36aca7aca6b7d62f1e52b6f4b54b6",
+      "size": 298
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/copy-5aWLQhLO.js",
+      "sha256": "c2c4364e9c8758cbbb10f822ffdef73d1e535eb24152daf25b89515a34ecf3bf",
+      "size": 400
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/globe-BPF4oTl2.js",
+      "sha256": "1db0abc793708234754b11acb3427bd8cecfc7ab6dbaa2c24b7dbf2c354698e8",
+      "size": 411
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-7820-NqI.js",
+      "sha256": "f6597dbe70007903406fd8fdf99b8c884e22706d85e8ac13118384e9506b2364",
+      "size": 288
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CCpZHHpo.js",
+      "sha256": "dd497ca0a12c1175bcd8631dc945f74da90fcd7ce7da432d043719668b83217c",
+      "size": 232
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CJQqyjVG.js",
+      "sha256": "9730ce21b2299df59bdfe5163dd1785035deae44cdf54c2bbabc1f041805bf",
+      "size": 1080
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+      "sha256": "a03d23862a4ec489c0aa81fc131027b4b4894ef9a846e1cd19b8e3c69a390cc0",
+      "size": 656775
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-DOPtUrVF.css",
+      "sha256": "259c2ba398594ad2220dc724fe7c7e73ba92cf4c796019123384d3ad64176822",
+      "size": 100753
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/maintenance-page-j6kXR210.js",
+      "sha256": "3603cea7d0b03d879ea04f556370664bcdcea6154026d6e72850dd3c21",
+      "size": 15367
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/mcp-page-CWT3lnG-.js",
+      "sha256": "486097aeb2f372601f80137c6254a24f784ce4c3c6b6e4f15c272def6d4514aa",
+      "size": 11430
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/pencil-B_hZHMms.js",
+      "sha256": "705b8cd3a95bdc39c1636eed4b2705d8d39aafd2d033a5184f373c2eb48c6a99",
+      "size": 445
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/plugins-page-BOi_QT1c.js",
+      "sha256": "d4307b285869114b8db1a7a96b94b9789516ea5d76eb5506616acb0be800e5",
+      "size": 2483
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/plus-DLmEjR9w.js",
+      "sha256": "6d80c0346e3161cb12bd2cf99e432a83e3f5cc806993cbb683e11d21acaeb75b",
+      "size": 322
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/refresh-cw-YG16BpN4.js",
+      "sha256": "c434d14a6e26c371026d554271e328a86520c6611f7cd1bd6f21fa1c470f66",
+      "size": 489
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/relay-page-CljGSoid.js",
+      "sha256": "73ae24a53fde91e2b9927eb9bfcb38ff6ca6f8ca38f897a5701e0f4a9ac88027",
+      "size": 70243
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/rotate-ccw-DdA7m5aQ.js",
+      "sha256": "d48bbf121ad189e382a1026a6ba1dc6330b7490362822afa9a2d9f20180743",
+      "size": 368
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/select-D3TF-G7B.js",
+      "sha256": "9978f52ed9ec7f3721a20dbb0f1ce3dcd235d598e2999b75c83ac0717053d2b8",
+      "size": 21560
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/sessions-page-_V8EZ45X.js",
+      "sha256": "8e8705b7586668d3d2b2927d5ac6e5b3eb561240cb0fe0282addb8de64100bb2",
+      "size": 15218
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/settings-page-CHeElwco.js",
+      "sha256": "6a68849a28f85934e2c8db8d437d46a84e221946875539a6c4e17223b14d606b",
+      "size": 9784
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/skills-page-R7hR7Rs1.js",
+      "sha256": "bb11132812434eb63349e631756f39b97aaa3c2dd069cc073086308b4eb040",
+      "size": 7819
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/switch-CLDV4nI8.js",
+      "sha256": "d6e46864f5d37a250903a2749c9fd986951353a556e3b6fdeff7053f5f3740",
+      "size": 2484
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/trash-2-Bq5byYZP.js",
+      "sha256": "2042aaa981f937bdafb6e43616ab40be6527bc110acfe9b0cf0cf9dc20f4c471",
+      "size": 526
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/upload-OvMZGXcd.js",
+      "sha256": "e6208be11a1f7d58b6319e1dc8c17f1784633df3ff71de90bcfd71a6f25f3548",
+      "size": 426
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/use-relay-providers-BNphfsn5.js",
+      "sha256": "d717a0a9ec40b1ae83d2285a719f669b176ea3aca65dc4199a883de2297327",
+      "size": 3722
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/index.html",
+      "sha256": "99038169300fd720e61222e63f34096cbc9d84591ee4e14fe7075b40f10d5ee6",
+      "size": 1455
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped-files.txt",
+      "sha256": "40086f8c05eb5f55c27bf5550b0c433f7492988d01146076d72521a331541cce",
+      "size": 4718
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/extract-command.txt",
+      "sha256": "a15454458a4207c113dc0ee31184cc339f98d9cd524d17cf58f38b11dd9ce645",
+      "size": 1051
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/api-map.json",
+      "sha256": "e660e85262ef3ff8951abb181d815a84a6095ec0eaa1574b0328ae90f59fa08a",
+      "size": 21321
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/ccf-coverage-summary.json",
+      "sha256": "ac2f01ce619929f212eb9a94269d020bde183f029d4e248d3dd7c1e92affe5",
+      "size": 1883
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/frontend-contract-report.md",
+      "sha256": "aa52b52f6f0382c3dd45716126704975af0b8cdef660d4763f9a97ff4b85e6",
+      "size": 18255
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/frontend-control-flow.jsonl",
+      "sha256": "b3a382e686a8c3cf2575b5f3ddab5c075dfa1bf73f678211ff318a8bb0b25404",
+      "size": 40062
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/frontend-files.txt",
+      "sha256": "bdeca64df067c1065ec4f24585f23628b0be7979a5db418edfc2ced93c7f799a",
+      "size": 874
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/http-hits.jsonl",
+      "sha256": "37235577833d85e3b29bbdabdbd2aae44fc0ea2d5044ff7e13ccc967543cf805",
+      "size": 43979
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/ipc-contracts.jsonl",
+      "sha256": "f2e4a247144dc6e9303e372f278d060257b3ef0d3d55282a6a7c9a1fef56d1b2",
+      "size": 93193
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/query-hits.jsonl",
+      "sha256": "4bb1977e8fe812eb74262744986bf40d9a3dd7bb3285c1e27818fa2490d4ae",
+      "size": 21269
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/router-hits.jsonl",
+      "sha256": "8d0be179d0bd02211dafe966af8b182c6ca7f4e336b938f11aa95507cc8840f6",
+      "size": 2204
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/source-map-recovered.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/source-map-refs.txt",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "size": 1
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/source-maps.txt",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "size": 1
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend-contracts.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend-contracts.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/minified-ccf.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size": 2
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/minified-ccf.stderr.log",
+      "sha256": "dc46cddfbfbc0f83b4384821d09dcbddfb65a10c43014320ca1743f56e265efe",
+      "size": 1208
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/minified-ccf.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/summary.json",
+      "sha256": "4a7081f9d1bfad492a6bb562f071b98172e18aa0c77771c9867086226d165379",
+      "size": 5316
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/tauri-dumper-thin.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "size": 2
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/tauri-dumper-thin.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/tauri-dumper-thin.stdout.log",
+      "sha256": "9bd59a3d2b7bbc8e56b3e87b724f817f8b9f2c2bd0613eacf596156073be8e2c",
+      "size": 1750
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/tauri-dumper.exit",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "size": 2
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/tauri-dumper.stderr.log",
+      "sha256": "9157b2310b5bb48e589e35fa6a022aaef40d5128300b3731c4a1f69453ef9726",
+      "size": 31
+    },
+    {
+      "path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/tauri-dumper.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    }
+  ]
+}

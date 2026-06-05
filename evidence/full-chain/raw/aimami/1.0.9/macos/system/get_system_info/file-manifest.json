@@ -1,0 +1,18 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "bundle_path": "raw/aimami/1.0.9/macos/system/get_system_info",
+  "self_hash_excluded": true,
+  "files": [
+    {"path": "AI.md",               "sha256": "72de8cb4f604a413665d35a865a20391db0f65cf9e7929cbd8165fffc7d3a4", "size": 5719},
+    {"path": "README.md",           "sha256": "dd2c15f094d7a7d6c0d864ffa9806a6f6cbabc861212b9a286b23adb03624b2d", "size": 7177},
+    {"path": "SYSTEM-DIFF.md",      "sha256": "6916e8e7a5d3e6514648199152246fde7e55ddd2371363dfbcf3ecf870a0fc97", "size": 3768},
+    {"path": "validation/result.json", "sha256": "162f38aef4b4bf9b5568e058b053c477caba99028f850f69a9f33f3ed3c2febf", "size": 2542},
+    {"path": "call-trees/codexmate_lib::commands::system::get_system_info.jsonl", "sha256": "98e94f0797e2c9872d79d0f481e160ad91eaae23861d89f5a8396f8452ee45", "size": 3918},
+    {"path": "ida/pseudocode-manifest.jsonl", "sha256": "8f28672944ebcab41a7ef81394599e793e3a240dc77ec3fc4d9f0bf4eac1ce38", "size": 1666},
+    {"path": "ida/pseudocode/0001_get_system_info_owner_cmd_6dde4e8d.c",              "sha256": "cecd3d2516ea7a75f7d0da18e3a59e05fbb1dbea2d5b76c6b12d3d10cb705a56", "size": 11184},
+    {"path": "ida/pseudocode/0002_get_system_info_platform_hostname_get_20dd19b6.c",  "sha256": "bd1959e8e69a26eef553a17cb1cf707afa0a1cebd70056baf11f7db2f298ad", "size": 2153},
+    {"path": "ida/pseudocode/0003_get_system_info_tauri_wrapper_closure_9f4253799d.c","sha256": "256a45b450b5d352cf93459011bf432756d4844a1385bc70e3d302e85c2f4752", "size": 4738},
+    {"path": "ida/pseudocode/0004_get_system_info_ipc_response_body_26fc1ff0.c",      "sha256": "6426e22fabbb6598f9b14c429a2b9b530ecb972707b0593b30ddd34afacad9d3", "size": 5302}
+  ],
+  "note": "manifest.json and file-manifest.json self-hashes excluded per spec"
+}

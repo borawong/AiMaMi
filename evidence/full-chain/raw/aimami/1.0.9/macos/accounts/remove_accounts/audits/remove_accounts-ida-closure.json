@@ -1,0 +1,124 @@
+{
+  "schema": "raw-evidence.raw.ida_closure_audit.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "accounts",
+  "command": "remove_accounts",
+  "threading_model_first": true,
+  "frontend": {
+    "command": "remove_accounts",
+    "wrapper": "removeAccounts",
+    "argKeys": [
+      "accountKeys"
+    ],
+    "ipc_contract_path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/ipc-contracts.jsonl",
+    "ipc_contract_row": 5,
+    "ccf_path": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/frontend-control-flow.jsonl",
+    "ccf_row": 5
+  },
+  "ida": {
+    "idb_path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+    "binary_path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi",
+    "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+    "idb_saved": true,
+    "comments_written": [
+      "0x100145060",
+      "0x10014514c",
+      "0x100330a08",
+      "0x100330be8",
+      "0x1005e4850",
+      "0x1005e4888",
+      "0x1005e49a8",
+      "0x1005e4adc",
+      "0x1005e4af8",
+      "0x1005e4cf4",
+      "0x1005e4d60",
+      "0x1005e4d80",
+      "0x1005e4da4",
+      "0x1005e4e30"
+    ]
+  },
+  "owners": {
+    "tokio_poll": {
+      "addr": "0x100145060",
+      "role": "blocking task poll entry",
+      "callsite_to_command_body": "0x10014514c"
+    },
+    "command_body": {
+      "addr": "0x100330a08",
+      "role": "Tauri blocking command body",
+      "core_callsite": "0x100330be8"
+    },
+    "core_owner": {
+      "addr": "0x1005e4850",
+      "symbol": "codexmate_lib::core::repository::Repository::remove_accounts"
+    }
+  },
+  "terminal_effects": [
+    {
+      "addr": "0x1005e4888",
+      "effect": "load_registry",
+      "branch": "missing registry error before delete/persist/quota/snooze"
+    },
+    {
+      "addr": "0x1005e49a8",
+      "effect": "active account guard",
+      "branch": "active account conflict before delete/persist/quota/snooze"
+    },
+    {
+      "addr": "0x1005e4adc",
+      "effect": "snapshot metadata before delete"
+    },
+    {
+      "addr": "0x1005e4af8",
+      "effect": "snapshot file remove; non-fatal delete error in static flow"
+    },
+    {
+      "addr": "0x1005e4cf4",
+      "effect": "persist retained registry"
+    },
+    {
+      "addr": "0x1005e4d60",
+      "effect": "save retained quota store when changed"
+    },
+    {
+      "addr": "0x1005e4d80",
+      "effect": "clear first snooze path"
+    },
+    {
+      "addr": "0x1005e4da4",
+      "effect": "clear second snooze path"
+    },
+    {
+      "addr": "0x1005e4e30",
+      "effect": "success CoreEnvelope"
+    }
+  ],
+  "gate": {
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "moduleExitAllowed": false,
+    "gateEffect": "no_promotion"
+  },
+  "target": "remove_accounts",
+  "status": "accepted_static_ida_raw_leaf_no_gate_promotion",
+  "currentAccountsReducer": "logic/ACCOUNTS-IDB-WRITEBACK-CURRENT-SYNC-109.md",
+  "platformBoundary": "macos_only",
+  "idb_writeback_current": {
+    "idb_modified": true,
+    "idb_saved": true,
+    "set_comments_count": 38
+  },
+  "strictImplementationUse": false,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false,
+  "updated_at": "2026-06-02T23:12:00+08:00"
+}

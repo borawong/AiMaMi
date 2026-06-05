@@ -1,0 +1,37 @@
+{
+  "schema": "restoration.cm.reverse.producer_ledger.v1",
+  "bundle": "audits/macos-1.0.9-sessions-analytics",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "sessions-analytics",
+  "producer": "codex",
+  "machine": "<workstation>",
+  "machine_note": "backfilled by <workstation> consolidation 2026-06-05; machine field from manifest.json producer record; 2026-06-04 IDA reverify reductions also performed on <workstation>",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "gate_status": "PASS",
+  "gate_accepted": true,
+  "readyToImplement": true,
+  "full_leaf_100": true,
+  "commands_total": 8,
+  "commands_ready": 8,
+  "produced_at": "2026-06-03T02:38:00+08:00",
+  "reverify_at": "2026-06-04",
+  "backfilled_at": "2026-06-05",
+  "idb_saved": true,
+  "commands": [
+    "load_sessions",
+    "delete_sessions",
+    "load_usage_analytics",
+    "load_session_analytics",
+    "load_token_analytics",
+    "load_tool_analytics",
+    "load_change_analytics",
+    "load_quota_history"
+  ],
+  "notes": [
+    "2026-06-04 IDA reverify reduced into canonical raw leaves; retired <source-location>/sessions-analytics/ mixed root must not be consumed.",
+    "load_usage_analytics side effect confirmed: writes bootstrap-cache.json usageAnalytics.",
+    "load_quota_history side effect confirmed: rewrites quota history after 7-day compaction."
+  ]
+}

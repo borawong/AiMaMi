@@ -1,0 +1,27 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "mcp",
+  "command": "upsert_mcp_server",
+  "owner": "0x140277e50",
+  "owner_decompile_ok": true,
+  "threading_model": "sync mutex/TOML parse-edit-save; no async/spawn",
+  "xrefs_wrapper_closed": true,
+  "callee_leaf_chain_closed": true,
+  "important_callees": [
+    "0x140277e50",
+    "0x140160FB0",
+    "managed_block_migration_core_sys",
+    "toml_block_renderer_core_sys"
+  ],
+  "interface_dto_closed": true,
+  "error_envelope_closed": true,
+  "side_effect_boundary_closed": true,
+  "same_platform_gate_closed": true,
+  "acceptance_mapping_closed": true,
+  "idb_comments_written": true,
+  "idb_saved": true,
+  "conclusion": "accepted_full_leaf_100_ida_direct_mcp"
+}

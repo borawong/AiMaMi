@@ -1,0 +1,26 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v1",
+  "leaf": "PluginRegistry__update_settings",
+  "platform": "macos",
+  "owner": {
+    "addr": "0x10015b42c",
+    "decompile_ok": true,
+    "pseudocode_lines": 145,
+    "pseudocode_chars": 4385
+  },
+  "important_callees": "0x10015b6fc",
+  "threading_model": "registry update_settings -> save_store_static",
+  "terminal_side_effect_classes": "mutex protected settings mutation, missing-target error, save-store side effect",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current macos AiMaMi 1.0.9 plugins behavior from IDA owner/callee/DTO/side-effect evidence only."
+  },
+  "idb_saved": true
+}

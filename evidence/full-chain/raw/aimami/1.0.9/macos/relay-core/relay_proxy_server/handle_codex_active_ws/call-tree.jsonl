@@ -1,0 +1,17 @@
+{"from": "handle_codex_active_ws::{{closure}}", "from_addr": "0x100091370", "to": "strip_websocket_request_headers", "to_addr": "0x100247554", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_active_ws::{{closure}}", "from_addr": "0x100091370", "to": "maybe_answer_codex_ws_prewarm::{{closure}}", "to_addr": "0x100096288", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_active_ws::{{closure}}", "from_addr": "0x100091370", "to": "pick_candidates_for", "to_addr": "0x100241824", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_active_ws::{{closure}}", "from_addr": "0x100091370", "to": "forward_codex_responses_internal::{{closure}}", "to_addr": "0x1000987a0", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_active_ws::{{closure}}", "from_addr": "0x100091370", "to": "bridge_http_response_to_codex_ws::{{closure}}", "to_addr": "0x100097208", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_active_ws::{{closure}}", "from_addr": "0x100091370", "to": "bridge_http_error_to_codex_ws::{{closure}}", "to_addr": "0x100095c48", "depth": 1, "edge_type": "direct_call"}
+{"from": "handle_codex_active_ws::{{closure}}", "from_addr": "0x100091370", "to": "read_normalized_codex_ws_body::{{closure}}", "to_addr": "0x100096684", "depth": 1, "edge_type": "direct_call"}
+{"from": "pick_candidates_for", "from_addr": "0x100241824", "to": "std::sys::pal::unix::sync::mutex::Mutex::lock", "to_addr": "0x100d3499c", "depth": 2, "edge_type": "direct_call"}
+{"from": "pick_candidates_for", "from_addr": "0x100241824", "to": "storage::lazy_load_api_key", "to_addr": "0x1001d0e2c", "depth": 2, "edge_type": "direct_call"}
+{"from": "pick_candidates_for", "from_addr": "0x100241824", "to": "breaker::select_candidates", "to_addr": "0x100159464", "depth": 2, "edge_type": "direct_call"}
+{"from": "pick_candidates_for", "from_addr": "0x100241824", "to": "chrono::offset::utc::Utc::now", "to_addr": "0x10080f270", "depth": 2, "edge_type": "direct_call", "terminated_reason": "external_call_recorded"}
+{"from": "storage::lazy_load_api_key", "from_addr": "0x1001d0e2c", "to": "keychain::get_api_key", "to_addr": "0x1001598b8", "depth": 3, "edge_type": "direct_call", "terminated_reason": "sidecar_dispatch"}
+{"from": "breaker::select_candidates", "from_addr": "0x100159464", "to": "core::slice::sort::stable::driftsort_main", "to_addr": "0x1004c7954", "depth": 3, "edge_type": "direct_call", "terminated_reason": "external_call_recorded"}
+{"from": "breaker::select_candidates", "from_addr": "0x100159464", "to": "core::slice::sort::shared::smallsort::insertion_sort_shift_left", "to_addr": "0x100533890", "depth": 3, "edge_type": "direct_call", "terminated_reason": "external_call_recorded"}
+{"from": "breaker::select_candidates", "from_addr": "0x100159464", "to": "Iterator::partition", "to_addr": "0x1004f70", "depth": 3, "edge_type": "direct_call", "terminated_reason": "external_call_recorded"}
+{"from": "maybe_answer_codex_ws_prewarm::{{closure}}", "from_addr": "0x100096288", "to": "codex_ws_prewarm_completed_payload", "to_addr": "0x100096434", "depth": 2, "edge_type": "direct_call"}
+{"from": "maybe_answer_codex_ws_prewarm::{{closure}}", "from_addr": "0x100096288", "to": "axum::extract::ws::WebSocket::send::{{closure}}", "to_addr": "0x1000a5848", "depth": 2, "edge_type": "terminal_send", "terminated_reason": "response_serialize"}

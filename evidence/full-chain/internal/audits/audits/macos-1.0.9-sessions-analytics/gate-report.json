@@ -1,0 +1,124 @@
+{
+  "schema": "restoration.cm.reverse.module_gate_report.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "sessions-analytics",
+  "status": "PASS",
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "moduleExitAllowed": true,
+  "commands_total": 8,
+  "commands_ready": 8,
+  "commands": [
+    {
+      "command": "load_sessions",
+      "owner": "0x1005716d0",
+      "threading_model": "sync FS metadata + SQLite/rusqlite + rollout index + CPU filtering; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/macos/sessions/load_sessions",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "delete_sessions",
+      "owner": "0x1005759ec",
+      "threading_model": "sync selected-id destructive mutator; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/macos/sessions/delete_sessions",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "load_usage_analytics",
+      "owner": "0x1005f894c",
+      "threading_model": "sync mutex CodexPaths clone -> usage aggregation, then sync bootstrap cache persistence update; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/macos/sessions/load_usage_analytics",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "load_session_analytics",
+      "owner": "0x1005f91bc",
+      "threading_model": "sync mutex CodexPaths clone -> session analytics; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/macos/sessions/load_session_analytics",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "load_token_analytics",
+      "owner": "0x1005f856c",
+      "threading_model": "sync mutex CodexPaths clone -> sensitive-field analytics; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/macos/sessions/load_token_analytics",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "load_tool_analytics",
+      "owner": "0x1005f81c8",
+      "threading_model": "sync mutex CodexPaths clone -> tool analytics; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/macos/sessions/load_tool_analytics",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "load_change_analytics",
+      "owner": "0x1005f8e18",
+      "threading_model": "sync mutex CodexPaths clone -> change analytics; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/macos/sessions/load_change_analytics",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    },
+    {
+      "command": "load_quota_history",
+      "owner": "0x1005f7dfc",
+      "threading_model": "sync mutex CodexPaths clone -> quota history read/filter/sort/compaction rewrite; no async/spawn",
+      "raw_leaf": "<source-location>/raw/aimami/1.0.9/macos/sessions/load_quota_history",
+      "readyToImplement": true,
+      "full_leaf_100": true
+    }
+  ],
+  "idb_saved": true,
+  "machine": "<workstation>",
+  "machine_note": "backfilled by <workstation> consolidation 2026-06-05; value from manifest.json producer record",
+  "canonicalCorrections20260604": {
+    "source": "live IDA MCP mac reverify in AiMaMi 1.0.9 IDB; IDB comments saved 2026-06-04",
+    "gateEffect": "gate booleans remain readyToImplement/full_leaf_100; corrections close stale canonical descriptions and remove deferred/outtake-only state",
+    "items": [
+      {
+        "command": "load_usage_analytics",
+        "correction": "side effect includes bootstrap-cache.json usageAnalytics persistence write via bootstrap_cache::update -> serde_json::to_vec -> std::fs::write::inner; prior read-only wording was incomplete"
+      },
+      {
+        "command": "load_token_analytics",
+        "correction": "real core callee is 0x10054939c compute_token_analytics, followed by 0x100547988 parse_all_sessions; prior 0x10054a0a4 was sibling session core"
+      },
+      {
+        "command": "load_tool_analytics",
+        "correction": "real core callee is 0x100548aa8 compute_tool_analytics, followed by 0x100547988 parse_all_sessions; prior 0x10054a0a4 was sibling session core"
+      },
+      {
+        "command": "load_change_analytics",
+        "correction": "real core callee is 0x100549a78 compute_change_analytics; upstream DTO is command-count based totalCommands/writeCommands/readCommands/otherCommands + series date/commands/writeOps/readOps"
+      },
+      {
+        "command": "load_quota_history",
+        "correction": "side effect includes quota history 7-day compaction rewrite via std::fs::write::inner; prior no-write wording was incomplete"
+      }
+    ]
+  },
+  "frontendConsumerHandoff": {
+    "status": "complete_current_source_frontend_chain",
+    "logic": "logic/FRONTEND-CONSUMER-CHAIN-109.md",
+    "noGatePromotion": true,
+    "currentSourceFrontendStatus": "live"
+  },
+  "frontendValidatorNotes": [
+    "Static source validation only in this handoff; App/manual acceptance must still execute before implementation sign-off.",
+    "After delete_sessions, current code invalidates [\"sessions\"] and refetches active [\"usage-analytics\"] only; session/sensitive-field/tool/change detail analytics can remain cached until their 5 minute stale window.",
+    "Quota history cache field differs between Overview activeAccountKey and Analytics activeAccountKey ?? \"none\"; enabled guards limit impact but consumers must keep this in mind.",
+    "recover_unindexed_sessions is current source archive product/baseline extra and is excluded from AiMaMi 1.0.9 upstream ready queues."
+  ]
+}

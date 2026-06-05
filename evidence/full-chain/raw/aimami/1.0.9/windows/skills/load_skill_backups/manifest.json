@@ -1,0 +1,41 @@
+{
+  "schema": "raw-evidence.raw.leaf.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "skills",
+  "command": "load_skill_backups",
+  "status": "accepted_full_leaf_100_ida_direct_skills",
+  "source_binary": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "frontend_contract_pointer": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/",
+  "owner": {
+    "wrapper": "0x14026c270",
+    "owner": "0x1405770d0",
+    "callees": [
+      "0x14024AED0 load backups helper",
+      "skill-backups/metadata.json scan",
+      "repo lock/poisoned-lock"
+    ]
+  },
+  "idb_modified": true,
+  "idb_saved": true,
+  "outputs": [
+    "AI.md",
+    "README.md",
+    "SYSTEM-DIFF.md",
+    "audits/load_skill_backups-ida-closure.json",
+    "validation/result.json",
+    "file-manifest.json",
+    "manifest.json"
+  ],
+  "index_status": "append_pending_then_appended",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true
+  }
+}

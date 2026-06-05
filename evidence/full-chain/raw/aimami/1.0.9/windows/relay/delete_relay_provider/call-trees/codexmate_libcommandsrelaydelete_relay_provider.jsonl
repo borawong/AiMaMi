@@ -1,0 +1,17 @@
+{"depth":1,"addr":"0x140274710","name":"delete_relay_provider_owner_sys","role":"command_owner","grade":"A","string_bound":"aDeleteRelayPro@0x141269010"}
+{"depth":2,"addr":"0x1402DCBC0","name":"get_usage_refresh_interval_core_read","role":"app_scope_rate_limit_check","grade":"B","note":"LODWORD==3 means rate-limited; early return error"}
+{"depth":2,"addr":"0x1400DA320","name":"sub_1400DA320","role":"manager_scope_auth_guard","grade":"B","terminated_reason":null}
+{"depth":2,"addr":"0x1411CE640","name":"sub_1411CE640","role":"json_state_dispatcher","grade":"B","terminated_reason":null}
+{"depth":2,"addr":"0x14045F6C0","name":"get_usage_refresh_interval_core_impl","role":"providerid_param_extractor","grade":"A","note":"IDA named symbol; extracts providerId string param"}
+{"depth":2,"addr":"0x14043C720","name":"sub_14043C720","role":"delete_core","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x14014F540","name":"sub_14014F540","role":"provider_lookup_and_delete","grade":"B","note":"codexmate_lib::core::relay::manager; guard: cannot delete last enabled relay — Chinese error string; calls sub_1401523E0+relay_manager_reset_codex_config_impl_sys; codex_router_catalog.json referenced"}
+{"depth":4,"addr":"0x14014DF10","name":"relay_manager_reset_codex_config_impl_sys","role":"codex_config_reset","grade":"A","terminated_reason":"external_call_recorded"}
+{"depth":4,"addr":"0x1401523E0","name":"sub_1401523E0","role":"persistence_commit","grade":"B","note":"writes updated relay state to disk via sub_140155830"}
+{"depth":3,"addr":"0x14000A1E0","name":"sub_14000A1E0","role":"drop_input_str","grade":"C","terminated_reason":null}
+{"depth":3,"addr":"0x140464400","name":"sub_140464400","role":"serialize_result","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x14045D780","name":"sub_14045D780","role":"cleanup","grade":"C","terminated_reason":null}
+{"depth":3,"addr":"0x140001370","name":"sub_140001370","role":"drop_providerid_string","grade":"C","terminated_reason":null}
+{"depth":2,"addr":"0x140069740","name":"sub_140069740","role":"response_serialize","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x14044B0C0","name":"sub_14044B0C0","role":"json_envelope_builder","grade":"C","note":"schemaVersion/success/code/message/data"}
+{"depth":3,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","role":"http_terminal","grade":"A","terminated_reason":"external_call_recorded"}
+{"call_tree_depth":4,"terminated_reason":"external_call_recorded","terminal":"relay_manager_reset_codex_config_impl_sys@depth4+tauri_ipc_resolve_sys@depth3","complete":true,"source_binary_sha256":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}

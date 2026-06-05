@@ -1,0 +1,22 @@
+{
+  "function": "migrate_threads_for_router_with_scope",
+  "win_symbol": "migrate_threads_for_router_with_scope_sys",
+  "platform": "windows-x64",
+  "product": "AiMaMi",
+  "version": "1.0.9",
+  "addr": "0x1403e6f70",
+  "size_bytes": 9000,
+  "sha": "a5822387fa3f",
+  "source_file": "src<network-share>",
+  "module": "relay_thread_migration",
+  "gate_tier": "strictImplementationUse",
+  "genuine_ceiling": false,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "dims_covered": ["dim1", "dim2", "dim3", "dim4"],
+  "caller_confirmed": "switch_account_stop_codex_restart@0x14014asource archive0",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_date": "2026-06-04",
+  "owner_basis": "first-write",
+  "authoritative": true
+}

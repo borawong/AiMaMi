@@ -1,0 +1,76 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v2",
+  "command": "preview_account_import",
+  "status": "accepted_full_leaf_100_ida_direct_windows_accounts",
+  "owner": {
+    "addr": "0x1408FA200",
+    "command_string": "0x14129c7f8",
+    "xref": "0x1408fa2c8",
+    "decompile_ok": true
+  },
+  "threading": "tokio_async_task_scheduler_await",
+  "params": [
+    "filePath"
+  ],
+  "callees": [
+    "sub_14060A630 scheduler",
+    "sub_140387100 await",
+    "sub_140458F10 serializer",
+    "tauri_ipc_resolve_sys"
+  ],
+  "terminal_helpers": {
+    "atomic_write": "relay_atomic_write_file_sys 0x140332540 -> MoveFileExW/CreateFileW/CloseHandle",
+    "nt_write": "0x14104E390 -> 0x141036DB0 NtWriteFile",
+    "file_open": "0x1410375C0 CreateFileW/SetFileInformationByHandle/CloseHandle",
+    "event": "0x1400AF970 runtime-state-updated / PROGRESSIVE_STATE_SAVE_FAILED"
+  },
+  "side_effects": [
+    "file read/parse only",
+    "no account persistence",
+    "tauri ipc resolve"
+  ],
+  "acceptance": [
+    "filePath required",
+    "valid import preview returns parsed account rows",
+    "parse/display errors map to error envelope",
+    "no write side effect"
+  ],
+  "idb_saved": true,
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "gate": {
+    "renderSurfaceReady": true,
+    "uiCallEntryReady": true,
+    "dtoBoundaryReady": true,
+    "happyPathReady": true,
+    "boundaryPathReady": true,
+    "sideEffectReady": true,
+    "frontendConsumptionReady": true,
+    "acceptanceDraftReady": true,
+    "platformScopeDeclared": true,
+    "consumerStartReady": true,
+    "consumerUse": true,
+    "startMode": "reverse_guided",
+    "strictParityReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "unknownsBlockingStart": [],
+    "unknownsAcceptedForStart": [],
+    "productDecisionsRequired": [],
+    "upstreamSurfaceDelta": [],
+    "allowedImplementationMode": "Implement same-platform Windows AiMaMi 1.0.9 accounts behavior from IDA owner/callee/DTO/side-effect evidence only; current Windows IDA proof only.",
+    "forbiddenAssumptions": [
+      "Use same-platform Windows owner evidence.",
+      "Use current Windows owner evidence.",
+      "Do not treat scheduler-only evidence as side-effect proof without the terminal helper map."
+    ],
+    "leaf": "preview_account_import",
+    "product": "aimami",
+    "version": "1.0.9",
+    "platform": "windows-x64",
+    "module": "accounts"
+  }
+}

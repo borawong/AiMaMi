@@ -1,0 +1,35 @@
+{
+  "schema": "raw-evidence.reverse.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "binary_sha256_prefix": "1db044e8efab",
+  "binary_format": "macho",
+  "module": "relay-core/relay_health_audit/passthrough_audit",
+  "scope": "feature",
+  "produced_at": "2026-06-02T00:00:00Z",
+  "session": "relay-health-audit-deep-mac-20260602",
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "targets": [
+    "append_entry",
+    "record_passthrough",
+    "read_recent_entries",
+    "get_passthrough_audit_log"
+  ],
+  "owners": {
+    "append_entry": "0x1001c2f0c",
+    "record_passthrough_closure": "0x10009e0b4",
+    "read_recent_entries": "0x1001c3428",
+    "get_passthrough_audit_log_command": "0x1001e2780"
+  },
+  "struct": {
+    "PassthroughAuditEntry": {
+      "fields": 7,
+      "fields_names": ["at", "body_bytes", "input_types", "status", "rewritten_to"],
+      "source": "struct debug string at 0x100f2f425",
+      "note": "7 fields confirmed from struct Debug impl; full field layout partially resolved"
+    }
+  }
+}

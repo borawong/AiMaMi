@@ -1,0 +1,19 @@
+{
+  "command": "import_relay_config",
+  "platform": "windows-x64",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "session": "C-config-passthrough-diag-20260602",
+  "validated_at": "2026-06-02T08:00:00Z",
+  "gate_result": "strictImplementationUse",
+  "dim_results": {
+    "dim1_frontend_ccf": {"status": "not_covered"},
+    "dim2_owner_pseudocode": {"status": "accepted", "owner_va": "0x140270420", "source": "ida", "sha_match": true},
+    "dim3_call_tree": {"status": "accepted", "depth": 5, "terminated_reason": "persistence_commit", "terminal": "sub_14006AA80"},
+    "dim4_interface_dto_error_sideeffect": {"status": "accepted", "args_confirmed": ["filePath"], "side_effect": "destructive_replace_providers_plus_config_toml_persist", "error_branches": 5},
+    "dim5_same_platform_gate": {"status": "accepted", "platform": "windows-x64", "independent": true},
+    "dim6_test_acceptance": {"status": "not_covered"}
+  },
+  "implementation_use": false,
+  "gate_accepted": false,
+  "unknowns": ["apiKey_encryption_after_import(accepted_unknown)", "response_importedCount_skippedCount_vs_bool(accepted_unknown)", "activeByIde_merge_semantics(accepted_unknown)"]
+}

@@ -1,0 +1,13 @@
+{"depth":1,"addr":"0x14027DBF0","name":"get_relay_proxy_status_owner_sys","role":"command_owner","grade":"A","string_bound":"aGetRelayProxyS@0x14126907f"}
+{"depth":2,"addr":"0x1400DA320","name":"sub_1400DA320","role":"ipc_arg_deserializer_auth_guard","grade":"B","terminated_reason":null}
+{"depth":2,"addr":"0x1411CE640","name":"sub_1411CE640","role":"json_state_dispatcher","grade":"B","terminated_reason":null}
+{"depth":2,"addr":"0x14043F4F0","name":"sub_14043F4F0","role":"get_relay_proxy_status_core_reader","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x140148BE0","name":"sub_140148BE0","role":"proxy_struct_reader_from_relay_manager","grade":"B","note":"reads lock at a2+16 CAS; provider count at v2+24; if zero: empty status; if present: port u16 at v2+32, has_proxy bool at a1+74, url/network strings via sub_14105D150"}
+{"depth":4,"addr":"0x141206B20","name":"_InterlockedCompareExchange8_emu","role":"mutex_cas_lock","grade":"B","terminated_reason":"external_call_recorded"}
+{"depth":4,"addr":"0x141206B20","name":"WakeByAddressSingle","role":"lock_release","grade":"B","terminated_reason":"external_call_recorded"}
+{"depth":4,"addr":"0x14105D150","name":"sub_14105D150","role":"string_encode_url_network","grade":"C","terminated_reason":null}
+{"depth":2,"addr":"0x14006E780","name":"sub_14006E780","role":"response_serialize","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x140458B40","name":"sub_140458B40","role":"json_envelope_builder","grade":"C","note":"schemaVersion/success/code/message/data"}
+{"depth":3,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","role":"http_terminal","grade":"A","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x140298200","name":"sub_140298200","role":"ipc_context_finalize","grade":"B","terminated_reason":"response_serialize"}
+{"call_tree_depth":4,"terminated_reason":"external_call_recorded","terminal":"_InterlockedCompareExchange8@depth4+tauri_ipc_resolve_sys@depth3","complete":true,"source_binary_sha256":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}

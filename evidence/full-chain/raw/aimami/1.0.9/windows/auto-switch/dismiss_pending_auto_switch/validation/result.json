@@ -1,0 +1,38 @@
+{
+  "command": "dismiss_pending_auto_switch",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "owner_found": true,
+  "owner_addr": "0x14027F120",
+  "owner_renamed": "dismiss_pending_auto_switch_owner_sys",
+  "core_impl_found": true,
+  "call_tree_depth": 3,
+  "call_tree_complete": true,
+  "terminal_leaves": [
+    "implementation_leaf: sub_140564060 (state clear: pendingSwitchAccountKey = None)",
+    "implementation_leaf: WakeByAddressSingle",
+    "implementation_leaf: sub_14006BAA0 (response: Option<String>)",
+    "implementation_leaf: tauri_ipc_resolve_sys"
+  ],
+  "interface": {
+    "command_name": "dismiss_pending_auto_switch",
+    "argKeys": [],
+    "response_ok": "Option<String> — returns old pendingSwitchAccountKey if it existed",
+    "response_err": "CoreError"
+  },
+  "side_effects": [
+    "Clears pendingSwitchAccountKey in bootstrap state (sets to None)",
+    "RwLock + WakeByAddressSingle"
+  ],
+  "dim1_backend_owner": "Accepted",
+  "dim2_call_tree_implementation_leaves": "Accepted",
+  "dim3_interface_dto_error_side_effect": "Accepted",
+  "dim4_platform_gate_windows": "Accepted",
+  "dim5_boundary_error_path": "Accepted — poisoned lock, None case handled",
+  "dim6_test_acceptance": "empty_per_task_spec",
+  "gate": "strictImplementationUse",
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "no_gate_promotion_to_ready": true
+}

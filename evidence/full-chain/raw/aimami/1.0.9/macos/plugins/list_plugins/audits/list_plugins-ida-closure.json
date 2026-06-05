@@ -1,0 +1,26 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v1",
+  "leaf": "list_plugins",
+  "platform": "macos",
+  "owner": {
+    "addr": "0x1003262b8",
+    "decompile_ok": true,
+    "pseudocode_lines": 56,
+    "pseudocode_chars": 2212
+  },
+  "important_callees": "0x10015bd38",
+  "threading_model": "dispatcher branch -> PluginRegistry::list",
+  "terminal_side_effect_classes": "read registry, map PluginEntry DTO, CoreEnvelope ok list, no durable write",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current macos AiMaMi 1.0.9 plugins behavior from IDA owner/callee/DTO/side-effect evidence only."
+  },
+  "idb_saved": true
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "PluginRegistry__save_store_static",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "52ecf4013210016d82799cd8b2a8aa744d339066d62b06ef18d716675f2987a8",
+      "size": 278
+    },
+    {
+      "path": "README.md",
+      "sha256": "49131148ead14340777be1b2b088a0ee60f795190e8f008ba24a038a1aee7b",
+      "size": 187
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "1b35609f98a5a0e4a49478a12e5aa9ee79657658a770eff2c434d4aeecb4bec0",
+      "size": 186
+    },
+    {
+      "path": "audits/PluginRegistry__save_store_static-ida-closure.json",
+      "sha256": "f0ef8ad5fabd4765ab024a0f75fcdaae8b57b8b2ec006b08807af9507fa1d980",
+      "size": 930
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "c40421de55d6ed801268eeb0e9a041c8a1c1405b9c0d420df2d11c47f507f992",
+      "size": 781
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "1337a221e5f1e3493450407708e1ae81c98c06f8cf02a14485ac21835857ef2a",
+      "size": 1551
+    }
+  ]
+}

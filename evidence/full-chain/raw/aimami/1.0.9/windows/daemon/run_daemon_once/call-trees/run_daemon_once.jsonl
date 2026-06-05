@@ -1,0 +1,16 @@
+{"depth":1,"addr":"0x1402843E0","name":"run_daemon_once_owner_sys","role":"command_owner","terminated_reason":null}
+{"depth":2,"addr":"0x1400DA7C0","name":"sub_1400DA7C0","role":"repo_state_check","terminated_reason":"implementation_leaf: repo lock check"}
+{"depth":2,"addr":"0x1411CE640","name":"sub_1411CE640","role":"param_deserializer","terminated_reason":"implementation_leaf: IPC param extraction"}
+{"depth":2,"addr":"0x1400A3A40","name":"run_daemon_once_core_impl","role":"core_impl","terminated_reason":null}
+{"depth":3,"addr":"0x141206A60","name":"sub_141206A60","role":"mutex_wait_fallback","terminated_reason":"implementation_leaf: WaitOnAddress fallback"}
+{"depth":3,"addr":"0x14055B4C0","name":"sub_14055B4C0","role":"state_read","terminated_reason":"implementation_leaf: bootstrap state DB read"}
+{"depth":3,"addr":"0x14055CFC0","name":"sub_14055CFC0","role":"state_deserialize","terminated_reason":"implementation_leaf: state struct deserialization"}
+{"depth":3,"addr":"0x14056B7F0","name":"sub_14056B7F0","role":"schtask_trigger","terminated_reason":"implementation_leaf: scheduled task state execution (run_once trigger)"}
+{"depth":3,"addr":"0x14055D580","name":"sub_14055D580","role":"schedule_write","terminated_reason":"implementation_leaf: schedule state update/write"}
+{"depth":3,"addr":"0x14055BAC0","name":"sub_14055BAC0","role":"schedule_finalize","terminated_reason":"implementation_leaf: scheduler state finalize"}
+{"depth":3,"addr":"0x141206B20","name":"WakeByAddressSingle","role":"sync_wake","terminated_reason":"implementation_leaf: Windows futex wake signal"}
+{"depth":3,"addr":"0x1400A4E70","name":"sub_1400A4E70","role":"err_envelope","terminated_reason":"implementation_leaf: Err result construction"}
+{"depth":3,"addr":"0x1400CA120","name":"sub_1400CA120","role":"arena_drop","terminated_reason":"implementation_leaf: state cleanup/arena drop"}
+{"depth":2,"addr":"0x1400723D0","name":"run_daemon_once_core_resolve","role":"core_resolve","terminated_reason":null}
+{"depth":3,"addr":"0x140451160","name":"load_bootstrap_state_core_serialize","role":"response_serialize","terminated_reason":"implementation_leaf: JSON bootstrap state builder"}
+{"depth":3,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","role":"ipc_resolve","terminated_reason":"implementation_leaf: IPC response send"}

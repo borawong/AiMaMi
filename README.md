@@ -1,12 +1,4 @@
-<p align="center">
-  <img src="assets/app-icon-composed.png" alt="AiMaMi" width="128" height="128" />
-</p>
-
 <h1 align="center">AiMaMi</h1>
-
-<p align="center">
-  <strong>A native desktop companion for OpenAI Codex — manage accounts, routing, sessions, and local configuration in one place.</strong>
-</p>
 
 <p align="center">
   English · <a href="./README-cn.md">简体中文</a>
@@ -14,57 +6,85 @@
 
 ---
 
-## Overview
+## Why This Is Public
 
-Codex stores accounts, sessions, MCP entries, Skills, smart-router settings, and relay configuration across multiple files under `~/.codex`. Multi-account switching, quota exhaustion, third-party model setup, session cleanup, and config drift quickly turn day-to-day work into hand-editing TOML, JSON, and SQLite.
+AiMaMi has gone through many personal iterations. Parts of the project were
+previously maintained outside the public source tree, which made it harder for
+users and contributors to understand what the app does with local Codex data.
 
-AiMaMi is built with **Tauri 2, React, and Rust**. It consolidates these high-frequency workflows — including smart routing and relay management — into a single desktop app that reads and writes Codex data locally, reducing the risk of manual file edits.
+This repository is being expanded so those materials can be reviewed, rebuilt,
+and improved in the open.
 
----
+The goals are simple:
 
-## Core Capabilities
+- keep AiMaMi useful for personal iteration and day-to-day local workflows;
+- keep the project available under the **Apache License 2.0**;
+- make the behavior easier to inspect before running it locally;
+- reduce privacy concerns by keeping reconstruction notes, source layout, and
+  reference assets in a public repository instead of relying on opaque local
+  bundles.
 
-| Module | Pain point addressed |
-| --- | --- |
-| **Account management** | Switching accounts by editing `auth.json`; scattered quota views; cumbersome import/export |
-| **Auto-switch** | Work stops when 5-hour or weekly quota runs out; need automatic fallback and Codex restart |
-| **Smart router** | Use relay models inside Codex Desktop while keeping historical threads resumable |
-| **Relay management** | Provider setup, connectivity tests, import/export, and router diagnostics |
-| **Session management** | Safely inspect, analyze, and bulk-clean local threads from the real index |
-| **MCP / Skills** | Manage MCP entries and Skills lifecycle in the UI, with backup and restore |
-| **Plugins** | Unified toggles for built-in extensions (e.g. web tools, image support) |
-| **Custom instructions** | Manage only the AiMaMi-managed block in `~/.codex/AGENTS.md`, with preview and rollback |
-| **System maintenance** | Diagnose, clean, rebuild registry, force-quit Codex, fix common config issues |
-| **Settings & runtime** | Theme, language, quota refresh, API proxy, update checks; tray and macOS notch quota display |
-
-**Smart router note:** Relay models are forwarded through AiMaMi's local proxy. Keep AiMaMi running while Codex uses relay models.
-
-<p align="center">
-  <img src="assets/console.png" alt="AiMaMi" width="1200" height="812" />
-</p>
-<p align="center">
-  <img src="assets/qr1.png" alt="AiMaMi community QR code" width="400" height="300" />
-</p>
+If you have a complete restoration or a cleaner implementation, PRs are welcome.
 
 ---
 
-## Platform Support
+## What Is Included
 
-| Platform | Notes |
-| --- | --- |
-| macOS | Universal (Apple Silicon + Intel), macOS 12+ |
-| Windows | x64, NSIS installer |
-| Linux | Best-effort support for some workflows |
+- `src/` and `src-tauri/`: the public Tauri 2 + React + Rust source tree.
+- `docs/reconstruction/`: maps and notes for rebuilding the project from public
+  files.
+- `evidence/full-chain/internal/`: reviewed chain summaries, audit maps,
+  frontend maps, distilled leaves, and data rollups.
+- `evidence/full-chain/raw/`: raw chain text, command indexes, manifests, and
+  validation summaries.
+- `evidence/binary-manifests/`: size and hash manifests for large reference
+  assets published outside this repository.
+- External IDB archive:
+  [MapleEve/OpenAiMami-IDB](https://github.com/MapleEve/OpenAiMami-IDB) at
+  `1.0.9/AiMaMi-1.0.9-i64-databases.zip`, containing the macOS and Windows
+  `.i64` reference databases.
+- `LICENSE`: Apache License 2.0.
+
+The repository does not require local machine-specific paths or unpublished
+state to understand the public restoration flow.
 
 ---
 
-## Tech Stack
+## Restore With AI
 
-Tauri 2 · React 18 · TypeScript · Vite 6 · Tailwind CSS · shadcn/ui · Rust
+Use this prompt when asking an AI coding agent to restore or complete AiMaMi from
+this repository:
+
+```text
+Restore AiMaMi as a complete Tauri 2 + React + Rust desktop application using
+only this public repository.
+
+Read these repository-relative inputs first: README.md, README-cn.md,
+docs/reconstruction/, evidence/full-chain/internal/,
+evidence/full-chain/raw/, evidence/binary-manifests/, src/, src-tauri/,
+package.json, and src-tauri/Cargo.toml.
+
+Preserve the Apache License 2.0. Rebuild the full application behavior, UI,
+Tauri command surface, Rust backend, packaging metadata, and validation workflow
+from the public source tree and full-chain reconstruction evidence. Start with
+docs/reconstruction/full-chain-map.md, evidence/full-chain/internal/INDEX.md,
+evidence/full-chain/raw/INDEX.md, evidence/full-chain/raw/command-index.json,
+and evidence/full-chain/raw/validation-summary.json.
+
+If reference databases are needed, fetch the external archive from
+https://github.com/MapleEve/OpenAiMami-IDB at
+1.0.9/AiMaMi-1.0.9-i64-databases.zip and use the macOS and Windows .i64 files
+inside it. Treat
+evidence/binary-manifests/1.0.9/i64-databases.json as the source of truth for
+asset status, sizes, and hashes.
+
+Do not rely on local-only paths, machine state, unpublished files, credentials,
+or user data. If you produce a complete restoration, submit it as a pull request.
+```
 
 ---
 
-## Quick Start
+## Build
 
 **Requirements:** Node.js · pnpm · Rust · [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/)
 
@@ -76,39 +96,18 @@ pnpm tauri dev
 ```
 
 ```bash
-pnpm build                                        # Frontend build check
-cargo check --manifest-path src-tauri/Cargo.toml  # Rust check
-pnpm tauri build                                  # Production build
-```
-
----
-
-## Project Structure
-
-```text
-src/           React frontend
-src-tauri/     Tauri shell and Rust backend
-src/locales/   i18n (en / zh)
-scripts/       Build and release scripts
-assets/        Branding and documentation assets
-```
-
----
-
-## Architecture
-
-```text
-React UI ── invoke() ──▶ Tauri commands ──▶ core/
-                                              ├── ~/.codex          (Codex native)
-                                              └── ~/.codex/codexmate/ (AiMaMi app data)
-                         platform/            macOS / Windows implementations
+pnpm build
+cargo check --manifest-path src-tauri/Cargo.toml
+pnpm tauri build
 ```
 
 ---
 
 ## Contributing
 
-Issues and pull requests are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, validation steps, and local Codex data-safety guidance. For larger changes, open an issue first so the approach can be discussed early.
+Issues and pull requests are welcome. A complete restoration, cleaner module
+split, stronger privacy review, or better documentation can all be proposed as
+PRs.
 
 ---
 
@@ -120,4 +119,5 @@ Issues and pull requests are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING
 
 ## Disclaimer
 
-AiMaMi is an independent tool for local Codex workflows. It is not affiliated with, endorsed by, or sponsored by OpenAI. Use third-party relay services at your own risk and comply with their terms of service.
+AiMaMi is an independent tool for local Codex workflows. It is not affiliated
+with, endorsed by, or sponsored by OpenAI.

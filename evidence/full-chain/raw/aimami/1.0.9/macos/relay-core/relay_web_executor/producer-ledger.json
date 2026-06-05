@@ -1,0 +1,77 @@
+{
+  "cluster": "relay_web_executor",
+  "platform": "macos-arm64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "producer": "<workstation>",
+  "session": "relay-missed-109",
+  "produced_at": "2026-06-03",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "gate": "pre-gate",
+  "status": "produced",
+  "leaves": [
+    {
+      "va": "0x1000a2098",
+      "name": "execute_with_web_tools::{{closure}}",
+      "tier": "A",
+      "decompile_ok": true,
+      "idb_comment": true,
+      "dim2": "closed",
+      "dim3": "closed",
+      "dim4": "closed"
+    },
+    {
+      "va": "0x10009efb0",
+      "name": "execute_proxy_tools::{{closure}}",
+      "tier": "A",
+      "decompile_ok": true,
+      "idb_comment": true,
+      "dim2": "closed",
+      "dim3": "closed",
+      "dim4": "closed"
+    },
+    {
+      "va": "0x10067331c",
+      "name": "build_passthrough_response",
+      "tier": "A",
+      "decompile_ok": true,
+      "idb_comment": true,
+      "dim2": "closed",
+      "dim3": "closed",
+      "dim4": "closed"
+    },
+    {
+      "va": "0x1006734cc",
+      "name": "append_assistant_and_tool_results",
+      "tier": "A",
+      "decompile_ok": true,
+      "idb_comment": true,
+      "dim2": "closed",
+      "dim3": "closed",
+      "dim4": "closed"
+    },
+    {
+      "va": "0x10009eedc",
+      "name": "fetch_raw_text::{{closure}}",
+      "tier": "B",
+      "decompile_ok": true,
+      "idb_comment": true
+    },
+    {
+      "va": "0x1000a7c0c",
+      "name": "drop_in_place<send_request::{{closure}}>",
+      "tier": "D",
+      "decompile_ok": true,
+      "idb_comment": true,
+      "note": "destructor only; not poll body"
+    },
+    {
+      "va": "0x1009b84ac",
+      "name": "RequestBuilder::send",
+      "tier": "C",
+      "decompile_ok": true,
+      "idb_comment": true,
+      "note": "reqwest library terminal"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "raw-evidence.raw.bundle.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "arch": "x64",
+  "module": "system",
+  "command": "reset_codex_config",
+  "produced_at": "2026-06-02",
+  "producer_tool": "ida-pro-mcp-win (IDA Pro + Hex-Rays)",
+  "source_binary": "AiMaM 1.0.9 win64.exe",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "imagebase": "0x140000000",
+  "owner_addr": "0x14026F590",
+  "owner_name": "tauri_cmd_reset_codex_config_handler",
+  "impl_addr": "0x14014DF10",
+  "impl_name": "relay_manager_reset_codex_config_impl",
+  "rust_module": "codexmate_lib::core::relay::manager",
+  "call_tree_depth": 5,
+  "call_tree_terminated_reason": "fs_leaf (MoveFileExW)",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": false,
+    "startMode": "reverse_guided",
+    "implementation_use": false,
+    "gate_accepted": false,
+    "reasons_not_ready": ["frontend_ccf_unknown", "test_acceptance_mapping_not_done"]
+  },
+  "payload_hashes": {
+    "ida/pseudocode/0001_tauri_cmd_reset_codex_config_handler_14026F590.c": "c08240c1d7700829bca7231d232a41c921b7333292116294a4ace185a91f0304",
+    "ida/pseudocode/0002_relay_manager_reset_codex_config_impl_14014DF10.c": "0bfcd41f7ba270dbad1549054dc00da1a09fe0e50a15a5a160967a4d31ba9234",
+    "ida/pseudocode/0003_relay_codex_config_toml_write_140422D90.c": "a9a112ae79e8652170140fcca61e6c092a2a5034ebc29f67463d86bd8270ee3e",
+    "ida/pseudocode/0004_relay_remove_codex_router_catalog_1403A1780.c": "00b51b1a555d8f596a5cdd6d952e569e2e8fee7d08a3f152892e44060155acdc",
+    "ida/pseudocode/0005_relay_atomic_write_file_140332540.c": "b046e03f3303b3ad0ee560baeb50d9423949178a058e0fa178cfa584180faa",
+    "ida/pseudocode-manifest.jsonl": "COMPUTED_ON_WRITE",
+    "call-trees/reset_codex_config_call_tree.jsonl": "COMPUTED_ON_WRITE"
+  },
+  "side_effects": [
+    "~/.codex/config.toml: stripped of relay-injected content",
+    "~/.codex/codex_router_catalog.json: conditionally rebuilt (only when router active)"
+  ],
+  "windows_specific": {
+    "atomic_write_impl": "MoveFileExW(flags=9 = MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)",
+    "retry_on_access_denied": true,
+    "max_retries": 9,
+    "retry_sleep_ms": 500
+  },
+  "platform_policy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  }
+}

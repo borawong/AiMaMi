@@ -1,0 +1,368 @@
+{
+  "metadata": {
+    "generatedAt": "2026-06-05T11:27:42.789Z",
+    "importedFiles": 546,
+    "skippedFiles": 13,
+    "extensionDistribution": {
+      ".md": 390,
+      ".jsonl": 6,
+      ".json": 148,
+      ".txt": 2
+    },
+    "areaDistribution": {
+      "root": 6,
+      "logic": 7,
+      "data": 5,
+      "audit": 451,
+      "leaf": 61,
+      "version-diff": 7,
+      "frontend-map": 9
+    }
+  },
+  "leaves": {
+    "macos-arm64/accounts/refresh_full_runtime_snapshot": {
+      "distilled": [
+        "leaves/aimami/1.0.9/macos-arm64/accounts/refresh_full_runtime_snapshot/DISTILLED.md"
+      ],
+      "manifests": [
+        "leaves/aimami/1.0.9/macos-arm64/accounts/refresh_full_runtime_snapshot/manifest.json"
+      ],
+      "ledgers": []
+    },
+    "macos-arm64/accounts/resolve_cached_auto_switch_service_state": {
+      "distilled": [
+        "leaves/aimami/1.0.9/macos-arm64/accounts/resolve_cached_auto_switch_service_state/RESOLVE-CACHED-AUTO-SWITCH-SERVICE-STATE-DISTILLED-109.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "macos-arm64/relay_codex_diagnostic": {
+      "distilled": [
+        "leaves/aimami/1.0.9/macos-arm64/relay_codex_diagnostic/DIAG-ITEM-ADAPTER-109-DISTILLED.md",
+        "leaves/aimami/1.0.9/macos-arm64/relay_codex_diagnostic/fix_issue-DISTILLED.md"
+      ],
+      "manifests": [
+        "leaves/aimami/1.0.9/macos-arm64/relay_codex_diagnostic/manifest.json"
+      ],
+      "ledgers": []
+    },
+    "macos-arm64/relay-codex-writer": {
+      "distilled": [
+        "leaves/aimami/1.0.9/macos-arm64/relay-codex-writer/strip_all_managed_blocks-DISTILLED.md"
+      ],
+      "manifests": [
+        "leaves/aimami/1.0.9/macos-arm64/relay-codex-writer/manifest.json"
+      ],
+      "ledgers": []
+    },
+    "macos-arm64/relay-sse-translate-stream": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/macos-arm64/relay-sse-translate-stream/manifest.json"
+      ],
+      "ledgers": []
+    },
+    "macos-arm64/relay-translator-stream": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/macos-arm64/relay-translator-stream/manifest.json"
+      ],
+      "ledgers": []
+    },
+    "macos-arm64/system/confirm_pending_auto_switch/data": {
+      "distilled": [],
+      "manifests": [],
+      "ledgers": [
+        "leaves/aimami/1.0.9/macos-arm64/system/confirm_pending_auto_switch/data/producer-ledger.json"
+      ]
+    },
+    "macos/mystery-unlock/data": {
+      "distilled": [],
+      "manifests": [],
+      "ledgers": [
+        "leaves/aimami/1.0.9/macos/mystery-unlock/data/producer-ledger.json"
+      ]
+    },
+    "macos/mystery-unlock": {
+      "distilled": [
+        "leaves/aimami/1.0.9/macos/mystery-unlock/MYSTERY-UNLOCK-MAC-109-distilled.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "macos/tls-config": {
+      "distilled": [
+        "leaves/aimami/1.0.9/macos/tls-config/reqwest-tls-config-distilled.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/append_assistant_and_tool_results/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/append_assistant_and_tool_results/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/append_assistant_and_tool_results/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/apply_codex_state_handler/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/apply_codex_state_handler/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/apply_codex_state_handler/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/auto-switch/confirm_pending_auto_switch/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/auto-switch/confirm_pending_auto_switch/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/auto-switch/confirm_pending_auto_switch/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/auto-switch/confirm_pending_auto_switch": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/auto-switch/confirm_pending_auto_switch/DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/auto-switch/dismiss_pending_auto_switch/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/auto-switch/dismiss_pending_auto_switch/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/auto-switch/dismiss_pending_auto_switch/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/auto-switch/dismiss_pending_auto_switch": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/auto-switch/dismiss_pending_auto_switch/DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/auto-switch/load_bootstrap_state/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/auto-switch/load_bootstrap_state/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/auto-switch/load_bootstrap_state/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/auto-switch/load_bootstrap_state": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/auto-switch/load_bootstrap_state/DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/cmd_detect_api_proxy_config_coroutine": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/cmd_detect_api_proxy_config_coroutine/DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/cmd_set_app_theme_coroutine/data": {
+      "distilled": [],
+      "manifests": [],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/cmd_set_app_theme_coroutine/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/cmd_set_theme/data": {
+      "distilled": [],
+      "manifests": [],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/cmd_set_theme/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/cmd_test_api_proxy_config_coroutine/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/cmd_test_api_proxy_config_coroutine/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/cmd_test_api_proxy_config_coroutine/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/data-store-identifiers": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/data-store-identifiers/DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/data-store-remove": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/data-store-remove/DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/data": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/data/windows-1.0.9-WIN-FRONTEND-CCF-DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/diagnose_codex_router": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/diagnose_codex_router/manifest.json"
+      ],
+      "ledgers": []
+    },
+    "windows-x64/get_hotspot_enabled/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/get_hotspot_enabled/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/get_hotspot_enabled/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/get_hotspot_enabled": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/get_hotspot_enabled/get_hotspot_enabled-DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/hotspot_ready/data": {
+      "distilled": [],
+      "manifests": [],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/hotspot_ready/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/hotspot_ready": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/hotspot_ready/manifest.json"
+      ],
+      "ledgers": []
+    },
+    "windows-x64/mystery-unlock/data": {
+      "distilled": [],
+      "manifests": [],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/mystery-unlock/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/mystery-unlock": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/mystery-unlock/MYSTERY-UNLOCK-WIN-109-distilled.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/rebuild_registry/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/rebuild_registry/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/rebuild_registry/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/relay_thread_migration/migrate_threads_for_router_with_scope/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/relay_thread_migration/migrate_threads_for_router_with_scope/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/relay_thread_migration/migrate_threads_for_router_with_scope/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/relay_web_executor/execute_proxy_tools": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/relay_web_executor/execute_proxy_tools/DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/relay-image-compat/data": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/relay-image-compat/data/manifest.json"
+      ],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/relay-image-compat/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/restart_codex_cmd_wrapper": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/restart_codex_cmd_wrapper/DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/router-lifecycle": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/router-lifecycle/focus_main_window-DISTILLED.md",
+        "leaves/aimami/1.0.9/windows-x64/router-lifecycle/rollback_threads_for_router-DISTILLED.md",
+        "leaves/aimami/1.0.9/windows-x64/router-lifecycle/run_daemon_once-DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/set_api_proxy_config": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/set_api_proxy_config/DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/set_hotspot_enabled/data": {
+      "distilled": [],
+      "manifests": [],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/set_hotspot_enabled/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/set_hotspot_enabled": {
+      "distilled": [
+        "leaves/aimami/1.0.9/windows-x64/set_hotspot_enabled/set_hotspot_enabled-DISTILLED.md"
+      ],
+      "manifests": [],
+      "ledgers": []
+    },
+    "windows-x64/system/clean/data": {
+      "distilled": [],
+      "manifests": [],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/system/clean/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/system/clean": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/system/clean/manifest.json"
+      ],
+      "ledgers": []
+    },
+    "windows-x64/system/data": {
+      "distilled": [],
+      "manifests": [],
+      "ledgers": [
+        "leaves/aimami/1.0.9/windows-x64/system/data/producer-ledger.json"
+      ]
+    },
+    "windows-x64/system": {
+      "distilled": [],
+      "manifests": [
+        "leaves/aimami/1.0.9/windows-x64/system/manifest.json"
+      ],
+      "ledgers": []
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "schema": "raw-evidence.reverse.raw.ida_impl_candidate_boundary.v1",
+  "produced_at": "2026-06-02T02:20:00+08:00",
+  "source": "ida_mcp",
+  "ida_instance": "127.0.0.1:13337",
+  "binary": {
+    "path": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+    "sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+    "size": 26821632,
+    "imagebase": "0x140000000",
+    "idb_path": "<local-path> 1.0.9 win64.exe.i64"
+  },
+  "leaf": "update_plugin_config",
+  "candidate": {
+    "name": "sub_1404F1950",
+    "addr": "0x1404f1950",
+    "size": "0x142",
+    "prototype": "__int64 __fastcall(__int64, __int64 *)",
+    "decompile_ok": true,
+    "impl_leaf_accepted": false,
+    "reason": "candidate is the settings decoder/display adapter, not the registry mutation or persistence implementation leaf"
+  },
+  "owner_branch": {
+    "owner": "sub_1402663E0",
+    "owner_addr": "0x1402663e0",
+    "command_string": "update_plugin_config",
+    "command_string_addr": "0x141269163",
+    "command_xref": "0x140266fec",
+    "registry_resolver": "sub_1400FA340",
+    "id_field": {
+      "field": "id",
+      "decoder": "sub_14045F6C0",
+      "call": "0x1402670bb"
+    },
+    "settings_field": {
+      "field": "settings",
+      "decoder": "sub_1404F1950",
+      "call": "0x14026713e"
+    },
+    "later_update_candidate": {
+      "name": "sub_140165130",
+      "call": "0x14026b1b9",
+      "callee": "sub_1403EDAA0"
+    },
+    "serializer": "sub_140062230"
+  },
+  "key_callees": [
+    {
+      "name": "sub_14045EFD0",
+      "addr": "0x14045efd0",
+      "role": "generic value/string preflight",
+      "evidence": [
+        "used by many display/deserialize wrappers",
+        "branches by dynamic value tag and string check"
+      ]
+    },
+    {
+      "name": "sub_140473090",
+      "addr": "0x140473090",
+      "role": "dynamic value conversion",
+      "evidence": [
+        "switches on input tag",
+        "allocates/copies string values",
+        "can produce tag 6 value consumed by candidate"
+      ]
+    },
+    {
+      "name": "sub_140DE5140",
+      "addr": "0x140de5140",
+      "role": "generic display/serde formatter",
+      "evidence": [
+        "large switch over dynamic display variants",
+        "candidate panics if it returns error"
+      ]
+    },
+    {
+      "name": "sub_140498180",
+      "addr": "0x140498180",
+      "role": "tagged dynamic cleanup/drop helper",
+      "evidence": [
+        "drops/free tagged variants",
+        "not persistence"
+      ]
+    },
+    {
+      "name": "sub_140165130",
+      "addr": "0x140165130",
+      "role": "later owner-side update candidate, not part of sub_1404F1950 body",
+      "evidence": [
+        "called after settings decoder branch",
+        "calls sub_1403EDAA0"
+      ]
+    },
+    {
+      "name": "sub_1403EDAA0",
+      "addr": "0x1403edaa0",
+      "role": "registry map mutation candidate",
+      "evidence": [
+        "references plugin store poisoned",
+        "allocates/copies id/settings bytes",
+        "updates map-like storage",
+        "calls sub_1403EDEC0"
+      ]
+    }
+  ],
+  "side_effect_hints": [
+    "sub_1404F1950 performs conversion allocation/drop only",
+    "no registry mutation inside candidate body",
+    "no plugins.json write/save-store/fs leaf observed inside candidate body",
+    "later sub_140165130/sub_1403EDAA0 chain suggests mutation remains outside this candidate"
+  ],
+  "error_hints": [
+    "a Display implementation returned an error unexpectedly",
+    "allocation failure via sub_14120829B",
+    "resolver/field decode failures are serialized by owner through sub_140062230"
+  ],
+  "missing_for_acceptance": [
+    "accepted mutation/persistence leaf",
+    "sub_1403EDEC0/save-store/fs boundary",
+    "strict update settings DTO and defaults",
+    "target-not-found and poisoned-lock error envelope",
+    "runtime IPC evidence",
+    "frontend config UI absence/product decision evidence",
+    "upstream test/manual acceptance mapping"
+  ],
+  "gate": {
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false
+  }
+}

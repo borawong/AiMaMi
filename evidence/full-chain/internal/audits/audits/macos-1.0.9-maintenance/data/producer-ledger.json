@@ -1,0 +1,33 @@
+{
+  "schema": "restoration.cm.reverse.producer_ledger.v1",
+  "bundle": "macos-1.0.9-maintenance",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "produced_at": "2026-06-03",
+  "leaves": [
+    {
+      "leaf": "clean",
+      "producer": "<workstation>",
+      "session": "<audit-session>", "sha12": "1db044e8efab",
+      "gate_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "raw_path": "<source-location>/raw/aimami/1.0.9/macos/maintenance/clean/leaf.md"
+    },
+    {
+      "leaf": "rebuild_registry",
+      "producer": "<workstation>",
+      "session": "<audit-session>", "sha12": "1db044e8efab",
+      "gate_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "raw_path": "<source-location>/raw/aimami/1.0.9/macos/maintenance/rebuild_registry/leaf.md"
+    },
+    {
+      "leaf": "load_snapshot",
+      "producer": "<workstation>",
+      "session": "<audit-session>", "sha12": "1db044e8efab",
+      "gate_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "raw_path": "<source-location>/raw/aimami/1.0.9/macos/maintenance/load_snapshot/leaf.md"
+    }
+  ]
+}

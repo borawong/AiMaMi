@@ -1,0 +1,22 @@
+{
+  "schema": "raw-evidence.raw.bundle.validation.v1",
+  "command": "get_relay_active",
+  "platform": "macos-arm64",
+  "version": "1.0.9",
+  "session": "relay-A-state-crud-20260602",
+  "idb_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sot_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "gate": "strictImplementationUse",
+  "dim1_frontend_ccf": {"status": "Unknown", "note": "frontend CCF not analyzed; accepted_unknown — pure read does not block strictImplementationUse"},
+  "dim2_backend_owner_pseudocode": {"status": "Accepted", "owner_addr": "0x1001dfe4c", "core_addr": "0x1001c83a4", "symbol": "codexmate_lib::commands::relay::get_relay_active::h454ae021e982c96c", "pseudocode_files": ["ida/pseudocode/0001_get_relay_active_owner_cmd_h454ae021.c", "ida/pseudocode/0002_get_relay_active_core_h488e5078.c"]},
+  "dim3_call_tree_impl_leaves": {"status": "Accepted", "depth": 5, "terminal_leaves": ["atomic_mutex_init", "Mutex::lock", "Vec<String>::clone(active_providers@v3+56)", "Mutex::unlock", "ipc_response_frame(d0=7_ABI_artifact)"], "call_tree_file": "call-trees/codexmate_lib::commands::relay::get_relay_active.jsonl", "note": "d0=7 return is IPC frame count (ABI artifact of __usercall), not a float — prior recon gap resolved"},
+  "dim4_interface_dto_error_sideeffect": {"status": "Accepted", "argKeys": [], "response": "Option<Vec<String>> — active provider ids; None sentinel {ptr=0,len=8,bool=0}", "response_field_offsets": {"Vec_ptr": "a2+0", "Vec_len": "a2+8", "Some_bool": "a2+16", "field_active_providers_in_state": "v3+56"}, "errors": ["Mutex_poisoned:{ptr=0,len=8,bool=0}", "OOM_Vec_clone:abort"], "side_effects": []},
+  "dim5_platform_gate": {"status": "Accepted", "macos": "CONFIRMED", "windows": "Unknown", "note": "pure read; no platform-specific APIs beyond POSIX mutex"},
+  "dim6_test_acceptance": {"status": "empty_per_task_spec"},
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "no_gate_promotion_to_ready": true
+}

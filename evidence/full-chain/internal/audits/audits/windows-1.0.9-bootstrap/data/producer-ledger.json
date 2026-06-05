@@ -1,0 +1,102 @@
+{
+  "schema": "restoration.cm.reverse.producer_ledger.v1",
+  "bundle": "windows-1.0.9-bootstrap",
+  "produced_at": "2026-06-03T00:00:00+08:00",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "platform": "windows-x64",
+  "leaves": [
+    {
+      "leaf": "app_run_entry",
+      "producer": "<workstation>",
+      "session": "<audit-session>", "sha12": "a5822387fa3f",
+      "gate": "pass",
+      "consumer_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "vas": {"cli": "0x1400010D0", "bootstrap": "0x140004B30", "dispatcher": "0x1402663E0"},
+      "renames_applied": 2,
+      "comments_applied": 2,
+      "idb_saved": true
+    },
+    {
+      "leaf": "boot_spawn_threads",
+      "producer": "<workstation>",
+      "session": "<audit-session>", "sha12": "a5822387fa3f",
+      "gate": "pass",
+      "consumer_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "vas": {"watcher": "0x14028CCB0", "spawn_wrapper": "0x140004980", "schtasks": "0x1403FC030"},
+      "renames_applied": 2,
+      "comments_applied": 2,
+      "idb_saved": true,
+      "is_upstream": false,
+      "platform_note": "schtasks Windows daemon registration; WakeByAddressSingle condvar; 1 watcher fn"
+    },
+    {
+      "leaf": "bootstrap_cache",
+      "producer": "<workstation>",
+      "session": "<audit-session>", "sha12": "a5822387fa3f",
+      "gate": "pass",
+      "consumer_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "vas": {"ipc_owner": "0x140272E80", "dispatcher": "0x1402663E0"},
+      "renames_applied": 1,
+      "comments_applied": 1,
+      "idb_saved": true,
+      "is_upstream": true,
+      "payload_fields": ["writtenAt", "snapshotProgressive", "usageAnalytics", "mcpServers", "installedSkills"]
+    },
+    {
+      "leaf": "managed_state_registry",
+      "producer": "<workstation>",
+      "session": "<audit-session>", "sha12": "a5822387fa3f",
+      "gate": "pass",
+      "consumer_tier": "strictImplementationUse",
+      "produced_at": "2026-06-03",
+      "vas": {"register_shim": "0x141208810", "typemap_set": "0x14102FA00"},
+      "renames_applied": 1,
+      "comments_applied": 1,
+      "idb_saved": true,
+      "is_upstream": true,
+      "managed_states_count": 3
+    }
+  ],
+  "system_shell_init_supplement": {
+    "session": "<audit-session>", "machine": "<workstation>",
+    "produced_at": "2026-06-03",
+    "scope": "system-shell-init angle-3 Win IDA deep supplement",
+    "distilled": "logic/WIN-SYSTEM-SHELL-INIT-DISTILLED-109.md",
+    "new_leaves": [
+      {
+        "leaf": "load_snapshot",
+        "va": "0x1408c2e10",
+        "name": "load_snapshot_coroutine_sys",
+        "gate": "pass",
+        "consumer_tier": "strictImplementationUse",
+        "dims_closed": ["dim1","dim2","dim3","dim4","dim5"],
+        "dim6": "missing_source_impl_side",
+        "is_upstream": true,
+        "sha12": "a5822387fa3f",
+        "renames_applied": 1,
+        "comments_applied": 1,
+        "idb_saved": true
+      }
+    ],
+    "support_leaves": [
+      {
+        "leaf": "build_runtime_snapshot_and_emit_sys",
+        "va": "0x14084DF80",
+        "role": "snapshot builder — called by load_snapshot coroutine",
+        "renames_applied": 1,
+        "comments_applied": 1
+      },
+      {
+        "leaf": "runtime_state_updated_emit_and_tray_refresh_sys",
+        "va": "0x1400AF970",
+        "role": "emits runtime-state-updated + tray refresh",
+        "renames_applied": 1,
+        "comments_applied": 1
+      }
+    ]
+  }
+}

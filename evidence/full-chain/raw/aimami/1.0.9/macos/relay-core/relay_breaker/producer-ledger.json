@@ -1,0 +1,17 @@
+{
+  "bundle": "aimami/1.0.9/macos/relay-core/relay_breaker",
+  "session": "relay-missed-109",
+  "machine": "<workstation>",
+  "completed_at": "2026-06-03",
+  "gate": "pre-gate",
+  "consumer_tier": "produced-pre-gate",
+  "leaves": [
+    {"leaf": "select_candidates", "va": "0x100159464", "status": "produced", "decompile": "ok", "call_tree": "terminated", "comment": "appended"},
+    {"leaf": "is_open",           "va": "0x1001595c8", "status": "produced", "decompile": "ok", "call_tree": "terminated", "comment": "appended"},
+    {"leaf": "record_success",    "va": "0x1001592a0", "status": "produced", "decompile": "ok", "call_tree": "terminated", "comment": "appended"},
+    {"leaf": "record_failure",    "va": "0x10015903c", "status": "produced", "decompile": "ok", "call_tree": "terminated", "comment": "appended"},
+    {"leaf": "new_store",         "va": "0x1001597bc", "status": "produced", "decompile": "ok", "call_tree": "terminated", "comment": "appended"}
+  ],
+  "index_entries_appended": 5,
+  "idb_save_confirmed": true
+}

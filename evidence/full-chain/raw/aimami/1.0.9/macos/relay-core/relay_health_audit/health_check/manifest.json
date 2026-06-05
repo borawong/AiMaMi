@@ -1,0 +1,33 @@
+{
+  "schema": "raw-evidence.reverse.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "binary_sha256_prefix": "1db044e8efab",
+  "binary_format": "macho",
+  "module": "relay-core/relay_health_audit/health_check",
+  "scope": "feature",
+  "produced_at": "2026-06-02T00:00:00Z",
+  "session": "relay-health-audit-deep-mac-20260602",
+  "implementation_targets_file": "implementation-targets.txt",
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "targets": [
+    "test_provider_async",
+    "build_openai_headers",
+    "build_anthropic_headers",
+    "post_openai_endpoint_async",
+    "responses_payload",
+    "resolve_responses_urls"
+  ],
+  "owners": {
+    "test_provider_async_closure": "0x10008ee30",
+    "post_openai_endpoint_async_closure": "0x100090fd8",
+    "build_openai_headers": "0x10023c440",
+    "build_anthropic_headers": "0x10023cbe8",
+    "responses_payload": "0x100239490",
+    "resolve_responses_urls": "0x10023c99c"
+  },
+  "inline_note": "build_test_request, apply_extra_headers, interpret_response_async appear to be inlined into test_provider_async closure (0x10008ee30, 256 basic blocks, cyclomatic_complexity=100); no separate symbol found"
+}

@@ -1,0 +1,118 @@
+{
+  "schema": "restoration.cm.reverse.module_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "sessions-analytics",
+  "produced_at": "2026-06-03T02:38:00+08:00",
+  "producer": "codex",
+  "machine": "<workstation>",
+  "status": "accepted_full_leaf_100_ida_direct_sessions_analytics",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "raw_leaves": [
+    "<source-location>/raw/aimami/1.0.9/windows/sessions/load_sessions",
+    "<source-location>/raw/aimami/1.0.9/windows/sessions/delete_sessions",
+    "<source-location>/raw/aimami/1.0.9/windows/sessions/load_usage_analytics",
+    "<source-location>/raw/aimami/1.0.9/windows/sessions/load_session_analytics",
+    "<source-location>/raw/aimami/1.0.9/windows/sessions/load_token_analytics",
+    "<source-location>/raw/aimami/1.0.9/windows/sessions/load_tool_analytics",
+    "<source-location>/raw/aimami/1.0.9/windows/sessions/load_change_analytics",
+    "<source-location>/raw/aimami/1.0.9/windows/sessions/load_quota_history"
+  ],
+  "gate": {
+    "schema": "restoration.cm.reverse.module_gate_report.v1",
+    "product": "aimami",
+    "version": "1.0.9",
+    "platform": "windows",
+    "module": "sessions-analytics",
+    "status": "PASS",
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "commands_total": 8,
+    "commands_ready": 8,
+    "commands": [
+      {
+        "command": "load_sessions",
+        "owner": "0x1408ca590",
+        "threading_model": "sync FS metadata + SQLite/rusqlite + rollout index + CPU filtering; no async/spawn",
+        "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/sessions/load_sessions",
+        "readyToImplement": true,
+        "full_leaf_100": true
+      },
+      {
+        "command": "delete_sessions",
+        "owner": "0x140273fe0",
+        "threading_model": "sync selected-id destructive mutator; no async/spawn",
+        "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/sessions/delete_sessions",
+        "readyToImplement": true,
+        "full_leaf_100": true
+      },
+      {
+        "command": "load_usage_analytics",
+        "owner": "0x14026cd90",
+        "threading_model": "sync mutex CodexPaths clone -> usage aggregation; no async/spawn",
+        "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/sessions/load_usage_analytics",
+        "readyToImplement": true,
+        "full_leaf_100": true
+      },
+      {
+        "command": "load_session_analytics",
+        "owner": "0x140276430",
+        "threading_model": "sync mutex CodexPaths clone -> session analytics; no async/spawn",
+        "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/sessions/load_session_analytics",
+        "readyToImplement": true,
+        "full_leaf_100": true
+      },
+      {
+        "command": "load_token_analytics",
+        "owner": "0x1402727a0",
+        "threading_model": "sync mutex CodexPaths clone -> sensitive-field analytics; no async/spawn",
+        "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/sessions/load_token_analytics",
+        "readyToImplement": true,
+        "full_leaf_100": true
+      },
+      {
+        "command": "load_tool_analytics",
+        "owner": "0x14026d320",
+        "threading_model": "sync mutex CodexPaths clone -> tool analytics; no async/spawn",
+        "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/sessions/load_tool_analytics",
+        "readyToImplement": true,
+        "full_leaf_100": true
+      },
+      {
+        "command": "load_change_analytics",
+        "owner": "0x140283cb0",
+        "threading_model": "sync mutex CodexPaths clone -> change analytics; no async/spawn",
+        "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/sessions/load_change_analytics",
+        "readyToImplement": true,
+        "full_leaf_100": true
+      },
+      {
+        "command": "load_quota_history",
+        "owner": "0x1402738b0",
+        "threading_model": "sync mutex CodexPaths clone -> quota history reader; no async/spawn",
+        "raw_leaf": "<source-location>/raw/aimami/1.0.9/windows/sessions/load_quota_history",
+        "readyToImplement": true,
+        "full_leaf_100": true
+      }
+    ],
+    "idb_saved": true
+  },
+  "frontendConsumerHandoff": {
+    "status": "complete_current_source_frontend_chain",
+    "logic": "logic/FRONTEND-CONSUMER-CHAIN-109.md",
+    "noGatePromotion": true,
+    "currentSourceFrontendStatus": "live"
+  },
+  "frontendValidatorNotes": [
+    "Static source validation only in this handoff; App/manual acceptance must still execute before implementation sign-off.",
+    "After delete_sessions, current code invalidates [\"sessions\"] and refetches active [\"usage-analytics\"] only; session/sensitive-field/tool/change detail analytics can remain cached until their 5 minute stale window.",
+    "Quota history cache field differs between Overview activeAccountKey and Analytics activeAccountKey ?? \"none\"; enabled guards limit impact but consumers must keep this in mind.",
+    "recover_unindexed_sessions is current source archive product/baseline extra and is excluded from AiMaMi 1.0.9 upstream ready queues."
+  ]
+}

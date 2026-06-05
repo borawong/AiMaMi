@@ -1,0 +1,50 @@
+{
+  "schema": "raw-evidence.reverse.raw_evidence_bundle.v1",
+  "produced_at": "2026-06-02T08:39:13+08:00",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "load_relay_state_owner_body_static",
+  "candidate_key": "aimami/1.0.9/windows/load_relay_state_owner_body_static",
+  "path": "raw/aimami/1.0.9/windows/load_relay_state_owner_body_static",
+  "source_binary": {
+    "path": "raw/binary/AiMaM 1.0.9 win64.exe",
+    "sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+    "size": 26821632,
+    "ida_module": "AiMaM 1.0.9 win64.exe",
+    "imagebase": "0x140000000"
+  },
+  "consumed_bundles": [
+    "intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap",
+    "upstream/aimami/1.0.9/windows/load_relay_state",
+    "intermediate/aimami/1.0.9/windows/load-relay-state-owner-pdata-calltree"
+  ],
+  "evidence": [
+    "README.md",
+    "AI.md",
+    "SYSTEM-DIFF.md",
+    "evidence/address-table.json",
+    "evidence/owner-body-boundary.md",
+    "evidence/calltree-summary.md"
+  ],
+  "intermediate_evidence": [
+    "intermediate/aimami/1.0.9/windows/load_relay_state_owner_body_static/ida/session-summary.md",
+    "intermediate/aimami/1.0.9/windows/load_relay_state_owner_body_static/ida/pseudocode-summary.md",
+    "intermediate/aimami/1.0.9/windows/load_relay_state_owner_body_static/ida/dispatcher-branch-summary.md",
+    "intermediate/aimami/1.0.9/windows/load_relay_state_owner_body_static/ida/helper-callee-summary.md"
+  ],
+  "gate_state": {
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "no_promotion": true
+  },
+  "counts": {
+    "accepted_static_facts": 8,
+    "candidate_helper_facts": 7,
+    "blocking_unknowns": 6
+  }
+}

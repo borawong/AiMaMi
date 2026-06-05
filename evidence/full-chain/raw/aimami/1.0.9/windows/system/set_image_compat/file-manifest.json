@@ -1,0 +1,19 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "set_image_compat",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "files": [
+    {"path": "manifest.json", "role": "bundle_manifest"},
+    {"path": "file-manifest.json", "role": "file_manifest"},
+    {"path": "AI.md", "role": "ai_handoff"},
+    {"path": "README.md", "role": "human_report"},
+    {"path": "SYSTEM-DIFF.md", "role": "system_diff"},
+    {"path": "call-trees/set_image_compat.jsonl", "role": "call_tree", "sha256": "05daf3f2bd3c0ee6c0a047e4735877533970769c173e1ab0bcad0aac704a5717"},
+    {"path": "ida/pseudocode-manifest.jsonl", "role": "pseudocode_manifest", "sha256": "685bae4b5a405024106545f7c0961123ea273a4c440b4bf0e1c05dae47f0923b"},
+    {"path": "ida/pseudocode/0001_set_image_compat_handler_owner_14027a1b0.c", "role": "pseudocode_owner", "va": "0x14027a1b0", "sha256": "384f999b6d7920ae954e68462aa10ba8f598aa348080b0bedd0a25b55ff4d45a"},
+    {"path": "ida/pseudocode/0002_set_image_compat_impl_core_1400a5eb0.c", "role": "pseudocode_core_impl", "va": "0x1400a5eb0", "sha256": "d31988e92670f5c036e0b3647340843779c4d91573419b66611a2b6ad90bf75e"},
+    {"path": "ida/pseudocode/0003_image_compat_build_response_ok_bool_1404391d0.c", "role": "pseudocode_response_builder", "va": "0x1404391d0", "sha256": "599a550a885a718aa9eebfbf95bd03106af451db6d43ac2269fc743a2c39d800"},
+    {"path": "validation/result.json", "role": "validation_result", "sha256": "aa6666063e5b93272552ac38f6f31df914de2dfaf076fae026bf87a23538ccac"}
+  ]
+}

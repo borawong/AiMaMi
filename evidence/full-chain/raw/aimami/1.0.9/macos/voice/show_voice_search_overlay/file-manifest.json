@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "voice",
+  "command": "show_voice_search_overlay",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "f36516962a1402ed57d969624fbebaa4d4ffd4dd232797d94fece08d31186b8b",
+      "size": 759
+    },
+    {
+      "path": "README.md",
+      "sha256": "4db6cd023dfce731a60f1cfd26f563d211de7d2d95058c980d17ffe1c3905a00",
+      "size": 845
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "14837313bf5165403aa081977f2f48fdf39e806d8260e3e032ff3df61e5c86f6",
+      "size": 382
+    },
+    {
+      "path": "audits/show_voice_search_overlay-ida-closure.json",
+      "sha256": "9c3cf094a7eb8a4ebf199a4b7e236fea6edcae022e751070ed0dd2cbdb716694",
+      "size": 2675
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "49028f02588558da285967106be3c7e88f7a82438b437db35defeea90f5413b9",
+      "size": 320
+    }
+  ],
+  "note": "manifest.json excluded to avoid circular digest; manifest carries this file-manifest digest"
+}

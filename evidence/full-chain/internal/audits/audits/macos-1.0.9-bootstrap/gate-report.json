@@ -1,0 +1,109 @@
+{
+  "schema": "restoration.cm.reverse.audit.gate_report.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "bootstrap",
+  "status": "authoritative_strictImplementationUse_upgrade",
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false,
+  "upgraded_from": "consumerStartReady",
+  "upgraded_by": {
+    "machine": "<workstation>",
+    "session": "<audit-session>", "produced_at": "2026-06-03",
+    "distilled": "logic/BOOTSTRAP-DEEP-DISTILLED-109.md"
+  },
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "indexLines": [
+      688,
+      689,
+      690,
+      691
+    ],
+    "reduceLine": 715
+  },
+  "readyToImplementRows": [],
+  "strictImplementationUseRows": [
+    "app_run_entry",
+    "boot_spawn_threads",
+    "bootstrap_cache",
+    "managed_state_registry"
+  ],
+  "consumerStartReadyRows": [],
+  "dims_closed": [
+    "dim1",
+    "dim2",
+    "dim3",
+    "dim4",
+    "dim5"
+  ],
+  "dim6_ceiling": "accepted_unknown - source archive implementation-side work",
+  "reverseRequiredQueues": {
+    "forbiddenUntilReady": [
+      "app_run_entry",
+      "boot_spawn_threads",
+      "bootstrap_cache",
+      "managed_state_registry"
+    ],
+    "forbiddenUntilStrictImplementationUse": [],
+    "consumerStartBlocked": []
+  },
+  "frontend_ccf_inventory": {
+    "session": "<audit-session>", "total_invoke_commands": 127,
+    "prev_count": 2,
+    "new_vs_prev": "127 vs prior 2 (backend table had only 32; CCF full-dump reveals 127 total frontend-called commands including relay/voice/custom-instructions/skills/plugins/sessions/analytics/auto-switch/accounts-io/system/maintenance)",
+    "boot_invokes": [
+      "load_bootstrap_state",
+      "load_snapshot",
+      "load_usage_analytics",
+      "load_mcp_servers",
+      "load_installed_skills",
+      "get_system_info",
+      "get_device_id",
+      "get_usage_refresh_interval",
+      "get_notification_client_state",
+      "get_mystery_unlock_grants",
+      "load_pending_auto_switch",
+      "hotspot_ready"
+    ],
+    "pages": [
+      "main_bundle (index-CL22l5v8.js)",
+      "analytics-panel-D01GGJ7u.js",
+      "use-relay-providers-BNphfsn5.js",
+      "maintenance-page-j6kXR210.js",
+      "relay-page-CljGSoid.js",
+      "hotspot window",
+      "accounts-page-CJFT2P5o.js (excluded per scope)"
+    ],
+    "backend_all_32_confirmed_called": true,
+    "frontend_only_not_yet_reversed": 95,
+    "dump_path": "raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/",
+    "notes": "CCF extractor report + raw G() wrapper grep cross-check. 3 commands (get_or_create_remote_device_secret/graceful_restart_for_update/import_remote_device_secret_if_empty) use direct pf() path not G() wrapper."
+  },
+  "app_run_entry_upgrade": {
+    "session": "<audit-session>", "was_budget_rule_only": false,
+    "was_drop_in_place_only": false,
+    "genuine_ceiling": false,
+    "real_body_addr": "0x100314324",
+    "basic_blocks": 419,
+    "instructions": 3283,
+    "all_cracked": true
+  },
+  "auto_switch_pending_emitter_upgrade": {
+    "session": "<audit-session>", "was_budget_rule_only": false,
+    "was_drop_in_place_only": false,
+    "genuine_ceiling": false,
+    "real_body_addr": "0x1005280f4",
+    "basic_blocks": 107,
+    "ceiling_cracked": true
+  },
+  "residual_ceilings_cleared": true,
+  "honest_remaining_ceilings": []
+}

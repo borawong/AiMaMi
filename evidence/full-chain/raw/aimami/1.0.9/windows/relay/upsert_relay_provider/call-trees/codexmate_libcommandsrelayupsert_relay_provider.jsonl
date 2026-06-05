@@ -1,0 +1,20 @@
+{"depth":1,"addr":"0x14026FB40","name":"upsert_relay_provider_owner_sys","role":"command_owner","grade":"A","string_bound":"aUpsertRelayPro@0x141268ffb"}
+{"depth":2,"addr":"0x1402DCBC0","name":"get_usage_refresh_interval_core_read","role":"app_scope_rate_limit_check","grade":"B","note":"LODWORD==3 means rate-limited; early return error"}
+{"depth":2,"addr":"0x1400DA320","name":"sub_1400DA320","role":"manager_scope_auth_guard","grade":"B","terminated_reason":null}
+{"depth":2,"addr":"0x1411CE640","name":"sub_1411CE640","role":"json_state_dispatcher","grade":"B","terminated_reason":null}
+{"depth":2,"addr":"0x14045F0C0","name":"sub_14045F0C0","role":"input_param_parser","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x1402DCBC0","name":"get_usage_refresh_interval_state_check","role":"param_state_check","grade":"C","terminated_reason":null}
+{"depth":3,"addr":"0x140548A70","name":"sub_140548A70","role":"input_dto_decode_type4","grade":"C","note":"structured RelayProvider input decode (discriminant 4)"}
+{"depth":3,"addr":"0x1407F8140","name":"sub_1407F8140","role":"input_dto_decode_type5","grade":"C","note":"alternate input form (discriminant 5)"}
+{"depth":2,"addr":"0x14043E420","name":"sub_14043E420","role":"upsert_core_orchestrator","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x140150520","name":"sub_140150520","role":"persistence_write_relay_manager","grade":"B","note":"CAS lock; lookup by id stride 208; insert/update; relay_manager_reset_codex_config_impl_sys; sub_1401523E0 persist; sub_140572E10 event notify"}
+{"depth":4,"addr":"0x1400DA320_cas","name":"_InterlockedCompareExchange8","role":"lock_acquire","grade":"B","terminated_reason":"external_call_recorded"}
+{"depth":4,"addr":"0x14014DF10","name":"relay_manager_reset_codex_config_impl_sys","role":"codex_config_reset","grade":"A","terminated_reason":"external_call_recorded"}
+{"depth":4,"addr":"0x1401523E0","name":"sub_1401523E0","role":"persistence_commit","grade":"B","note":"writes updated relay state to disk via sub_140155830"}
+{"depth":4,"addr":"0x140572E10","name":"sub_140572E10","role":"event_notify","grade":"C","terminated_reason":null}
+{"depth":3,"addr":"0x140438A30","name":"sub_140438A30","role":"result_struct_pack","grade":"B","note":"packs RelayProvider 208-byte struct into output"}
+{"depth":3,"addr":"0x14000A1E0","name":"sub_14000A1E0","role":"drop_input_str","grade":"C","terminated_reason":null}
+{"depth":2,"addr":"0x140072700","name":"sub_140072700","role":"response_serialize","grade":"B","terminated_reason":null}
+{"depth":3,"addr":"0x140454890","name":"sub_140454890","role":"json_envelope_builder","grade":"C","note":"schemaVersion/success/code/message/data"}
+{"depth":3,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","role":"http_terminal","grade":"A","terminated_reason":"external_call_recorded"}
+{"call_tree_depth":4,"terminated_reason":"external_call_recorded","terminal":"_InterlockedCompareExchange8@depth4+relay_manager_reset_codex_config_impl_sys@depth4+tauri_ipc_resolve_sys@depth3","complete":true,"source_binary_sha256":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}

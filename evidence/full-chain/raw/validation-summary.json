@@ -1,0 +1,666 @@
+{
+    "generated_at":  "2026-06-05T11:29:50Z",
+    "validation_result_count":  165,
+    "results":  [
+                    {
+                        "path":  "macos/accounts/begin_add_account_attach_monitor/validation/result.json",
+                        "status":  "PASS_static_ida_raw_leaf_no_gate_promotion"
+                    },
+                    {
+                        "path":  "macos/accounts/switch_account_and_restart_codex/validation/result.json",
+                        "status":  "PASS_static_ida_raw_leaf_no_gate_promotion"
+                    },
+                    {
+                        "path":  "macos/auto-switch/configure_auto_switch/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/auto-switch/confirm_pending_auto_switch/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/auto-switch/confirm_pending_auto_switch_and_restart_codex/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/auto-switch/dismiss_pending_auto_switch/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/auto-switch/load_pending_auto_switch/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/auto-switch/start_auto_switch_pending_watcher/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/custom-instructions/apply_custom_instruction/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/custom-instructions/clear_custom_instruction_block/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/custom-instructions/load_custom_instruction_state/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/custom-instructions/preview_custom_instruction_apply/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/custom-instructions/rollback_custom_instruction/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/daemon/load_bootstrap_state/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/daemon/note_usage_refresh_activity/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/daemon/update_usage_refresh_schedule/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/mcp/load_mcp_servers/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/mcp/remove_mcp_server/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/mcp/set_mcp_server_enabled/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/mcp/upsert_mcp_server/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/builtin__all_builtin_plugins/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/builtin__image_support__plugin_info/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/builtin__web_tools__plugin_info/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/get_plugin_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/list_plugins/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/PluginRegistry__get_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/PluginRegistry__list/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/PluginRegistry__save_store_static/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/PluginRegistry__set_enabled/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/PluginRegistry__update_settings/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/PluginStoreSchema__serialize/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/toggle_plugin/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/plugins/update_plugin_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/relay/export_relay_config/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/relay/fix_codex_router_issue/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/relay/get_relay_active/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/relay/get_relay_proxy_status/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/relay/import_relay_config/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/relay/load_relay_state/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/relay/run_codex_router_diagnostics/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/relay/set_block_official_passthrough/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/relay/set_relay_provider_network/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "macos/skills/delete_skill_backup/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/skills/import_skill/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/skills/load_installed_skills/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/skills/load_skill_backups/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/skills/remove_skill/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/skills/restore_skill_backup/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/system/get_image_compat/validation/result.json",
+                        "status":  "pass"
+                    },
+                    {
+                        "path":  "macos/system/has_notch/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/cancel_voice_trigger_capture/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/generate_voice_prompt/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/inject_voice_text/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/load_voice_asr_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/load_voice_llm_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/load_voice_runtime_status/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/load_voice_workspace/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/remove_voice_history_entry/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/remove_voice_mode_shortcut/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/remove_voice_template/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/remove_voice_vocabulary/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/remove_voice_vocabulary_app_scope/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/replace_voice_vocabulary_kind/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/request_accessibility_permission/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/request_voice_permissions/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/resolve_voice_vocabulary_app_info/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/save_voice_asr_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/save_voice_llm_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/set_voice_global_shortcut/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/set_voice_mode_shortcut/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/set_voice_processing_mode_id/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/set_voice_trigger_bindings/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/set_voice_trigger_listener_suppressed/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/show_voice_search_overlay/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/start_voice_capture/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/stop_voice_capture/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/test_voice_asr_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/test_voice_llm_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/update_voice_runtime_settings/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/upsert_voice_template/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/upsert_voice_vocabulary/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "macos/voice/upsert_voice_vocabulary_app_scope/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/accounts/begin_add_account_attach_monitor/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/accounts/export_accounts_to_file/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/accounts/import_accounts_from_file/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/accounts/preview_account_import/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/accounts/remove_accounts/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/accounts/switch_account/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/accounts/switch_account_and_restart_codex/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/auto-switch/configure_auto_switch/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/auto-switch/confirm_pending_auto_switch_and_restart_codex/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/auto-switch/dismiss_pending_auto_switch/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/auto-switch/load_pending_auto_switch/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/auto-switch/set_auto_switch/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/auto-switch/start_auto_switch_pending_watcher/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/custom-instructions/apply_custom_instruction/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/custom-instructions/clear_custom_instruction_block/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/custom-instructions/load_custom_instruction_state/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/custom-instructions/preview_custom_instruction_apply/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/custom-instructions/rollback_custom_instruction/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/daemon/load_bootstrap_state/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/daemon/run_daemon_once/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/mcp/load_mcp_servers/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/mcp/remove_mcp_server/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/mcp/set_mcp_server_enabled/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/mcp/upsert_mcp_server/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/builtin__all_builtin_plugins/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/builtin__image_support__plugin_info/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/builtin__web_tools__plugin_info/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/get_plugin_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/list_plugins/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/PluginRegistry__get_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/PluginRegistry__list/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/PluginRegistry__save_store_static/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/PluginRegistry__set_enabled/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/PluginRegistry__update_settings/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/PluginStoreSchema__serialize/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/toggle_plugin/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/plugins/update_plugin_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/relay/export_relay_config/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/relay/import_relay_config/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/relay/run_codex_router_diagnostics/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/skills/delete_skill_backup/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/skills/import_skill/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/skills/load_installed_skills/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/skills/load_skill_backups/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/skills/remove_skill/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/skills/restore_skill_backup/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/system/force_kill_codex/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/system/get_image_compat/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/system/get_system_info/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/system/reset_codex_config/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/system/set_image_compat/validation/result.json",
+                        "status":  null
+                    },
+                    {
+                        "path":  "windows/voice/cancel_voice_trigger_capture/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/generate_voice_prompt/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/inject_voice_text/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/load_voice_asr_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/load_voice_llm_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/load_voice_runtime_status/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/load_voice_workspace/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/remove_voice_history_entry/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/remove_voice_mode_shortcut/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/remove_voice_template/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/remove_voice_vocabulary/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/remove_voice_vocabulary_app_scope/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/replace_voice_vocabulary_kind/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/request_accessibility_permission/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/request_voice_permissions/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/resolve_voice_vocabulary_app_info/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/save_voice_asr_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/save_voice_llm_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/set_voice_global_shortcut/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/set_voice_mode_shortcut/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/set_voice_processing_mode_id/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/set_voice_trigger_bindings/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/set_voice_trigger_listener_suppressed/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/show_voice_search_overlay/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/start_voice_capture/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/stop_voice_capture/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/test_voice_asr_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/test_voice_llm_config/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/update_voice_runtime_settings/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/upsert_voice_template/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/upsert_voice_vocabulary/validation/result.json",
+                        "status":  "PASS"
+                    },
+                    {
+                        "path":  "windows/voice/upsert_voice_vocabulary_app_scope/validation/result.json",
+                        "status":  "PASS"
+                    }
+                ]
+}

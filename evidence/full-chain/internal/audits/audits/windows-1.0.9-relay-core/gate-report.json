@@ -1,0 +1,647 @@
+{
+  "schema": "restoration.cm.reverse.gate_report.v1",
+  "bundle": "windows-1.0.9-relay-core",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "binary_sha12": "a5822387fa3f",
+  "gate_report_produced_at": "2026-06-03",
+  "gate_report_session": "relay-missed-109",
+  "gate_report_machine": "<workstation>",
+  "gate_report_model": "claude-sonnet-4-6",
+  "gate_report_updated_at": "2026-06-03",
+  "prewrite_gate_decision": "ALLOW",
+  "prewrite_gate_write_mode": "owner",
+  "clusters": {
+    "relay_manager": {
+      "leaf_count": 13,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "closed",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_manager/",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement"
+    },
+    "relay_proxy_server": {
+      "leaf_count": 9,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "closed",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "accepted_unknowns": [
+        "forward_with_candidates: ICF-inlined"
+      ],
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_proxy_server/",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement"
+    },
+    "relay_codex_writer": {
+      "leaf_count": 8,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "missing",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "dim4_notes": "All 8 leaves A/B-level; pseudocode-manifest.jsonl CONFIRMED at intermediate/aimami/1.0.9/windows/relay-core/relay_codex_writer/ida/pseudocode-manifest.jsonl (relay-mac-closeout-109); INTERFACE-MAP.md at intermediate/; provider_kind/compact_flag/block_markers/TOML_dispatch all confirmed; apply_codex_state CodexPaths[+56/+64]=config_toml dir, [+584/+592]=backup dir confirmed via macOS cross-platform re-decompile",
+      "blocker": "dim6 only (test/acceptance mapping)",
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_codex_writer/",
+      "session_updated": "relay-mac-closeout-109",
+      "dim4_upgrade": "dim4_partial→dim4_closed (relay-mac-closeout-109: pseudocode-manifest.jsonl + INTERFACE-MAP.md confirmed at intermediate/)"
+    },
+    "relay_diagnostic": {
+      "leaf_count": 7,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "missing",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "dim4_notes": "All 7 leaves (6 decompiled + 1 targeted); pseudocode-manifest.jsonl CONFIRMED at intermediate/aimami/1.0.9/windows/relay-core/relay_diagnostic/ida/pseudocode-manifest.jsonl (relay-mac-closeout-109); interface_map at intermediate/interfaces/; itemId dispatch table fully documented; relay_diagnostic_engine_core_sys (53KB) accepted_unknown per macOS parallel evidence (run_diagnostics 7-check closure confirmed cross-platform relay-mac-closeout-109); leaf_count corrected 6→7",
+      "blocker": "dim6 only; relay_diagnostic_engine_core_sys full decompile accepted_unknown",
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_diagnostic/",
+      "session_updated": "relay-mac-closeout-109",
+      "dim4_upgrade": "dim4_partial→dim4_closed (relay-mac-closeout-109: pseudocode-manifest.jsonl confirmed at intermediate/; leaf_count 6→7)"
+    },
+    "relay_thread_migration": {
+      "leaf_count": 5,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "closed",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_thread_migration/",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement"
+    },
+    "relay_health_audit": {
+      "leaf_count": 11,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "missing",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "dim2_notes": "9 fully decompiled; build_test_request_shared (not in health_check path) deferred; apply_extra_headers_variant_b deferred as ICF near-dup",
+      "dim4_notes": "PassthroughAuditEntry 7 fields CONFIRMED (at/model/endpoint/body_bytes/input_types/status/rewritten_to); RelayTestResult healthScore+sentinel confirmed; error paths confirmed; side-effects (JSONL fire-and-forget) confirmed; RelayTestResult 4-field shape macOS cross-platform B-level confirmed relay-mac-closeout-109 (modelsSample@+0/errorMessage@+24/latencyMs@+48/ok@+56)",
+      "key_findings": [
+        "health_check_test_provider_async_core_sys VA 0x140825280: A-level orchestrator, call-tree 9+ edges",
+        "health_check_response_parser_sys VA 0x140118B90: NEW rename; 2xx->healthScore; non-2xx->Err; sentinel 0x8000000000000000",
+        "interpret_response_async_core_sys VA 0x140827E40: async state machine 0-5; sub_1401140E0 extracts healthScore JSON field",
+        "passthrough_audit_entry_serializer_sys VA 0x14042E340: 7 confirmed field names+offsets",
+        "passthrough_audit_jsonl_append_sys VA 0x14042D9E0: NEW rename; file JSONL append; CloseHandle; 1MB guard",
+        "PassthroughAuditEntry: at(+8/16) model(+32/40) endpoint(+56/64) body_bytes(+120) input_types(+72) status(+128/130) rewritten_to(+96) — 7 fields ALL CONFIRMED",
+        "get_passthrough_audit_log IPC: limit?:number default=50; response={ok:'ok',entries:Entry[]}",
+        "append write: fire-and-forget (error logged, not propagated)",
+        "Wire API selector: *(v14+205) byte distinguishes Anthropic vs OpenAI reqwest client",
+        "RelayTestResult 4 fields B-confirmed cross-platform: modelsSample@+0/errorMessage@+24/latencyMs@+48/ok@+56 (relay-mac-closeout-109 macOS serialize+drop confirms shape)"
+      ],
+      "dto_closures": {
+        "RelayTestResult": {
+          "field_count": 4,
+          "fields": {
+            "modelsSample": {
+              "offset": "+0",
+              "type": "Vec<String>"
+            },
+            "errorMessage": {
+              "offset": "+24",
+              "type": "Option<String>"
+            },
+            "latencyMs": {
+              "offset": "+48",
+              "type": "i64"
+            },
+            "ok": {
+              "offset": "+56",
+              "type": "bool"
+            }
+          },
+          "healthScore_note": "healthScore is RelayProvider.healthScore (NOT RelayTestResult); sentinel 0x8000000000000000 is healthScore sentinel in provider struct",
+          "evidence_level": "B (cross-platform macOS serialize@0x1001c7194 + drop@0x1000d26fc confirmed relay-mac-closeout-109)"
+        },
+        "PassthroughAuditEntry": {
+          "field_count": 7,
+          "confirmed": true,
+          "fields": {
+            "at": {
+              "offset": "+8/+16",
+              "type": "String"
+            },
+            "model": {
+              "offset": "+32/+40",
+              "type": "String"
+            },
+            "endpoint": {
+              "offset": "+56/+64",
+              "type": "String"
+            },
+            "body_bytes": {
+              "offset": "+120",
+              "type": "u32/u64"
+            },
+            "input_types": {
+              "offset": "+72",
+              "type": "Vec"
+            },
+            "status": {
+              "offset": "+128 flag_u16 / +130 code_u16",
+              "type": "Option<u16>"
+            },
+            "rewritten_to": {
+              "offset": "+96/+104",
+              "type": "Option<String>"
+            }
+          },
+          "entry_size_bytes": 96
+        }
+      },
+      "blocker": "dim6 test/acceptance mapping not written",
+      "session": "<audit-session>",
+      "reduce_session_prior": "phase-reduce-20260602 (gap_needs_reducer; IDA MCP offline)",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_health_audit/",
+      "logic_file": "logic/WIN-RELAY-HEALTH-AUDIT-REDUCE-109.md"
+    },
+    "bootstrap": {
+      "leaf_count": 4,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "partial_thread_model_only",
+      "dim3_call_tree": "partial",
+      "dim4_interface_error_side_effect": "partial",
+      "dim5_platform_gate": "windows_independent_partial",
+      "dim6_test_acceptance": "missing",
+      "consumerStartReady": false,
+      "strictImplementationUse": false,
+      "readyToImplement": false,
+      "gate": "consumerStartReady_candidate",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "blocker": "IDA MCP offline; setup closure body, watcher loop body, TypeMap internals not decompiled; out-of-scope per user discipline red-line",
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/bootstrap/"
+    },
+    "relay_breaker": {
+      "leaf_count": 12,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "closed",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "key_findings": [
+        "BreakerState stride=208, open_until_ms_offset=144, active_flag_offset=204",
+        "Backoff ladder: 5s/30s/300s confirmed",
+        "3 .c decompile files + 9 in manifest; idb_save confirmed=true",
+        "Sentinel value 0x8000000000000000 for not-found entries",
+        "Windows mutex: InterlockedCompareExchange8 + WakeByAddressSingle pattern",
+        "relay_breaker_is_open_sys IS standalone callable (not inline)",
+        "new_store CLOSED@0x1403ECFA0 (relay-closeout-109): Creates Arc<Mutex<HashMap<String,BreakerState>>>; 72-byte alloc align-8; called from relay_manager_new_sys@0x14014e960; mac_va=0x1001597bc"
+      ],
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_breaker/",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement"
+    },
+    "relay_fetch_models": {
+      "leaf_count": 12,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed_12_of_12 (ceiling-cracked <audit-session>)",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed (async terminals resolved: ICF body@0x1408E0870 335BB/5-level jpt)",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "missing",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "accepted_unknowns": [
+        "fetch_async/fetch_openai_async: ICF-merged async poll bodies; accepted_unknown"
+      ],
+      "key_findings": [
+        "parse_model_ids/parse_extra_headers/build_url_normalize/classify_error/is_transient_request_error/strip_v1_suffix all decompiled",
+        "apply_extra_headers_openai VA 0x14010EFC0 confirmed",
+        "build_openai_headers_authorization VA 0x1401AD5A0 confirmed",
+        "keychain_get_api_key VA 0x140571180 = relay_manager dual-use VA (callees extracted)",
+        "HTTP terminal in async poll body — ICF-folded, not directly decompilable"
+      ],
+      "blocker": "fetch_async+fetch_openai_async async terminals blocked (ICF); dim6 missing",
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_fetch_models/",
+      "ceiling_crack_session": "<audit-session>",
+      "ceiling_crack_va": "0x1408E0870",
+      "cc_crosscheck": "divergence",
+      "cc_crosscheck_summary": "cc-switch: single global client + always Bearer auth. AiMaMi Win: DIRECT/SYSTEM OnceLock pair; Anthropic x-api-field+anthropic-version:2023-06-01; relay_keychain_get_api_key_sys; connect_timeout=30s/request_timeout=30s/read_timeout=60s; WakeByAddressSingle.",
+      "consumer_note": "Windows confirms macOS behavior cross-platform. DIRECT/SYSTEM auth branching + Anthropic headers required."
+    },
+    "relay_models": {
+      "leaf_count": 6,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "closed",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "key_findings": [
+        "error_hint VA 0x140431D00 / sanitize_error_for_display VA 0x140434960 — leaf functions",
+        "RelayActiveByIde::add VA 0x140152720 — call_tree depth=5; 7 named callees",
+        "RelayProvider_map_deser VA 0x1407E5EB0 — 15 fields confirmed (correction: was 9 in SEED)",
+        "RelayProxyStatus_map_deser VA 0x1407EC400 — struct not enum (correction), 5 fields",
+        "RelayIde: 1 variant only (codex) confirmed",
+        "RelayActiveByIde_update_inplace VA 0x1401BDED0"
+      ],
+      "corrections_vs_seed": [
+        "RelayProxyStatus = struct not enum",
+        "RelayProvider = 15 fields not 9",
+        "RelayIde = 1 variant (codex only)"
+      ],
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_models/",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement"
+    },
+    "relay_web_executor": {
+      "leaf_count": 9,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed_7_of_9",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "closed",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "accepted_unknowns": [
+        "send_request_http_terminal: ICF-folded async tokio; accepted_unknown"
+      ],
+      "key_findings": [
+        "execute_proxy_tools_owner_sys VA 0x1401DFC70 — Tier-A depth>=5",
+        "build_passthrough_response_owner_sys VA 0x1401F9D60 — Tier-A depth>=5",
+        "web_dispatch_loop_owner_sys VA 0x140840650 — Tier-A depth>=5",
+        "append_assistant_and_tool_results_owner_sys VA 0x1402395C0 — Tier-A",
+        "Two stream translation functions Tier-B named from prior session",
+        "DTO: tool_calls/choices/summary_text/tool_call_id/call_id closed",
+        "Side effects: in-memory JSON mutation only; no persistent store write"
+      ],
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_web_executor/",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement"
+    },
+    "relay_web_tools": {
+      "leaf_count": 16,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "closed",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "key_findings": [
+        "TWO MIRRORED CLUSTERS: cluster1 (0x14015xxx) = stream_codex_responses_native_sys path; cluster2 (0x14084xxx) = forward_codex_responses_internal_sys path",
+        "Shared: github_raw_url_convert@0x140157230 + inject_tool_definitions@0x1401F9D60",
+        "fetch UA = MacOS Chrome/125 (hardcoded)",
+        "Search backends: Yahoo + DuckDuckGo",
+        "extract_html_text_body_sys + collect_element_text_sys confirmed as scraper-crate implementation",
+        "skip_tags: nav/style/aside/script/header/footer/noscript",
+        "truncate = 8000 bytes (not Unicode char count)",
+        "web_search_tool = {type:web_search_20250305, name:web_search, max_uses:5}",
+        "inject_prompt = 'You have a web_search tool available.' (37B) + cache_control:ephemeral",
+        "SSE headers: text/event-stream + no-cache + X-Accel-Buffering:no",
+        "16 renames + 16 comments applied; idb_save ok",
+        "format_results/extract_ddg_url/SearchResult: inlined/stripped — not locatable"
+      ],
+      "accepted_unknowns": [
+        "format_results: inlined in fetch_search_body",
+        "extract_ddg_url: inlined",
+        "SearchResult struct: stripped"
+      ],
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_web_tools/",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement"
+    },
+    "relay_translator_stream": {
+      "leaf_count": 11,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "closed",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "key_findings": [
+        "ChatToResponsesStream: translator_chat_to_responses_handle_chunk_sys@0x1401DC4C0 (0x2558 bytes); 5 direct code callers",
+        "AnthropicToOpenAiStream: translator_anthropic_to_openai_handle_event_sys@0x140211FC0 (0x1e52 bytes)",
+        "AnthropicDirectToResponsesStream: translator_anthropic_to_responses_handle_event_sys@0x14021C1A0 (0x4a48 bytes)",
+        "OpenAiToAnthropicStream: translator_openai_to_anthropic_handle_event_sys@0x140233800 (0x28d6 bytes)",
+        "feed_line pattern: trim \\r → check 'data: ' prefix → parse JSON → [DONE] check → call handle_event_sys",
+        "NO ICF fold — synchronous handlers; all 4 fully decompilable (unlike macOS relay_fetch_models)",
+        "ensure_response_created_sys@0x1402246F0; emit_message_start_sys@0x140237670; emit_created_response_sys@0x140238C10",
+        "11 renames + 8 IDB comments; idb_save confirmed",
+        "ToolItemState accepted_unknown (Windows version — layout differs from macOS stride=40)"
+      ],
+      "platform_differences": {
+        "macos_icf": "macOS relay_fetch_models has ICF fold (async); Windows relay_translator_stream does NOT have ICF fold",
+        "state_machine_sizes": "ChatToResponsesStream Windows 9.6KB vs macOS 15.3KB; AnthropicDirectToResponses Windows 18.9KB vs macOS 16.3KB",
+        "feed_line": "Windows uses explicit feed_line + handle_event pattern; macOS uses handle_chunk directly"
+      },
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_translator/",
+      "logic_file": "logic/WIN-RELAY-CLOSEOUT-109.md",
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement"
+    },
+    "relay_translator": {
+      "leaf_count": 15,
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed_15_leaves",
+      "dim3_call_tree": "closed_depth_gte_5",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "missing",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "dim4_notes": "tool_result/tool_use/tool_choice mapping CLOSED via convert_anthropic_message_to_openai_chat_sys@0x140214FD0 (A-level decompile); tool_call_id/function/arguments keys confirmed; system/messages/stream/max_tokens/temperature/top_p/stop_sequences/tools forwarding confirmed; stream_codex_responses_translator_dispatch_sys@0x140134DC0 + anthropic_request_to_openai_chat_request_sys@0x14020A900 named; relay_translator_extract_text_field_sys@0x140125E10 + relay_translator_convert_tools_array_sys@0x14009BD60 confirmed; relay-mac-closeout-109",
+      "blocker": "dim6 only (test/acceptance mapping)",
+      "session": "<audit-session>",
+      "gate_change": "not_started → strictImplementationUse (relay-mac-closeout-109)",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_translator/",
+      "key_supplement": "<source-location>/audits/windows-1.0.9-relay-core/logic/WIN-RELAY-MAC-CLOSEOUT-109.md"
+    },
+    "relay_proxy_config": {
+      "leaf_count": 4,
+      "dim1_frontend_ccf": "accepted_unknown",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "missing",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "key_findings": [
+        "set_api_proxy_config_handler_sys@0x140282340 — A-level; params repo/mode/url; writes to settings JSON (NOT relay TOML); same semantics as macOS",
+        "cmd_detect_api_proxy_config_coroutine_sys@0x1408C45B0 — A-level; coroutine dispatch entry",
+        "cmd_test_api_proxy_config_coroutine_sys@0x1408E8160 — A-level; params mode/url; test connectivity",
+        "detect_system_env_proxy_sys@0x140110A80 — B-level; reads HTTPS_PROXY/HTTP_PROXY/ALL_PROXY both case variants; TCP probe 200ms; error msg confirmed",
+        "ProxyConfig mode/url DTO CLOSED cross-platform (macOS A-level confirms semantics)",
+        "set writes settings JSON NOT relay TOML — CONFIRMED Windows-independent",
+        "4 INDEX entries (lines 1149-1153) in relay_transport scope"
+      ],
+      "platform_notes": "Windows-specific: detect_system_env_proxy reads env vars (both case HTTPS_PROXY/HTTP_PROXY/ALL_PROXY); macOS uses networksetup subprocess additionally; TCP probe 200ms confirmed both platforms; settings JSON write confirmed Windows-independent",
+      "cross_platform_confirmed": "ProxyConfig/TestResult DTO shape confirmed via macOS A-level (sanitize_proxy_config/test_api_connectivity) + Windows coroutine entries",
+      "blocker": "dim6 test/acceptance mapping not written",
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_transport/ (relay_proxy_config scope)",
+      "logic_file": "logic/WIN-RELAY-TRANSPORT-CLOSEOUT-109.md",
+      "idb_saved": true
+    },
+    "relay_image_compat": {
+      "leaf_count": 9,
+      "dim1_frontend_ccf": "accepted_unknown",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed_depth_gte_5",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "missing",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "key_findings": [
+        "relay_image_compat_set_handler_sys@0x14027A1B0 — A-level; dispatched from auto_switch_multiplex_dispatcher_sys@0x1402663E0; string 'set_image_compat'@0x141268D1C; param 'enabled'@0x14126925B",
+        "relay_image_compat_set_impl_sys@0x1400A5EB0 — A-level; parses [features] section via byteswap comparison (0x696D6167655F6765='image_ge' + 0x6E65726174696F6E='neration'); 3 insertion paths; calls codex_paths_build_from_env_sys + atomic-write sub_14104E390",
+        "relay_image_compat_read_config_toml_sys@0x1400A55F0 — A-level; SSE 16-byte prefix match xmmword_141257E10; checks value='false' (0x65736C6166 5 bytes); returns bool via shared response builder",
+        "relay_image_compat_build_ok_bool_response_sys@0x1404391D0 — shared by get/set_image_compat + PluginRegistry::set_enabled + update_plugin_config + relay_set_block_passthrough_write_ok; builds CoreEnvelope{ok:{enabled:bool}}",
+        "relay_image_compat_get_handler_sys@0x1402779B0 — A-level; command_string_va 0x141267E70; calls read_config_toml_sys directly",
+        "relay_image_compat_get_core_impl_sys@0x1400A7040 — B-level; called from reset_codex_config handler; alternate read path",
+        "relay_image_support_capability_descriptor_sys@0x140599610 — builds {id:'image-support',name:'Image Support',desc:194B,version:'1.0.0',category:'relay',enabled:true}",
+        "relay_image_support_tool_pair_builder_sys@0x1405999D0 — 304-byte alloc; pairs fetch+image-support descriptors (each 152B)",
+        "stream_codex_responses_native_sys@0x14012AE30 — forward gate via BEHAVIORAL rejection: sub_140108C80('image_url',9) check at 0x14012C3C0; logs '[AiMaMi] image_url rejected by upstream; retrying with text fallback'@0x14125BF91; retry via sub_140143840",
+        "relay_models_error_hint_sys@0x140431D00 — error hint classifier checking 'image generation'/'image_generation' in error messages (display path, not capability gate)"
+      ],
+      "dto_closures": {
+        "IPC_set_image_compat": {
+          "command_string_va": "0x141268D1C",
+          "input": "{ enabled: bool }",
+          "param_key": "enabled (7 bytes @ 0x14126925B)",
+          "output": "CoreEnvelope { ok: { enabled: bool } }",
+          "output_ok_key": "0x6B6F (27503)",
+          "output_enabled_key": "7 bytes (0x64656C62617265 + 'n')",
+          "bool_offset": "+77 in response struct",
+          "side_effect": "mutates config.toml [features] section with 'image_generation = false'"
+        },
+        "IPC_get_image_compat": {
+          "command_string_va": "0x141267E70",
+          "input": "manager (AppState handle, 7 bytes)",
+          "output": "CoreEnvelope { ok: { enabled: bool } }",
+          "enabled_semantics": "true if image_generation absent OR != 'false' in [features]; false if 'image_generation = false' present"
+        },
+        "config_toml_format": {
+          "section_header": "[features] (10 bytes; detected by XOR 0x657275746165665B | 0x5D73)",
+          "field": "image_generation (16 bytes; SSE 16-byte prefix match xmmword_141257E10)",
+          "value_when_disabled": "false (5 bytes; 0x736C6166 + 0x65)",
+          "full_line": "image_generation = false (24 bytes @ 0x1412585C0)"
+        },
+        "forward_gate": {
+          "mechanism": "BEHAVIORAL rejection",
+          "gate_check": "sub_140108C80('image_url', 9) in response body at 0x14012C3C0",
+          "precondition": "[rsi+388h] < 3 AND [rsi+0CEh] != 1",
+          "log_condition": "cs:off_141882AF8 >= 3 (DEBUG level)",
+          "log_string": "[AiMaMi] image_url rejected by upstream; retrying with text fallback (137B @ 0x14125BF91)",
+          "retry_entry": "sub_140143840 at loc_14012source archive8D",
+          "note": "forward path does NOT call codex_paths_build_from_env_sys; config.toml is not re-read during forwarding"
+        }
+      },
+      "blocker": "dim6 test/acceptance mapping not written",
+      "session": "<audit-session>",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_image_compat/",
+      "logic_file": "logic/WIN-RELAY-IMAGE-COMPAT-109.md",
+      "idb_saved": true,
+      "idb_path": "<source-location><network-share>"
+    },
+    "relay_sse": {
+      "leaf_count": "bridge=294BB + 3 unfold poll bodies",
+      "dim1_frontend_ccf": "product_decision",
+      "dim2_backend_owner_pseudocode": "closed (bridge sub_140835420 + all 3 unfold poll bodies decompiled)",
+      "dim3_call_tree": "closed (bridge→vtable_dispatch@0x140831850→poll_bodies)",
+      "dim4_interface_error_side_effect": "closed (HTTP status [200,299]; x-aimami-reason; [DONE] sentinel; 1MB SSE buffer; blockOfficialPassthrough; activeByIde)",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "missing",
+      "consumerStartReady": true,
+      "strictImplementationUse": true,
+      "readyToImplement": false,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "ceiling_crack_session": "<audit-session>",
+      "prior_tier": "accepted_unknown",
+      "gate_change": "accepted_unknown→strictImplementationUse",
+      "vtable_dispatch": "sse_translate_stream_vtable_dispatch_sys@0x140831850",
+      "poll_bodies": {
+        "passthrough": "0x1404F8BF0",
+        "anthropic_to_openai": "0x1404FA7F0",
+        "openai_to_anthropic": "0x1404FC1A0"
+      },
+      "bridge_body": "sub_140835420 (294BB, 7913B)",
+      "cc_crosscheck": "divergence",
+      "cc_crosscheck_summary": "cc-switch has no WS bridge. Three-variant dispatch (passthrough/A2O/O2A) aligns with cc-switch adapter pattern conceptually. AiMaMi Windows bridge is standalone (not ICF-folded unlike macOS); [DONE] sentinel + 1MB limit + x-aimami-reason are AiMaMi-specific.",
+      "consumer_note": "Windows relay_sse fully closed. Use feed_line+flush pattern per translator variants. Passthrough = raw byte copy. WS bridge must be implemented from binary evidence, not cc-switch reference."
+    }
+  },
+  "cluster_gate_summary": {
+    "readyToImplement": 8,
+    "strictImplementationUse": 8,
+    "consumerStartReady_candidate": 1,
+    "gap_needs_reducer": 0,
+    "blocked": 0,
+    "note": "relay-transport-closeout-109: relay_proxy_config added as new cluster (strictImplementationUse; 4 Windows IDA leaves; dim6 missing). Total: 8 readyToImplement (relay_manager|relay_proxy_server|relay_thread_migration|relay_breaker|relay_models|relay_web_executor|relay_web_tools|relay_translator_stream). 7 strictImplementationUse (relay_codex_writer|relay_diagnostic|relay_health_audit|relay_fetch_models|relay_translator|relay_image_compat|relay_proxy_config). 1 consumerStartReady_candidate: bootstrap (out-of-scope). total_clusters=16. Updated <audit-session> 2026-06-05: total_clusters corrected 16→17; strictImplementationUse corrected 7→8 (relay_sse added — promoted from accepted_unknown via <audit-session>); 8 strictImplementationUse = relay_codex_writer|relay_diagnostic|relay_health_audit|relay_fetch_models|relay_translator|relay_image_compat|relay_proxy_config|relay_sse. total_clusters=17.",
+    "wf_aimami109_ceilingcrack_upgrades": "relay_sse: accepted_unknown→strictImplementationUse; relay_fetch_models: dim2 closed 10→12; all cc_crosscheck added"
+  },
+  "updated_at": "2026-06-03 (relay-transport-closeout-109: relay_proxy_config cluster added strictImplementationUse; strictImplementationUse count 6→7; cluster_count 15→16)",
+  "readyToImplement_promotions": [
+    {
+      "cluster": "relay_manager",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109.md §10",
+      "dim6_ref": "logic/RELAY-CORE-ACCEPTANCE-MAPPING-109.md"
+    },
+    {
+      "cluster": "relay_proxy_server",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109.md §11"
+    },
+    {
+      "cluster": "relay_thread_migration",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109.md §12"
+    },
+    {
+      "cluster": "relay_models",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109.md §4"
+    },
+    {
+      "cluster": "relay_breaker",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109.md §5; new_store@0x1403ECFA0 closed relay-closeout-109"
+    },
+    {
+      "cluster": "relay_web_executor",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109.md §2"
+    },
+    {
+      "cluster": "relay_web_tools",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109.md §3"
+    },
+    {
+      "cluster": "relay_translator_stream",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "evidence": "RELAY-CORE-ACCEPTANCE-MAPPING-109.md §1; WIN-RELAY-CLOSEOUT-109.md; NO ICF fold on Windows"
+    }
+  ],
+  "remaining_strictImplementationUse_blockers": {
+    "relay_codex_writer": "dim6 only — dim4 closed relay-mac-closeout-109 (pseudocode-manifest.jsonl + INTERFACE-MAP.md confirmed at intermediate/)",
+    "relay_diagnostic": "dim6 only — dim4 closed relay-mac-closeout-109 (pseudocode-manifest.jsonl confirmed at intermediate/; 7 engine checks fully enumerated; relay_diagnostic_engine_core_sys 53KB accepted_unknown)",
+    "relay_health_audit": "dim6 only — all other dims closed relay-closeout-109; RelayTestResult 4-field shape B-confirmed cross-platform relay-mac-closeout-109",
+    "relay_fetch_models": "dim2 partial (fetch_async/fetch_openai_async ICF-merged async poll bodies; 10/12 decompiled); dim6 missing",
+    "relay_translator": "dim6 only — dim4 closed relay-mac-closeout-109 (tool_result/tool_use/tool_choice mapping CLOSED; 15 leaves; call-tree depth>=5)",
+    "relay_image_compat": "dim6 only — all other dims closed relay-image-compat-109",
+    "relay_proxy_config": "dim6 only — all dims 1-5 closed relay-transport-closeout-109 (4 Windows IDA decompiles + cross-platform DTO confirmation)"
+  },
+  "platform_policy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  },
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "indexLines": "see INDEX.jsonl (relay-missed-109 + relay-closeout-109 + relay-mac-closeout-109 + relay-image-compat-109 + relay-transport-closeout-109 appends; lines 1145-1153 Windows transport layer)"
+  }
+}

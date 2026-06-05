@@ -1,0 +1,13 @@
+{
+  "leaf": "schedule_full_runtime_refresh",
+  "files": [
+    {"path": "manifest.json", "type": "manifest"},
+    {"path": "file-manifest.json", "type": "file_manifest"},
+    {"path": "AI.md", "type": "ai_handoff"},
+    {"path": "README.md", "type": "readme"},
+    {"path": "SYSTEM-DIFF.md", "type": "system_diff"},
+    {"path": "call-trees/schedule_full_runtime_refresh.jsonl", "type": "call_tree"},
+    {"path": "validation/result.json", "type": "validation"},
+    {"path": "ida/pseudocode/schedule_full_runtime_refresh.c", "type": "pseudocode"}
+  ]
+}

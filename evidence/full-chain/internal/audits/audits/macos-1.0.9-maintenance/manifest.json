@@ -1,0 +1,28 @@
+{
+  "schema": "restoration.cm.reverse.audit.v1",
+  "bundle": "macos-1.0.9-maintenance",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "cluster": "maintenance",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_at": "2026-06-03",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sha12": "1db044e8efab",
+  "leaves": ["clean", "rebuild_registry", "load_snapshot"],
+  "gate_tier": "strictImplementationUse",
+  "gate_accepted": false,
+  "implementation_use": false,
+  "dim6_missing": true,
+  "ceiling": "strictImplementationUse",
+  "is_upstream_all": true,
+  "idb_saved": true,
+  "ida_comments_appended": 7,
+  "owner": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "authoritative": true
+  },
+  "raw_evidence_root": "<source-location>/raw/aimami/1.0.9/macos/maintenance/",
+  "distilled": "<source-location>/audits/macos-1.0.9-maintenance/logic/MAINTENANCE-DISTILLED-109.md"
+}

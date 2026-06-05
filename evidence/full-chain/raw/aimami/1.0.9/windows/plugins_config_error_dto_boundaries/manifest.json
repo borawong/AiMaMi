@@ -1,0 +1,64 @@
+{
+  "schema": "raw-evidence.raw.leaf_manifest.v1",
+  "produced_at": "2026-06-02T05:47:53+08:00",
+  "producer": "codex",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "arch": "x64",
+  "module": "plugins_config_error_dto_boundaries",
+  "leaf": "plugins_config_error_dto_boundaries",
+  "kind": "backend_reverse_ida_static_boundary",
+  "source_binary": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "source_binary_size": 26821632,
+  "ida": {
+    "host": "127.0.0.1",
+    "port": 13337,
+    "health": "ok",
+    "module": "AiMaM 1.0.9 win64.exe",
+    "imagebase": "0x140000000"
+  },
+  "paths": {
+    "raw": "<source-location>/raw/aimami/1.0.9/windows/plugins_config_error_dto_boundaries",
+    "intermediate": "<source-location>/intermediate/aimami/1.0.9/windows/plugins_config_error_dto_boundaries",
+    "handoff_root": "<source-location>/aimami/1.0.9/windows-x64/plugins_config_error_dto_boundaries"
+  },
+  "evidence": [
+    "README.md",
+    "AI.md",
+    "SYSTEM-DIFF.md",
+    "evidence/ida-static-boundary.md",
+    "evidence/address-table.json"
+  ],
+  "supplements_existing_leaves": [
+    "get_plugin_config",
+    "update_plugin_config",
+    "plugin_response_error_envelope",
+    "plugins_json_persistence_error",
+    "plugins_builtin_web_tools_defaults_settings"
+  ],
+  "gate": {
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "consumerUse": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "no_gate": true,
+    "no_gate_promotion": true
+  },
+  "producer_appended_global_index": false,
+  "task_plan_written": false,
+  "runtime_executed": false,
+  "idb_mutated": false,
+  "forbidden_path_audit": {
+    "uses_canonical_root_only": true,
+    "no_date_machine_pass_retry_attempt_producer_dirs": true,
+    "no_version_span_path_components": true,
+    "no_index_shard": true,
+    "no_internal_reverse_raw_artifacts": true
+  }
+}
+

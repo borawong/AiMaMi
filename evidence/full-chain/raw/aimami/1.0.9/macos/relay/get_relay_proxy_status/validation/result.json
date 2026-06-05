@@ -1,0 +1,22 @@
+{
+  "schema": "raw-evidence.raw.bundle.validation.v1",
+  "command": "get_relay_proxy_status",
+  "platform": "macos-arm64",
+  "version": "1.0.9",
+  "session": "relay-A-state-crud-20260602",
+  "idb_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sot_sha256": "985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "gate": "strictImplementationUse",
+  "dim1_frontend_ccf": {"status": "Unknown", "note": "accepted_unknown — pure read, no blocking impl decision"},
+  "dim2_backend_owner_pseudocode": {"status": "Accepted", "owner_addr": "0x1001e2294", "core_addr": "0x1001c8fb4", "symbol": "codexmate_lib::commands::relay::get_relay_proxy_status::h1c0a3f76f8238284"},
+  "dim3_call_tree_impl_leaves": {"status": "Accepted", "depth": 5, "terminal_leaves": ["atomic_mutex_init", "Mutex::lock", "format_inner(127.0.0.1:{port})", "format_inner({port})", "Mutex::unlock", "inactive_path_all_zero"], "call_tree_file": "call-trees/codexmate_lib::commands::relay::get_relay_proxy_status.jsonl"},
+  "dim4_interface_dto_error_sideeffect": {"status": "Accepted", "argKeys": [], "response_struct": "ProxyStatus{active:bool@a2+74, port:u16@a2+72, hostStr:'127.0.0.1:PORT'@a2+0..+16, portStr:'PORT'@a2+24..+40, proxyAddr:Option@a2+48}", "inactive_sentinel": "xmmword_100EDC0E0@+40", "format_templates": {"host": "anon_168='127.0.0.1:{}'", "port": "anon_166='{}'"}, "errors": ["Mutex_poisoned:all_zero_fields"], "side_effects": []},
+  "dim5_platform_gate": {"status": "Accepted", "macos": "CONFIRMED", "windows": "Unknown", "note": "pure read with string format; no platform-specific OS APIs beyond POSIX mutex"},
+  "dim6_test_acceptance": {"status": "empty_per_task_spec"},
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "no_gate_promotion_to_ready": true
+}

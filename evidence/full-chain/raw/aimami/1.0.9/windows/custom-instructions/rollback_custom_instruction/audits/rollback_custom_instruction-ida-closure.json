@@ -1,0 +1,42 @@
+{
+  "schema": "raw-evidence.reverse.ida_absence_substitute.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "custom-instructions",
+  "command": "rollback_custom_instruction",
+  "status": "accepted_ready_absent_backend_orphan_ida_direct",
+  "source_binary": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "idb": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe.i64",
+  "frontend_contract_pointer": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/",
+  "thread_model": "no backend command owner; frontend invoke would have no same-platform Tauri handler in AiMaMi 1.0.9 artifact",
+  "wrapper": "frontend tauriInvokeWrapper only",
+  "owner": "backend_absent_same_platform_ida_string_scan",
+  "absence_anchor": "0x1412804eb",
+  "searched_patterns": [
+    "load_custom_instruction_state",
+    "preview_custom_instruction_apply",
+    "apply_custom_instruction",
+    "clear_custom_instruction_block",
+    "rollback_custom_instruction",
+    "custom-instructions",
+    "AGENTS.md"
+  ],
+  "interface": "{ historyId: string }",
+  "side_effect": "No upstream backend side effect in AiMaMi 1.0.9 binary; only path constants for custom-instructions/AGENTS.md exist. upstream implementation is product/local behavior, not upstream backend parity.",
+  "error_surface": "Backend command-not-registered/orphan invoke is the upstream artifact boundary; no owner error envelope exists.",
+  "acceptance_mapping": "consumer acceptance: treat as upstream frontend orphan; implement/keep upstream custom-instructions behavior only as product decision and do not claim upstream backend owner parity.",
+  "idb_comments_written": true,
+  "idb_saved": true,
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "accepted_substitute": "same_platform_ida_backend_absence_for_frontend_orphan_command"
+  },
+  "produced_at": "2026-06-03T00:00:00+08:00"
+}

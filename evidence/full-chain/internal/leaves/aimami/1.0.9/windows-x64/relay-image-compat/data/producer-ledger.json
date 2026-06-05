@@ -1,0 +1,79 @@
+{
+  "ledger_version": 2,
+  "bundle": "aimami/1.0.9/windows-x64/relay-image-compat",
+  "producer": "<workstation>",
+  "session": "<audit-session>", "date": "2026-06-04",
+  "status": "canonical",
+  "gate_tier": "strictImplementationUse",
+  "owner_gate_exit": 0,
+  "items": [
+    {
+      "fn": "relay_image_compat_get_handler_sys",
+      "addr": "0x1402779b0",
+      "size_bytes": 627,
+      "basic_blocks": 25,
+      "decompile_pass": "single",
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "accepted_unknown": false,
+      "block_decomposed": false
+    },
+    {
+      "fn": "relay_image_compat_get_core_impl_sys",
+      "addr": "0x1400a7040",
+      "size_bytes": 649,
+      "basic_blocks": 18,
+      "decompile_pass": "single",
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "accepted_unknown": false,
+      "block_decomposed": false
+    },
+    {
+      "fn": "relay_image_compat_set_handler_sys",
+      "addr": "0x14027a1b0",
+      "size_bytes": 911,
+      "decompile_pass": "single",
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "accepted_unknown": false,
+      "block_decomposed": false
+    },
+    {
+      "fn": "relay_image_compat_set_impl_sys",
+      "addr": "0x1400a5eb0",
+      "size_bytes": 3577,
+      "basic_blocks": 155,
+      "decompile_pass": "single",
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "accepted_unknown": false,
+      "block_decomposed": false
+    },
+    {
+      "fn": "relay_image_compat_read_config_toml_sys",
+      "addr": "0x1400a55f0",
+      "size_bytes": 900,
+      "decompile_pass": "single",
+      "real_body_found": true
+    },
+    {
+      "fn": "relay_image_compat_build_ok_bool_response_sys",
+      "addr": "0x1404391d0",
+      "size_bytes": 229,
+      "decompile_pass": "single",
+      "real_body_found": true
+    }
+  ],
+  "fake_wall_taxonomy": {
+    "drop_in_place": "EXCLUDED",
+    "architecture_only": "EXCLUDED",
+    "async_decompile_failed": "EXCLUDED",
+    "wrong_va": "EXCLUDED",
+    "vtable_dynamic": "EXCLUDED",
+    "http_terminal": "EXCLUDED",
+    "library_internal": "EXCLUDED",
+    "body_too_large": "EXCLUDED"
+  },
+  "recovery_attempts": "not_needed"
+}

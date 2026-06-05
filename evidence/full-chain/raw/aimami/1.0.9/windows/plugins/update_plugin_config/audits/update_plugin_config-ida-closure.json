@@ -1,0 +1,26 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v1",
+  "leaf": "update_plugin_config",
+  "platform": "windows-x64",
+  "owner": {
+    "addr": "0x1402663e0",
+    "decompile_ok": true,
+    "pseudocode_lines": 2085,
+    "pseudocode_chars": 76311
+  },
+  "important_callees": "0x1404f1950,0x140165130,0x1403edaa0,0x1403edec0",
+  "threading_model": "dispatcher branch -> adapter/wrapper -> update_settings -> save_store_static",
+  "terminal_side_effect_classes": "decode id/settings, update_settings, save store, CoreEnvelope ok bool",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "platformScopeDeclared": true,
+    "allowedImplementationMode": "Implement current windows-x64 AiMaMi 1.0.9 plugins behavior from IDA owner/callee/DTO/side-effect evidence only."
+  },
+  "idb_saved": true
+}

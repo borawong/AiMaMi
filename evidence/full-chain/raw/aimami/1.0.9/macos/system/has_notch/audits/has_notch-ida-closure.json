@@ -1,0 +1,65 @@
+{
+  "schema": "raw-evidence.raw.ida_closure.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "system",
+  "command": "has_notch",
+  "produced_at": "2026-06-03T10:00:00+08:00",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "ida_mcp": "mcp__ida_pro_mcp_mac",
+  "owner": {
+    "va": "0x100330730",
+    "symbol": "codexmate_lib::commands::hotspot::has_notch",
+    "decompile": "accepted"
+  },
+  "platform_leaf": {
+    "va": "0x1003e1c64",
+    "symbol": "codexmate_lib::platform::screen::has_notch_screen",
+    "decompile": "accepted"
+  },
+  "threading_model": [
+    "Tauri command wrapper",
+    "WRY user message to main thread",
+    "mpsc/mpmc receiver wait",
+    "platform leaf requires pthread_main_np()==1"
+  ],
+  "terminal_leaves": [
+    "NSProcessInfo::operatingSystemVersion",
+    "pthread_main_np",
+    "NSScreen::screens",
+    "NSArray::count",
+    "NSArray::objectAtIndex",
+    "NSScreen::auxiliaryTopLeftArea",
+    "NSScreen::auxiliaryTopRightArea"
+  ],
+  "interface": {
+    "args": {},
+    "return": "bool",
+    "frontend_error_fallback": "false"
+  },
+  "side_effects": {
+    "fs": false,
+    "http": false,
+    "process": false,
+    "registry": false,
+    "window": false,
+    "notes": "has_notch read-only; hotspot window creation is a separate consumer path"
+  },
+  "idb_writeback": {
+    "comments_written": [
+      "0x100330730",
+      "0x1003e1c64"
+    ],
+    "idb_saved": true
+  },
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "platformScopeDeclared": "macOS confirmed; Windows Unknown"
+  }
+}

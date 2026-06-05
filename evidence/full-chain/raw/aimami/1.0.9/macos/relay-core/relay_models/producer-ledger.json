@@ -1,0 +1,92 @@
+{
+  "schema": "raw-evidence.producer.ledger.v1",
+  "bundle": "raw/aimami/1.0.9/macos/relay-core/relay_models",
+  "producer": "<workstation>",
+  "session": "relay-missed-109",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "produced_at": "2026-06-03",
+  "leaves": [
+    {
+      "leaf": "error_hint",
+      "va": "0x1001820",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "sha12": "1db044e8efab",
+      "gate": "no-gate",
+      "status": "produced-pre-gate",
+      "decompile_ok": true,
+      "inline_comment": true
+    },
+    {
+      "leaf": "sanitize_error_for_display",
+      "va": "0x1001c7e2c",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "sha12": "1db044e8efab",
+      "gate": "no-gate",
+      "status": "produced-pre-gate",
+      "decompile_ok": true,
+      "inline_comment": true
+    },
+    {
+      "leaf": "RelayActiveByIde_add",
+      "va": "0x1001c62a0",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "sha12": "1db044e8efab",
+      "gate": "no-gate",
+      "status": "produced-pre-gate",
+      "decompile_ok": true,
+      "inline_comment": true
+    },
+    {
+      "leaf": "struct_RelayState",
+      "va": "0x100029684",
+      "evidence": "drop_in_place",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "sha12": "1db044e8efab",
+      "gate": "no-gate",
+      "status": "produced-pre-gate",
+      "decompile_ok": true,
+      "inline_comment": true
+    },
+    {
+      "leaf": "struct_RelayProvider",
+      "va": "0x1004c2d20",
+      "evidence": "drop_in_place",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "sha12": "1db044e8efab",
+      "gate": "no-gate",
+      "status": "produced-pre-gate",
+      "decompile_ok": true,
+      "inline_comment": true
+    },
+    {
+      "leaf": "struct_CodexRouteDiagnostic",
+      "va": "0x1000015f8",
+      "evidence": "drop_in_place",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "sha12": "1db044e8efab",
+      "gate": "no-gate",
+      "status": "produced-pre-gate",
+      "decompile_ok": true,
+      "inline_comment": true
+    },
+    {
+      "leaf": "enum_shapes_RelayWireApi_RelayNetworkMode_RelayIde_RelayProxyStatus",
+      "evidence": "serde_string_tables",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "sha12": "1db044e8efab",
+      "gate": "no-gate",
+      "status": "produced-pre-gate",
+      "decompile_ok": "serde_strings_only",
+      "inline_comment": false
+    }
+  ],
+  "idb_save": true,
+  "reduce_pending": true
+}

@@ -1,0 +1,115 @@
+{
+  "schema": "raw-evidence.reverse.raw.plugins_runtime_isolation_preflight_readiness.v1",
+  "produced_at": "2026-06-02T00:00:00+08:00",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "arch": "x64",
+  "leaf": "plugins_runtime_isolation_preflight_readiness",
+  "status": "plugins_runtime_isolation_preflight_readiness_no_gate_promotion",
+  "candidate_key": "aimami/1.0.9/windows/plugins_runtime_isolation_preflight_readiness/monitor-profile-readiness-no-gate-promotion",
+  "execution_boundary": {
+    "ran_aimami": false,
+    "started_capture": false,
+    "read_real_plugins_json_contents": false,
+    "wrote_real_profile": false,
+    "appended_index": false
+  },
+  "source_binary": {
+    "path": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+    "size": 26821632,
+    "sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+    "recheck": "matched"
+  },
+  "read_only_metadata": {
+    "running_process": {
+      "exists": true,
+      "pid": 16168,
+      "process_name": "AiMaMi",
+      "image_path": "<local-path>"
+    },
+    "real_plugins_file": {
+      "exists": true,
+      "path": "<local-path>",
+      "size": 187,
+      "sha256": "41faeb615141f292ebcfff321e0f5785fdc93ddba16155ea3cf75a104b69d6",
+      "content_read": false
+    }
+  },
+  "monitoring_tools": {
+    "available": [
+      "wpr",
+      "logman",
+      "tracerpt",
+      "wevtutil",
+      "netsh",
+      "PowerShell ETW",
+      "admin shell"
+    ],
+    "missing": [
+      "Procmon",
+      "Handle",
+      "Frida",
+      "xperf",
+      "debugger tools"
+    ]
+  },
+  "consumed_evidence": {
+    "index_rows": [
+      590,
+      591,
+      592
+    ],
+    "raw_paths": [
+      "<source-location>/raw/aimami/1.0.9/windows/plugins_path_root_resolution/evidence/ida-plugins-path-root-resolution.json",
+      "<source-location>/raw/aimami/1.0.9/windows/plugins_json_persistence_error/evidence/ida-plugins-json-persistence-error.json",
+      "<source-location>/raw/aimami/1.0.9/windows/plugins_frontend_ui_state/evidence/frontend-ui-state.json"
+    ],
+    "template_only": [
+      "<source-location>/raw/aimami/1.0.8/windows/plugins/plugins-registry-boundary/trace-pack/"
+    ]
+  },
+  "readiness": {
+    "runtime_preflight_can_run_now": false,
+    "runtime_preflight_blockers": [
+      "real AiMaMi process is active",
+      "real profile plugins file exists",
+      "risk of reading or mutating real profile",
+      "risk of mixing traces with current real process"
+    ],
+    "etw_preflight_possible_after_cleanup": true,
+    "etw_preflight_constraints": [
+      "no existing AiMaMi process",
+      "disposable CODEX_HOME",
+      "disposable HOME",
+      "disposable USERPROFILE",
+      "disposable APPDATA",
+      "disposable LOCALAPPDATA",
+      "disposable WEBVIEW2_USER_DATA_FOLDER",
+      "disposable TEMP",
+      "disposable TMP",
+      "ETW/logman/WPR capture only",
+      "abort on real profile access"
+    ],
+    "full_toggle_runtime_acceptance_ready": false,
+    "full_toggle_runtime_acceptance_blockers": [
+      "Procmon unavailable",
+      "Frida unavailable",
+      "Handle unavailable",
+      "xperf unavailable",
+      "debugger tools unavailable",
+      "no same-version IPC response/payload capture"
+    ]
+  },
+  "gate": {
+    "consumerStartReady": false,
+    "consumerUse": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "full_leaf_100": false,
+    "gate_accepted": false,
+    "implementation_use": false,
+    "no_gate": true,
+    "no_gate_promotion": true
+  }
+}

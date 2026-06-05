@@ -1,0 +1,10 @@
+{"depth":1,"caller":"codexmate_lib::commands::relay::deactivate_relay_provider","callee":"codexmate_lib::core::relay::manager::RelayManager::deactivate","addr_caller":"0x1001e25a4","addr_callee":"0x1001c7ff8","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::deactivate","callee":"mutex_lock","addr_callee":"std::sys::pal::unix::sync::mutex::Mutex::lock","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::deactivate","callee":"RelayState::clone","addr_callee":"0x10020cc2c","edge_type":"call"}
+{"depth":2,"caller":"RelayManager::deactivate","callee":"Vec::retain","addr_callee":"0x1004c9974","edge_type":"call"}
+{"depth":3,"caller":"Vec::retain","callee":"check_provider_still_active_in_other_ide","edge_type":"branch","note":"if empty after retain: alloc error string 'Provider is still active in other IDE' len 123"}
+{"depth":2,"caller":"RelayManager::deactivate","callee":"RelayManager::persist","addr_callee":"0x1001cf304","edge_type":"call","terminated_reason":"persistence_commit"}
+{"depth":2,"caller":"RelayManager::deactivate","callee":"RelayManager::sync_codex_config_with_outcome","addr_callee":"0x1001cc828","edge_type":"call","terminated_reason":"persistence_commit"}
+{"depth":2,"caller":"RelayManager::deactivate","callee":"mutex_unlock","addr_callee":"std::sys::pal::unix::sync::mutex::Mutex::unlock","edge_type":"call"}
+{"depth":1,"caller":"codexmate_lib::commands::relay::deactivate_relay_provider","callee":"CoreEnvelope::ok","addr_callee":"0x1001d9e60","edge_type":"call","terminated_reason":"response_serialize"}
+{"depth":1,"caller":"codexmate_lib::commands::relay::deactivate_relay_provider","callee":"rust_dealloc","edge_type":"call","terminated_reason":"error_return"}

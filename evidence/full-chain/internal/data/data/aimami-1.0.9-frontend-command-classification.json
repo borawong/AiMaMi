@@ -1,0 +1,1180 @@
+{
+  "schema": "restoration.cm.reverse.frontend_command_classification.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "source": "<source-location>/intermediate/aimami/frontend-ccf/windows-1.0.9-frontend-ccf-bootstrap/frontend/ipc-command-set.json",
+  "comparison_branch": "origin/fear/v1.1-上游同步实施",
+  "total_commands": 127,
+  "counts": {
+    "excluded_relay": 19,
+    "target_custom_instructions": 5,
+    "excluded_accounts": 9,
+    "target_voice": 34,
+    "excluded_system_boot_shell_direct": 38,
+    "target_sessions_analytics": 8,
+    "target_skills": 6,
+    "excluded_plugins_deep": 4,
+    "target_mcp": 4
+  },
+  "unknown_commands": [],
+  "target_categories": [
+    "target_sessions_analytics",
+    "target_mcp",
+    "target_skills",
+    "target_custom_instructions",
+    "target_voice"
+  ],
+  "excluded_categories": [
+    "excluded_accounts",
+    "excluded_plugins_deep",
+    "excluded_relay",
+    "excluded_system_boot_shell_direct"
+  ],
+  "gate": {
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false
+  },
+  "commands": [
+    {
+      "command": "activate_relay_provider",
+      "argKeys": [
+        "ide",
+        "providerId"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "apply_custom_instruction",
+      "argKeys": [
+        "content",
+        "source",
+        "templateCode",
+        "templateTitle"
+      ],
+      "rowCount": 1,
+      "category": "target_custom_instructions",
+      "reason": "included target surface"
+    },
+    {
+      "command": "begin_add_account_attach_monitor",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_accounts",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "cancel_voice_trigger_capture",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "capture_voice_trigger_key",
+      "argKeys": [
+        "style"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "check_update_installability",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "clean",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "clear_custom_instruction_block",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_custom_instructions",
+      "reason": "included target surface"
+    },
+    {
+      "command": "configure_auto_switch",
+      "argKeys": [
+        "threshold5hPercent",
+        "thresholdWeeklyPercent"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "confirm_pending_auto_switch",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "confirm_pending_auto_switch_and_restart_codex",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "deactivate_relay_provider",
+      "argKeys": [
+        "ide",
+        "providerId"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "delete_relay_provider",
+      "argKeys": [
+        "providerId"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "delete_sessions",
+      "argKeys": [
+        "ids"
+      ],
+      "rowCount": 1,
+      "category": "target_sessions_analytics",
+      "reason": "included target surface"
+    },
+    {
+      "command": "delete_skill_backup",
+      "argKeys": [
+        "id"
+      ],
+      "rowCount": 1,
+      "category": "target_skills",
+      "reason": "included target surface"
+    },
+    {
+      "command": "detect_api_proxy_config",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "diagnose",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "diagnose_codex_router",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "dismiss_pending_auto_switch",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "export_accounts_to_file",
+      "argKeys": [
+        "accountKeys",
+        "targetPath"
+      ],
+      "rowCount": 1,
+      "category": "excluded_accounts",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "export_relay_config",
+      "argKeys": [
+        "filePath",
+        "includeApiKeys"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "fetch_relay_models_draft",
+      "argKeys": [
+        "input"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "fix_codex_router_issue",
+      "argKeys": [
+        "itemId"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "focus_main_window",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "force_kill_codex",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "generate_voice_prompt",
+      "argKeys": [
+        "asrDurationMs",
+        "asrEmotion",
+        "asrErrorCode",
+        "asrLanguage",
+        "asrModel",
+        "asrProvider",
+        "clipboardText",
+        "llmApiKey",
+        "llmBaseUrl",
+        "llmModel",
+        "llmProvider",
+        "promptOverride",
+        "rawText",
+        "selectedText",
+        "targetAppName",
+        "targetBundleId",
+        "templateId",
+        "templateKind",
+        "templateTitle"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "get_device_id",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "get_hotspot_enabled",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "get_image_compat",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "get_mystery_unlock_grants",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "get_notification_client_state",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "get_or_create_remote_device_secret",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "get_passthrough_audit_log",
+      "argKeys": [
+        "limit"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "get_plugin_config",
+      "argKeys": [
+        "id"
+      ],
+      "rowCount": 1,
+      "category": "excluded_plugins_deep",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "get_relay_active",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "get_relay_proxy_status",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "get_system_info",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "get_usage_refresh_interval",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "graceful_restart_for_update",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "has_notch",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "hotspot_ready",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "import_accounts_from_file",
+      "argKeys": [
+        "filePath",
+        "overwriteExisting",
+        "selectedKeys"
+      ],
+      "rowCount": 1,
+      "category": "excluded_accounts",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "import_chatgpt_session_account",
+      "argKeys": [
+        "overwriteExisting",
+        "sessionJson"
+      ],
+      "rowCount": 1,
+      "category": "excluded_accounts",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "import_relay_config",
+      "argKeys": [
+        "filePath"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "import_remote_device_secret_if_empty",
+      "argKeys": [
+        "sensitive-field"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "import_skill",
+      "argKeys": [
+        "path"
+      ],
+      "rowCount": 1,
+      "category": "target_skills",
+      "reason": "included target surface"
+    },
+    {
+      "command": "inject_voice_text",
+      "argKeys": [
+        "expectedBundleId",
+        "text"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "list_plugins",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_plugins_deep",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "load_bootstrap_state",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "load_change_analytics",
+      "argKeys": [
+        "range"
+      ],
+      "rowCount": 1,
+      "category": "target_sessions_analytics",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_custom_instruction_state",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_custom_instructions",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_installed_skills",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_skills",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_mcp_servers",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_mcp",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_pending_auto_switch",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "load_quota_history",
+      "argKeys": [
+        "accountKey"
+      ],
+      "rowCount": 1,
+      "category": "target_sessions_analytics",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_relay_state",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "load_session_analytics",
+      "argKeys": [
+        "range"
+      ],
+      "rowCount": 1,
+      "category": "target_sessions_analytics",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_sessions",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_sessions_analytics",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_skill_backups",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_skills",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_snapshot",
+      "argKeys": [
+        "localOnly"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "load_token_analytics",
+      "argKeys": [
+        "range"
+      ],
+      "rowCount": 1,
+      "category": "target_sessions_analytics",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_tool_analytics",
+      "argKeys": [
+        "range"
+      ],
+      "rowCount": 1,
+      "category": "target_sessions_analytics",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_usage_analytics",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_sessions_analytics",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_voice_asr_config",
+      "argKeys": [
+        "provider"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_voice_llm_config",
+      "argKeys": [
+        "provider"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_voice_runtime_status",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "load_voice_workspace",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "logout",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_accounts",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "merge_mystery_unlock_grants",
+      "argKeys": [
+        "grants"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "open_path",
+      "argKeys": [
+        "path"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "preview_account_import",
+      "argKeys": [
+        "filePath"
+      ],
+      "rowCount": 1,
+      "category": "excluded_accounts",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "preview_custom_instruction_apply",
+      "argKeys": [
+        "content"
+      ],
+      "rowCount": 1,
+      "category": "target_custom_instructions",
+      "reason": "included target surface"
+    },
+    {
+      "command": "rebuild_registry",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "refresh_usage_snapshot",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "remove_accounts",
+      "argKeys": [
+        "accountKeys"
+      ],
+      "rowCount": 1,
+      "category": "excluded_accounts",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "remove_mcp_server",
+      "argKeys": [
+        "name"
+      ],
+      "rowCount": 1,
+      "category": "target_mcp",
+      "reason": "included target surface"
+    },
+    {
+      "command": "remove_skill",
+      "argKeys": [
+        "id"
+      ],
+      "rowCount": 1,
+      "category": "target_skills",
+      "reason": "included target surface"
+    },
+    {
+      "command": "remove_voice_history_entry",
+      "argKeys": [
+        "id"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "remove_voice_mode_shortcut",
+      "argKeys": [
+        "modeId"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "remove_voice_template",
+      "argKeys": [
+        "id"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "remove_voice_vocabulary",
+      "argKeys": [
+        "id"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "remove_voice_vocabulary_app_scope",
+      "argKeys": [
+        "appBundleId"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "replace_voice_vocabulary_kind",
+      "argKeys": [
+        "appBundleId",
+        "appName",
+        "entries",
+        "kind",
+        "notes",
+        "replacement",
+        "source"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "request_accessibility_permission",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "request_voice_permissions",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "reset_codex_config",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "resolve_voice_vocabulary_app_info",
+      "argKeys": [
+        "path"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "restart_codex",
+      "argKeys": [],
+      "rowCount": 2,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "restore_skill_backup",
+      "argKeys": [
+        "id"
+      ],
+      "rowCount": 1,
+      "category": "target_skills",
+      "reason": "included target surface"
+    },
+    {
+      "command": "rollback_custom_instruction",
+      "argKeys": [
+        "historyId"
+      ],
+      "rowCount": 1,
+      "category": "target_custom_instructions",
+      "reason": "included target surface"
+    },
+    {
+      "command": "run_codex_router_diagnostics",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "run_daemon_once",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "save_voice_asr_config",
+      "argKeys": [
+        "asrApiKey",
+        "asrBaseUrl",
+        "asrModel",
+        "asrProvider"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "save_voice_llm_config",
+      "argKeys": [
+        "llmApiKey",
+        "llmBaseUrl",
+        "llmModel",
+        "llmProvider"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "set_api_proxy_config",
+      "argKeys": [
+        "mode",
+        "url"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "set_auto_switch",
+      "argKeys": [
+        "enabled"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "set_block_official_passthrough",
+      "argKeys": [
+        "blocked"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "set_codex_router_enabled",
+      "argKeys": [
+        "enabled",
+        "relaunch"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "set_hotspot_enabled",
+      "argKeys": [
+        "enabled"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "set_image_compat",
+      "argKeys": [
+        "enabled"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "set_mcp_server_enabled",
+      "argKeys": [
+        "enabled",
+        "name"
+      ],
+      "rowCount": 1,
+      "category": "target_mcp",
+      "reason": "included target surface"
+    },
+    {
+      "command": "set_relay_provider_network",
+      "argKeys": [
+        "network",
+        "providerId"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "set_usage_refresh_interval",
+      "argKeys": [
+        "interval"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "set_voice_global_shortcut",
+      "argKeys": [
+        "shortcut"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "set_voice_mode_shortcut",
+      "argKeys": [
+        "keyCode",
+        "keyKind",
+        "keyLabel",
+        "modeId",
+        "modifierMask",
+        "style"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "set_voice_processing_mode_id",
+      "argKeys": [
+        "modeId",
+        "processingMode"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "set_voice_trigger_bindings",
+      "argKeys": [
+        "activeStyle",
+        "holdKeyCode",
+        "holdKeyKind",
+        "holdKeyLabel",
+        "holdModifierMask",
+        "toggleKeyCode",
+        "toggleKeyKind",
+        "toggleKeyLabel",
+        "toggleModifierMask"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "set_voice_trigger_key",
+      "argKeys": [
+        "keyCode",
+        "keyKind",
+        "keyLabel",
+        "modifierMask",
+        "style"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "set_voice_trigger_listener_suppressed",
+      "argKeys": [
+        "suppressed"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "show_voice_search_overlay",
+      "argKeys": [
+        "output",
+        "query"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "start_voice_capture",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "stop_voice_capture",
+      "argKeys": [],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "switch_account",
+      "argKeys": [
+        "accountKey"
+      ],
+      "rowCount": 1,
+      "category": "excluded_accounts",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "switch_account_and_restart_codex",
+      "argKeys": [
+        "accountKey"
+      ],
+      "rowCount": 1,
+      "category": "excluded_accounts",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "test_api_proxy_config",
+      "argKeys": [
+        "mode",
+        "url"
+      ],
+      "rowCount": 1,
+      "category": "excluded_system_boot_shell_direct",
+      "reason": "excluded by user scope bootstrap/system-shell-init or system direct"
+    },
+    {
+      "command": "test_relay_draft",
+      "argKeys": [
+        "input"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "test_relay_provider",
+      "argKeys": [
+        "providerId"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "test_voice_asr_config",
+      "argKeys": [
+        "asrApiKey",
+        "asrBaseUrl",
+        "asrModel",
+        "asrProvider"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "test_voice_llm_config",
+      "argKeys": [
+        "llmApiKey",
+        "llmBaseUrl",
+        "llmModel",
+        "llmProvider"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "toggle_plugin",
+      "argKeys": [
+        "enabled",
+        "id"
+      ],
+      "rowCount": 1,
+      "category": "excluded_plugins_deep",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "update_plugin_config",
+      "argKeys": [
+        "id",
+        "settings"
+      ],
+      "rowCount": 1,
+      "category": "excluded_plugins_deep",
+      "reason": "excluded by user scope accounts/plugins deep"
+    },
+    {
+      "command": "update_voice_runtime_settings",
+      "argKeys": [
+        "enabled",
+        "processingMode",
+        "processingModeId",
+        "shortcut",
+        "speechModel"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "upsert_mcp_server",
+      "argKeys": [
+        "args",
+        "environment",
+        "headers"
+      ],
+      "rowCount": 1,
+      "category": "target_mcp",
+      "reason": "included target surface"
+    },
+    {
+      "command": "upsert_relay_provider",
+      "argKeys": [
+        "input"
+      ],
+      "rowCount": 1,
+      "category": "excluded_relay",
+      "reason": "excluded by user scope relay/relay-core"
+    },
+    {
+      "command": "upsert_voice_template",
+      "argKeys": [
+        "content",
+        "description",
+        "id",
+        "title"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "upsert_voice_vocabulary",
+      "argKeys": [
+        "appBundleId",
+        "appName",
+        "id",
+        "kind",
+        "notes",
+        "replacement",
+        "source"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    },
+    {
+      "command": "upsert_voice_vocabulary_app_scope",
+      "argKeys": [
+        "bundleId",
+        "name",
+        "path"
+      ],
+      "rowCount": 1,
+      "category": "target_voice",
+      "reason": "included target surface"
+    }
+  ]
+}

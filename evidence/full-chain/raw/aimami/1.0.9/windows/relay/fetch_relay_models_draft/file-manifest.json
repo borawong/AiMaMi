@@ -1,0 +1,22 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "fetch_relay_models_draft",
+  "platform": "windows-x64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "produced_at": "2026-06-02",
+  "self_hash_excluded": true,
+  "files": [
+    {
+      "path": "evidence.md",
+      "size_bytes": 4382,
+      "sha256": "c9be73a2c1c26c2d68dcc42314ae2bbbc9d908ebe4ed56b69951862d43f98412"
+    },
+    {
+      "path": "manifest.json",
+      "size_bytes": 962,
+      "sha256": "eff12e0a4f1794226b1cd3d6cf84a13d5314f0745b94bd44477a0cc7d9ac3d3a"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "raw-evidence.raw.validation.result.v1",
+  "command": "set_image_compat",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "produced_at": "2026-06-02",
+  "checks": {
+    "binary_sha_verified": true,
+    "command_string_found": true,
+    "command_string_va": "0x141268d1c",
+    "owner_resolved": true,
+    "owner_va": "0x14027a1b0",
+    "owner_name": "set_image_compat_handler",
+    "core_impl_resolved": true,
+    "core_impl_va": "0x1400a5eb0",
+    "core_impl_name": "set_image_compat_impl",
+    "call_tree_depth_reached": 5,
+    "call_tree_terminated": true,
+    "implementation_leaves_reached": [
+      "codex_paths_build_from_env @0x140476200",
+      "codex_paths_join_all_subpaths @0x140476350",
+      "sub_14104DEE0 (ReadFile) @0x14104dee0",
+      "sub_14104E390 (WriteFile+CloseHandle) @0x14104e390",
+      "image_compat_build_response_ok_bool @0x1404391d0",
+      "WakeByAddressSingle (promise resolve) @0x141206b20"
+    ],
+    "no_http": true,
+    "no_registry": true,
+    "no_process_spawn": true,
+    "no_sidecar": true,
+    "side_effect": "file: modifies ~/.codex/config.toml — inserts or removes 'image_generation = false' under [features] section",
+    "icf_comdat_folding": "not detected; single xref code path, no folding observed",
+    "platform_independent_inference": false
+  },
+  "gate": "strictImplementationUse",
+  "notes": "Frontend CCF not yet closed. Backend owner+pseudocode+call-tree+interface+error+side-effect all closed for Windows x64."
+}

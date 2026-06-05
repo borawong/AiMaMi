@@ -1,0 +1,41 @@
+{
+  "leaf": "dismiss_pending_auto_switch",
+  "owner_addr": "0x1002618b4",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "validated_at": "2026-06-03T00:00:00Z",
+  "pseudocode_status": "decompiled",
+  "pseudocode_source": "ida",
+  "pseudocode_source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "call_tree_edges": 12,
+  "call_tree_depth": 2,
+  "implementation_leaves": [
+    "fs_leaf:load_pending_auto_switch@0x1005ea840",
+    "response_leaf:Ok(None)_no_pending",
+    "time_leaf:SystemTime_now_duration_since",
+    "fs_leaf:ensure_directories@0x1005267f8",
+    "alloc_leaf:128byte_serde_buf",
+    "serialize_leaf:currentAccountKey_candidateAccountKey_dismissedAt_rodata_confirmed",
+    "fs_leaf:write_snooze@0x100d2c974_a1+512/520",
+    "drop_leaf:AutoSwitchSnoozeRecord@0x1006046e8",
+    "fs_leaf:clear_auto_switch_snooze@0x1005ea754_remove_file",
+    "response_leaf:Ok(())_success_discriminant10_byte1",
+    "resource_leaf:Mutex_unlock_all_paths@0x100d349b8"
+  ],
+  "gate_status": "strictImplementationUse",
+  "dim1": "accepted_native_callback_bootstrap_spawn",
+  "dim2": "accepted",
+  "dim3": "accepted",
+  "dim4": "accepted",
+  "dim5": "macos_confirmed_windows_unknown",
+  "dim6": "empty",
+  "deep_recovery": {
+    "fake_wall_taxonomy_all_7_checked": true,
+    "genuine_ceiling": false,
+    "accepted_unknown_needed": false,
+    "callee_bodies_decompiled": 4,
+    "snooze_json_keys_rodata_confirmed": true
+  },
+  "blocker": null,
+  "strictImplementationUse": true,
+  "readyToImplement": false
+}

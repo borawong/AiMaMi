@@ -1,0 +1,44 @@
+{
+  "schema": "raw-evidence.raw.bundle.validation.v1",
+  "validated_at": "2026-06-02T00:00:00+08:00",
+  "validator": "claude-sonnet-4-6",
+  "bundle_key": "aimami/1.0.9/windows/system/get_system_info",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "gate": "strictImplementationUse",
+  "gate_status": "pass",
+  "dimensions": {
+    "dim1_backend_owner": "Accepted",
+    "dim2_call_tree_implementation_leaves": "Accepted",
+    "dim3_interface_dto_error_side_effect": "Accepted",
+    "dim4_platform_gate_windows": "Accepted",
+    "dim5_boundary_error_path": "Accepted",
+    "dim6_test_acceptance": "empty_per_task_spec"
+  },
+  "owner_addr": "0x140070050",
+  "owner_confirmed_method": "unique_field_builder_callee_chain_plus_dispatch_table_data_refs",
+  "icf_folding": true,
+  "pe_stripped": true,
+  "pseudocode_count": 4,
+  "pseudocode_failed": 0,
+  "call_tree_depth": 5,
+  "call_tree_complete": true,
+  "terminal_leaves": [
+    "WakeByAddressSingle@0x141206b20",
+    "Arc::drop_slow@0x140DDB070",
+    "memcpy@0x1411CCB90",
+    "heap_alloc@0x140001360",
+    "heap_dealloc@0x140001370"
+  ],
+  "blocked_scope": [
+    "frontend_ccf_windows",
+    "upstream_field_population_chain",
+    "test_acceptance_mapping"
+  ],
+  "accepted_unknowns": [
+    "upstream_populator_for_os_osVersion_arch_hostname_strings"
+  ],
+  "strictImplementationUse": true,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false
+}

@@ -1,0 +1,18 @@
+{
+  "session": "<audit-session>", "machine": "<workstation>",
+  "date": "2026-06-04",
+  "target": "cmd_test_api_proxy_config_coroutine",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "sha": "a5822387fa3f",
+  "status": "complete",
+  "gate_tier": "strict",
+  "gate_accepted": true,
+  "dims_completed": ["2", "3", "4", "5"],
+  "addr_verified": "0x1408e8160",
+  "tools_used": ["func_query", "decompile", "callees", "xrefs_to"],
+  "fake_wall_exhausted": true,
+  "recovery_attempts": "none",
+  "genuine_ceiling": false,
+  "accepted_unknown": false
+}

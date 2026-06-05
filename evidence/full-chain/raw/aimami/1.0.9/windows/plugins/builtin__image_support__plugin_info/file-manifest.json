@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "builtin__image_support__plugin_info",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "317981d96173035a39cde911ffbc2cded0dec72a0063ba07a126a71717751ea0",
+      "size": 249
+    },
+    {
+      "path": "README.md",
+      "sha256": "082618c15f0a83638070c9b523936f69e30f664b5259d9b05c1bd2e731f643",
+      "size": 155
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "8b8a1fc2599d3918b7700b74f063e77d6ae4181911f17face064ad7af2281d33",
+      "size": 173
+    },
+    {
+      "path": "audits/builtin__image_support__plugin_info-ida-closure.json",
+      "sha256": "5d1cd04224bf156dcb64d649ff5f7d727db50f434a8469db3897cc9d095ff203",
+      "size": 867
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "d06480058c8737a2a726011d0389673bbfcdfd7653c4bfb16abd71fef4a11089",
+      "size": 783
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "096593d4bf28edb1099e881ada7ac39b988b4a3227557566744f86518580fd8b",
+      "size": 1492
+    }
+  ]
+}

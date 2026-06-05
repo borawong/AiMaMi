@@ -1,0 +1,18 @@
+{
+  "scope": "get_hotspot_enabled",
+  "platform": "windows-x64",
+  "version": "1.0.9",
+  "product": "aimami",
+  "producer_machine": "<workstation>",
+  "producer_session": "<audit-session>",
+  "completed_at": "2026-06-04",
+  "gate_tier": "strictImplementationUse",
+  "addr_verified": "0x140285050",
+  "binary_sha12": "a5822387fa3f",
+  "dims_closed": [1, 2, 3, 4, 5],
+  "dims_open": [6],
+  "fake_wall_taxonomy_exhausted": true,
+  "genuine_ceiling": false,
+  "accepted_unknown_count": 0,
+  "status": "complete"
+}

@@ -1,0 +1,13 @@
+{
+  "leaf": "note_usage_refresh_activity",
+  "files": [
+    {"path": "manifest.json", "type": "manifest"},
+    {"path": "file-manifest.json", "type": "file_manifest"},
+    {"path": "AI.md", "type": "ai_handoff"},
+    {"path": "README.md", "type": "readme"},
+    {"path": "SYSTEM-DIFF.md", "type": "system_diff"},
+    {"path": "call-trees/note_usage_refresh_activity.jsonl", "type": "call_tree"},
+    {"path": "validation/result.json", "type": "validation"},
+    {"path": "ida/pseudocode/note_usage_refresh_activity.c", "type": "pseudocode"}
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "restoration.cm.reverse.audit.gate_report.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "relay",
+  "status": "module_root_gate_summary",
+  "source": "data/gate-report.json",
+  "updated_at": "2026-06-03 (<audit-session> reduce: v5→v6; 3 HTTP-terminal cmds cap LIFTED; readyToImplement=18, strictImplementationUse=0)",
+  "gate_summary": {
+    "readyToImplement": 18,
+    "strictImplementationUse": 0,
+    "consumerStartReady": 0,
+    "blocked": 0,
+    "total_commands": 18
+  },
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false,
+  "readyToImplement_commands": [
+    "load_relay_state", "get_relay_active", "get_relay_proxy_status",
+    "upsert_relay_provider", "delete_relay_provider", "set_relay_provider_network",
+    "activate_relay_provider", "deactivate_relay_provider", "set_codex_router_enabled",
+    "export_relay_config", "import_relay_config", "set_block_official_passthrough",
+    "get_passthrough_audit_log", "run_codex_router_diagnostics", "fix_codex_router_issue",
+    "test_relay_provider", "test_relay_draft", "fetch_relay_models_draft"
+  ],
+  "strictImplementationUse_commands": [],
+  "strictImplementationUse_reason": "none — all macOS relay commands readyToImplement after v6 cap-fill",
+  "notes": [
+    "Command-level gate detail in data/gate-report.json (v6).",
+    "This root file is the consumer-facing gate summary pointer for macos-1.0.9-relay.",
+    "relay-closeout-109 phase-reduce promoted get_passthrough_audit_log+run_codex_router_diagnostics+fix_codex_router_issue from strictImplementationUse to readyToImplement (dim6 via source archive source evidence).",
+    "<audit-session> (2026-06-03) LIFTED the final 3 HTTP-terminal caps: test_relay_provider / test_relay_draft / fetch_relay_models_draft → readyToImplement. Cap-breaker: owner bodies + shared HTTP closure (0x10008ee30) + fetch resolver (0x100114ab0) are GENUINE recovered async state-machines (NOT ICF); transport reused from ceiling-crack wf (ASYNC_CLIENT_DIRECT/SYSTEM OnceLock pair, Anthropic auth, retry max=2). DTOs corrected (RelayDraftTestInput 9-field; RelayFetchModelsInput 6-field). dim6 mock-assertable; residual external server response accepted_unknown non-critical.",
+    "cc_switch substitute (RELAY-HTTP-TERMINAL-CCSWITCH-SUBSTITUTE-109.md) no longer required as implementation mechanics for these 3 — AiMaMi upstream transport now genuinely reversed; cc-switch retained only as optional cross-check reference.",
+    "OWNERSHIP_TAKEOVER (2026-06-03, relay-closeout-109): source archive ownership metadata redacted for public evidence index."
+  ]
+}
+

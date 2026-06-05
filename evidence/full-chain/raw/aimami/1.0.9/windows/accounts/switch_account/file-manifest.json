@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "switch_account",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "3d882d50ec7c699420b0d1c635b68269fd979b051cc66622cc8705345c99fcec",
+      "size": 350
+    },
+    {
+      "path": "README.md",
+      "sha256": "e6df35c2c4d5651523ca747b63f93bf9c32fe66c06ecfdefe9f70063ff2256",
+      "size": 704
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "2a97bae0d7670c1be9518afd162a83793ddc31e5f23f5305a38d98886635cc",
+      "size": 254
+    },
+    {
+      "path": "audits/switch_account-ida-closure.json",
+      "sha256": "6a883fc6f06dccaf1a5b6c30cacaf80f8fb5ec98b2f9278c977a6343ec84008b",
+      "size": 2622
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "87ca15cfa47c7b867b34e0224e3aa4256df50a4785b56117242a96623d8e0c22",
+      "size": 1681
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "d329d5882a8cdc1b0409b73665c27304c72d67745ac8d2bc3e5afb93abeb88",
+      "size": 3298
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "schema": "restoration.cm.reverse.audit.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "cross",
+  "module": "relay-core-bootstrap",
+  "bundle": "cross-1.0.9-relay-core-bootstrap",
+  "description": "Cross-platform ACK bundle synthesizing macos-1.0.9-relay-core (14 clusters) + macos-1.0.9-bootstrap (4 leaves) + windows-1.0.9-relay-core (12 clusters) + windows-1.0.9-bootstrap (4 leaves, IDA-offline). Phase-reduce complete for relay-missed-109 session.",
+  "mac_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "win_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "mac_sha12": "1db044e8efab",
+  "win_sha12": "a5822387fa3f",
+  "produced_at": "2026-06-03",
+  "reduce_session": "relay-missed-109",
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "produced_at": "2026-06-03",
+    "basis": "first-write (no prior owner for cross scope)"
+  },
+  "source_bundles": {
+    "macos_relay_core": "<source-location>/audits/macos-1.0.9-relay-core/",
+    "macos_bootstrap": "<source-location>/audits/macos-1.0.9-bootstrap/",
+    "windows_relay_core": "<source-location>/audits/windows-1.0.9-relay-core/",
+    "windows_bootstrap": "<source-location>/audits/windows-1.0.9-bootstrap/"
+  },
+  "gate_summary": {
+    "cross_consumerStartReady": 5,
+    "cross_consumerStartReady_via_macos_only": 3,
+    "cross_strictImplementationUse_macos_and_windows": 3,
+    "gap_needs_reducer": 1,
+    "bootstrap_cross_consumerStartReady": 4,
+    "readyToImplement": 0
+  },
+  "status": "reduce-complete-phase-broadcast",
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "primaryPointers": [
+    "data/task-plan.json",
+    "manifest.json",
+    "gate-report.json",
+    "pointers/evidence-paths.md"
+  ],
+  "platformPolicy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true,
+    "note": "Each platform gate is independently closed. Cross gate = lower bound of mac+win pair."
+  }
+}

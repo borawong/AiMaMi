@@ -1,0 +1,11 @@
+{"addr":"0x140140040","name":"route_codex_request_and_dispatch_sys","size":"0x233a","module":"codexmate_lib::core::relay::proxy_server","role":"router_dispatch","level":"A","binary_sha256":"a5822387fa3f"}
+{"addr":"0x14012ae30","name":"stream_codex_responses_native_sys","size":"0x4d2f","module":"codexmate_lib::core::relay::proxy_server","role":"stream_handler","level":"B","binary_sha256":"a5822387fa3f"}
+{"addr":"0x140137fe0","name":"execute_responses_stream_roundtrip_sys","size":"0x1d48","module":"codexmate_lib::core::relay::proxy_server","role":"roundtrip_executor","level":"B","binary_sha256":"a5822387fa3f"}
+{"addr":"0x14013c9f0","name":"build_upstream_url_and_headers_sys","size":"0x440","module":"codexmate_lib::core::relay::proxy_server","role":"url_header_builder","level":"A","binary_sha256":"a5822387fa3f"}
+{"addr":"0x140145610","name":"passthrough_to_chatgpt_upstream_sys","size":"0xa8e","module":"codexmate_lib::core::relay::proxy_passthrough","role":"forward_to_openai","level":"B","binary_sha256":"a5822387fa3f"}
+{"addr":"0x140205540","name":"translate_responses_to_chat_completion_sys","size":"0x1e5d","module":"codexmate_lib::core::relay::proxy_server","role":"ChatToResponsesStream_path1","level":"B","binary_sha256":"a5822387fa3f"}
+{"addr":"0x1401eefa0","name":"translate_responses_to_anthropic_stream_sys","size":"0x1f73","module":"codexmate_lib::core::relay::proxy_server","role":"AnthropicToOpenAiStream_path2","level":"B","binary_sha256":"a5822387fa3f"}
+{"addr":"0x140214fd0","name":"convert_anthropic_message_to_openai_chat_sys","size":"0x25ba","module":"codexmate_lib::core::relay::proxy_server","role":"tool_format_mapping","level":"B","binary_sha256":"a5822387fa3f"}
+{"addr":"0x140232060","name":"emit_anthropic_stream_events_delta_sys","size":"0xfd3","module":"codexmate_lib::core::relay::proxy_server","role":"delta_stream_emitter","level":"B","binary_sha256":"a5822387fa3f"}
+{"addr":"0x140144c60","name":"build_aimami_proxy_error_response_sys","size":"0x762","module":"codexmate_lib::core::relay::proxy_passthrough","role":"error_response_builder","level":"B","binary_sha256":"a5822387fa3f"}
+{"addr":"0x14020ec80","name":"inject_web_search_system_prompt_sys","size":"0x4ef","module":"codexmate_lib::core::relay::proxy_server","role":"web_tools_injector","level":"B","binary_sha256":"a5822387fa3f"}

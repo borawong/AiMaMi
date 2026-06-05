@@ -1,0 +1,2 @@
+{"file":"0001_load_bootstrap_state_owner_sys_272e80.c","addr":"0x140272E80","role":"command_owner","status":"accepted","sha":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}
+{"file":"0002_load_bootstrap_state_core_serialize_451160.c","addr":"0x140451160","role":"core_serialize","status":"accepted","sha":"a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b"}

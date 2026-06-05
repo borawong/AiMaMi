@@ -1,0 +1,15 @@
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"std::sys::fs::metadata@0x100d322dc","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"open_codex_db@0x10056538c","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"read_thread_columns@0x100566270","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"load_thread_snapshots@0x100566b90","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"find_first_session_meta_line@0x10056b174","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"serde_json::de::from_trait@0x1003104bc","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"serde_json::value::Value::pointer@0x100cf051c","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"core::str::pattern::StrSearcher::new@0x100d6ef3c","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"extract_config_provider_ids@0x100567f7c","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"rusqlite::Connection::execute_batch@0x10081a670","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"update_thread_meta@0x100565fec","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"patch_session_meta_line@0x100567384","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"replace_first_session_meta_line@0x10056dc48","depth":1,"type":"call","terminated_reason":null}
+{"from":"normalize_thread_providers_before_migration@0x10057071c","to":"rusqlite::transaction::Transaction::commit@0x1005a2cf8","depth":1,"type":"call","terminated_reason":"persistence_commit"}
+{"from":"replace_first_session_meta_line@0x10056dc48","to":"std::sys::fs::rename@0x100d31eac","depth":2,"type":"call","terminated_reason":"persistence_commit"}

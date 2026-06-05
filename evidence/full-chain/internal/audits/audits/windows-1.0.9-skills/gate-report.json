@@ -1,0 +1,35 @@
+{
+  "schema": "restoration.cm.reverse.gate_report.v1",
+  "status": "PASS",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "skills",
+  "commands": [
+    "load_installed_skills",
+    "load_skill_backups",
+    "import_skill",
+    "remove_skill",
+    "restore_skill_backup",
+    "delete_skill_backup"
+  ],
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "accepted_count": 6,
+  "total_count": 6,
+  "frontendConsumerHandoff": {
+    "status": "complete_current_source_frontend_chain",
+    "logic": "logic/FRONTEND-CONSUMER-CHAIN-109.md",
+    "noGatePromotion": true,
+    "currentSourceFrontendStatus": "live"
+  },
+  "frontendValidatorNotes": [
+    "Most successful skills mutations signal completion through dialog close/cache refresh; restore has a success toast with rollback backup information.",
+    "Current fast validation is source-level; backups and mutation E2E/mock coverage is not comprehensive in this handoff.",
+    "Import cancellation is a silent no-op and should remain distinct from import failure."
+  ]
+}

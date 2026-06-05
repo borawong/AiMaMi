@@ -1,0 +1,14 @@
+{"depth":0,"addr":"0x1402663E0","name":"auto_switch_multiplex_dispatcher_sys","type":"dispatcher","terminated_reason":null}
+{"depth":1,"addr":"0x1408E4F50","name":"confirm_pending_auto_switch_and_restart_coroutine","type":"async_coroutine","terminated_reason":null}
+{"depth":2,"addr":"0x1402DCBC0","name":"sub_1402DCBC0","type":"confirm_auto_switch_state","terminated_reason":null}
+{"depth":3,"addr":"0x1400F61A0","name":"sub_1400F61A0","type":"read_app_handle","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x1402D3C90","name":"sub_1402D3C90","type":"get_tokio_runtime_handle","terminated_reason":null}
+{"depth":2,"addr":"0x140607A20","name":"sub_140607A20","type":"tokio_spawn_restart_task","terminated_reason":"external_call_recorded — Tokio::spawn"}
+{"depth":3,"addr":"0x1400A2DE0","name":"restart_codex_async_wrapper_sys","type":"restart_impl","terminated_reason":null}
+{"depth":4,"addr":"0x140254510","name":"signal_codex_quit_wake","type":"send_quit_signal","terminated_reason":"external_call_recorded — sets quit flag + wakes Codex"}
+{"depth":4,"addr":"0x140254140","name":"quit_codex_wait_fallback_kill_sys","type":"wait_then_kill","terminated_reason":"external_call_recorded — WaitForSingleObject 8s timeout, then TerminateProcess"}
+{"depth":4,"addr":"0x140250B80","name":"check_update_installability_core_sys","type":"check_update_installability","terminated_reason":"external_call_recorded — checks if OTA update can install"}
+{"depth":2,"addr":"0x140879EE0","name":"sub_140879EE0","type":"cleanup_old_pending_state","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x140889870","name":"sub_140889870","type":"release_arc_ref","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x14085D190","name":"sub_14085D190","type":"flush_ipc_response","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","type":"ipc_resolve","terminated_reason":"external_call_recorded"}

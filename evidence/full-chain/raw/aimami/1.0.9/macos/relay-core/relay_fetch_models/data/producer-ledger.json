@@ -1,0 +1,93 @@
+{
+  "cluster": "relay_fetch_models",
+  "producer": "<workstation>",
+  "session": "relay-missed-109",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "produced_at": "2026-06-03",
+  "leaves": [
+    {
+      "leaf": "parse_model_ids",
+      "va": "0x1002386a0",
+      "status": "decompiled",
+      "gate": "no-gate",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "produced_at": "2026-06-03",
+      "dim2": "accepted",
+      "dim3": "accepted_terminal",
+      "dim4": "accepted"
+    },
+    {
+      "leaf": "sanitize_api_key",
+      "va": "0x1002387ec",
+      "status": "decompiled",
+      "gate": "no-gate",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "produced_at": "2026-06-03",
+      "dim2": "accepted",
+      "dim3": "accepted_terminal",
+      "dim4": "accepted"
+    },
+    {
+      "leaf": "is_transient_error",
+      "va": "0x100238948",
+      "status": "decompiled",
+      "gate": "no-gate",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "produced_at": "2026-06-03",
+      "dim2": "accepted",
+      "dim3": "accepted_terminal",
+      "dim4": "accepted"
+    },
+    {
+      "leaf": "parse_extra_headers",
+      "va": "0x100238b78",
+      "status": "decompiled",
+      "gate": "no-gate",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "produced_at": "2026-06-03",
+      "dim2": "accepted",
+      "dim3": "accepted_depth_closed",
+      "dim4": "accepted"
+    },
+    {
+      "leaf": "build_url",
+      "va": "0x100239168",
+      "status": "decompiled",
+      "gate": "no-gate",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "produced_at": "2026-06-03",
+      "dim2": "accepted",
+      "dim3": "accepted_terminal",
+      "dim4": "accepted"
+    },
+    {
+      "leaf": "fetch_async",
+      "seed_va": "0x1000a6494",
+      "seed_va_note": "drop_in_place, not async body",
+      "status": "blocked_ida_unavailable",
+      "gate": "no-gate",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "produced_at": "2026-06-03",
+      "dim2": "blocked",
+      "blocker": "IDA MCP network timeout at 2026-06-03T01:30"
+    },
+    {
+      "leaf": "fetch_openai_async",
+      "seed_va": "0x1000a7164",
+      "seed_va_note": "drop_in_place, not async body",
+      "status": "blocked_ida_unavailable",
+      "gate": "no-gate",
+      "producer": "<workstation>",
+      "session": "relay-missed-109",
+      "produced_at": "2026-06-03",
+      "dim2": "blocked",
+      "blocker": "IDA MCP network timeout at 2026-06-03T01:30"
+    }
+  ]
+}

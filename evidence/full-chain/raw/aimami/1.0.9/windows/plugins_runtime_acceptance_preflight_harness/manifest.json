@@ -1,0 +1,74 @@
+{
+  "schema": "raw-evidence.raw.runtime_acceptance_preflight_harness.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "arch": "x64",
+  "leaf": "plugins_runtime_acceptance_preflight_harness",
+  "produced_at": "2026-06-02T00:00:00+08:00",
+  "producer_role": "execution_producer",
+  "canonical_root_semantics": "<source-location>",
+  "raw_bundle": "<source-location>/raw/aimami/1.0.9/windows/plugins_runtime_acceptance_preflight_harness",
+  "intermediate": "<source-location>/intermediate/aimami/1.0.9/windows/plugins_runtime_acceptance_preflight_harness",
+  "handoff_root": "<source-location>/aimami/1.0.9/windows-x64/plugins_runtime_acceptance_preflight_harness",
+  "source_binary": {
+    "path": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+    "sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+    "size": 26821632,
+    "hash_status": "matched_expected"
+  },
+  "runtime": {
+    "runtime_preflight_only": true,
+    "runtime_executed": false,
+    "trace_started": false,
+    "app_started_by_this_bundle": false,
+    "real_profile_content_read": false,
+    "real_profile_metadata_only": true
+  },
+  "current_host_abort_state": {
+    "aimami_process_present": true,
+    "aimami_process_observed": [
+      {
+        "processName": "AiMaMi",
+        "pid": 16168
+      }
+    ],
+    "real_profile_plugins_json_exists": true,
+    "real_profile_plugins_json_size": 187,
+    "real_profile_plugins_json_sha256": "41faeb615141f292ebcfff321e0f5785fdc93ddba16155ea3cf75a104b69d6",
+    "real_profile_content_read": false
+  },
+  "trace_tools": {
+    "wpr": true,
+    "logman": true,
+    "tracerpt": true,
+    "wevtutil": true,
+    "netsh": true,
+    "Get-WinEvent": true,
+    "New-Guid": true,
+    "Get-FileHash": true
+  },
+  "linked_existing_evidence": [
+    "<source-location>/raw/aimami/1.0.9/windows/plugins_runtime_isolation_preflight_readiness",
+    "<source-location>/raw/aimami/1.0.9/windows/plugins_path_root_resolution",
+    "<source-location>/raw/aimami/1.0.9/windows/plugins_json_persistence_error",
+    "<source-location>/raw/aimami/1.0.9/windows/plugins_settings_decode_write_failure_paths",
+    "<source-location>/raw/aimami/1.0.9/windows/plugins_web_tools_sidechannel_ordering",
+    "<source-location>/raw/aimami/1.0.9/windows/plugins_frontend_acceptance_mapping"
+  ],
+  "gate": {
+    "implementation_use": false,
+    "gate_accepted": false,
+    "readyToImplement": false,
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "consumerUse": false,
+    "full_leaf_100": false,
+    "no_gate_promotion": true
+  },
+  "write_boundaries": {
+    "index_jsonl_written": false,
+    "task_plan_written": false,
+    "consumer_gate_promoted": false
+  }
+}

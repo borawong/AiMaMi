@@ -1,0 +1,9 @@
+{
+  "source_binary":"<source-location>/source-binary/AiMaMi 1.0.9.app/Contents/MacOS/AiMaMi",
+  "source_binary_sha256":"1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "derived_binary":"AiMaMi.arm64.thin",
+  "derived_from":"lipo -thin arm64",
+  "derived_binary_sha256":"985dae00be620b21164b4a8d35cc0379b750d5a6257b25897b0e813441e4d706",
+  "derived_binary_size":26093360,
+  "promotion_allowed":false
+}

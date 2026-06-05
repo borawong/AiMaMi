@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "module": "voice",
+  "command": "load_voice_workspace",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "cbd0832401d1066a707f1252f38431df7e609d14c87069fb5c19e931f5c0a09a",
+      "size": 751
+    },
+    {
+      "path": "README.md",
+      "sha256": "24f1de735e22614906f006d56017a0c2108d26725bc959e0b390076f1824d8f9",
+      "size": 844
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "6a9e797c7fb325e50a63c2c1ab20d6892d857455d72a6dc0ca85244dfa335b75",
+      "size": 381
+    },
+    {
+      "path": "audits/load_voice_workspace-ida-closure.json",
+      "sha256": "80a6e4e72e67661a50b5cc914b7b320d7f6fefb0d4a0955f268c360fd2c4fa",
+      "size": 2630
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "9b78b8e07888a9678285f96d2e30b555084923d49e69c3535664a7aa029cef38",
+      "size": 317
+    }
+  ],
+  "note": "manifest.json excluded to avoid circular digest; manifest carries this file-manifest digest"
+}

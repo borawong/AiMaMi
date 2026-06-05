@@ -1,0 +1,19 @@
+{
+  "gate": "strictImplementationUse",
+  "strictImplementationUse": true,
+  "consumerStartReady": true,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "dim1_frontend_ccf": "Unknown",
+  "dim2_backend_owner_pseudocode": "Accepted",
+  "dim3_call_tree": "Accepted",
+  "dim4_interface_dto_error_sideeffect": "Accepted",
+  "dim5_platform_gate": "Accepted",
+  "dim6_test_acceptance_mapping": "empty_per_task_spec",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "produced_at": "2026-06-02",
+  "session": "ida-pro-mcp-win",
+  "not_gate_promotion": true
+}

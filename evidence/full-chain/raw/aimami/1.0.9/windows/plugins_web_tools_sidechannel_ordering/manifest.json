@@ -1,0 +1,63 @@
+{
+  "schema": "raw-evidence.raw.leaf.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "arch": "x64",
+  "module": "plugins_web_tools_sidechannel_ordering",
+  "leaf": "plugins_web_tools_sidechannel_ordering",
+  "kind": "ida_static_assist",
+  "source_binary": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "source_binary_size": 26821632,
+  "ida_mcp": {
+    "host": "127.0.0.1",
+    "port": 13337,
+    "module": "AiMaM 1.0.9 win64.exe",
+    "health": "ok",
+    "auto_analysis_ready": true,
+    "hexrays_ready": true
+  },
+  "evidence": [
+    "README.md",
+    "AI.md",
+    "SYSTEM-DIFF.md",
+    "evidence/address-table.md",
+    "evidence/ordering-summary.md"
+  ],
+  "chains": {
+    "startup": ["0x140004B30", "0x1403EE200", "0x1403ED4D0"],
+    "get_hotspot_enabled": ["0x140285050", "0x1401631A0"],
+    "toggle_plugin": ["0x140282B70", "0x140164C00", "0x1403ED760", "0x1403EDEC0", "0x14104E390"],
+    "update_plugin_config": ["0x1402663E0", "0x140165130", "0x1403EDAA0", "0x1403EDEC0"]
+  },
+  "key_addresses": {
+    "web_tools_string": "0x14120C7E8",
+    "startup_store_init_call": "0x140004C65",
+    "startup_lookup_call": "0x140004C8D",
+    "startup_sidechannel_write": "0x140004C9A",
+    "get_enabled_command": "0x140285050",
+    "get_enabled_reader_helper": "0x1401631A0",
+    "toggle_store_mutation": "0x1403ED90C",
+    "toggle_save_call": "0x1403ED91D",
+    "toggle_web_tools_compare": "0x140164D30",
+    "toggle_sidechannel_write": "0x140164D5B",
+    "update_settings_replacement": "0x1403EDC62",
+    "update_save_call": "0x1403EDC90"
+  },
+  "gate": {
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "full_leaf_100": false,
+    "gate_accepted": false,
+    "implementation_use": false,
+    "no_gate_promotion": true
+  },
+  "producer_appended_global_index": false,
+  "notes": [
+    "runtime ordering not proven statically beyond path-local instruction/call order",
+    "no runtime fixture or frontend consumption mapping",
+    "do not promote gate from this IDA-only leaf"
+  ]
+}

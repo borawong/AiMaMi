@@ -1,0 +1,55 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "accounts",
+  "command": "preview_account_import",
+  "target": "preview_account_import",
+  "files": [
+    {
+      "path": "AI.md",
+      "size": 1651,
+      "sha256": "a75e3b446db8bb4bfd69a07dbefd1424766c215e1e4e30d170e52f310030fb58"
+    },
+    {
+      "path": "README.md",
+      "size": 2115,
+      "sha256": "b78e0ccd57764366ad001bb0374c124feaa1542cc94193a3897b59df1d4652e2"
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "size": 1175,
+      "sha256": "f5a2274b357a107f898fddb3e047758430845584303d8d3483c0ef6923725739"
+    },
+    {
+      "path": "audits/preview_account_import-ida-closure.json",
+      "size": 3564,
+      "sha256": "36acefb0363592f32c4b42d2b9ebc374a814e83cd44a185fdd7752370af14d5c"
+    },
+    {
+      "path": "validation/result.json",
+      "size": 1554,
+      "sha256": "7bd9e693710aa5f5e032675673b8e4cb384b2225d437fc2eb3a9a382ba1e0ed5"
+    },
+    {
+      "path": "file-manifest.json",
+      "size": 1034,
+      "sha256": "f73cd812c7ea864db473585431d02f1dabba46d7c8d58d4c26981e7fcfb38ddf"
+    },
+    {
+      "path": "manifest.json",
+      "size": 5415,
+      "sha256": "f1852a6442794b4af1363e39b23d9964bf32dc07f55756f365f679d44b85373a"
+    }
+  ],
+  "currentAccountsReducer": "logic/ACCOUNTS-IDB-WRITEBACK-CURRENT-SYNC-109.md",
+  "platformBoundary": "macos_only",
+  "updated_at": "2026-06-02T23:12:00+08:00",
+  "strictImplementationUse": false,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false
+}

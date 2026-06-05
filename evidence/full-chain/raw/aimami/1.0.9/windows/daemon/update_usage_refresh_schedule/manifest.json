@@ -1,0 +1,24 @@
+{
+  "schema": "raw-evidence.reverse.raw.leaf.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "leaf": "update_usage_refresh_schedule",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "source_binary": "AiMaM 1.0.9 win64.exe",
+  "tool": "IDA Pro + HexRays (win)",
+  "session": "2026-06-02",
+  "produced_at": "2026-06-02",
+  "status": "consumerStartReady",
+  "platform_result": "ABSENT",
+  "finding": "Command update_usage_refresh_schedule does not exist in Windows 1.0.9 binary. Windows interval management is handled by set_usage_refresh_interval (persistence-based, no condvar watcher).",
+  "windows_closest_analog": "set_usage_refresh_interval @ 0x14027F690 (different mechanism — persistence-only, no condvar notify)",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": false,
+    "readyToImplement": false,
+    "implementation_use": false,
+    "gate_accepted": false
+  },
+  "do_not_infer_windows_from_macos": true
+}

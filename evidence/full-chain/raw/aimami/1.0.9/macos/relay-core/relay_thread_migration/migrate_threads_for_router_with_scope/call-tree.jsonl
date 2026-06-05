@@ -1,0 +1,14 @@
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"std::path::Path::_join@0x100d38cc4","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"std::sys::fs::metadata@0x100d322dc","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"open_codex_db@0x10056538c","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"read_thread_columns@0x100566270","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"load_thread_snapshots@0x100566b90","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"extract_config_provider_ids@0x100567f7c","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"detect_openai_provider_id@0x100567cc0","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"rusqlite::Connection::execute_batch@0x10081a670","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"update_db_for_migration@0x100567930","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"router_thread_migration_target_model@0x10056e840","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"write_manifest@0x100565710","depth":1,"type":"call","terminated_reason":null}
+{"from":"migrate_threads_for_router_with_scope@0x10056ea58","to":"rusqlite::transaction::Transaction::commit@0x1005a2cf8","depth":1,"type":"call","terminated_reason":"persistence_commit"}
+{"from":"write_manifest@0x100565710","to":"atomic_write::write_atomic@0x1006729f8","depth":2,"type":"call","terminated_reason":"persistence_commit"}
+{"from":"update_db_for_migration@0x100567930","to":"rusqlite::Connection::execute@0x100819xxx","depth":2,"type":"call","terminated_reason":"persistence_commit"}

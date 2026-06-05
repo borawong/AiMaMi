@@ -1,0 +1,56 @@
+{
+  "schema": "raw-evidence.reverse.raw_leaf.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "leaf": "managed_state_registry",
+  "leaf_type": "bootstrap_structural",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "binary_path_relative": "raw/binary/AiMaM 1.0.9 win64.exe",
+  "idb_path": "<local-path> 1.0.9 win64.exe.i64",
+  "produced_at": "2026-06-02",
+  "produced_by": "claude-sonnet-4-6 (windows bootstrap)",
+  "managed_states": [
+    {
+      "type": "std::sync::poison::mutex::Mutex<codexmate_lib::core::repository::Repository>",
+      "string_va": "0x14126AC91",
+      "guard_va": "0x1400D93D0",
+      "register_va": "0x141208810",
+      "allocation_bytes": 976,
+      "allocation_align": 8
+    },
+    {
+      "type": "codexmate_lib::core::relay::manager::RelayManager",
+      "string_va": "0x14126AC60",
+      "guard_va": "0x1400D8020",
+      "register_va": "0x141208810",
+      "allocation_bytes": "unknown_pending_decompile"
+    },
+    {
+      "type": "codexmate_lib::core::plugins::registry::PluginRegistry",
+      "string_va": "0x14126ABE0",
+      "guard_va": "0x1400D9820",
+      "register_va": "0x141208810",
+      "allocation_bytes": "unknown_pending_decompile"
+    }
+  ],
+  "state_manager_handle_va": "unk_14126AC16",
+  "vtable_type_ptr_va": "off_14126AC48",
+  "owner_resolution_confidence": "A",
+  "pseudocode_status": "blocked_ida_offline",
+  "gate_leaf": "consumerStartReady_candidate",
+  "readyToImplement": false,
+  "strictImplementationUse": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "pending_ida_actions": [
+    "decompile 0x141208810",
+    "decompile 0x1400D93D0",
+    "decompile 0x1400D8020",
+    "decompile 0x1400D9820",
+    "rename 0x141208810 managed_state_register_sys",
+    "set_comments",
+    "idb_save"
+  ],
+  "evidence_source": "intermediate/aimami/1.0.9/windows-x64/_threadmodel/THREAD-MODEL.md §2"
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "raw-evidence.raw.leaf.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "arch": "arm64",
+  "module": "system",
+  "command": "has_notch",
+  "produced_at": "2026-06-03T10:00:00+08:00",
+  "producer": "codex",
+  "machine": "<workstation>",
+  "path": "raw/aimami/1.0.9/macos/system/has_notch",
+  "source_binary_sot": "raw/binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "frontend_contract_pointer": [
+    "src/components/settings/settings-page.tsx",
+    "src/lib/api.ts",
+    "src-tauri/src/lib.rs"
+  ],
+  "owner": {
+    "va": "0x100330730",
+    "symbol": "codexmate_lib::commands::hotspot::has_notch",
+    "decompile": "accepted"
+  },
+  "platform_leaf": {
+    "va": "0x1003e1c64",
+    "symbol": "codexmate_lib::platform::screen::has_notch_screen",
+    "decompile": "accepted"
+  },
+  "threading_model": [
+    "Tauri command wrapper",
+    "WRY user message to main thread",
+    "mpsc/mpmc receiver wait",
+    "platform leaf requires pthread_main_np()==1"
+  ],
+  "terminal_side_effect_classes": [
+    "read-only AppKit screen probe",
+    "no fs/http/process/persistence write"
+  ],
+  "idb_writeback": {
+    "comments_written": [
+      "0x100330730",
+      "0x1003e1c64"
+    ],
+    "idb_saved": true
+  },
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "platformScopeDeclared": "macOS confirmed; Windows Unknown"
+  },
+  "file_manifest_sha256": "156715f696ac2667857ca789f252c0ab44fee667ebdef873aa4710f902bf25",
+  "file_manifest_size": 911,
+  "files": [
+    "AI.md",
+    "README.md",
+    "SYSTEM-DIFF.md",
+    "audits/has_notch-ida-closure.json",
+    "validation/result.json",
+    "file-manifest.json"
+  ],
+  "index_status": "appended_to_INDEX_jsonl"
+}

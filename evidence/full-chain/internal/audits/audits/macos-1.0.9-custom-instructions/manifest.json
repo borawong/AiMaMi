@@ -1,0 +1,70 @@
+{
+  "schema": "restoration.cm.reverse.module_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "custom-instructions",
+  "status": "accepted_ready_absent_backend_orphan_ida_direct",
+  "commands": [
+    "load_custom_instruction_state",
+    "preview_custom_instruction_apply",
+    "apply_custom_instruction",
+    "clear_custom_instruction_block",
+    "rollback_custom_instruction"
+  ],
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb_modified": true,
+  "idb_saved": true,
+  "gate": {
+    "schema": "restoration.cm.reverse.task_plan.consumer_gate.v1",
+    "readyToImplement": [
+      "load_custom_instruction_state",
+      "preview_custom_instruction_apply",
+      "apply_custom_instruction",
+      "clear_custom_instruction_block",
+      "rollback_custom_instruction"
+    ],
+    "strictImplementationUse": [
+      "load_custom_instruction_state",
+      "preview_custom_instruction_apply",
+      "apply_custom_instruction",
+      "clear_custom_instruction_block",
+      "rollback_custom_instruction"
+    ],
+    "consumerStartReady": [
+      "load_custom_instruction_state",
+      "preview_custom_instruction_apply",
+      "apply_custom_instruction",
+      "clear_custom_instruction_block",
+      "rollback_custom_instruction"
+    ],
+    "reverseRequiredQueues": {
+      "forbiddenUntilReady": [],
+      "forbiddenUntilStrictImplementationUse": [],
+      "consumerStartBlocked": []
+    },
+    "platformPolicy": {
+      "windowsIndependent": true,
+      "doNotInferWindowsFromMacOS": true
+    },
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "accepted_substitute": "same_platform_ida_backend_absence_for_frontend_orphan_command"
+  },
+  "frontendConsumerHandoff": {
+    "status": "complete_current_source_frontend_chain",
+    "logic": "logic/FRONTEND-CONSUMER-CHAIN-109.md",
+    "noGatePromotion": true,
+    "currentSourceFrontendStatus": "live"
+  },
+  "productDecisionBoundary": "Current source archive custom-instructions chain is live product/local behavior; upstream 1.0.9 backend owner parity is absent substitute.",
+  "frontendValidatorNotes": [
+    "Initial load_custom_instruction_state failure lacks a dedicated visible error alert in the current page and can be perceived as a spinner/empty-current state.",
+    "Successful apply/clear/rollback intentionally uses setQueryData with returned CoreEnvelope instead of invalidation; changing this can alter UI state timing.",
+    "Current source archive implementation is product/local behavior; upstream 1.0.9 backend owner parity is absent substitute, not strict backend reconstruction."
+  ],
+  "machine": "<workstation>",
+  "machine_backfill_date": "2026-06-05"
+}

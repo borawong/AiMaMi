@@ -1,0 +1,76 @@
+{
+  "schema": "restoration.cm.reverse.audit.gate_report.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "system-shell-init",
+  "status": "duplicate_local_outtake_not_authoritative",
+  "consumerStartReady": false,
+  "strictImplementationUse": false,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false,
+  "reason": "Shared INDEX already records shell/bootstrap work owned by <workstation> session deep-mac-bootstrap-20260602; this local package must not override or promote that work.",
+  "authoritativeProgress": {
+    "macosBootstrap": {
+      "machine": "<workstation>",
+      "session": "<audit-session>",
+      "indexLines": [
+        688,
+        689,
+        690,
+        691
+      ],
+      "gate": "no_gate_promotion / consumerStartReady reduce",
+      "reduceAuditLine": 715,
+      "bundle": "<source-location>/audits/macos-1.0.9-bootstrap"
+    },
+    "windowsBootstrap": {
+      "producer": "claude-sonnet-4-6 (deep-win-bootstrap)",
+      "indexLines": [
+        710,
+        711,
+        712,
+        713
+      ],
+      "gate": "consumerStartReady_candidate",
+      "bundle": "<source-location>/audits/windows-1.0.9-bootstrap"
+    },
+    "crossBootstrap": {
+      "bundle": "<source-location>/audits/cross-1.0.9-relay-core-bootstrap/data/task-plan.json",
+      "bootstrapMacosGate": "consumerStartReady",
+      "bootstrapWindowsGate": "consumerStartReady_candidate"
+    }
+  },
+  "localIdaNotes": {
+    "commentsSet": 13,
+    "idbModified": true,
+    "idbSaved": true,
+    "effect": "reuse_index_only_no_gate_promotion"
+  },
+  "strictBlockingDimensions": [
+    "duplicate_scope_not_checked_before_write",
+    "authoritative_shared_bootstrap_work_exists"
+  ],
+  "remainingMacosRuntimeGates": [],
+  "auto_switch_pending_emitter_ceiling_crack": {
+    "session": "<audit-session>", "real_body_addr": "0x1005280f4",
+    "basic_blocks": 107,
+    "bytes": "0x744",
+    "was_drop_in_place_only": false,
+    "was_budget_rule_only": false,
+    "genuine_ceiling": false,
+    "cracked": true,
+    "gate_tier": "strictImplementationUse",
+    "description": "Real watcher body confirmed via xref to 0x100f39323 (auto-switch-pending rodata). 5s poll; LAST_PENDING_REQUEST_AT atomic; tao::Proxy::send_event(discriminant=28) + tauri::Emitter::emit. Spawner chain: start_auto_switch_pending_watcher@0x100263444."
+  },
+  "frontend_ccf_boot_invokes": {
+    "auto_switch_pending_listener_registered": "step 4 of frontend init (before hotspot_ready)",
+    "load_pending_auto_switch": "boot invoke (auto-fires on first render)",
+    "session": "<audit-session>",
+    "residual_ceilings_cleared": true
+  },
+  "honest_remaining_ceilings": []
+}

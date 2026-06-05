@@ -1,0 +1,134 @@
+{
+  "schema": "restoration.cm.producer-ledger.v1",
+  "session_id": "<audit-session>",
+  "machine": "<workstation>",
+  "produced": "2026-06-04",
+  "bundle": "surface-p3-win-residual-closeout",
+  "version": "1.0.9",
+  "scope": "win-residual-final-closeout + mac-fetch_usage_snapshot-refile + recon-platform-divergence",
+  "owner_gate": "ALLOW/first",
+  "gate_exit_code": 0,
+  "items": [
+    {
+      "name": "cmd_fetch_data_store_identifiers_coroutine",
+      "platform": "windows-x64",
+      "addr": "0x1408f2ad0",
+      "gate_tier": "strictImplementationUse",
+      "exists": true,
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "index_key": "aimami/1.0.9/windows-x64/data-store-identifiers/cmd-fetch-data-store-identifiers-coroutine-canonical",
+      "evidence_path": "<source-location>/aimami/1.0.9/windows-x64/data-store-identifiers/DISTILLED.md",
+      "status": "canonical-distilled",
+      "authoritative": true
+    },
+    {
+      "name": "cmd_remove_data_store_coroutine",
+      "platform": "windows-x64",
+      "addr": "0x1408f1e20",
+      "gate_tier": "strictImplementationUse",
+      "exists": true,
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "index_key": "aimami/1.0.9/windows-x64/data-store-remove/cmd-remove-data-store-coroutine-canonical",
+      "evidence_path": "<source-location>/aimami/1.0.9/windows-x64/data-store-remove/DISTILLED.md",
+      "status": "canonical-distilled",
+      "authoritative": true
+    },
+    {
+      "name": "rollback_threads_for_router",
+      "win_symbol": "rollback_threads_for_router_sys",
+      "platform": "windows-x64",
+      "addr": "0x1403903a0",
+      "gate_tier": "strictImplementationUse",
+      "exists": true,
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "index_key": "aimami/1.0.9/windows-x64/router-lifecycle/rollback_threads_for_router",
+      "evidence_path": "<source-location>/aimami/1.0.9/windows-x64/router-lifecycle/rollback_threads_for_router-DISTILLED.md",
+      "status": "canonical-distilled",
+      "authoritative": true
+    },
+    {
+      "name": "migrate_threads_for_router_with_scope",
+      "win_symbol": "migrate_threads_for_router_with_scope_sys",
+      "platform": "windows-x64",
+      "addr": "0x1403e6f70",
+      "gate_tier": "strictImplementationUse",
+      "exists": true,
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "index_key": "aimami/1.0.9/windows-x64/relay_thread_migration/migrate_threads_for_router_with_scope/canonical",
+      "evidence_path": "<source-location>/aimami/1.0.9/windows-x64/relay_thread_migration/migrate_threads_for_router_with_scope/AI.md",
+      "status": "canonical-distilled",
+      "authoritative": true
+    },
+    {
+      "name": "fetch_usage_snapshot",
+      "platform": "macos-arm64",
+      "addr": "0x1005441b0",
+      "gate_tier": "strictImplementationUse",
+      "exists": true,
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "index_key": "aimami/1.0.9/macos-arm64/api_client/fetch_usage_snapshot/canonical",
+      "evidence_path": "<source-location>/audits/macos-1.0.9-system/logic/FETCH-USAGE-SNAPSHOT-DISTILLED-109.md",
+      "status": "canonical-distilled",
+      "authoritative": true,
+      "notes": "Refile from local-outtake (blocked by CWD bug in prior pass). Correct gate path: cd <source-location> then prewrite-owner-gate.py. Exit 0."
+    }
+  ],
+  "platform_divergence_no_win": [
+    {
+      "name": "create_hotspot_window",
+      "exists_on_win": false,
+      "note": "mac-only: uses NSWindow (Cocoa) to create floating hotspot overlay. Win has hotspot state/config functions but no window-creation equivalent. Platform divergence, not a gap."
+    },
+    {
+      "name": "install_native_hotspot_observers",
+      "exists_on_win": false,
+      "note": "mac-only: registers NSNotificationCenter/NSWorkspace observers for native hotspot events. Win has no NSNotification infrastructure. Platform divergence."
+    },
+    {
+      "name": "apply_native_hotspot_properties",
+      "exists_on_win": false,
+      "note": "mac-only: applies Cocoa NSWindow properties to hotspot window. No apply_hotspot equivalent in win binary. Platform divergence."
+    },
+    {
+      "name": "capture_switch_rollback_state",
+      "exists_on_win": false,
+      "note": "No match on win. Exhaustive searches empty. Win has rollback_threads_for_router_sys (thread rollback) and relay_manager_set_router_enabled_rollback_sys (relay rollback) but neither matches mac capture-state-before-switch semantics. Absent or folded into differently-named coroutine on win."
+    },
+    {
+      "name": "perform_switch_payload_with_restart",
+      "exists_on_win": false,
+      "note": "No verbatim match. Win has confirm_pending_auto_switch_and_restart_coroutine@0x1408e4f50 and switch_account_stop_codex_restart@0x14014asource archive0 covering adjacent restart-on-switch semantics, but neither is direct port. Cannot confirm win_addr without deeper decompile."
+    },
+    {
+      "name": "load_full_runtime_snapshot",
+      "exists_on_win": false,
+      "note": "No exact match. Win has load_snapshot_coroutine_sys@0x1408c2e10 (0xef9B) and build_runtime_snapshot_and_emit_sys@0x14084df80 partially covering. Mac function name has no verbatim win symbol."
+    },
+    {
+      "name": "get_cached_display_snapshot",
+      "exists_on_win": false,
+      "note": "No match on win. Win has window_manager_snapshot_acquire/clone/release_sys (refcount management) but no display-snapshot query equivalent. Mac uses a display-specific snapshot cache that win does not implement."
+    },
+    {
+      "name": "resolve_cached_auto_switch_service_state",
+      "exists_on_win": false,
+      "note": "No exact match. Closest win candidate: load_auto_switch_state_sys@0x14055d390 (0x161B) reads auto-switch state. Mac function resolves a cached service-state object. Cannot confirm semantic equivalence without decompile."
+    },
+    {
+      "name": "ensure_fresh_token",
+      "exists_on_win": false,
+      "note": "No sensitive-field-named function found in win binary across all searches (sensitive-field, auth_token, bearer_token, access_token, ensure_token, token_refresh). sensitive-field refresh/validation may be handled inline or via different mechanism on win. Absent as named symbol."
+    }
+  ],
+  "win_canonical_count": 4,
+  "mac_refiled_count": 1,
+  "recon_platform_divergence_count": 9,
+  "all_real_body_found": true,
+  "all_genuine_ceiling_false": true,
+  "gate_result": "ALLOW/first"
+}

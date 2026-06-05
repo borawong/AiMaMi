@@ -1,0 +1,23 @@
+{"depth":0,"addr":"0x10025ee14","name":"codexmate_lib::commands::system::set_image_compat","renamed":"set_image_compat_owner_sys","role":"owner","callee_of":"0x10032427c","terminated_reason":null}
+{"depth":1,"addr":"0x100526914","name":"codexmate_lib::platform::paths::CodexPaths::resolve_codex_home","role":"platform_leaf","callee_of":"0x10025ee14","terminated_reason":null}
+{"depth":2,"addr":"0x100d2f57c","name":"std::env::_var","role":"env_read","callee_of":"0x100526914","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x100b9f628","name":"dirs::home_dir","role":"platform_os","callee_of":"0x100526914","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x100d38cc4","name":"std::path::Path::_join","role":"path_construction","callee_of":"0x100526914","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x100526a40","name":"codexmate_lib::platform::paths::CodexPaths::from_home","role":"platform_leaf","callee_of":"0x10025ee14","terminated_reason":"persistence_commit"}
+{"depth":2,"addr":"0x100d322dc","name":"std::sys::fs::metadata","role":"fs_stat","callee_of":"0x100526a40","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x100d31eac","name":"std::sys::fs::rename","role":"fs_rename","callee_of":"0x100526a40","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x100d2c1f4","name":"std::fs::read_to_string::inner","role":"fs_read","callee_of":"0x10025ee14","terminated_reason":null}
+{"depth":2,"addr":"0x100d31ca8","name":"std::sys::fs::unix::File::open_c","role":"fs_open","callee_of":"0x100d2c1f4","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x100db5108","name":"fstat","role":"fs_stat_syscall","callee_of":"0x100d2c1f4","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x100d2cfa4","name":"std::io::default_read_to_end","role":"fs_read_loop","callee_of":"0x100d2c1f4","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x100db4f58","name":"close","role":"fs_close","callee_of":"0x100d2c1f4","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x1003a6544","name":"alloc::str::join_generic_copy","role":"string_processing","callee_of":"0x10025ee14","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x100d2c974","name":"std::fs::write::inner","role":"fs_write","callee_of":"0x10025ee14","terminated_reason":null}
+{"depth":2,"addr":"0x100d31ca8","name":"std::sys::fs::unix::File::open_c","role":"fs_open_write","callee_of":"0x100d2c974","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x100db58c4","name":"write","role":"fs_write_syscall","callee_of":"0x100d2c974","terminated_reason":"external_call_recorded"}
+{"depth":2,"addr":"0x100db4f58","name":"close","role":"fs_close","callee_of":"0x100d2c974","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x1001d9148","name":"codexmate_lib::core::models::CoreEnvelope::ok","role":"response_serialize","callee_of":"0x10025ee14","terminated_reason":"response_serialize"}
+{"depth":1,"addr":"0x100d60b34","name":"alloc::fmt::format::format_inner","role":"error_format","callee_of":"0x10025ee14","terminated_reason":"error_return"}
+{"depth":0,"addr":"0x10032427c","name":"codexmate_lib::run::{{closure}}::{{closure}}","role":"tauri_wrapper","callee_of":"invoke_handler","terminated_reason":null}
+{"depth":1,"addr":"0x1003d37cc","name":"_$LT$D as tauri::ipc::command::CommandArg<R>$GT$::from_command","role":"arg_deserialize","callee_of":"0x10032427c","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x10060df78","name":"tauri::ipc::InvokeResolver::respond","role":"response_serialize","callee_of":"0x10032427c","terminated_reason":"response_serialize"}

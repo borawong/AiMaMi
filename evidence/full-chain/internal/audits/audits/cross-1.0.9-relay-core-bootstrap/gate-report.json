@@ -1,0 +1,59 @@
+{
+  "schema": "restoration.cm.reverse.audit.gate_report.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "cross",
+  "module": "relay-core-bootstrap",
+  "bundle": "cross-1.0.9-relay-core-bootstrap",
+  "produced_at": "2026-06-03",
+  "reduce_session": "relay-missed-109",
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>"
+  },
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "relay_core_clusters": {
+    "relay_codex_writer":      { "macos": "consumerStartReady", "windows": "strictImplementationUse", "cross": "consumerStartReady" },
+    "relay_diagnostic":        { "macos": "consumerStartReady", "windows": "strictImplementationUse", "cross": "consumerStartReady" },
+    "relay_health_audit":      { "macos": "consumerStartReady", "windows": "gap_needs_reducer",       "cross": "gap_needs_reducer",  "blocker": "IDA MCP <network-share>:13337 offline — 0/11 win leaves decompiled" },
+    "relay_manager":           { "macos": "consumerStartReady", "windows": "strictImplementationUse", "cross": "consumerStartReady" },
+    "relay_proxy_server":      { "macos": "consumerStartReady", "windows": "strictImplementationUse", "cross": "consumerStartReady" },
+    "relay_thread_migration":  { "macos": "consumerStartReady", "windows": "strictImplementationUse", "cross": "consumerStartReady" },
+    "relay_translator":        { "macos": "consumerStartReady", "windows": "not_in_scope",            "cross": "macos_only" },
+    "relay_breaker":           { "macos": "consumerStartReady", "windows": "strictImplementationUse", "cross": "consumerStartReady",  "notes": "field DIFF: mac BreakerState stride=40; win stride=208" },
+    "relay_fetch_models":      { "macos": "gap_needs_reducer",  "windows": "strictImplementationUse", "cross": "gap_needs_reducer",  "blocked_leaves": "mac: fetch_async+fetch_openai_async (IDA timeout); win: 2 ICF-blocked async (accepted_unknown)" },
+    "relay_models":            { "macos": "consumerStartReady", "windows": "strictImplementationUse", "cross": "consumerStartReady",  "notes": "field CORRECTIONS from win: RelayProxyStatus=struct(5 fields); RelayProvider=15 fields; RelayIde=1 variant" },
+    "relay_translator_stream": { "macos": "strictImplementationUse", "windows": "not_started",       "cross": "macos_only" },
+    "relay_web_executor":      { "macos": "strictImplementationUse", "windows": "strictImplementationUse", "cross": "strictImplementationUse" },
+    "relay_web_tools":         { "macos": "strictImplementationUse", "windows": "strictImplementationUse", "cross": "strictImplementationUse", "notes": "field DIFF: mac truncate=8000chars(unicode); win truncate=8000bytes" }
+  },
+  "bootstrap_leaves": {
+    "app_run_entry":         { "macos": "consumerStartReady", "windows": "consumerStartReady_candidate", "cross": "consumerStartReady" },
+    "boot_spawn_threads":    { "macos": "consumerStartReady", "windows": "consumerStartReady_candidate", "cross": "consumerStartReady" },
+    "bootstrap_cache":       { "macos": "consumerStartReady", "windows": "consumerStartReady_candidate", "cross": "consumerStartReady" },
+    "managed_state_registry":{ "macos": "consumerStartReady", "windows": "consumerStartReady_candidate", "cross": "consumerStartReady" }
+  },
+  "reverseRequiredQueues": {
+    "forbiddenUntilReady": [],
+    "forbiddenUntilStrictImplementationUse": [
+      "relay_health_audit: any implementation — IDA MCP offline blocker on Windows; RelayTestResult DTO Unknown on macOS",
+      "relay_translator: Windows implementation — no windows relay_translator reduce exists",
+      "relay_translator_stream: Windows implementation — not started",
+      "relay_fetch_models: async terminal transport (fetch_async/fetch_openai_async bodies) — macOS IDA timeout; Windows ICF-blocked accepted_unknown"
+    ],
+    "consumerStartBlocked": [
+      "relay_health_audit: all implementation until IDA MCP <network-share>:13337 reconnects and 11 windows leaves decompiled",
+      "bootstrap windows: all 4 leaves full decompile — IDA MCP offline"
+    ]
+  },
+  "blockers_requiring_resolution": [
+    { "blocker": "relay_health_audit windows: IDA MCP <network-share>:13337 offline (0/11 decompiled)",  "resolve": "Reconnect win IDA MCP; decompile 11 leaves at confirmed VAs" },
+    { "blocker": "relay_translator windows: not started",                                                "resolve": "find_regex relay_translator owner on win; full IDA chain" },
+    { "blocker": "relay_translator_stream windows: not started",                                         "resolve": "find_regex stream state machines on win; full IDA chain" },
+    { "blocker": "relay_fetch_models macOS: fetch_async+fetch_openai_async async state VAs unresolved", "resolve": "Reconnect mac IDA MCP; locate async poll body VAs; decompile" }
+  ],
+  "dim6_status": "ALL clusters missing dim6 acceptance mapping — required for readyToImplement promotion"
+}

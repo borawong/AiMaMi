@@ -1,0 +1,7 @@
+{"from": "export_relay_config@0x1001e01c8", "to": "RelayManager::snapshot@0x1001cfc44", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "export_relay_config@0x1001e01c8", "to": "io::export_to_file@0x1001c373c", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "io::export_to_file@0x1001c373c", "to": "keychain::get_api_key@0x1001598b8", "edge_type": "call_conditional", "depth": 2, "terminated_reason": null, "condition": "includeApiKey && provider has accountKey"}
+{"from": "io::export_to_file@0x1001c373c", "to": "chrono::Utc::now@0x10080f270", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "io::export_to_file@0x1001c373c", "to": "serde_json::ser::to_writer@serde_path", "edge_type": "call_serde", "depth": 2, "terminated_reason": null}
+{"from": "io::export_to_file@0x1001c373c", "to": "atomic_write::write_atomic@0x1006729f8", "edge_type": "call", "depth": 2, "terminated_reason": "persistence_commit"}
+{"from": "io::export_to_file@0x1001c373c", "to": "fs::set_permissions@0x100d31188", "edge_type": "call_conditional", "depth": 2, "terminated_reason": "persistence_commit", "condition": "includeApiKey; sets 0o600"}

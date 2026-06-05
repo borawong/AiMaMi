@@ -1,0 +1,474 @@
+{
+  "schema": "restoration.cm.reverse.producer_ledger.v1",
+  "bundle": "macos-1.0.9-system",
+  "platform": "macos-arm64",
+  "version": "1.0.9",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "produced_at": "2026-06-03",
+  "clusters": [
+    {
+      "cluster": "diagnose",
+      "session": "<audit-session>", "machine": "<workstation>",
+      "leaves": [
+        "diagnose_codex_router",
+        "diagnose"
+      ],
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "is_upstream_per_leaf": {
+        "diagnose_codex_router": false,
+        "diagnose": true
+      },
+      "owner_vas": {
+        "diagnose_codex_router": "0x1001e0d70",
+        "diagnose": "0x1002641c0"
+      },
+      "dims_closed": [
+        "dim1",
+        "dim2",
+        "dim3",
+        "dim4",
+        "dim5"
+      ],
+      "dim6_missing": true,
+      "ceiling": "strictImplementationUse",
+      "index_lines": [
+        1256,
+        1257,
+        1258
+      ],
+      "raw_paths": [
+        "raw/aimami/1.0.9/macos/system/diagnose_codex_router/DIAGNOSE-CODEX-ROUTER-MAC-109.md",
+        "raw/aimami/1.0.9/macos/system/diagnose/DIAGNOSE-MAC-109.md"
+      ],
+      "distilled_path": "<source-location>/audits/macos-1.0.9-system/logic/DIAGNOSE-CLUSTER-DISTILLED-109.md",
+      "idb_saved": true,
+      "notes": "diagnose_codex_router: source archive-extra relay module cmd; DiagnoseCodexRouterResult 0x140B; read-only. diagnose: upstream system cmd; DiagnoseResult 0x1A0B; read-only."
+    },
+    {
+      "cluster": "get_image_compat",
+      "session": "<audit-session>", "machine": "<workstation>",
+      "producer": "claude-opus-4-8",
+      "leaves": [
+        "get_image_compat"
+      ],
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "is_upstream_per_leaf": {
+        "get_image_compat": true
+      },
+      "owner_vas": {
+        "get_image_compat": "0x10025e7c0"
+      },
+      "owner_size_bytes": {
+        "get_image_compat": 716
+      },
+      "sole_caller": "run::{{closure}}@0x1003187fc (Tauri IPC dispatch)",
+      "decompiled_addrs": [
+        "0x10025e7c0",
+        "0x100526a40",
+        "0x1001d9148",
+        "0x1001bfdd4"
+      ],
+      "dims_closed": [
+        "dim1",
+        "dim2",
+        "dim3",
+        "dim4",
+        "dim5"
+      ],
+      "dim1_status": "dormant_wrapper_no_active_source archive_consumer_pure_backend_orphan",
+      "dim6_missing": true,
+      "dim6_status": "product_decision_no_live_consumer",
+      "ceiling": "strictImplementationUse",
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "was_false_wall": "none",
+      "accepted_unknown": false,
+      "fake_wall_taxonomy_checked": true,
+      "recovery_attempts": "not_needed_no_ceiling: real sync body HexRays-clean; 8-taxonomy checked none applicable (drop_in_place<CodexPaths>=RAII not async; single func_query hit no ICF; single xref no wrong-VA; no vtable/HTTP/oversized); cross-validated vs relay-core read_image_compat_enabled@0x1001bfdd4 byte-identical scan",
+      "argKeys": [],
+      "response_type": "CoreEnvelope<bool>",
+      "dto_fields": "status=ok message=success data_bool@+77",
+      "side_effects": [
+        "READ:<codex_home>/config.toml",
+        "possible fs::rename codexmate-old->codexmate migration"
+      ],
+      "call_tree_edges": 13,
+      "call_tree_depth": 2,
+      "terminated_reason": "external_call_recorded+response_serialize+error_return",
+      "index_lines": [
+        468,
+        1135,
+        1333
+      ],
+      "raw_paths": [
+        "raw/aimami/1.0.9/macos/system/get_image_compat/",
+        "raw/aimami/1.0.9/macos/relay-core/relay_image_compat/"
+      ],
+      "distilled_path": "<source-location>/audits/macos-1.0.9-system/logic/GET-IMAGE-COMPAT-DISTILLED-109.md",
+      "idb_saved": true,
+      "idb_comment_appended": "0x10025e7c0",
+      "deep_reverify": true,
+      "corrections": "config=<codex_home>/config.toml home-root (codex_home=$CODEX_HOME|~/.codex|.); section=[features] len==10 (NOT [feature]); value=false 0x736C6166 (NOT true); semantic inversion image_generation=false=>enabled=true; superseded prior readyToImplement over-claim (canonical=strictImplementationUse); fixed relay-core INTERFACE-MAP Leaf2/DTO mislabels",
+      "produced_at": "2026-06-04"
+    },
+    {
+      "cluster": "get_notification_client_state",
+      "session": "<audit-session>", "machine": "<workstation>",
+      "producer": "claude-opus-4-8",
+      "leaves": [
+        "get_notification_client_state"
+      ],
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "is_upstream_per_leaf": {
+        "get_notification_client_state": false
+      },
+      "owner_vas": {
+        "get_notification_client_state": "0x100262804"
+      },
+      "owner_size_bytes": {
+        "get_notification_client_state": 632
+      },
+      "core_va": "0x1005f0e34",
+      "core_size_bytes": 648,
+      "ipc_closure_va": "0x100323f54",
+      "ipc_closure_size_bytes": 644,
+      "sole_caller": "run::{{closure}}::{{closure}}@0x100323f54 (Tauri IPC dispatch, edge@0x100324020)",
+      "decompiled_addrs": [
+        "0x100262804",
+        "0x1005f0e34",
+        "0x100323f54"
+      ],
+      "dims_closed": [
+        "dim1",
+        "dim2",
+        "dim3",
+        "dim4",
+        "dim5"
+      ],
+      "dim1_status": "lazy_once_per_session_active_source archive_consumer (useNotifications -> getClientState -> api.getNotificationClientState)",
+      "dim6_missing": true,
+      "dim6_status": "source_impl_side_acceptance_out_of_reverse_scope",
+      "ceiling": "strictImplementationUse",
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "was_false_wall": "none",
+      "accepted_unknown": false,
+      "fake_wall_taxonomy_checked": true,
+      "recovery_attempts": "not_needed_no_ceiling: owner 632B + core 648B + closure 644B all HexRays-clean single pass / drop_in_place=poison-path drop<CoreError>@0x1002809d0 is callee cleanup NOT owner async; respond_async_serialized enumerated (func_query) NONE is our closure h9f5e2f4a9691174e -> command synchronous (positive proof not absence) / architecture_only=no budget override needed / async_decompile_failed=no state machine no Future::poll closure calls sync InvokeResolver::respond::h6aa3e2ce952source archive32c / wrong_VA=func_query sole hit 0x100262804 size 0x278 no ICF, xrefs_to=1 / vtable=all callees direct demangled symbols no fat-pointer / HTTP-terminal=no reqwest pure in-proc / library_internal=load_settings/save_settings are codexmate_lib internal decompiled / body_too_large=648B max no chunking",
+      "argKeys": [],
+      "response_type": "CoreEnvelope{tag:u64, device_id:String, notifications_since:u64}",
+      "dto_fields": "deviceId(UUIDv4 lowercase hex) + notificationsSince(u64 epoch seconds, frontend *1000 for JS Date); ok tag=10; err sentinel 0x8000000000000000",
+      "error_paths": [
+        "mutex_poison: 'poisoned lock: another task failed inside'@0x100f305e9 -> Err sentinel",
+        "save_settings_fail (create path) -> CoreError propagated",
+        "load_settings_fail -> silent, falls through to create path",
+        "uuid::fmt::LowerHex panic (unexpected) -> unwrap_failed"
+      ],
+      "side_effects": [
+        "READ path (existing device_id + notifications_since>0): NO disk write, idempotent",
+        "CREATE path (first call / notifications_since==0 / empty device_id): uuid::Uuid::new_v4 + SystemTime::now epoch_secs + Repository::save_settings -> writes CodexMateSettings (~/.codex settings)"
+      ],
+      "no_http_spawn_sqlite_registry": true,
+      "synchronous": true,
+      "call_tree_edges": 9,
+      "call_tree_depth": 5,
+      "terminated_reason": "persistence_commit(save_settings create path)+response_serialize(InvokeResolver::respond)+error_return(CoreError sentinel)",
+      "cmd_name_binding": "closure inline blob v19[0] begins 'get_notification_client_state' len v19[1]=29; cmd registry blob 0x100f2ecf6",
+      "xrefs_to_owner": 1,
+      "xrefs_to_core": 1,
+      "index_lines": [
+        1212,
+        1222,
+        1323
+      ],
+      "distilled_path": "<source-location>/audits/macos-1.0.9-system/logic/NOTIFICATION-CLIENT-STATE-DISTILLED-109.md",
+      "idb_saved": true,
+      "idb_comment_appended": "0x100262804,0x1005f0e34,0x100323f54",
+      "deep_reverify": true,
+      "reverify_pass": 3,
+      "reverify_added": "decisive async ruling via respond_async_serialized enumeration (positive proof synchronous); xrefs_to core=1 (owner sole caller) clean singleton chain; SHA parity SOT .app vs _ida.app re-verified",
+      "produced_at": "2026-06-04"
+    },
+    {
+      "cluster": "device-sensitive-field-get_or_create-reverify",
+      "session": "<audit-session>", "machine": "<workstation>",
+      "producer": "claude-opus-4-8",
+      "leaves": [
+        "get_or_create_remote_device_secret"
+      ],
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "is_upstream_per_leaf": {
+        "get_or_create_remote_device_secret": false
+      },
+      "owner_vas": {
+        "get_or_create_remote_device_secret": "0x100263544"
+      },
+      "owner_size_bytes": {
+        "get_or_create_remote_device_secret": 644
+      },
+      "owner_size_hex": "0x284",
+      "owner_basic_blocks": 25,
+      "impl_va": "0x1005f030c",
+      "impl_size_bytes": 448,
+      "impl_size_hex": "0x1c0",
+      "impl_basic_blocks": 17,
+      "ipc_closure_va": "0x10031ff00",
+      "ipc_closure_size_bytes": 624,
+      "sole_caller": "run::{{closure}}::{{closure}}@0x10031ff00 (Tauri IPC dispatch, edge@0x10031ffd0)",
+      "decompiled_addrs": [
+        "0x100263544",
+        "0x1005f030c",
+        "0x10031ff00"
+      ],
+      "dims_closed": [
+        "dim1",
+        "dim2",
+        "dim3",
+        "dim4",
+        "dim5"
+      ],
+      "dim1_status": "native-bootstrap-substitute pure-backend orphan (retained_candidate_ipc INDEX line 343; no active UI invoke; device-registration code path; JS migration flow calls import_remote_device_secret_if_empty then get_or_create_remote_device_secret)",
+      "dim6_missing": true,
+      "dim6_status": "source_impl_side_acceptance_out_of_reverse_scope",
+      "ceiling": "strictImplementationUse",
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "was_false_wall": "none",
+      "accepted_unknown": false,
+      "fake_wall_taxonomy_checked": true,
+      "recovery_attempts": "not_needed_no_ceiling: shim 644B/25BB + impl 448B/17BB both HexRays-clean single pass / drop_in_place=drop<CoreError>@0x1002809d0 (shim Err-path) + drop<CodexMateSettings>@0x1006044f0 (impl RAII) are CALLEE destructors NOT owner async / async DECISIVELY EXCLUDED by POSITIVE PROOF: func_query(*remote_device_secret* poll|async_fn_env|closure)=EMPTY no state machine + dispatch closure 0x10031ff00 calls InvokeResolver::respond::h5ccb85507852a67e (SYNC respond NOT respond_async_serialized; enumerated respond_async_serialized_inner drops NONE is our closure h52d4ac42dc0bc32d) -> command synchronous / architecture_only=no budget override / async_decompile_failed=no Future::poll sync Mutex pattern / wrong_VA=func_query 2 distinct named fns 0x100263544(0x284)+0x1005f030c(0x1c0) no ICF, xrefs_to(shim)=1 dispatch closure, xrefs_to(impl)=1 shim self 0x100263660 clean singleton / vtable=all callees direct demangled symbols, UUID Display::fmt::he2f0a093711c10c4 monomorphized no fat-pointer / HTTP-terminal=no reqwest pure std::fs / library_internal=load_settings/save_settings codexmate_lib internal decompiled / body_too_large=644B shim/448B impl no chunking",
+      "caller_disambiguation_tried": "N/A_not_icf_folded",
+      "argKeys": [],
+      "response_type": "Result<String,CoreError>",
+      "dto_fields": "remoteDeviceSecret String = '{uuid4}-{uuid4}' (73 chars, two uuid::v4::new_v4 hyphenated lowercase joined by '-', via format_inner@0x100d60b34 byte_100EA6CAF fmt::Arguments + 2x Display::fmt@0x100676b6c); Ok tag=10/0xA; Err tag=1; field byte-confirmed serde pool 0x100f3f513; cmd-name byte-confirmed registry 0x100f2ecf6 + closure blob v19[0]",
+      "error_paths": [
+        "mutex_poison: 'poisoned lock: another task failed inside'@0x100f305e9 -> Err sentinel + CoreError::Display::fmt@0x10020c20c -> *a2=1",
+        "save_settings_fail (CREATE path) -> CoreError propagated *a2=1",
+        "load_settings_fail -> silent, falls through to CREATE path (no panic)",
+        "uuid format unexpected -> unwrap_failed (panic path, not business)"
+      ],
+      "side_effects": [
+        "READ path (remoteDeviceSecret present + non-empty after trim_matches): load_settings only, NO disk write, idempotent",
+        "CREATE path (field absent or empty-after-trim): 2x uuid::v4::new_v4@0x100source archive1a50 + format_inner + save_settings@0x1005e3328 -> writes CodexMateSettings JSON via std::fs::write@0x10038f318 (~/.codex settings); additive-only never overwrites existing non-empty value"
+      ],
+      "no_http_spawn_sqlite_registry": true,
+      "synchronous": true,
+      "call_tree_edges": 19,
+      "call_tree_depth": 3,
+      "terminated_reason": "persistence_commit(std::fs::write@0x10038f318 CREATE path)+external_call_recorded(std::fs::read_to_string@0x100d2c1f4 load_settings)+response_serialize(InvokeResolver::respond@0x10060dd88)+error_return(CoreError sentinel)",
+      "cmd_name_binding": "dispatch closure 0x10031ff00 inline blob v19[0] begins sensitive-field 'get_or_create_remote_device_secret'; full invoke_handler cmd registry 0x100f2ecf6 byte-verified",
+      "xrefs_to_owner": 1,
+      "xrefs_to_impl": 1,
+      "size_correction": "impl 0x1005f030c=0x1c0/448B (prior DISTILLED+raw evidence claimed '~0x284/644B' which was the SHIM 0x100263544=0x284/644B size); corrected this pass",
+      "index_lines": [
+        1201,
+        1217,
+        1324
+      ],
+      "distilled_path": "<source-location>/audits/macos-1.0.9-system/logic/DEVICE-sensitive-field-CLUSTER-DISTILLED-109.md",
+      "idb_saved": true,
+      "idb_comment_appended": "0x100263544,0x1005f030c",
+      "deep_reverify": true,
+      "reverify_pass": 2,
+      "reverify_added": "independent live-IDB re-decompile of shim+impl+dispatch closure; impl size correction 644B->448B; decisive async exclusion via respond_async_serialized enumeration (positive proof synchronous, sync InvokeResolver::respond); byte-level cmd-name + remoteDeviceSecret field confirmation; SHA parity SOT .app vs _ida.app re-verified",
+      "owner_gate_exit": 0,
+      "owner_gate_write_mode": "owner",
+      "produced_at": "2026-06-04"
+    },
+    {
+      "cluster": "device-sensitive-field-import-reverify",
+      "session": "<audit-session>", "machine": "<workstation>",
+      "producer": "claude-opus-4-8",
+      "leaves": [
+        "import_remote_device_secret_if_empty"
+      ],
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "is_upstream_per_leaf": {
+        "import_remote_device_secret_if_empty": false
+      },
+      "owner_vas": {
+        "import_remote_device_secret_if_empty": "0x100263bc4"
+      },
+      "owner_size_bytes": {
+        "import_remote_device_secret_if_empty": 620
+      },
+      "owner_size_hex": "0x26c",
+      "impl_va": "0x1005f0508",
+      "impl_size_bytes": 324,
+      "impl_size_hex": "0x144",
+      "ipc_closure_va": "0x100329a6c",
+      "ipc_closure_size_bytes": 804,
+      "ipc_closure_size_hex": "0x324",
+      "sole_caller": "run::{{closure}}::{{closure}}@0x100329a6c (Tauri IPC dispatch, edge@0x100329ba4)",
+      "decompiled_addrs": [
+        "0x100263bc4",
+        "0x1005f0508",
+        "0x100329a6c",
+        "0x1005e3328",
+        "0x1005e2f68",
+        "0x1005267f8"
+      ],
+      "dims_closed": [
+        "dim1",
+        "dim2",
+        "dim3",
+        "dim4",
+        "dim5"
+      ],
+      "dim1_status": "native-bootstrap-substitute pure-backend orphan (retained_candidate_ipc INDEX line 343; no active UI invoke; JS migration flow: reads localStorage[Ll], if non-empty invoke import_remote_device_secret_if_empty({sensitive-field}) .catch(()=>{}) then localStorage.removeItem(Ll) then get_or_create_remote_device_secret)",
+      "dim6_missing": true,
+      "dim6_status": "source_impl_side_acceptance_out_of_reverse_scope",
+      "ceiling": "strictImplementationUse",
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "was_false_wall": "none",
+      "accepted_unknown": false,
+      "fake_wall_taxonomy_checked": true,
+      "recovery_attempts": "not_needed_no_ceiling: shim 620B + impl 324B both HexRays-clean single pass / drop_in_place=drop<CoreError>@0x1002809d0 (shim Err-path) + drop<CodexMateSettings>@0x1006044f0 (impl RAII) are CALLEE destructors NOT owner async / async DECISIVELY EXCLUDED by POSITIVE PROOF: func_query(import_remote_device_secret.*{poll|async_fn_env|closure})=EMPTY no state machine + dispatch closure 0x100329a6c calls InvokeResolver::respond::hccd562173016b4e1@0x100611148 (SYNC respond NOT respond_async_serialized) inspecting unit-Ok sentinel 0x8000000000000000 inline -> command synchronous / architecture_only=no budget override 620B+324B small / async_decompile_failed=no Future::poll sync Mutex pattern / wrong_VA=func_query 2 distinct named fns 0x100263bc4(0x26c)+0x1005f0508(0x144) no ICF, xrefs_to(shim)=1 dispatch closure 0x100329a6c, xrefs_to(impl)=1 shim self 0x100263cd4 clean singleton / vtable=all callees direct demangled symbols no fat-pointer / HTTP-terminal=no reqwest pure std::fs / library_internal=load_settings/save_settings/ensure_directories codexmate_lib internal decompiled / body_too_large=620B shim/324B impl no chunking",
+      "caller_disambiguation_tried": "N/A_not_icf_folded",
+      "argKeys": [
+        "sensitive-field"
+      ],
+      "ipc_arg": "sensitive-field: String (a2[1]=ptr, a2[2]=len; deallocated at shim end)",
+      "response_type": "Result<(),CoreError>",
+      "dto_fields": "unit Ok (sentinel 0x8000000000000000 written to a3); Err=CoreError formatted via Display::fmt@0x10020c20c + drop<CoreError>@0x1002809d0; impl Ok-tag *a4=10",
+      "guard_semantics": "import-if-empty additive guard: (1) trim_matches(sensitive-field); if empty-after-trim -> Ok(()) immediately, NO read/write. (2) load_settings; trim existing remoteDeviceSecret; if existing non-empty-after-trim -> Ok(()) immediately, NO write (never overwrites). (3) else alloc+memcpy sensitive-field -> set remoteDeviceSecret field -> save_settings -> Ok(())",
+      "error_paths": [
+        "mutex_poison: 'poisoned lock: another task failed inside'@0x100f305e9 -> Err sentinel + CoreError::Display::fmt@0x10020c20c",
+        "save_settings_fail (WRITE path) -> CoreError propagated (impl *a4=2)",
+        "load_settings_fail -> CoreError propagated (impl *a4 set by load path)",
+        "input empty-after-trim OR existing non-empty -> Ok(()) no-op (not an error)"
+      ],
+      "side_effects": [
+        "READ-only when input empty-after-trim (early Ok, no load) OR existing remoteDeviceSecret non-empty (load_settings only, no write) - idempotent",
+        "WRITE path (input non-empty AND field currently empty-after-trim): load_settings + alloc/memcpy + save_settings@0x1005e3328 -> writes remoteDeviceSecret to ~/.codex/settings.json via std::fs::write@0x10038f318; additive-only never overwrites existing non-empty value"
+      ],
+      "no_http_spawn_sqlite_registry": true,
+      "synchronous": true,
+      "call_tree_edges": 18,
+      "call_tree_depth": 5,
+      "terminated_reason": "persistence_commit(std::fs::write@0x10038f318 save_settings WRITE path)+external_call_recorded(std::fs::read_to_string@0x100d2c1f4 load_settings)+response_serialize(InvokeResolver::respond@0x100611148)+error_return(CoreError sentinel)",
+      "cmd_name_binding": "dispatch closure 0x100329a6c inline registry blob begins sensitive-field 'import_remote_device_secret_if_empty'; full invoke_handler cmd registry 0x100f2ecf6 byte-verified ('...get_or_create_remote_device_secret|import_remote_device_secret_if_empty|get_mystery_unlock_grants...'); arg 'sensitive-field' in arg-name pool",
+      "field_binding": "remoteDeviceSecret in CodexMateSettings serde pool (same field family as get_or_create_remote_device_secret); save_settings serialize_entry confirms struct",
+      "xrefs_to_owner": 1,
+      "xrefs_to_impl": 1,
+      "size_correction": "NONE - prior DISTILLED+raw evidence sizes (shim 0x26c/620B, impl 0x144/324B) confirmed EXACT by independent live re-decompile (contrast sibling get_or_create which had a 644B->448B impl correction)",
+      "index_lines": [
+        1202,
+        1218,
+        1325
+      ],
+      "raw_paths": [
+        "raw/aimami/1.0.9/macos/system/import_remote_device_secret_if_empty/"
+      ],
+      "distilled_path": "<source-location>/audits/macos-1.0.9-system/logic/DEVICE-sensitive-field-CLUSTER-DISTILLED-109.md",
+      "idb_saved": true,
+      "idb_comment_appended": "0x100263bc4,0x1005f0508",
+      "deep_reverify": true,
+      "reverify_pass": 2,
+      "reverify_added": "independent live-IDB re-decompile of shim+impl+dispatch closure+shared fs leaves; sizes confirmed exact (no correction); decisive async exclusion via empty func_query + sync InvokeResolver::respond positive proof; byte-level cmd-name + remoteDeviceSecret field confirmation; std::fs::write persistence_commit leaf byte-confirmed; SHA parity SOT .app vs _ida.app re-verified; raw evidence.md independently re-confirmed NOT structurally rewritten",
+      "owner_gate_exit": 0,
+      "owner_gate_write_mode": "owner",
+      "produced_at": "2026-06-04"
+    },
+    {
+      "cluster": "load_usage_only_runtime_snapshot-deep-recovery",
+      "session": "<audit-session>", "machine": "<workstation>",
+      "producer": "claude-opus-4-8",
+      "leaves": [
+        "load_usage_only_runtime_snapshot"
+      ],
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "classification": "shared_synchronous_core_worker_NOT_standalone_registered_ipc_command_orphan_pure_backend",
+      "is_upstream_per_leaf": {
+        "load_usage_only_runtime_snapshot": true
+      },
+      "owner_vas": {
+        "load_usage_only_runtime_snapshot": "0x1001e74d0"
+      },
+      "owner_size_bytes": {
+        "load_usage_only_runtime_snapshot": 2076
+      },
+      "owner_basic_blocks": 91,
+      "owner_instruction_count": 497,
+      "owner_callee_count": 27,
+      "core_va": "0x1005f50e0",
+      "core_symbol": "enrich_active_account_usage_via_api",
+      "http_terminal_va": "0x1005441b0",
+      "http_terminal_symbol": "api_client::fetch_usage_snapshot",
+      "callers": {
+        "refresh_usage_snapshot_with_retry@0x1001e7eec": [
+          "0x1001e7f58",
+          "0x1001e8000"
+        ],
+        "BlockingTask_poll@0x10030dbb8": [
+          "0x10030dc88"
+        ]
+      },
+      "decompiled_addrs": [
+        "0x1001e74d0",
+        "0x1005f50e0",
+        "0x1005441b0",
+        "0x10030dbb8"
+      ],
+      "dims_closed": [
+        "dim1",
+        "dim2",
+        "dim3",
+        "dim4",
+        "dim5"
+      ],
+      "dim1_status": "shared_core_behind_active_source archive_usage_refresh_UI_no_own_command_name",
+      "dim6_missing": true,
+      "dim6_status": "source_impl_side_acceptance_out_of_reverse_scope",
+      "ceiling": "strictImplementationUse",
+      "real_body_found": true,
+      "genuine_ceiling": false,
+      "was_false_wall": "none",
+      "accepted_unknown": false,
+      "fake_wall_taxonomy_checked": true,
+      "caller_disambiguation_tried": "N/A_not_icf_folded",
+      "synchronous": true,
+      "argKeys": [],
+      "response_type": "CoreEnvelope<CoreSnapshotPayload>",
+      "response_size_bytes": 760,
+      "dto_fields": "ok_with_warnings(snapshot payload + warnings Vec); failure envelope tag=3 CoreError; usage rate-limit fields limit/hard_limit/remaining/remaining_requests/used_requests/limit_window_seconds/window_seconds/period_seconds/resets_at/used_percent",
+      "error_paths": [
+        "mutex_poison(either lock) 'poisoned lock: another task failed inside'@0x100f305e9 -> CoreError envelope tag3 early return",
+        "load_local_state_synced Err tag2 -> CoreError formatted -> envelope tag3",
+        "persist_progressive_state fail tag!=10 -> warning PROGRESSIVE_STATE_SAVE_FAILED+'Failed to persist refreshed runtime state:' pushed to warnings Vec non-fatal",
+        "store_bootstrap_snapshot_progressive fail tag!=10 -> CoreError dropped silent",
+        "fetch_usage_snapshot per-account transport->tag6 / non-2xx->tag9 / connect-timeout via is_connect/is_timeout -> per-account context graceful not propagated"
+      ],
+      "side_effects": [
+        "HTTP GET https://chatgpt.com/backend-api/wham/usage?account_id=<id> per subscribed account (reqwest::blocking; Authorization Bearer / ChatGPT-Account-Id / Accept / User-Agent AiMaMi/1.0.9)",
+        "fs WRITE persist_progressive_state (~/.codex progressive runtime state)",
+        "quota_store::upsert_item per account",
+        "Repository in-place mutation AccountApiContext/AccountSummary + sensitive-field-status->quota sync + SystemTime::now timestamps"
+      ],
+      "no_tauri_event_no_retry_in_this_body": true,
+      "contrast_vs_refresh_usage_snapshot": "NO broadcast_runtime_snapshot event + NO 200ms sleep/retry; orchestration in refresh_usage_snapshot_with_retry@0x1001e7eec wrapping this body x2",
+      "call_tree_depth": 5,
+      "terminated_reason": "external_call_recorded(fetch_usage_snapshot reqwest::blocking send)+persistence_commit(persist_progressive_state+quota upsert_item)+response_serialize(ok_with_warnings)+error_return(CoreError tag3)",
+      "recovery_attempts": "not_needed_no_ceiling: owner 2076B/91BB/497insn HexRays-clean single pass NOT shim; async EXCLUDED by POSITIVE PROOF func_query(load_usage_only_runtime_snapshot.*{poll|async_fn_env|closure|resume})=EMPTY straight-line no .await; drop_in_place=refresh_usage_only_runtime_snapshot_async closure+tokio BlockingTask+run_blocking_command destructors NOT body; wrong_VA=func_query(commands.*accounts.*load_usage_only) EXACTLY ONE fn no ICF; architecture_only/body_too_large=2076B decompiled whole no chunking; vtable=27 direct demangled callees async entry direct BL; HTTP-terminal=fetch_usage_snapshot wrapper FULLY reversed only external server content unknowable non-cap; library_internal=reqwest/rustls not needed config recovered; caller_disambiguation=N/A not ICF-folded",
+      "cmd_registry_absent": "absent from invoke_handler blobs 0x100edc37e (accounts: refresh_usage_snapshot present) + 0x100f2ecf6 (device/analytics)",
+      "frontend_binding": "refreshUsageSnapshot/refreshUsageOnly({retryOnFailure}) in index-CL22l5v8.js route via registered refresh_usage_snapshot command",
+      "distilled_path": "<source-location>/audits/macos-1.0.9-system/logic/USAGE-ONLY-RUNTIME-SNAPSHOT-DISTILLED-109.md",
+      "json_evidence_path": "<source-location>/audits/macos-1.0.9-system/logic/USAGE-ONLY-RUNTIME-SNAPSHOT-109.json",
+      "index_line": 1353,
+      "idb_saved": true,
+      "idb_comment_appended": "0x1001e74d0,0x10030dbb8",
+      "owner_gate_exit": 0,
+      "owner_gate_write_mode": "owner",
+      "does_not_modify_canonical": true,
+      "reaffirms_canonical": "USAGE-CLUSTER-DISTILLED-109.md (refresh_usage_snapshot @ 0x1001e7eec distinct command NOT modified)",
+      "produced_at": "2026-06-04"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "gate": "strictImplementationUse",
+  "dims_closed": ["dim1", "dim2", "dim3", "dim4", "dim5_macos"],
+  "dims_empty": ["dim6"],
+  "dims_blocked": [],
+  "call_tree_depth": 5,
+  "call_tree_terminated_reason": "fs_read_serde_json_leaf",
+  "owner_addr": "0x1002606fc",
+  "core_leaf_addr": "0x1005ea840",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "validated_at": "2026-06-02"
+}

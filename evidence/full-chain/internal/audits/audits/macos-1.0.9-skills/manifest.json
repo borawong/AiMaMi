@@ -1,0 +1,41 @@
+{
+  "schema": "restoration.cm.reverse.module_manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "skills",
+  "status": "accepted_full_leaf_100_ida_direct_skills",
+  "commands": [
+    "load_installed_skills",
+    "load_skill_backups",
+    "import_skill",
+    "remove_skill",
+    "restore_skill_backup",
+    "delete_skill_backup"
+  ],
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb_modified": true,
+  "idb_saved": true,
+  "raw_root": "<source-location>/raw/aimami/1.0.9/macos/skills/",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true
+  },
+  "frontendConsumerHandoff": {
+    "status": "complete_current_source_frontend_chain",
+    "logic": "logic/FRONTEND-CONSUMER-CHAIN-109.md",
+    "noGatePromotion": true,
+    "currentSourceFrontendStatus": "live"
+  },
+  "frontendValidatorNotes": [
+    "Most successful skills mutations signal completion through dialog close/cache refresh; restore has a success toast with rollback backup information.",
+    "Current fast validation is source-level; backups and mutation E2E/mock coverage is not comprehensive in this handoff.",
+    "Import cancellation is a silent no-op and should remain distinct from import failure."
+  ],
+  "machine": "<workstation>",
+  "machine_backfill_date": "2026-06-05"
+}

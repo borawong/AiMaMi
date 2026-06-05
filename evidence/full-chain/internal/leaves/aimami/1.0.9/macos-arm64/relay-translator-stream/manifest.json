@@ -1,0 +1,26 @@
+{
+  "target": "relay::translator::stream::ChatToResponsesStream::handle_chunk",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos-arm64",
+  "addr": "0x1006539ec",
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>", "date": "2026-06-04"
+  },
+  "authoritative": true,
+  "gate_tier": "readyToImplement",
+  "implementation_use": true,
+  "gate_accepted": true,
+  "files": [
+    "AI.md",
+    "gate-report.json",
+    "manifest.json"
+  ],
+  "description": "SSE stream adapter: Chat Completions delta chunks -> Responses API events. Processes choices/summary_text/completed/annotations/created_at. Full decompile 15312B/576 blocks. All callees resolved.",
+  "dim6_closed": true,
+  "dim6_date": "2026-06-05",
+  "dim6_session": "<audit-session>",
+  "full_leaf_100_definition_v2_all_dims_closed": true,
+  "dims_completed": ["dim1", "dim2", "dim3", "dim4", "dim5", "dim6"]
+}

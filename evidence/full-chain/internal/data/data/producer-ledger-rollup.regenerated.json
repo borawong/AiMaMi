@@ -1,0 +1,105 @@
+{
+  "schema": "restoration.cm.reverse.producer_ledger_rollup.regenerated.v2",
+  "generated_at": "2026-06-01T00:00:00+08:00",
+  "source": "regenerated_from_current_1_0_9_bundle_and_consumed_canonical_bundle_producer_ledgers",
+  "notHistoricalOriginal": true,
+  "counts": {
+    "totalRows": 37,
+    "consumerStartReady": 21,
+    "consumerStartBlocked": 16,
+    "strictImplementationUse": 4,
+    "readyToImplement": 0
+  },
+  "bundles": [
+    {
+      "module": "accounts_legacy_eight",
+      "path": "<source-location>/audits/macos-1.0.8-accounts/",
+      "gate_effect": {
+        "consumerStartReady": 8,
+        "consumerStartBlocked": 0,
+        "strictImplementationUse": 0,
+        "readyToImplement": 0,
+        "implementation_use": false,
+        "gate_accepted": false,
+        "full_leaf_100": false
+      },
+      "current_blocker_type": "legacy eight accounts start-ready context only; strict blocked by runtime IPC/envelope/side-effect/acceptance and platform closure"
+    },
+    {
+      "module": "accounts_chatgpt_session_import",
+      "path": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/ACCOUNTS-CHATGPT-SESSION-IMPORT-DIFF-109.md",
+      "gate_effect": {
+        "consumerStartReady": 1,
+        "consumerStartBlocked": 0,
+        "strictImplementationUse": 0,
+        "readyToImplement": 0,
+        "implementation_use": false,
+        "gate_accepted": false,
+        "full_leaf_100": false
+      },
+      "current_blocker_type": "current accounts ChatGPT session import is consumerStartReady only; strict/highest remain blocked by runtime envelope, side-effect bytes, executed acceptance, and independent platform closure"
+    },
+    {
+      "module": "plugins",
+      "path": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/PLUGINS-SIX-DIM-MIGRATION-109.md",
+      "gate_effect": {
+        "consumerStartReady": 2,
+        "consumerStartBlocked": 11,
+        "strictImplementationUse": 0,
+        "readyToImplement": 0,
+        "implementation_use": false,
+        "gate_accepted": false,
+        "full_leaf_100": false
+      },
+      "current_blocker_type": "plugin config/internal rows blocked; accounts Gate 1 is closed for module exit and current active lock is plugins deep"
+    },
+    {
+      "module": "relay_targeted",
+      "path": "<source-location>/audits/macos-1.0.8-fix-relay/",
+      "gate_effect": {
+        "consumerStartReady": 3,
+        "consumerStartBlocked": 0,
+        "strictImplementationUse": 0,
+        "readyToImplement": 0,
+        "implementation_use": false,
+        "gate_accepted": false,
+        "full_leaf_100": false
+      },
+      "current_blocker_type": "product-decision start only; not upstream strict proof"
+    },
+    {
+      "module": "system",
+      "path": "<source-location>/audits/macos-1.0.8-system/",
+      "gate_effect": {
+        "consumerStartReady": 4,
+        "consumerStartBlocked": 5,
+        "strictImplementationUse": 4,
+        "readyToImplement": 0,
+        "implementation_use": false,
+        "gate_accepted": false,
+        "full_leaf_100": false
+      },
+      "current_blocker_type": "four direct strict rows retained; helper rows and highest gate blocked"
+    },
+    {
+      "module": "tray",
+      "path": "<source-location>/audits/macos-1.0.8-tray/",
+      "gate_effect": {
+        "consumerStartReady": 3,
+        "consumerStartBlocked": 0,
+        "strictImplementationUse": 0,
+        "readyToImplement": 0,
+        "implementation_use": false,
+        "gate_accepted": false,
+        "full_leaf_100": false
+      },
+      "current_blocker_type": "product-decision native tray start only; not upstream strict proof"
+    }
+  ],
+  "nonActions": [
+    "root data support sync only",
+    "no rule/spec edit",
+    "no gate promotion",
+    "no product code or product test execution"
+  ]
+}

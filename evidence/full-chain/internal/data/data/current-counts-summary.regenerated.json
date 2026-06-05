@@ -1,0 +1,80 @@
+{
+  "schema": "restoration.cm.reverse.current_counts_summary.regenerated.v2",
+  "generated_at": "2026-06-01T00:00:00+08:00",
+  "source": "regenerated_from_current_1_0_9_bundle_and_consumed_canonical_bundles",
+  "notHistoricalOriginal": true,
+  "counts": {
+    "totalRows": 37,
+    "consumerStartReady": 21,
+    "consumerStartBlocked": 16,
+    "strictImplementationUse": 4,
+    "readyToImplement": 0
+  },
+  "bundles": [
+    {
+      "module": "accounts_legacy_eight",
+      "path": "<source-location>/audits/macos-1.0.8-accounts/",
+      "rows": 8,
+      "consumerStartReady": 8,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0
+    },
+    {
+      "module": "accounts",
+      "target": "import_chatgpt_session_account",
+      "path": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/ACCOUNTS-CHATGPT-SESSION-IMPORT-DIFF-109.md",
+      "rows": 1,
+      "consumerStartReady": 1,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0,
+      "note": "Current AiMaMi 1.0.9 accounts ChatGPT session import boundary reached consumerStartReady only; no strict/highest gate promotion."
+    },
+    {
+      "module": "plugins",
+      "path": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/PLUGINS-SIX-DIM-MIGRATION-109.md",
+      "rows": 13,
+      "consumerStartReady": 2,
+      "consumerStartBlocked": 11,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0
+    },
+    {
+      "module": "relay_targeted",
+      "path": "<source-location>/audits/macos-1.0.8-fix-relay/",
+      "rows": 3,
+      "consumerStartReady": 3,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0
+    },
+    {
+      "module": "system",
+      "path": "<source-location>/audits/macos-1.0.8-system/",
+      "rows": 9,
+      "consumerStartReady": 4,
+      "consumerStartBlocked": 5,
+      "strictImplementationUse": 4,
+      "readyToImplement": 0
+    },
+    {
+      "module": "tray",
+      "path": "<source-location>/audits/macos-1.0.8-tray/",
+      "rows": 3,
+      "consumerStartReady": 3,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0
+    }
+  ],
+  "currentEntrypoint": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/",
+  "historicalBundlesAreConsumedInputsOnly": true,
+  "excludedFromCounts": [],
+  "nonActions": [
+    "root data support sync only",
+    "no rule/spec edit",
+    "no gate promotion",
+    "no product code or product test execution"
+  ]
+}

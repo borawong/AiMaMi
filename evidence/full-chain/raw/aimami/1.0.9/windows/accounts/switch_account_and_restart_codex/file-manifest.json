@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "switch_account_and_restart_codex",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "3ea612c89df488bd924229f129d96f606d595f3b488c7c72c7f8c82ba2a514f4",
+      "size": 363
+    },
+    {
+      "path": "README.md",
+      "sha256": "51cb18a9a94ccf76c6ba8774f5abe805a91aa6fceed43cf2f7bf1185940682b6",
+      "size": 713
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "60c2cc180a3d8c2fc6f99fa2d3bffbec430f250600b968cde9031975b34dd426",
+      "size": 274
+    },
+    {
+      "path": "audits/switch_account_and_restart_codex-ida-closure.json",
+      "sha256": "23ddf529476406cde2d90b388a46bf6a468015867271ee0f43395d3f5bf02640",
+      "size": 2687
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "b902053e3fab7b4c4125cb83082f25e8dab7b95a20b0c1949db58226e5b2df04",
+      "size": 1717
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "d23f6e8b8b20ea6a6ee33020b48fa730ab71bc15912f802eb1d01e80f0e5c0",
+      "size": 3369
+    }
+  ]
+}

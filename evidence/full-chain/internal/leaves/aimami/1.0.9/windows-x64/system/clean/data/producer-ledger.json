@@ -1,0 +1,15 @@
+{
+  "schema": "restoration.cm.producer_ledger.v1",
+  "field": "aimami/1.0.9/windows-x64/system/clean",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "platform": "windows-x64",
+  "sha256_binary": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "status": "done",
+  "produced_at": "2026-06-04",
+  "gate": "strictImplementationUse",
+  "dims_done": ["dim2", "dim3", "dim4", "dim5"],
+  "dim1_status": "ipc_string_confirmed_no_frontend_ccf_file",
+  "owner_va": "0x140280DE0",
+  "core_va": "0x140568340",
+  "ipc_string": "clean"
+}

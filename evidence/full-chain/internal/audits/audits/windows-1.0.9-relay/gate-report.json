@@ -1,0 +1,133 @@
+{
+  "schema": "restoration.cm.reverse.gate_report.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "produced_at": "2026-06-02",
+  "updated_at": "2026-06-03",
+  "update_note": "relay-closeout-109: set_codex_router_enabled dim4 CLOSED → readyToImplement; ProxyContext Windows struct field layout confirmed (6 Arc fields). <audit-session> (2026-06-03): ALL 3 Windows HTTP-terminal cmds (test_relay_provider/test_relay_draft/fetch_relay_models_draft) dim4 partial→CLOSED, still_capped=false (owner+transport GENUINE-recovered via ceiling-crack reuse, NOT ICF); tiers STAY strictImplementationUse (dim1 frontend CCF=not_closed_windows is the remaining gate; doNotInferWindowsFromMacOS — macOS readyToImplement lift not inheritable). See capfill_v6_wf_aimami109_relaycapfill_opus. IDB saved.",
+  "scope": "relay",
+  "command_count": 18,
+  "summary": {
+    "readyToImplement": 15,
+    "strictImplementationUse": 3,
+    "consumerStartReady": 0,
+    "blocked": 0
+  },
+  "readyToImplement_commands": [
+    "load_relay_state",
+    "get_relay_active",
+    "get_relay_proxy_status",
+    "upsert_relay_provider",
+    "delete_relay_provider",
+    "set_relay_provider_network",
+    "activate_relay_provider",
+    "deactivate_relay_provider",
+    "fix_codex_router_issue",
+    "export_relay_config",
+    "import_relay_config",
+    "set_block_official_passthrough",
+    "get_passthrough_audit_log",
+    "run_codex_router_diagnostics",
+    "set_codex_router_enabled"
+  ],
+  "set_codex_router_enabled_dim4_closure": {
+    "session": "<audit-session>",
+    "promoted_from": "strictImplementationUse",
+    "promoted_to": "readyToImplement",
+    "evidence": {
+      "sub_140454D00_clarification": "0x140454D00 is thread_migration_exists_check_sys / run_codex_router_diagnostics JSON builder — NOT the TOML writer for set_codex_router_enabled. Previous doc was incorrect.",
+      "TOML_block_markers": {
+        "start_marker": "# >>> aimami-relay codex-router top start (DO NOT EDIT MANUALLY)",
+        "start_marker_addr": "0x141274D31",
+        "start_marker_len": 64,
+        "end_marker": "# <<< aimami-relay codex-router top end",
+        "end_marker_addr": "0x141274C97",
+        "end_marker_len": 39
+      },
+      "TOML_section_stripper": {
+        "fn": "config_toml_aimami_block_stripper_sys",
+        "va": "0x14042C4B0",
+        "algorithm": "reads config.toml line-by-line; strips sections with name length>=13 starting with 'aimami_relay_' (checked at 0x14042c7f1)"
+      },
+      "TOML_writer_chain": {
+        "atomic_writer": "relay_toml_section_writer_atomic_sys@0x1403C3140",
+        "block_renderer": "toml_block_renderer_core_sys@0x1401D37B0",
+        "migration_core": "managed_block_migration_core_sys@0x1401D6FE0",
+        "megafunction": "relay_codex_config_toml_write_sys@0x140422D90",
+        "file_write_leaf": "relay_atomic_write_file_sys@0x140332540"
+      },
+      "router_enabled_key": {
+        "field": "router_enabled",
+        "key_addr": "0x14127D042",
+        "bool_false_literal": "0x141263C8A",
+        "bool_true_literal": "0x141263C8F",
+        "struct_offset": "+216 (router_enabled bool flag in renderer input struct)"
+      },
+      "rollback_path": {
+        "fn": "relay_manager_set_router_enabled_rollback_sys@0x14014A620",
+        "action": "sets manager+316=0 (router_enabled=false); calls relay_state_persist_commit + relay_manager_reset_codex_config_impl; on reset fail calls relay_codex_config_toml_write_sys to write empty config"
+      },
+      "state_serializer": {
+        "fn": "relay_state_json_serializer_sys@0x140467F70",
+        "codexRouterEnabled_addr": "0x14127C082",
+        "output_field": "codexRouterEnabled@(a4+292)"
+      }
+    },
+    "dim6_status": "closed (A/B/C passes from prior session)"
+  },
+  "strictImplementationUse_commands": [
+    "test_relay_provider",
+    "test_relay_draft",
+    "fetch_relay_models_draft"
+  ],
+  "strictImplementationUse_blockers": {
+    "test_relay_provider": "dim4 CLOSED (<audit-session>): owner test_relay_provider_owner_sys@0x1408AF110 GENUINE recovered + shared HTTP core@0x140825280 reversed; transport ceiling-crack reuse; POST /v1/messages + relay.json persist proven; still_capped=false. Remaining blocker to readyToImplement = dim1 frontend CCF not_closed_windows (accepted_unknown product_decision) — needs same-platform frontend UI-trigger CCF closure; doNotInferWindowsFromMacOS.",
+    "test_relay_draft": "dim4 CLOSED (<audit-session>): owner test_relay_draft_owner_sys@0x140913E40 GENUINE recovered; RelayDraftTestInput 9-field; shared HTTP core@0x140825280; READ-ONLY no-persist proven by callee enumeration (no relay_state_persist_commit/write); still_capped=false. Remaining blocker to readyToImplement = dim1 frontend CCF not_closed_windows (product_decision).",
+    "fetch_relay_models_draft": "dim4 CLOSED (<audit-session>): owner fetch_relay_models_draft_owner_sys@0x1408E0870 GENUINE recovered (2026 insn, #wind=60); GET /v1/models + Anthropic auth in-owner; HTTP GET only no state write; still_capped=false. Remaining blocker to readyToImplement = dim1 frontend CCF not_closed_windows (product_decision)."
+  },
+  "capfill_v6_wf_aimami109_relaycapfill_opus": {
+    "date": "2026-06-03",
+    "machine": "<workstation>",
+    "session": "<audit-session>", "scope": "Windows independent lane (doNotInferWindowsFromMacOS)",
+    "summary": "ALL 3 Windows HTTP-terminal relay caps dim4 partial→CLOSED, still_capped=false. Owner bodies are GENUINE recovered async state-machines (NOT ICF/thunk), shared HTTP core health_check_test_provider_async_core_sys@0x140825280 fully reversed; transport reused from ceiling-crack (ASYNC_CLIENT OnceLock pair selected by *(a2+96)+205 byte → DIRECT/SYSTEM, Arc-clone _InterlockedIncrement64, WakeByAddressSingle, retry attempt[v23+104] vs max[v23+108] should_retry sub_14088D5D0 + retry_after_classifier 0x140118EB0, Anthropic auth build_test_request_anthropic_sys@0x140118030 x-api-field+anthropic-version:2023-06-01).",
+    "tier_stays_strict_reason": "Windows tiers REMAIN strictImplementationUse (NOT promoted to readyToImplement) because dim1 frontend CCF=not_closed_windows is the remaining gate; the HTTP-terminal/dim4 cap that blocked these is removed but the Windows frontend UI-trigger CCF lane is independent and not closed. macOS lifted the same 3 to readyToImplement off macOS frontend evidence — must NOT be inferred onto Windows (doNotInferWindowsFromMacOS).",
+    "cc_switch_substitute_status": "RELAY-HTTP-TERMINAL-CCSWITCH-SUBSTITUTE-109.md no longer required as Windows implementation mechanics for the transport/dim4 — AiMaMi Windows owner+transport genuinely recovered. Retained only as optional cross-check reference.",
+    "side_effect_distinctions": "test_relay_provider WRITES relay.json (relay_state_persist_commit_sys@0x1401523E0); test_relay_draft + fetch_relay_models_draft do NOT persist (proven by callee enumeration)",
+    "evidence": [
+      "logic/WIN-TEST-RELAY-PROVIDER-CAPFILL-109.md + data/producer-ledger-test-relay-provider-capfill.json",
+      "logic/WIN-TEST-RELAY-DRAFT-CAPFILL-109.md + data/producer-ledger-test-relay-draft-capfill.json",
+      "logic/WIN-FETCH-RELAY-MODELS-DRAFT-CAPFILL-109.md + data/producer-ledger-fetch-relay-models-draft-capfill.json"
+    ],
+    "tier_counts_unchanged": "readyToImplement=15, strictImplementationUse=3 (dim4 closed but dim1 frontend keeps the 3 at strict)"
+  },
+  "readyToImplement_new_commands_to_implement": {
+    "set_block_official_passthrough": "Not yet in source archive relay.rs. Full acceptance spec in ACCEPTANCE-MAPPING-109.md. Implement pub fn set_block_official_passthrough(repo, blocked:bool).",
+    "get_passthrough_audit_log": "Not yet in source archive relay.rs. Full acceptance spec in ACCEPTANCE-MAPPING-109.md. Field names accepted_unknown (7-field count proven); resolve via passthrough_audit.rs source at implementation time.",
+    "run_codex_router_diagnostics": "source archive exposes as 'diagnose_codex_router' (IPC name delta product_decision). Already exists in relay.rs L267. Needs vitest coverage + cargo unit test to write."
+  },
+  "global_policy": {
+    "dim1_frontend_ccf": "Windows frontend CCF not closed for any of the 18 commands — accepted as product_decision for all. source archive controls the frontend layer.",
+    "dim5_platform_gate": "windows_independent_closed for all 18 — Windows evidence produced by Windows IDA server (mcp__ida-pro-mcp-win); macOS evidence not used.",
+    "http_terminal_ceiling": {
+      "applies_to": [],
+      "status": "LIFTED (<audit-session> 2026-06-03)",
+      "previously_applied_to": ["test_relay_provider", "test_relay_draft", "fetch_relay_models_draft"],
+      "reason": "HTTP-terminal dim4 ceiling LIFTED for all 3: owner+shared HTTP core@0x140825280 GENUINE recovered (NOT ICF), transport reused from ceiling-crack. external_call_recorded boundary remains but is now a fully-explained accepted_unknown non-critical residual (server reply drives no binary logic; healthScore latency-only). dim6 mock-assertable via fake_http_server (Cargo + Vitest). The only remaining gate keeping these 3 at strictImplementationUse on Windows is dim1 frontend CCF=not_closed_windows (product_decision), NOT the HTTP terminal."
+    }
+  },
+  "source archive_behavioral_deltas_product_decision": {
+    "deactivate_relay_provider": "source archive ignores providerId; deactivates current active provider. Upstream uses providerId for lookup.",
+    "delete_relay_provider": "source archive errors on not-found; upstream is idempotent (returns ok/enabled struct).",
+    "set_codex_router_enabled": "source archive has no relaunch arg; always relaunches. Upstream has explicit relaunch:bool param.",
+    "run_codex_router_diagnostics": "source archive IPC name is 'diagnose_codex_router'; upstream is 'run_codex_router_diagnostics'.",
+    "fix_codex_router_issue": "source archive issue taxonomy differs from upstream IDA itemId table. source archive does NOT kill Codex on fix.",
+    "test_relay_draft": "source archive does NOT persist draft health state; upstream writes via __draft__ id.",
+    "get_relay_active": "source archive returns bool (RelayActivePayload.enabled); upstream encodes as enum tag=2+'ok'/'enabled' string pair.",
+    "get_relay_proxy_status": "source archive field names (running/port/baseUrl/codexBaseUrl/lastError) differ from upstream (has_proxy/network/url/port).",
+    "upsert_relay_provider": "source archive has no upstream rate-limit check (file-based stateless design). source archive adds tray_menu refresh.",
+    "import_relay_config": "source archive accepts both file object and filePath (two forms). Upstream single form.",
+    "export_relay_config": "source archive returns RelayExportFile struct; redaction via exportable_extra_headers. Upstream masks inline."
+  }
+}

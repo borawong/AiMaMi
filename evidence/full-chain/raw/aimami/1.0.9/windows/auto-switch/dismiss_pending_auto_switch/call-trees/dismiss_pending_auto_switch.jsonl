@@ -1,0 +1,9 @@
+{"depth":1,"addr":"0x14027F120","name":"dismiss_pending_auto_switch_owner_sys","role":"command_owner","terminated_reason":null}
+{"depth":2,"addr":"0x1400DA7C0","name":"sub_1400DA7C0","role":"repo_state_check","terminated_reason":"implementation_leaf"}
+{"depth":2,"addr":"0x1400AA290","name":"sub_1400AA290","role":"core_impl","terminated_reason":null}
+{"depth":3,"addr":"0x141206A60","name":"sub_141206A60","role":"mutex_wait_fallback","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x140564060","name":"sub_140564060","role":"state_write: clear pendingSwitchAccountKey","terminated_reason":"implementation_leaf: sets pendingSwitchAccountKey = None, returns old value"}
+{"depth":3,"addr":"0x141206B20","name":"WakeByAddressSingle","role":"sync_wake","terminated_reason":"implementation_leaf"}
+{"depth":3,"addr":"0x1400C8830","name":"sub_1400C8830","role":"cleanup_drop","terminated_reason":"implementation_leaf"}
+{"depth":2,"addr":"0x14006BAA0","name":"sub_14006BAA0","role":"response_build: Option<String>","terminated_reason":"implementation_leaf: builds Option<dismissed_key> response"}
+{"depth":2,"addr":"0x140062230","name":"tauri_ipc_resolve_sys","role":"ipc_resolve","terminated_reason":"implementation_leaf"}

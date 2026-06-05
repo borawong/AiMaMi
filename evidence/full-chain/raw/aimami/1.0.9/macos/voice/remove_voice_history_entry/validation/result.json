@@ -1,0 +1,14 @@
+{
+  "schema": "raw-evidence.raw.validation.v1",
+  "command": "remove_voice_history_entry",
+  "platform": "macos",
+  "status": "PASS",
+  "checks": {
+    "required_files": true,
+    "json_valid": true,
+    "idb_saved": true,
+    "index_appended": true,
+    "gate_flags_highest": true,
+    "absence_substitute_explicit": true
+  }
+}

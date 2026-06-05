@@ -1,0 +1,35 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "files": [
+    {
+      "path": "AI.md",
+      "size": 451,
+      "sha256": "79be9623ee0bf16a05a8e68b65afcc1d857de9c011beb31bf300c098cae8dc89"
+    },
+    {
+      "path": "README.md",
+      "size": 454,
+      "sha256": "ca09cf4d13471d9ae798743e6cb0c18f951b7ee4c49bf918ffa57b2a96e52960"
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "size": 226,
+      "sha256": "a6a899be2332e021e15fed443fa013cb9123fbec410d5923fb9cde32b4e154c7"
+    },
+    {
+      "path": "audits/apply_custom_instruction-ida-closure.json",
+      "size": 2317,
+      "sha256": "69d3a77ce29e708db75058e568e32e442aadcb56e382c9c28a7d3f3578f79413"
+    },
+    {
+      "path": "manifest.json",
+      "size": 921,
+      "sha256": "5b0adf50b3008be5ba5fb5ba37a1fead4f33a1c941a6e0ea9e013988d58629"
+    },
+    {
+      "path": "validation/result.json",
+      "size": 602,
+      "sha256": "a005fbbbfa50877748e4e529618166bf909f55266950f2fe7c4d56f38706a12f"
+    }
+  ]
+}

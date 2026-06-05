@@ -1,0 +1,82 @@
+{
+  "scope": "aimami/1.0.9/windows/relay-core/relay_models",
+  "machine": "<workstation>",
+  "session": "relay-missed-109",
+  "produced_at": "2026-06-03",
+  "sha256_binary_prefix": "a5822387fa3f",
+  "platform": "windows-x64",
+  "phase": "deep-win",
+  "gate": "pre-gate",
+  "leaves": [
+    {
+      "leaf": "error_hint",
+      "win_va": "0x140431D00",
+      "ida_name": "relay_models_error_hint_sys",
+      "decompile_status": "ok",
+      "call_tree_depth": "leaf",
+      "raw_file": "error_hint.c"
+    },
+    {
+      "leaf": "sanitize_error_for_display",
+      "win_va": "0x140434960",
+      "ida_name": "relay_models_sanitize_error_for_display_sys",
+      "decompile_status": "ok",
+      "call_tree_depth": "leaf",
+      "raw_file": "sanitize_error_for_display.c"
+    },
+    {
+      "leaf": "RelayActiveByIde::add",
+      "win_va": "0x140152720",
+      "ida_name": "relay_models_relay_active_by_ide_add_sys",
+      "decompile_status": "ok",
+      "call_tree_depth": 5,
+      "named_callees": [
+        "sub_140153300 (RelayState RwLock read)",
+        "sub_14014A0C0 (provider index)",
+        "relay_models_relay_active_by_ide_update_inplace_sys (0x1401BDED0)",
+        "sub_1404325F0 (Vec push)",
+        "relay_state_persist_commit_sys (0x1401523E0)",
+        "relay_manager_reset_codex_config_impl_sys (0x14014DF10)",
+        "relay_manager_ensure_proxy_started_sys (0x140148EA0)"
+      ],
+      "raw_file": "relay_active_by_ide_add.c"
+    },
+    {
+      "leaf": "RelayProvider_map_deser",
+      "win_va": "0x1407E5EB0",
+      "ida_name": "relay_models_relay_provider_map_deser_sys",
+      "decompile_status": "ok",
+      "fields_closed": 15,
+      "raw_file": "relay_provider_fields.c"
+    },
+    {
+      "leaf": "RelayActiveByIde_update_inplace",
+      "win_va": "0x1401BDED0",
+      "ida_name": "relay_models_relay_active_by_ide_update_inplace_sys",
+      "decompile_status": "ok",
+      "call_tree_depth": "leaf",
+      "raw_file": "pseudocode-manifest.md"
+    },
+    {
+      "leaf": "RelayProxyStatus_map_deser",
+      "win_va": "0x1407EC400",
+      "ida_name": "relay_models_relay_proxy_status_map_deser_sys",
+      "decompile_status": "ok",
+      "fields_closed": 5,
+      "correction": "RelayProxyStatus is a struct, not an enum (SEED.md had incorrect classification)",
+      "raw_file": "relay_proxy_status_fields.c"
+    }
+  ],
+  "gaps_resolved": {
+    "CodexRouteDiagnostic": "accepted_unknown — not in relay_models scope",
+    "RelayIde_variants": "CLOSED — 1 variant: codex (off_14127C058 table count=1, len=5)",
+    "RelayProvider_9_fields": "CLOSED — 15 fields fully named",
+    "RelayActiveByIde_layout": "PARTIALLY_CLOSED — offsets mapped, labels need mac cross-check",
+    "RelayProxyStatus_type": "CORRECTED — struct not enum, 5 fields confirmed"
+  },
+  "idb_renames": 8,
+  "idb_comments": 6,
+  "idb_saved": true,
+  "idb_path": "<local-path> 1.0.9 win64.exe.i64",
+  "inline_writebacks_done": true
+}

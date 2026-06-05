@@ -1,0 +1,27 @@
+{
+  "schema": "restoration.cm.reverse.gate.v1",
+  "bundle": "cross-1.0.9-home-usage-frontend",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_at": "2026-06-05",
+  "sha12": "cross-platform",
+  "gate_tier": "consumerStartReady",
+  "gate_accepted": false,
+  "implementation_use": false,
+  "platform": "cross",
+  "product": "aimami",
+  "version": "1.0.9",
+  "prewrite_gate_decision": "ALLOW",
+  "prewrite_gate_write_mode": "first",
+  "evidence_basis": "DISTILLED-home-usage-load-chains.md <audit-session>: frontend source tree only (<source-location>/src/), no IDA backend analysis. gate_accepted=false (frontend CCF only, no backend IDA verification; consumers can start with product decision).",
+  "scope": "home-dashboard + usage-snapshot-panel (OverviewPage + AnalyticsPanel)",
+  "evidence_type": "frontend-source-dump-angle2+4",
+  "note": "This bundle covers frontend load chains only — no backend IDA decompile. Backend evidence for the underlying commands (load_usage_analytics, load_tool_analytics, load_snapshot, load_bootstrap_state, etc.) lives in their respective module bundles. Gate tier consumerStartReady: source archive can start implementation using frontend load chain facts; backend dim2/dim3/dim4/dim5 must come from per-command bundles.",
+  "cluster_gate_summary": {
+    "consumerStartReady": 1,
+    "strictImplementationUse": 0,
+    "readyToImplement": 0,
+    "gap_needs_reducer": 0,
+    "blocked": 0,
+    "note": "Frontend-only bundle; backend verification delegated to per-command bundles"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "raw-evidence.reverse.validation.result.v1",
+  "status": "PASS",
+  "command": "load_custom_instruction_state",
+  "platform": "windows",
+  "checks": {
+    "frontend_control_flow": true,
+    "backend_absence_ida": true,
+    "same_platform_gate": true,
+    "accepted_substitute": true,
+    "idb_saved": true
+  },
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "accepted_substitute": "same_platform_ida_backend_absence_for_frontend_orphan_command"
+  }
+}

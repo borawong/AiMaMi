@@ -1,0 +1,15 @@
+{"depth":0,"addr":"0x14028CCB0","name":"auto_switch_watcher_bootstrap_sys","type":"native_bootstrap","terminated_reason":null,"note":"NOT a Tauri IPC command — triggered by Tauri run() bootstrap"}
+{"depth":1,"addr":"0x1402CD250","name":"sub_1402CD250","type":"check_app_setup_state","terminated_reason":null}
+{"depth":1,"addr":"0x1400E1090","name":"sub_1400E1090","type":"load_existing_watcher_context","terminated_reason":null}
+{"depth":1,"addr":"0x1400DA7C0","name":"sub_1400DA7C0","type":"repo_mutex_acquire","terminated_reason":null}
+{"depth":1,"addr":"0x1405532D0","name":"sub_1405532D0","type":"read_watcher_enabled_state","terminated_reason":null}
+{"depth":1,"addr":"0x141206B20","name":"WakeByAddressSingle","type":"mutex_release","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x14000B710","name":"sub_14000B710","type":"build_thread_closure_with_app_state","terminated_reason":null}
+{"depth":1,"addr":"0x1400AC380","name":"sub_1400AC380","type":"app_state_arc_retain","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x1400AADD0","name":"sub_1400AADD0","type":"app_handle_retain","terminated_reason":"external_call_recorded"}
+{"depth":1,"addr":"0x140476200","name":"codex_paths_build_from_env_sys","type":"build_codex_paths","terminated_reason":"external_call_recorded — reads CODEX_HOME / ~/.codex"}
+{"depth":1,"addr":"0x140004980","name":"std_thread_spawn_wrapper_sys","type":"thread_spawn","terminated_reason":null}
+{"depth":2,"addr":"0x1402D3C90","name":"sub_1402D3C90","type":"copy_thread_closure","terminated_reason":null}
+{"depth":2,"addr":"0x14002A7E0","name":"sub_14002A7E0","type":"CreateThread_wrapper","terminated_reason":"external_call_recorded — Windows CreateThread API"}
+{"depth":2,"addr":"0x14120A760","name":"__imp_CloseHandle","type":"detach_thread_handle","terminated_reason":"external_call_recorded — Windows CloseHandle API (fire-and-forget)"}
+{"depth":2,"addr":"0x1412085B0","name":"sub_1412085B0","type":"panic_failed_to_spawn_thread","terminated_reason":"error_return — 'failed to spawn thread' panic path"}

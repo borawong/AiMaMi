@@ -1,0 +1,45 @@
+{
+  "schema": "restoration.cm.consumer.producer_ledger.v1",
+  "bundle": "<source-location>/audits/cross-1.0.9-relay-core-bootstrap",
+  "authoritative_producer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>",
+    "produced_at": "2026-06-03",
+    "basis": "first-write (cross ACK bundle synthesized from 4 platform bundles)"
+  },
+  "mac_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "win_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "platform": "cross",
+  "source_bundles": {
+    "macos_relay_core":    { "bundle": "macos-1.0.9-relay-core",  "clusters": 14, "gate_summary": { "strictImplementationUse": 3, "consumerStartReady": 9, "gap_needs_reducer": 1 } },
+    "macos_bootstrap":     { "bundle": "macos-1.0.9-bootstrap",   "leaves":    4, "gate_summary": { "consumerStartReady": 4 } },
+    "windows_relay_core":  { "bundle": "windows-1.0.9-relay-core","clusters": 12, "gate_summary": { "strictImplementationUse": 10, "gap_needs_reducer": 1, "consumerStartReady_candidate": 1 } },
+    "windows_bootstrap":   { "bundle": "windows-1.0.9-bootstrap", "leaves":    4, "gate_summary": { "consumerStartReady_candidate": 4 } }
+  },
+  "cross_gate_matrix": [
+    { "cluster": "relay_codex_writer",       "macos_gate": "consumerStartReady",       "win_gate": "strictImplementationUse",  "cross_gate": "consumerStartReady" },
+    { "cluster": "relay_diagnostic",         "macos_gate": "consumerStartReady",       "win_gate": "strictImplementationUse",  "cross_gate": "consumerStartReady" },
+    { "cluster": "relay_health_audit",       "macos_gate": "consumerStartReady",       "win_gate": "gap_needs_reducer",        "cross_gate": "gap_needs_reducer" },
+    { "cluster": "relay_manager",            "macos_gate": "consumerStartReady",       "win_gate": "strictImplementationUse",  "cross_gate": "consumerStartReady" },
+    { "cluster": "relay_proxy_server",       "macos_gate": "consumerStartReady",       "win_gate": "strictImplementationUse",  "cross_gate": "consumerStartReady" },
+    { "cluster": "relay_thread_migration",   "macos_gate": "consumerStartReady",       "win_gate": "strictImplementationUse",  "cross_gate": "consumerStartReady" },
+    { "cluster": "relay_translator",         "macos_gate": "consumerStartReady",       "win_gate": "not_in_scope",             "cross_gate": "macos_only" },
+    { "cluster": "relay_breaker",            "macos_gate": "consumerStartReady",       "win_gate": "strictImplementationUse",  "cross_gate": "consumerStartReady" },
+    { "cluster": "relay_fetch_models",       "macos_gate": "gap_needs_reducer",        "win_gate": "strictImplementationUse",  "cross_gate": "gap_needs_reducer" },
+    { "cluster": "relay_models",             "macos_gate": "consumerStartReady",       "win_gate": "strictImplementationUse",  "cross_gate": "consumerStartReady" },
+    { "cluster": "relay_translator_stream",  "macos_gate": "strictImplementationUse",  "win_gate": "not_started",              "cross_gate": "macos_only" },
+    { "cluster": "relay_web_executor",       "macos_gate": "strictImplementationUse",  "win_gate": "strictImplementationUse",  "cross_gate": "strictImplementationUse" },
+    { "cluster": "relay_web_tools",          "macos_gate": "strictImplementationUse",  "win_gate": "strictImplementationUse",  "cross_gate": "strictImplementationUse" },
+    { "cluster": "app_run_entry",            "macos_gate": "consumerStartReady",       "win_gate": "consumerStartReady_candidate", "cross_gate": "consumerStartReady" },
+    { "cluster": "boot_spawn_threads",       "macos_gate": "consumerStartReady",       "win_gate": "consumerStartReady_candidate", "cross_gate": "consumerStartReady" },
+    { "cluster": "bootstrap_cache",          "macos_gate": "consumerStartReady",       "win_gate": "consumerStartReady_candidate", "cross_gate": "consumerStartReady" },
+    { "cluster": "managed_state_registry",   "macos_gate": "consumerStartReady",       "win_gate": "consumerStartReady_candidate", "cross_gate": "consumerStartReady" }
+  ],
+  "total_clusters_leaves": 17,
+  "cross_gate_summary": {
+    "strictImplementationUse_both_platforms": 3,
+    "consumerStartReady_lower_bound": 9,
+    "gap_needs_reducer": 2,
+    "macos_only_no_win_scope": 2
+  }
+}

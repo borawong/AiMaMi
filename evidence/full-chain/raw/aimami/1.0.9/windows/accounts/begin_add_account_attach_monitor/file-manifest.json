@@ -1,0 +1,36 @@
+{
+  "schema": "raw-evidence.raw.file_manifest.v1",
+  "command": "begin_add_account_attach_monitor",
+  "files": [
+    {
+      "path": "AI.md",
+      "sha256": "62e2caf11c8a1471ae1ab0850fa82286e8799e9061ab0d4c3b3c3a5bdb3af551",
+      "size": 373
+    },
+    {
+      "path": "README.md",
+      "sha256": "c4cfc1674fd0bcc6e5450fd6f42f3d28e3247f25012a504054d1c12ca2c4bcae",
+      "size": 682
+    },
+    {
+      "path": "SYSTEM-DIFF.md",
+      "sha256": "59d4de72b4a40216405fc3bad6b8472df76f38eb1e2865d4094b841d4c929814",
+      "size": 229
+    },
+    {
+      "path": "audits/begin_add_account_attach_monitor-ida-closure.json",
+      "sha256": "382aab11695f928183c4ccf0fe3e9dd86694f4c719d877824f393cdfd94e52bc",
+      "size": 2532
+    },
+    {
+      "path": "validation/result.json",
+      "sha256": "adfa982d61dea775e1ca92fbf419d9671714541cfcc15abdd7e859a53093aa2f",
+      "size": 1717
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "7e91e46ab4901bc1027c02433a79f41667491655e0889c0597be8bb798",
+      "size": 3261
+    }
+  ]
+}

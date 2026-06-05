@@ -1,0 +1,43 @@
+{
+  "schema": "rust-reverse-pipeline.win-frontend-extraction.v1",
+  "produced_at": "2026-06-05",
+  "machine": "<workstation>",
+  "session": "win-frontend-ccf-extract-20260605",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "lane": "frontend",
+  "source_binary": "raw/binary/AiMaM 1.0.9 win64.exe",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "source_binary_type": "PE32+ GUI x86-64 (Tauri single-file build, base 0x140000000, MSVC linker 14.44); NOT an NSIS installer",
+  "extraction_method": "tauri-dumper run directly on installer PE (assets embedded in .rdata); 7zz only yielded PE sections (no NSIS overlay present)",
+  "tooling": {
+    "unpacker": "extract_windows_package.py (7zz -> PE sections only, no candidate app PE found)",
+    "asset_recovery": "tauri-dumper 0.x --input <PE> --output tauri-dumped/ -> index.html + 30 assets",
+    "ipc_contracts": "extract_frontend_contracts.py --frontend tauri-dumped --out tauri-dumped/frontend",
+    "ccf": "extract_component_control_flow.mjs (babel via NODE_PATH) --frontend-root tauri-dumped"
+  },
+  "assets_recovered": 31,
+  "main_bundle": "assets/index-CL22l5v8.js",
+  "main_bundle_sha256": "a03d23862a4ec489c0aa81fc131027b4b4894ef9a846e1cd19b8e3c69a390cc0",
+  "win_unique_commands": 127,
+  "win_ccf_rows": 97,
+  "diff_vs_mac": {
+    "mac_baseline": "raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped + frontend/ipc-contracts.jsonl",
+    "asset_filename_sets": "IDENTICAL (30/30 same Vite content-hashed names)",
+    "asset_bytes": "30/30 JS+CSS byte-identical (SHA256); index.html differs only by CRLF/LF line-endings + 1 trailing blank line (1487B win vs 1455B mac), content identical",
+    "command_sets": "IDENTICAL: 127 shared, 0 win-only, 0 mac-only",
+    "argkeys_per_command": "IDENTICAL: 0 mismatches across all 127 commands",
+    "verdict": "win frontend == mac frontend (SAME React/Vite build). Proven by byte-level SHA256, not inferred. Win frontend command surface is therefore TRUE first-party win evidence, not mac extrapolation."
+  },
+  "implication": "Confirms (with first-party win-PE-derived bytes) the prior assertion in INDEX session wf-aimami109-win-dim1-link that the shared frontend bundle is identical mac<->win. Upgrades that dim1-shared-CCF-link basis from asserted to byte-proven.",
+  "artifacts": [
+    "raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/index.html",
+    "raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/ (30 files)",
+    "raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/frontend/ipc-contracts.jsonl",
+    "raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/frontend/frontend-control-flow.jsonl",
+    "raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/frontend/api-map.json",
+    "raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/frontend/frontend-contract-report.md",
+    "raw/aimami/1.0.9/windows-x64/frontend/package/windows-package-manifest.json"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "relay-core",
+  "cluster": "relay_breaker",
+  "session": "relay-missed-109",
+  "machine": "<workstation>",
+  "produced_at": "2026-06-03",
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "sha12": "1db044e8efab",
+  "tool": "IDA MCP (mcp__ida-pro-mcp-mac)",
+  "authoritative": true,
+  "gate_accepted": false,
+  "implementation_use": false,
+  "gate_status": "pre-gate",
+  "consumer_tier": "in-progress",
+  "leaves": [
+    "select_candidates",
+    "is_open",
+    "record_success",
+    "record_failure",
+    "new_store"
+  ],
+  "struct_BreakerStore": {
+    "type": "Arc<Mutex<HashMap<String,BreakerState>>>",
+    "arc_layout": {
+      "offset_0": "strong_count: AtomicUsize",
+      "offset_8": "Mutex OnceBox<pthread_mutex_t>",
+      "offset_16": "HashMap header (ptr/capacity_mask/len/hasher)"
+    },
+    "hashmap_offsets_on_store_ptr": {
+      "+32": "table_ptr: *mut u8 (hashbrown ctrl+slots)",
+      "+40": "capacity_mask: usize",
+      "+56": "len: usize (entry count)",
+      "+64": "RandomState {k0: u64, k1: u64}"
+    },
+    "mutex_poison_flag_offset": "+24 (byte, set=1 on mutex poison)"
+  },
+  "struct_BreakerState": {
+    "note": "hashbrown SwissTable slot, stride 40 bytes, read relative to slot ptr",
+    "slot_minus_40": "key_ptr: *const u8",
+    "slot_minus_32": "padding",
+    "slot_minus_24": "key_ptr duplicate (hashbrown KV layout)",
+    "slot_minus_16": "retry_after: i64 (timestamp_ms, 0 = cleared)",
+    "slot_minus_8": "failure_count: i32 (low 4 bytes)"
+  },
+  "backoff_schedule_ms": {
+    "failure_1": 5000,
+    "failure_2": 30000,
+    "failure_gte_3": 300000
+  },
+  "upstream_call_sites": {
+    "pick_candidates_for": "0x100241824 (proxy_server hot path, called per request)",
+    "forward_with_candidates_success": "0x100244c00 → record_success call site",
+    "forward_with_candidates_failure": "0x100244c00 → record_failure call site",
+    "forward_codex_responses_success": "0x1000987a0 + 0x100247aac",
+    "forward_codex_responses_failure": "0x1000987a0 + 0x100247aac + 0x10028563c",
+    "relay_manager_new": "0x1001ccea0 → new_store"
+  },
+  "files": [
+    "select_candidates.c",
+    "is_open.c",
+    "record_success.c",
+    "record_failure.c",
+    "new_store.c",
+    "pseudocode-manifest.jsonl",
+    "ida/session.json",
+    "manifest.json"
+  ]
+}

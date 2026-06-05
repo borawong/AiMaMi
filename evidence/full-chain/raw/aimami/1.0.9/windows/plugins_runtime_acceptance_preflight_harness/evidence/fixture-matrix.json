@@ -1,0 +1,174 @@
+{
+  "schema": "raw-evidence.raw.plugins.runtime_acceptance_fixture_matrix.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows",
+  "source_binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "runtime_preflight_only": true,
+  "runtime_executed": false,
+  "trace_started": false,
+  "matrix": [
+    {
+      "id": "list_plugins_baseline_disposable_store",
+      "target": "list_plugins",
+      "fixture_seed": "empty_or_missing_disposable_plugins_json",
+      "expected_observation_points": [
+        "resolved plugins.json path under disposable CODEX_HOME",
+        "response payload plugin count and builtin plugin fields",
+        "schemaVersion/default store behavior",
+        "frontend displayed plugin names/enabled flags if UI is exercised"
+      ],
+      "provable_after_execution": [
+        "runtime path isolation",
+        "list response payload shape",
+        "default builtin plugin materialization"
+      ],
+      "not_provable_in_this_bundle": [
+        "runtime payload values",
+        "frontend rendering/consumption",
+        "write side effect ordering"
+      ],
+      "current_status": "template_only_not_executed"
+    },
+    {
+      "id": "toggle_plugin_enabled_false_true",
+      "target": "toggle_plugin",
+      "fixture_seed": "disposable_plugins_json_with_toggle_target",
+      "expected_observation_points": [
+        "request target plugin id",
+        "enabled field before and after toggle",
+        "response payload fields",
+        "plugins.json serialize/write after in-memory mutation",
+        "query invalidation or UI refresh ordering"
+      ],
+      "provable_after_execution": [
+        "mutation behavior",
+        "persisted JSON delta",
+        "runtime ordering between mutation, write, response, and UI refresh"
+      ],
+      "not_provable_in_this_bundle": [
+        "runtime ordering proof",
+        "rollback behavior on failed write",
+        "frontend success/error consumption"
+      ],
+      "current_status": "template_only_not_executed"
+    },
+    {
+      "id": "get_plugin_config_defaults",
+      "target": "get_plugin_config",
+      "fixture_seed": "disposable_store_with_builtin_and_custom_settings_variants",
+      "expected_observation_points": [
+        "target plugin id lookup",
+        "settings object returned for present plugin",
+        "null/empty/default/omitted settings behavior",
+        "target-not-found error behavior"
+      ],
+      "provable_after_execution": [
+        "settings decode and response payload shape",
+        "default/null/empty semantics",
+        "not-found error envelope"
+      ],
+      "not_provable_in_this_bundle": [
+        "runtime DTO parity",
+        "frontend config UI consumption",
+        "not-found UI reachability"
+      ],
+      "current_status": "template_only_not_executed"
+    },
+    {
+      "id": "update_plugin_config_settings_variants",
+      "target": "update_plugin_config",
+      "fixture_seed": "settings_null_empty_default_omitted_matrix",
+      "expected_observation_points": [
+        "request settings variant",
+        "stored JSON after update",
+        "response payload",
+        "settings decode/write failure behavior",
+        "builtin plugin guard if applicable"
+      ],
+      "provable_after_execution": [
+        "settings write semantics",
+        "serialize/write ordering",
+        "error envelope for invalid settings or failed persistence"
+      ],
+      "not_provable_in_this_bundle": [
+        "serialize/write failure behavior",
+        "rollback behavior",
+        "strict frontend acceptance"
+      ],
+      "current_status": "template_only_not_executed"
+    },
+    {
+      "id": "web_tools_sidechannel_ordering",
+      "target": "web-tools side-channel",
+      "fixture_seed": "web_tools_enabled_disabled_transition",
+      "expected_observation_points": [
+        "web-tools enabled state before command",
+        "side-channel registration or capability effect after toggle/config update",
+        "ordering relative to plugins.json persistence and frontend refresh"
+      ],
+      "provable_after_execution": [
+        "runtime side-channel ordering",
+        "whether side-channel observes pre-write or post-write state"
+      ],
+      "not_provable_in_this_bundle": [
+        "runtime side-channel execution",
+        "ETW/logman ordering events",
+        "capability refresh timing"
+      ],
+      "current_status": "template_only_not_executed"
+    },
+    {
+      "id": "plugins_json_write_denied",
+      "target": "plugins.json write/serialize failure",
+      "fixture_seed": "disposable_store_with_denied_write_or_invalid_serialize_case",
+      "expected_observation_points": [
+        "write attempt path",
+        "error prefix or envelope",
+        "response error",
+        "whether in-memory mutation is rolled back",
+        "plugins.json before/after hash in disposable store"
+      ],
+      "provable_after_execution": [
+        "write failure behavior",
+        "rollback or no-rollback behavior",
+        "frontend error consumption if UI is exercised"
+      ],
+      "not_provable_in_this_bundle": [
+        "runtime failure result",
+        "rollback behavior",
+        "user-visible error mapping"
+      ],
+      "current_status": "template_only_not_executed"
+    },
+    {
+      "id": "frontend_acceptance_mapping",
+      "target": "acceptance mapping",
+      "fixture_seed": "manual_or_automated_ui_acceptance_draft",
+      "expected_observation_points": [
+        "UI trigger for list/toggle",
+        "loading/disabled/toast/dialog behavior",
+        "query invalidation",
+        "visible persisted state after restart under disposable profile"
+      ],
+      "provable_after_execution": [
+        "upstream manual or automated acceptance evidence",
+        "frontend consumption of runtime payloads"
+      ],
+      "not_provable_in_this_bundle": [
+        "executed acceptance",
+        "restart persistence",
+        "visual UI result"
+      ],
+      "current_status": "template_only_not_executed"
+    }
+  ],
+  "gate": {
+    "implementation_use": false,
+    "gate_accepted": false,
+    "readyToImplement": false,
+    "consumerStartReady": false,
+    "strictImplementationUse": false,
+    "full_leaf_100": false
+  }
+}

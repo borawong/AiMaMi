@@ -1,0 +1,10 @@
+{"caller":"route_codex_request_and_dispatch_sys","callee":"stream_codex_responses_native_sys","type":"code","depth":1}
+{"caller":"route_codex_request_and_dispatch_sys","callee":"passthrough_to_chatgpt_upstream_sys","type":"code","depth":1}
+{"caller":"route_codex_request_and_dispatch_sys","callee":"build_upstream_url_and_headers_sys","type":"code","depth":1}
+{"caller":"stream_codex_responses_native_sys","callee":"execute_responses_stream_roundtrip_sys","type":"code","depth":2}
+{"caller":"execute_responses_stream_roundtrip_sys","callee":"translate_responses_to_chat_completion_sys","type":"code","depth":3}
+{"caller":"execute_responses_stream_roundtrip_sys","callee":"translate_responses_to_anthropic_stream_sys","type":"code","depth":3}
+{"caller":"translate_responses_to_anthropic_stream_sys","callee":"convert_anthropic_message_to_openai_chat_sys","type":"code","depth":4}
+{"caller":"translate_responses_to_anthropic_stream_sys","callee":"emit_anthropic_stream_events_delta_sys","type":"code","depth":4}
+{"caller":"passthrough_to_chatgpt_upstream_sys","callee":"build_aimami_proxy_error_response_sys","type":"code","depth":2}
+{"caller":"stream_codex_responses_native_sys","callee":"inject_web_search_system_prompt_sys","type":"code","depth":2}

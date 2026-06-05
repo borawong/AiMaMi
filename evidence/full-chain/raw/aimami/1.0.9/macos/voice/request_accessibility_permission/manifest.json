@@ -1,0 +1,66 @@
+{
+  "schema": "raw-evidence.raw.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "voice",
+  "command": "request_accessibility_permission",
+  "produced_at": "2026-06-03T03:48:32+08:00",
+  "producer": "Codex",
+  "machine": "<workstation>",
+  "claim_id": "claim-20260603T034650-<workstation>-aimami-109-voice",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb_path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "input_binary": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi",
+  "frontend_contract": "<source-location>/audits/cross-1.0.9-sessions-analytics-mcp-skills-custom-voice/data/frontend-command-classification.json",
+  "arg_keys": [],
+  "ida_findings": {
+    "command_string_match_count": 0,
+    "backend_owner": "absent",
+    "backend_wrapper": "absent",
+    "decompile_status": "not_applicable_backend_command_absent",
+    "threading_model": "no backend thread model exists for this command in AiMaMi 1.0.9 binary; frontend orphan wrapper only; nearby app/plugin constants are UI/path/capability anchors",
+    "anchors": [
+      "0x100f3933a voice-workspace.json/voice-runtime.json path anchor",
+      "0x100f35807 voice-overlay UI anchor",
+      "0x100f38815 voice-search-overlay UI anchor",
+      "0x100edde07 global-shortcut plugin constant"
+    ],
+    "idb_comments_written": true,
+    "idb_saved": true
+  },
+  "interface_error_side_effect": {
+    "input_dto": [],
+    "output_dto": "no upstream backend response owner present in same-version binary",
+    "error_envelope": "no backend error envelope present; invoke would have no registered upstream backend owner for this command",
+    "side_effect_boundary": "no upstream backend side effect leaf present; voice path/UI/global-shortcut constants are not command owners"
+  },
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true,
+    "moduleExitAllowed": true,
+    "accepted_substitute": "same-platform IDA backend command absence substitute",
+    "not_upstream_backend_parity": true
+  },
+  "acceptance_mapping": {
+    "consumer_action": "do not implement an upstream backend owner for this command unless upstream product restores voice as product decision",
+    "acceptance": "verify upstream 1.1/master either removes voice surface or gates restored voice as Product decision, not upstream backend parity"
+  },
+  "output_files": [
+    "AI.md",
+    "README.md",
+    "SYSTEM-DIFF.md",
+    "audits/request_accessibility_permission-ida-closure.json",
+    "validation/result.json",
+    "file-manifest.json",
+    "manifest.json"
+  ],
+  "index_status": "accepted_ready_absent_backend_orphan_ida_direct_voice",
+  "index_gate": "promotion_full_leaf_100_accepted_substitute_ida_absence",
+  "file_manifest_sha256": "3f7cc11b539b75aa56d38a23e4d98ee705925df6c8c8969a1a4cfb341e7aca97",
+  "file_manifest_size": 1076
+}

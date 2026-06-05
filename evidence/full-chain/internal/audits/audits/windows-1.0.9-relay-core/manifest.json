@@ -1,0 +1,340 @@
+{
+  "schema": "restoration.cm.reverse.audit_bundle.consumer_gate.v1",
+  "bundle": "windows-1.0.9-relay-core",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "windows-x64",
+  "binary_sha256": "a5822387fa3f56dc03893111f4ffdd074daa882e8887ec4e7c394879c0e9fe0b",
+  "binary_path_sot": "<source-location>/source-binary/AiMaM 1.0.9 win64.exe",
+  "idb_path": "<source-location><network-share>",
+  "produced_at": "2026-06-03",
+  "updated_at": "2026-06-03 (<audit-session>: relay_proxy_config cluster added strictImplementationUse angle-3 Win deep; cluster_count 15→16; strictImplementationUse 6→7; leaf_count 156→159; INDEX lines 1265-1267)",
+  "reduce_session": "relay-missed-109",
+  "reduce_sessions": [
+    "relay-missed-109",
+    "relay-closeout-109",
+    "relay-mac-closeout-109",
+    "relay-image-compat-109",
+    "<audit-session>"
+  ],
+  "scope": "relay-core-complete (7 internal clusters + 5 missed clusters + bootstrap + relay_translator_stream Windows + relay_translator Windows + relay_image_compat + relay_proxy_config)",
+  "leaf_count": 159,
+  "cluster_count": 16,
+  "gate_summary": {
+    "strictImplementationUse": 7,
+    "gap_needs_reducer": 0,
+    "consumerStartReady_candidate": 1,
+    "readyToImplement": 8,
+    "blocked": 0,
+    "note": "<audit-session> final: 8 clusters readyToImplement (relay_manager/relay_proxy_server/relay_thread_migration/relay_models/relay_breaker/relay_web_executor/relay_web_tools/relay_translator_stream). 7 strictImplementationUse (relay_codex_writer[dim6 only]/relay_diagnostic[dim6 only]/relay_health_audit[dim6 only]/relay_fetch_models[async ICF+dim6]/relay_translator[dim6 only]/relay_image_compat[dim6 only]/relay_proxy_config[dim6 only]). 1 consumerStartReady_candidate: bootstrap (out-of-scope per user discipline).",
+    "total_clusters": 16
+  },
+  "clusters": {
+    "relay_manager": {
+      "leaves": 13,
+      "pseudocode_available": true,
+      "pseudocode_format": "pseudocode-manifest.jsonl + .c files",
+      "all_decompiled": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "dim6_closed": true,
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "session": "<audit-session>"
+    },
+    "relay_proxy_server": {
+      "leaves": 9,
+      "pseudocode_available": true,
+      "pseudocode_format": "AI.md + manifest.json (intermediate evidence root)",
+      "all_decompiled": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "dim6_closed": true,
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "session": "<audit-session>"
+    },
+    "relay_codex_writer": {
+      "leaves": 8,
+      "pseudocode_available": true,
+      "pseudocode_format": "evidence.md + pseudocode-manifest.jsonl at intermediate/ + INTERFACE-MAP.md at intermediate/ (dim4 CLOSED relay-mac-closeout-109)",
+      "all_decompiled": true,
+      "gate": "strictImplementationUse",
+      "dim4_closed": true,
+      "dim6_missing": true,
+      "session": "<audit-session>",
+      "session_updated": "relay-mac-closeout-109",
+      "dim4_upgrade": "dim4_partial→dim4_closed (relay-mac-closeout-109)"
+    },
+    "relay_diagnostic": {
+      "leaves": 7,
+      "pseudocode_available": true,
+      "pseudocode_format": "evidence.md + pseudocode-manifest.jsonl at intermediate/ + interfaces/ at intermediate/ (dim4 CLOSED relay-mac-closeout-109); leaf_count corrected 6→7",
+      "all_decompiled": true,
+      "gate": "strictImplementationUse",
+      "dim4_closed": true,
+      "dim6_missing": true,
+      "session": "<audit-session>",
+      "session_updated": "relay-mac-closeout-109",
+      "dim4_upgrade": "dim4_partial→dim4_closed; leaf_count 6→7 (relay-mac-closeout-109)"
+    },
+    "relay_thread_migration": {
+      "leaves": 5,
+      "pseudocode_available": "partial",
+      "pseudocode_format": "evidence.md (full targeted decompile; no pseudocode-manifest.jsonl)",
+      "all_decompiled": false,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "dim6_closed": true,
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "session": "<audit-session>"
+    },
+    "relay_health_audit": {
+      "leaves": 11,
+      "pseudocode_available": true,
+      "pseudocode_format": "evidence.md (9 fully decompiled) + .c files (health_check_response_parser_sys + passthrough_audit_jsonl_append_sys) + logic/WIN-RELAY-HEALTH-AUDIT-REDUCE-109.md",
+      "all_decompiled": false,
+      "decompile_notes": "9/11 decompiled; build_test_request_shared deferred (not in health_check path); apply_extra_headers_variant_b deferred (ICF near-dup of A)",
+      "gate": "strictImplementationUse",
+      "dim6_missing": true,
+      "dto_closed": [
+        "PassthroughAuditEntry 7 fields",
+        "RelayTestResult 4-field shape B-level (cross-platform relay-mac-closeout-109): modelsSample@+0/errorMessage@+24/latencyMs@+48/ok@+56"
+      ],
+      "key_facts": "health_check orchestrator call-tree 9+ edges; PassthroughAuditEntry 7 fields confirmed; JSONL append fire-and-forget; get_passthrough_audit_log IPC interface closed; idb_save=true; RelayTestResult shape cross-confirmed relay-mac-closeout-109",
+      "session": "<audit-session>",
+      "reduce_session_prior": "phase-reduce-20260602 (gap_needs_reducer)",
+      "session_supplement": "relay-mac-closeout-109 (RelayTestResult DTO cross-confirmed)"
+    },
+    "bootstrap": {
+      "leaves": 4,
+      "pseudocode_available": false,
+      "pseudocode_format": "AI.md (THREAD-MODEL derived; IDA MCP offline)",
+      "all_decompiled": false,
+      "gate": "consumerStartReady_candidate",
+      "blocker": "IDA MCP endpoint <network-share>:13337 unreachable",
+      "session": "<audit-session>"
+    },
+    "relay_breaker": {
+      "leaves": 12,
+      "pseudocode_available": true,
+      "pseudocode_format": "pseudocode-manifest.json + 3 .c files (core 3; 9 manifest-only including new_store)",
+      "all_decompiled": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "dim6_closed": true,
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "accepted_unknowns": [
+        "new_store accepted_unknown prior to relay-closeout-109; CLOSED@0x1403ECFA0"
+      ],
+      "key_facts": "BreakerState stride=208; open_until_ms_offset=144; backoff 5s/30s/300s; new_store CLOSED@0x1403ECFA0 (relay-closeout-109); idb_save=true",
+      "new_store_closure": {
+        "va": "0x1403ECFA0",
+        "name": "relay_breaker_new_store_sys",
+        "caller": "relay_manager_new_sys@0x14014e960",
+        "mac_va": "0x1001597bc",
+        "session": "<audit-session>"
+      },
+      "session": "<audit-session>"
+    },
+    "relay_fetch_models": {
+      "leaves": 12,
+      "pseudocode_available": true,
+      "pseudocode_format": "pseudocode-manifest.json + sub-dir leaves; 10 decompiled, 2 blocked (ICF async)",
+      "all_decompiled": false,
+      "gate": "strictImplementationUse",
+      "accepted_unknowns": [
+        "fetch_async/fetch_openai_async ICF-merged"
+      ],
+      "dim6_missing": true,
+      "session": "<audit-session>"
+    },
+    "relay_models": {
+      "leaves": 6,
+      "pseudocode_available": true,
+      "pseudocode_format": ".c files + pseudocode-manifest.md + producer-ledger.json",
+      "all_decompiled": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "dim6_closed": true,
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "key_corrections": [
+        "RelayProxyStatus=struct not enum",
+        "RelayProvider=15 fields not 9",
+        "RelayIde=1 variant (codex)"
+      ],
+      "session": "<audit-session>"
+    },
+    "relay_web_executor": {
+      "leaves": 9,
+      "pseudocode_available": true,
+      "pseudocode_format": "producer-ledger.json + pseudocode-manifest.jsonl (in raw)",
+      "all_decompiled": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "dim6_closed": true,
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "accepted_unknowns": [
+        "send_request ICF-folded async"
+      ],
+      "session": "<audit-session>"
+    },
+    "relay_web_tools": {
+      "leaves": 16,
+      "pseudocode_available": true,
+      "pseudocode_format": "pseudocode-manifest.json + 18 .c files",
+      "all_decompiled": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "dim6_closed": true,
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "key_facts": "Two mirrored clusters; fetch UA=MacOS Chrome/125; search=Yahoo+DDG; scraper crate; truncate=8000B; web_search_tool={type:web_search_20250305,max_uses:5}",
+      "session": "<audit-session>"
+    },
+    "relay_translator_stream": {
+      "leaves": 11,
+      "pseudocode_available": true,
+      "pseudocode_format": "IDA decompile + WIN-RELAY-CLOSEOUT-109.md (4 state machines + 2 feed_line + 2 flush + 3 helpers)",
+      "all_decompiled": true,
+      "gate": "readyToImplement",
+      "gate_accepted": true,
+      "implementation_use": true,
+      "dim6_closed": true,
+      "dim6_session": "relay-closeout-109 phase-reduce",
+      "gate_change": "strictImplementationUse→readyToImplement",
+      "key_facts": "4 state machines: ChatToResponsesStream@0x1401DC4C0 / AnthropicToOpenAi@0x140211FC0 / AnthropicDirectToResponses@0x14021C1A0 / OpenAiToAnthropic@0x140233800; NO ICF fold (synchronous handlers); feed_line + handle_event pattern; 11 renames + 8 IDB comments; idb_save=true",
+      "platform_differences": "Windows state machine sizes differ from macOS; no ICF fold on Windows vs macOS relay_fetch_models; truncate=8000B (byte count) on Windows vs 8000 chars (Unicode) on macOS",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_translator/",
+      "logic_file": "logic/WIN-RELAY-CLOSEOUT-109.md",
+      "session": "<audit-session>"
+    },
+    "relay_translator": {
+      "leaves": 15,
+      "pseudocode_available": true,
+      "pseudocode_format": "IDA decompile + WIN-RELAY-MAC-CLOSEOUT-109.md (15 leaves: 11 prior + 4 new relay-mac-closeout-109)",
+      "all_decompiled": true,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "dim4_closed": true,
+      "dim6_missing": true,
+      "gate_change": "not_started → strictImplementationUse (relay-mac-closeout-109)",
+      "key_facts": "tool_result/tool_use/tool_choice CLOSED; stream_codex_responses_translator_dispatch_sys@0x140134DC0; anthropic_request_to_openai_chat_request_sys@0x14020A900 A-level; convert_anthropic_message_to_openai_chat_sys@0x140214FD0 A-level; call-tree depth>=5; 4 INDEX entries appended relay-mac-closeout-109; idb_saved",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_translator/",
+      "logic_file": "logic/WIN-RELAY-MAC-CLOSEOUT-109.md",
+      "session": "<audit-session>",
+      "blocker": "dim6 only"
+    },
+    "relay_image_compat": {
+      "leaves": 9,
+      "pseudocode_available": true,
+      "pseudocode_format": "IDA decompile (5 A-level + 4 B-level) + WIN-RELAY-IMAGE-COMPAT-109.md + logic file",
+      "all_decompiled": true,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "dim1_frontend_ccf": "accepted_unknown (internal relay-core module; no UI surface)",
+      "dim2_backend_owner_pseudocode": "closed",
+      "dim3_call_tree": "closed_depth_gte_5",
+      "dim4_interface_error_side_effect": "closed",
+      "dim5_platform_gate": "windows_independent_closed",
+      "dim6_test_acceptance": "missing",
+      "dim6_missing": true,
+      "blocker": "dim6 only",
+      "key_facts": "relay_image_compat_set_handler_sys@0x14027A1B0 (A); set_impl_sys@0x1400A5EB0 (A; 3 insertion paths; byteswap field detect); read_config_toml_sys@0x1400A55F0 (A; SSE 16-byte prefix match); build_ok_bool_response_sys@0x1404391D0 (shared builder); get_handler_sys@0x1402779B0 (A); relay_image_support_capability_descriptor_sys@0x140599610 (id/name/desc/version/category/enabled); relay_image_support_tool_pair_builder_sys@0x1405999D0 (304B alloc); forward_gate BEHAVIORAL@0x14012C3C0 in stream_codex_responses_native_sys (image_url substring check → retry sub_140143840); platform_diff: Windows uses BEHAVIORAL rejection (no OnceLock cache), macOS uses TBZ dispatch with OnceLock/Mutex cache; 9 renames + 11 IDA comments; idb_save=true",
+      "dto_closures": {
+        "IPC_set_image_compat": {
+          "command_string_va": "0x141268D1C",
+          "input": "{ enabled: bool }",
+          "output": "CoreEnvelope { ok: { enabled: bool } }",
+          "side_effect": "mutates config.toml [features] section with 'image_generation = false'"
+        },
+        "IPC_get_image_compat": {
+          "command_string_va": "0x141267E70",
+          "input": "manager handle",
+          "output": "CoreEnvelope { ok: { enabled: bool } }",
+          "enabled_semantics": "true if image_generation absent OR != 'false'; false if 'image_generation = false' present"
+        },
+        "config_toml_key": "[features] / image_generation",
+        "forward_gate_mechanism": "BEHAVIORAL rejection: sub_140108C80('image_url',9) check in response body"
+      },
+      "platform_difference_vs_macos": "macOS: TBZ dispatch + OnceLock/Mutex cache + TOML re-read per call; Windows: BEHAVIORAL rejection via substring match in stream path; macOS config field=[feature], Windows config field=[features]",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_image_compat/",
+      "logic_file": "logic/WIN-RELAY-IMAGE-COMPAT-109.md",
+      "idb_saved": true,
+      "idb_path": "<source-location><network-share>",
+      "session": "<audit-session>",
+      "gate_change": "new_cluster → strictImplementationUse"
+    },
+    "relay_proxy_config": {
+      "leaves": 3,
+      "pseudocode_available": true,
+      "pseudocode_format": "IDA A-level decompile (all 3 leaves) + WIN-PROXY-CONFIG-DEEP-109-wf-dualcomplete.md + WIN-RELAY-TRANSPORT-CLOSEOUT-109.md §6-7",
+      "all_decompiled": true,
+      "gate": "strictImplementationUse",
+      "gate_accepted": false,
+      "implementation_use": false,
+      "dim1_frontend_ccf": "confirmed (frontend-contract-report.md: setApiProxyConfig/detectApiProxyConfig/testApiProxyConfig wrappers; Win dispatcher xref for set_api_proxy_config@0x1402694B2)",
+      "dim2_backend_owner_pseudocode": "closed (all 3 A-level decompile)",
+      "dim3_call_tree": "closed_depth_gte_5 (set: depth 5+ terminated disk_write+WakeByAddressSingle; detect: depth 6+ terminated TCP_syscall+closesocket; test: depth 5+ terminated tokio_spawn+broadcast)",
+      "dim4_interface_error_side_effect": "closed (input/output/side-effect per leaf confirmed)",
+      "dim5_platform_gate": "windows_independent_closed (all VAs from Win PE IDB; dispatcher xref from auto_switch_multiplex_dispatcher_sys)",
+      "dim6_test_acceptance": "missing",
+      "dim6_missing": true,
+      "blocker": "dim6 only",
+      "is_upstream": true,
+      "key_facts": "set_api_proxy_config_handler_sys@0x140282340 (A; params repo+mode+url; api_proxy_config_write_core_sys@0x14055C3A0→settings_deserialize+serialize+disk_write; NOT relay TOML). cmd_detect_api_proxy_config_coroutine_sys@0x1408C45B0 (A; 4-state async; reads settings; sub_140609490 TCP probe coroutine→detect_system_env_proxy_sys@0x140110A80; 6 env vars both cases; 200ms probe; skip 127.0.0.1/localhost). cmd_test_api_proxy_config_coroutine_sys@0x1408E8160 (A; params mode+url; sub_140609D60 TCP probe coroutine; broadcast sub_140877B20 on success). Platform diff vs macOS: detect on Win uses env vars only (no networksetup subprocess, no 18 static candidates). 5 IDA renames + 5 comments; idb_save=true.",
+      "dto_closures": {
+        "set_api_proxy_config": {
+          "input": "{ repo: String, mode: String, url: Option<String> }",
+          "output": "CoreEnvelope<()>",
+          "side_effect": "writes proxy mode+url to settings JSON; NOT config.toml"
+        },
+        "detect_api_proxy_config": {
+          "input": "{ app: String }",
+          "output": "CoreEnvelope<ProxyDetectResult>",
+          "side_effect": "read-only; spawns tokio blocking TCP probe; no write"
+        },
+        "test_api_proxy_config": {
+          "input": "{ mode: String, url: Option<String> }",
+          "output": "CoreEnvelope<TestResult>",
+          "side_effect": "read-only; spawns tokio blocking TCP probe; broadcast sub_140877B20 on success"
+        }
+      },
+      "platform_difference_vs_macos": "detect: Win reads 6 env vars only (no networksetup subprocess, no 18 static candidate addresses); macOS detect uses networksetup subprocess + 18 static candidates. set: both write to settings JSON not config.toml. test: Win broadcasts sub_140877B20; macOS equivalent not confirmed this session.",
+      "evidence_root": "raw/aimami/1.0.9/windows/relay-core/relay_proxy_config/",
+      "raw_leaf": "raw/aimami/1.0.9/windows/relay-core/relay_proxy_config/WIN-PROXY-CONFIG-DEEP-109-wf-dualcomplete.md",
+      "logic_file": "logic/WIN-RELAY-TRANSPORT-CLOSEOUT-109.md (§6-7)",
+      "idb_saved": true,
+      "idb_path": "<source-location><network-share>",
+      "session": "<audit-session>", "index_lines": "1265-1267",
+      "gate_change": "supplement→full_cluster strictImplementationUse (angle-3 Win deep)"
+    }
+  },
+  "canonical_relation": {
+    "ipc_command_gate": "windows-1.0.9-relay (audits/windows-1.0.9-relay/gate-report.json)",
+    "daemon_autoswitch_gate": "windows-1.0.9-daemon-autoswitch (audits/windows-1.0.9-daemon-autoswitch/gate-report.json)",
+    "note": "This bundle provides internal callee evidence backing. IPC command gate authority is windows-1.0.9-relay."
+  },
+  "platform_policy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  },
+  "authoritativeProducer": {
+    "machine": "<workstation>",
+    "session": "<audit-session>", "indexLines": "see INDEX.jsonl append (relay-missed-109 + relay-closeout-109 + relay-mac-closeout-109; 24 entries from relay-mac-closeout-109 appended; 3 entries <audit-session> lines 1265-1267)",
+    "updated_at": "2026-06-03 (<audit-session>: relay_proxy_config cluster added strictImplementationUse angle-3 Win deep; cluster_count 15→16; strictImplementationUse 6→7; leaf_count 156→159)"
+  }
+}

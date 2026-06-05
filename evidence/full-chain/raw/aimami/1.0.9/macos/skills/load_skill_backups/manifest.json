@@ -1,0 +1,40 @@
+{
+  "schema": "raw-evidence.raw.leaf.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "skills",
+  "command": "load_skill_backups",
+  "status": "accepted_full_leaf_100_ida_direct_skills",
+  "source_binary": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "frontend_contract_pointer": "<source-location>/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/",
+  "owner": {
+    "wrapper": "0x1003269a4 registration/string cluster",
+    "owner": "0x1001df318/0x1001de3f0 backup metadata helpers",
+    "callees": [
+      "skill-backups metadata scan/read path confirmed by 0x100ee0bd5/0x100ee11f7 xrefs",
+      "serde SkillBackupSummary/Metadata serializers"
+    ]
+  },
+  "idb_modified": true,
+  "idb_saved": true,
+  "outputs": [
+    "AI.md",
+    "README.md",
+    "SYSTEM-DIFF.md",
+    "audits/load_skill_backups-ida-closure.json",
+    "validation/result.json",
+    "file-manifest.json",
+    "manifest.json"
+  ],
+  "index_status": "append_pending_then_appended",
+  "gate": {
+    "consumerStartReady": true,
+    "strictImplementationUse": true,
+    "readyToImplement": true,
+    "implementation_use": true,
+    "gate_accepted": true,
+    "full_leaf_100": true
+  }
+}

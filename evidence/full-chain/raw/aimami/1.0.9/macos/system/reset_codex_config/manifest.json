@@ -1,0 +1,33 @@
+{
+  "schema": "raw-evidence.raw.bundle.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "arch": "arm64",
+  "module": "system",
+  "command": "reset_codex_config",
+  "leaf": "reset_codex_config",
+  "source_binary": "AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi",
+  "source_binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "idb_path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "owner_addr": "0x10025fbc8",
+  "owner_name": "codexmate_lib::commands::system::reset_codex_config",
+  "owner_name_renamed": "reset_codex_config_owner_sys",
+  "registration_closure": "0x1003187fc",
+  "registration_closure_name": "codexmate_lib::run::{{closure}}",
+  "gate_candidate": "strictImplementationUse",
+  "call_tree_depth_max": 3,
+  "produced_at": "2026-06-02T00:00:00Z",
+  "producer": "claude-sonnet-4-6",
+  "producer_machine": "<workstation>",
+  "payload_hashes": {
+    "call-trees/reset_codex_config.jsonl": "79d0ed732bbfacf8b100dbbab7932ad4a0f0f2440de0b640e2c31539caa193bc",
+    "validation/result.json": "49c969a4eb184d553b21bc716ac83b54862067f0ce2486c8c06b53a6ef0ca7d2",
+    "ida/pseudocode/0001_reset_codex_config_owner_sys.c": "780ae2c37240394d717b97e6f02cc827433990cd0107f265d4d6ef087b3ff0",
+    "ida/pseudocode/0002_relay_manager_snapshot.c": "f40a18d1f16484a35fb703c752075adbc067b5394650c6ace7bd1a04dcc0db",
+    "ida/pseudocode/0003_resolve_codex_home.c": "1626f36265fbad336afc327a7a38a44f280a3328e4b9098ac2e7b40ad5f5146e",
+    "ida/pseudocode/0004_fs_write_inner.c": "3aba0c4fac894979815fa9159009ddee03a0a31961ee78046e6485bf6316faf5",
+    "ida/pseudocode/0005_core_envelope_ok.c": "7daa3e6614a7fd837a3c2417dc3620b685ad0c7f182eba898fc72277a218f1b9",
+    "ida/pseudocode-manifest.jsonl": "2df14577a99df885f2bca057a248a4f25ca106edf16c88ba27735c861158e737"
+  }
+}

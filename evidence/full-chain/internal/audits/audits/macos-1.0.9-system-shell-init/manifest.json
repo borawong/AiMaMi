@@ -1,0 +1,34 @@
+{
+  "schema": "restoration.cm.reverse.audit.manifest.v1",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "module": "system-shell-init",
+  "produced_at": "2026-06-02T23:39:05+08:00",
+  "status": "duplicate_local_outtake_not_authoritative",
+  "consumerStartReady": false,
+  "strictImplementationUse": false,
+  "readyToImplement": false,
+  "implementation_use": false,
+  "gate_accepted": false,
+  "full_leaf_100": false,
+  "moduleExitAllowed": false,
+  "currentReducer": "logic/SYSTEM-SHELL-INIT-FULL-LEAF-100-IDA-ACCEPTED-109.md",
+  "authoritativeBundles": [
+    "../macos-1.0.9-bootstrap/data/task-plan.json",
+    "../windows-1.0.9-bootstrap/data/task-plan.json",
+    "../cross-1.0.9-relay-core-bootstrap/data/task-plan.json"
+  ],
+  "authoritativeIndex": {
+    "macosMachine": "<workstation>",
+    "macosSession": "deep-mac-bootstrap-20260602",
+    "macosLines": [688, 689, 690, 691, 715],
+    "windowsProducer": "claude-sonnet-4-6 (deep-win-bootstrap)",
+    "windowsLines": [710, 711, 712, 713]
+  },
+  "platformPolicy": {
+    "macosOnly": true,
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  }
+}

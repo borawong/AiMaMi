@@ -1,0 +1,15 @@
+{"from": "import_relay_config@0x1001e0468", "to": "RelayManager::import_config@0x1001c8554", "edge_type": "call", "depth": 1, "terminated_reason": null}
+{"from": "import_relay_config@0x1001e0468", "to": "tray_menu::refresh_tray_menu@0x100331688", "edge_type": "call_conditional", "depth": 1, "terminated_reason": null, "condition": "import success"}
+{"from": "RelayManager::import_config@0x1001c8554", "to": "io::parse_import_file@0x1001c43d8", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "RelayManager::import_config@0x1001c8554", "to": "Mutex::lock@0x100d3499c", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "RelayManager::import_config@0x1001c8554", "to": "RelayState::clone@0x10020cc2c", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "RelayManager::import_config@0x1001c8554", "to": "Mutex::unlock@0x100d349b8", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "RelayManager::import_config@0x1001c8554", "to": "io::apply_import_to_state@0x1001c4d48", "edge_type": "call", "depth": 2, "terminated_reason": null}
+{"from": "RelayManager::import_config@0x1001c8554", "to": "RelayManager::persist@0x1001cf304", "edge_type": "call", "depth": 2, "terminated_reason": "persistence_commit"}
+{"from": "RelayManager::import_config@0x1001c8554", "to": "RelayManager::sync_codex_config_with_outcome@0x1001cc828", "edge_type": "call_conditional", "depth": 2, "terminated_reason": null, "condition": "provider count changed (pre!=post)"}
+{"from": "io::parse_import_file@0x1001c43d8", "to": "fs::metadata@0x100d322dc", "edge_type": "call", "depth": 3, "terminated_reason": null}
+{"from": "io::parse_import_file@0x1001c43d8", "to": "fs::read_to_string::inner@0x100d2c1f4", "edge_type": "call", "depth": 3, "terminated_reason": null}
+{"from": "io::parse_import_file@0x1001c43d8", "to": "serde_json::de::from_trait@0x100310880", "edge_type": "call", "depth": 3, "terminated_reason": "response_serialize"}
+{"from": "io::apply_import_to_state@0x1001c4d48", "to": "chrono::Utc::now@0x10080f270", "edge_type": "call", "depth": 3, "terminated_reason": null}
+{"from": "io::apply_import_to_state@0x1001c4d48", "to": "keychain::set_api_key@0x10015a4c8", "edge_type": "call_conditional", "depth": 3, "terminated_reason": "persistence_commit", "condition": "provider has api_key in import"}
+{"from": "io::apply_import_to_state@0x1001c4d48", "to": "HashMap::insert@0x1004d92fc", "edge_type": "call", "depth": 3, "terminated_reason": null}

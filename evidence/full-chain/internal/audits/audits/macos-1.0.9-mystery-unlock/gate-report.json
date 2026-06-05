@@ -1,0 +1,57 @@
+{
+  "schema": "restoration.cm.reverse.gate.v1",
+  "bundle": "macos-1.0.9-mystery-unlock",
+  "session": "<audit-session>", "machine": "<workstation>",
+  "produced_at": "2026-06-05",
+  "sha12": "1db044e8efab",
+  "sha256_binary": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "gate_tier": "strictImplementationUse",
+  "gate_accepted": false,
+  "implementation_use": false,
+  "dim6_missing": true,
+  "ceiling": "strictImplementationUse",
+  "platform": "macos-arm64",
+  "product": "aimami",
+  "version": "1.0.9",
+  "is_upstream": false,
+  "prewrite_gate_decision": "ALLOW",
+  "prewrite_gate_write_mode": "first",
+  "evidence_basis": "AI.md <audit-session> + REVERSE-STATUS lines 1045-1081",
+  "leaves": {
+    "get_mystery_unlock_grants": {
+      "cmd_va": "0x10026091c",
+      "repo_va": "0x1005ec3e0",
+      "gate": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "dim6": "missing",
+      "gate_accepted": false,
+      "implementation_use": false
+    },
+    "merge_mystery_unlock_grants": {
+      "cmd_va": "0x1002620d4",
+      "repo_va": "0x1005ef594",
+      "gate": "strictImplementationUse",
+      "dims_done": ["dim1", "dim2", "dim3", "dim4", "dim5"],
+      "dim6": "missing",
+      "gate_accepted": false,
+      "implementation_use": false
+    },
+    "mystery_route_allowed": {
+      "cmd_va": null,
+      "repo_va": "0x1005e9e08",
+      "role": "helper",
+      "gate": "strictImplementationUse",
+      "dims_done": ["dim3", "dim4"],
+      "gate_accepted": false,
+      "implementation_use": false
+    }
+  },
+  "cluster_gate_summary": {
+    "strictImplementationUse": 3,
+    "consumerStartReady": 0,
+    "readyToImplement": 0,
+    "gap_needs_reducer": 0,
+    "blocked": 0,
+    "note": "dim6 not closed (source archive impl-side); ceiling: strictImplementationUse"
+  }
+}

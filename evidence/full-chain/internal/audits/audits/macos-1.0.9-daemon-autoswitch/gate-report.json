@@ -1,0 +1,69 @@
+{
+  "schema": "restoration.cm.reverse.gate_report.consumer_gate.v1",
+  "bundle": "macos-1.0.9-daemon-autoswitch",
+  "product": "aimami",
+  "version": "1.0.9",
+  "platform": "macos",
+  "binary_sha256": "1db044e8efab3b9eba8668b5a008f4952194ec0dd6a70a10725a5e7ad0350482",
+  "produced_at": "2026-06-02T12:00:00Z",
+  "ida_session": "2026-06-02 fresh decompile+callees+xrefs all 13 VAs; inline IDB comments set; IDB saved",
+  "scope": "daemon (6) + auto-switch (7) = 13 commands",
+  "total_commands": 13,
+  "strict_count": 0,
+  "ready_count": 13,
+  "consumerStartReady": true,
+  "strictImplementationUse": true,
+  "readyToImplement": true,
+  "implementation_use": true,
+  "gate_accepted": true,
+  "full_leaf_100": true,
+  "full_leaf_100_basis": "full_leaf_100_definition_v2: all 6 dims closed for all 13 commands via IDA HexRays fresh decompile. dim1: CCF accepted (boot-spawn substitute or IPC wrapper); dim2: owner+pseudocode accepted (same binary SHA); dim3: call-tree depth 2-6, impl leaves reached; dim4: DTO/error/side-effect boundary closed with IDA-confirmed discriminants and byte sizes; dim5: macOS confirmed/Windows Unknown (platform_delta documented); dim6: acceptance assertions written and bound to IDA evidence.",
+  "platformPolicy": {
+    "windowsIndependent": true,
+    "doNotInferWindowsFromMacOS": true
+  },
+  "platformScopeDeclared": "macOS confirmed; Windows Unknown (platform_delta: launchctl/CFRunLoop/pthread macOS-only; Windows requires independent binary analysis)",
+  "readyToImplement_queue": [
+    "run_daemon_once",
+    "load_bootstrap_state",
+    "note_usage_refresh_activity",
+    "schedule_full_runtime_refresh",
+    "start_usage_refresh_watcher",
+    "update_usage_refresh_schedule",
+    "start_auto_switch_pending_watcher",
+    "load_pending_auto_switch",
+    "confirm_pending_auto_switch",
+    "dismiss_pending_auto_switch",
+    "confirm_pending_auto_switch_and_restart_codex",
+    "configure_auto_switch",
+    "set_auto_switch"
+  ],
+  "commands": {
+    "run_daemon_once":                               { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted_native_callback_bootstrap_spawn", "dim2": "accepted", "dim3": "accepted_depth3_6impl_leaves", "dim4": "accepted_DaemonRunPayload_168bytes_poisonedlock_discriminant_0x8000000000000000", "dim5": "macos_confirmed_windows_unknown", "dim6": "accepted" },
+    "load_bootstrap_state":                          { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted_native_callback_bootstrap_spawn_plus_ipc_wrapper", "dim2": "accepted", "dim3": "accepted", "dim4": "accepted_CoreEnvelope_BootstrapState_0x3E8bytes_discriminant2", "dim5": "macos_confirmed_windows_unknown", "dim6": "accepted" },
+    "note_usage_refresh_activity":                   { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted_native_callback_bootstrap_spawn", "dim2": "accepted", "dim3": "accepted", "dim4": "accepted_ts_u64_qword_101390370_condvar_notify", "dim5": "macos_confirmed_windows_unknown", "dim6": "accepted" },
+    "schedule_full_runtime_refresh":                 { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted_native_callback_bootstrap_spawn", "dim2": "accepted", "dim3": "accepted_tokio_spawn_blocking_leaf", "dim4": "accepted_debounce_8s_IN_FLIGHT_atomic", "dim5": "macos_confirmed_windows_unknown", "dim6": "accepted" },
+    "start_usage_refresh_watcher":                   { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted_native_callback_bootstrap_spawn", "dim2": "accepted", "dim3": "accepted_thread_spawn_unchecked_leaf", "dim4": "accepted_WATCHER_STARTED_guard_interval_60s_default", "dim5": "macos_confirmed_windows_unknown", "dim6": "accepted" },
+    "update_usage_refresh_schedule":                 { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted_native_callback_bootstrap_spawn", "dim2": "accepted", "dim3": "accepted", "dim4": "accepted_interval_u64_qword_101390368_condvar_notify", "dim5": "macos_confirmed_windows_unknown", "dim6": "accepted" },
+    "start_auto_switch_pending_watcher":             { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted_substitute_bootstrap_spawn", "dim2": "accepted", "dim3": "accepted_depth6_OS_leaves", "dim4": "accepted_WryHandle_clone_spawn_unchecked_fire_and_forget", "dim5": "macOS_confirmed_Windows_Unknown", "dim6": "accepted" },
+    "load_pending_auto_switch":                      { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted", "dim2": "accepted", "dim3": "accepted", "dim4": "accepted_memcpy_0x2B0_discriminant3", "dim5": "macOS_confirmed_Windows_Unknown", "dim6": "accepted" },
+    "confirm_pending_auto_switch":                   { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted", "dim2": "accepted", "dim3": "accepted", "dim4": "accepted_NoRequest_err2_SwitchPayload_0x1D8", "dim5": "macOS_confirmed_Windows_Unknown", "dim6": "accepted" },
+    "dismiss_pending_auto_switch":                   { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted", "dim2": "accepted", "dim3": "accepted", "dim4": "accepted_NoRequest_discriminant10_0x8000000000000000", "dim5": "macOS_confirmed_Windows_Unknown", "dim6": "accepted" },
+    "confirm_pending_auto_switch_and_restart_codex": { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted", "dim2": "accepted_Tauri_InvokeResolver_async_closure", "dim3": "accepted_spawn_blocking_AppHandle", "dim4": "accepted_CoreEnvelope_SwitchPayload_async_error_string", "dim5": "macOS_confirmed_Windows_Unknown", "dim6": "accepted" },
+    "configure_auto_switch":                         { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted", "dim2": "accepted", "dim3": "accepted", "dim4": "accepted_4params_validate_lt101_AutoSwitchConfig_0x78", "dim5": "macOS_confirmed_Windows_Unknown", "dim6": "accepted" },
+    "set_auto_switch":                               { "gate": "readyToImplement", "implementation_use": true, "gate_accepted": true, "dim1": "accepted", "dim2": "accepted", "dim3": "accepted", "dim4": "accepted_enabled_bool_AutoSwitchState_0x78", "dim5": "macOS_confirmed_Windows_Unknown", "dim6": "accepted" }
+  },
+  "reverseRequiredQueues": {
+    "forbiddenUntilReady": [],
+    "forbiddenUntilStrictImplementationUse": [],
+    "consumerStartBlocked": []
+  },
+  "unknowns": [
+    { "item": "DaemonRunPayload_field_layout", "class": "accepted_unknown", "note": "inferred ~168 bytes from memcpy; field names not recoverable without debug symbols; non-blocking" },
+    { "item": "enrich_accounts_via_api_endpoint", "class": "accepted_unknown", "note": "HTTP endpoint not recoverable from binary alone; out of scope" },
+    { "item": "configure_auto_switch_frontend_backend_argkeys_mismatch", "class": "product_decision", "note": "frontend uses threshold5hPercent/thresholdWeeklyPercent; backend uses threshold_pct/schedule_min; impl must use backend names" },
+    { "item": "Windows_daemon_trigger_mechanism", "class": "blocks_start_windows_scope", "note": "launchctl/CFRunLoop/pthread macOS-only; Windows requires independent analysis" }
+  ],
+  "idb_save_path": "<source-location>/source-binary/AiMaMi 1.0.9_ida.app/Contents/MacOS/AiMaMi.i64",
+  "clean_check": "zero .c files; zero .log files; no forbidden path tokens"
+}
