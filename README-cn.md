@@ -50,10 +50,10 @@ LFS/IDB 资料独立称为 `OpenAiMami IDB`。主仓库不直接保存大体积 
 请只使用当前公开仓库，按可审计方式重建 OpenAiMami 1.0.9。所有新增注释和文档必须使用中文，不写入内部路径、机器名、用户名、共享盘、内部项目名、凭据或任何未匿名化材料。
 
 第一步先校验证据完整性：
-1. 读取 `evidence/full-chain/raw/aimami/1.0.9/frontend-dumped-checksums.zh.md`。
-2. 校验其中列出的前端 dumped 文件。
+1. 先读取 `evidence/full-chain/raw/INDEX.md`、`evidence/full-chain/raw/command-index.json`、`evidence/full-chain/raw/validation-summary.json`。
+2. 通过 raw 索引定位前端 dumped 校验文件，并校验其中列出的前端 dumped 文件。
 3. 校验相关 manifest hash，确认 raw 链条和清单一致。
-4. 同时读取 `evidence/full-chain/raw/INDEX.md`、`evidence/full-chain/raw/command-index.json`、`evidence/full-chain/raw/validation-summary.json`。
+4. 任何 raw 子路径都必须按仓库索引解析，不能写入本机路径、机器名或未匿名来源。
 
 第二步读取 raw 链条：
 1. 从 `evidence/full-chain/raw` 读取 macOS/Windows 前端 dumped 文件。

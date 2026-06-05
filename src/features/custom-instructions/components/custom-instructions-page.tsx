@@ -29,9 +29,9 @@ import type {
   CustomInstructionPreviewPayload,
   CustomInstructionStatePayload,
 } from "@/types";
-import { HistoryList } from "@/components/custom-instructions/history-list";
-import { PreviewDialog } from "@/components/custom-instructions/preview-dialog";
-import { TemplateCard } from "@/components/custom-instructions/template-card";
+import { HistoryList } from "./history-list";
+import { PreviewDialog } from "./preview-dialog";
+import { TemplateCard } from "./template-card";
 import { SegmentedOptions } from "@/components/ui/segmented-options";
 import { useBusyAction } from "@/hooks/use-busy-action";
 import {

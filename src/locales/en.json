@@ -387,6 +387,14 @@
     "tokens": "Token Analytics",
     "tools": "Tool Analytics",
     "changes": "Change Analytics",
+    "panel": {
+      "usage": "Usage",
+      "sessions": "Sessions",
+      "tokens": "Token",
+      "tools": "Tools",
+      "changes": "Changes",
+      "quota": "Quota"
+    },
     "range": {
       "today": "Today",
       "week": "Week",
@@ -397,6 +405,10 @@
     "totalTokens": "Total tokens",
     "toolCalls": "Tool calls",
     "writeCommands": "Write commands",
+    "quotaHistory": "Quota History",
+    "quotaAccountKey": "Account key",
+    "quotaAccountKeyPlaceholder": "Enter an account key to load quota history",
+    "quotaAccountKeyRequired": "Enter an account key to load quota history",
     "emptySeries": "No series data was found in the current evidence payload",
     "unknownTool": "Unknown tool"
   },

@@ -1,3 +1,4 @@
+use crate::core::dto::{BackendOperationEffect, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::core::migration;
 use serde::Serialize;
@@ -67,6 +68,25 @@ impl<T: Serialize> CoreEnvelope<T> {
         }
     }
 
+    pub(crate) fn unsupported(data: T, action: &str) -> Self {
+        Self {
+            schema_version: migration::current_schema_version().0,
+            success: true,
+            code: "unsupported".into(),
+            message: "命令契约已保留，当前后端拒绝伪实现未证实业务。".into(),
+            warnings: vec![unsupported_warning(action)],
+            data,
+        }
+    }
+
+    pub(crate) fn from_backend_plan(data: T, plan: &BackendOperationPlan) -> Self {
+        match plan.effect() {
+            BackendOperationEffect::Pending => Self::pending(data, plan.command()),
+            BackendOperationEffect::NoOp => Self::no_op(data, plan.command()),
+            BackendOperationEffect::Unsupported => Self::unsupported(data, plan.command()),
+        }
+    }
+
     pub(crate) fn failure(data: T, error: &CoreError) -> Self {
         Self {
             schema_version: migration::current_schema_version().0,
@@ -95,5 +115,12 @@ pub(crate) fn no_op_warning(action: &str) -> CoreWarning {
     CoreWarning {
         code: "no_op".into(),
         message: format!("{action} 已返回结构化结果，当前没有执行文件、进程或系统副作用。"),
+    }
+}
+
+pub(crate) fn unsupported_warning(action: &str) -> CoreWarning {
+    CoreWarning {
+        code: "unsupported".into(),
+        message: format!("{action} 缺少仓库内证据，当前仅保留后端命令契约。"),
     }
 }

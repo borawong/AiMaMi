@@ -30,7 +30,7 @@ LFS/IDB 资料独立称为 `OpenAiMami IDB`。主仓库保存匿名化 raw/inter
 
 ## 重建主线
 
-1. 从 `evidence/full-chain/raw/aimami/1.0.9/frontend-dumped-checksums.zh.md` 开始校验前端 dumped 文件和 manifest hash。
+1. 从 `evidence/full-chain/raw/INDEX.md`、命令索引和校验摘要开始，按索引定位前端 dumped 校验文件，再校验 dumped 文件和 manifest hash。
 2. 读取 `evidence/full-chain/raw` 中的 macOS/Windows 前端 dumped 文件、IPC、CCF、manifest、命令索引和校验摘要。
 3. 读取 `evidence/full-chain/internal` 中的 audit map、frontend map、distilled logic、raw leaf 和版本差异材料。
 4. 用 raw 链条确认来源，用 internal 链条解释结构、页面、边界和行为摘要。

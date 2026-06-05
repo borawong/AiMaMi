@@ -26,6 +26,8 @@ export function useSessionsModule() {
         receivedAt: Date.now(),
       });
       void SessionsCache.invalidateContractQueries(queryClient);
+      void queryClient.invalidateQueries({ queryKey: ["usage-analytics"] });
+      void queryClient.invalidateQueries({ queryKey: ["analytics", "usage"] });
     },
   });
 

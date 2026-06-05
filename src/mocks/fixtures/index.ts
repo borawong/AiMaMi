@@ -8,7 +8,7 @@ import {
   type IpcCommandName,
   type IpcJsonObject,
 } from "@/contracts/ipc";
-import type { CoreEnvelope } from "@/types";
+import type { BackendSkeletonStatus, CoreEnvelope } from "@/types";
 import type { IpcMockStepResult } from "@/mocks/ipc";
 
 export const fixturePolicy = {
@@ -32,6 +32,7 @@ export interface EvidenceBackedIpcFixture extends IpcJsonObject {
     stepName: string;
   }[];
   source: string;
+  status: BackendSkeletonStatus;
   tier: string;
   wrapperNames: string[];
 }
@@ -76,6 +77,25 @@ function resolveEnvelopeStatus(steps: IpcMockStepResult[]) {
   return { code: "MOCK_OK", message: "IPC mock resolved", success: true };
 }
 
+function createBackendSkeletonStatus(
+  command: IpcCommandName,
+  domain: IpcCommandDomain,
+): BackendSkeletonStatus {
+  return {
+    module: domain,
+    command,
+    restored: false,
+    note: "后端业务实现由后续 PR 在当前边界内补齐",
+    boundary: {
+      repositoryChecked: false,
+      repositoryPathKnown: false,
+      platformChecked: false,
+      coreChecked: true,
+      effect: "pending",
+    },
+  };
+}
+
 export function createEvidenceBackedIpcFixture(
   command: IpcCommandName,
   args: IpcArgs | undefined,
@@ -103,6 +123,10 @@ export function createEvidenceBackedIpcFixture(
         stepName: step.stepName,
       })),
       source: definition?.source ?? "unknown",
+      status: createBackendSkeletonStatus(
+        command,
+        definition?.domain ?? "system",
+      ),
       tier: definition?.tier ?? "unknown",
       wrapperNames: [...(definition?.wrapperNames ?? [])],
     },

@@ -71,14 +71,15 @@ OpenAiMami 1.0.9 前端覆盖面：
 | `src/App.tsx` | 应用根包装。 |
 | `src/main-app.tsx` | 主路由状态、页面加载和外壳组合。 |
 | `src/components/layout/` | 侧栏和布局组件。 |
-| `src/components/custom-instructions/` | 自定义指令工作流界面。 |
-| `src/components/mcp/` | MCP 管理界面。 |
-| `src/components/skills/` | Skills 管理界面。 |
-| `src/components/maintenance/` | 维护操作界面。 |
-| `src/components/settings/` | 设置界面。 |
+| `src/features/custom-instructions/components/` | 自定义指令工作流界面。 |
+| `src/features/mcp/components/` | MCP 管理界面。 |
+| `src/features/skills/components/` | Skills 管理界面。 |
+| `src/features/maintenance/components/` | 维护操作界面。 |
+| `src/features/plugins/components/` | 插件管理界面。 |
+| `src/features/settings/components/` | 设置界面。 |
 | `src/components/update/` | 更新覆盖层。 |
 | `src/components/runtime/` | 运行期对话框。 |
-| `src/components/ui/` | 共享界面基础组件。 |
+| `src/components/ui/` | 共享 primitive 基础组件；不得放业务组合组件或模块私有状态。 |
 | `src/hooks/` | React hooks。 |
 | `src/locales/` | 本地化资源。 |
 | `src/types/` | 共享 TypeScript 类型。 |

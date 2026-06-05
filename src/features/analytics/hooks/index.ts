@@ -4,42 +4,80 @@ import { analyticsService } from "@/services/analytics";
 import type { AnalyticsRange } from "@/types";
 import { AnalyticsCache } from "../cache";
 
+export type AnalyticsPanelId =
+  | "usage"
+  | "sessions"
+  | "tokens"
+  | "tools"
+  | "changes"
+  | "quota";
+
+export interface AnalyticsModuleOptions {
+  activePanel?: AnalyticsPanelId;
+  quotaAccountKey?: string | null;
+}
+
+const ANALYTICS_QUERY_POLICY = {
+  staleTime: 30_000,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+} as const;
+
 export function useAnalyticsCacheController() {
   return useModuleCacheController(AnalyticsCache);
 }
 
-export function useAnalyticsModule(range: AnalyticsRange = "week") {
+export function useAnalyticsModule(
+  range: AnalyticsRange = "week",
+  options: AnalyticsModuleOptions = {},
+) {
+  const activePanel = options.activePanel ?? "usage";
+  const quotaAccountKey = options.quotaAccountKey?.trim() ?? "";
+
   const usageQuery = useQuery({
     queryKey: [...AnalyticsCache.queryKeys.root, "usage"],
     queryFn: () => analyticsService.loadUsageAnalytics(),
-    staleTime: 30_000,
+    enabled: activePanel === "usage",
+    ...ANALYTICS_QUERY_POLICY,
   });
   const sessionQuery = useQuery({
     queryKey: [...AnalyticsCache.queryKeys.root, "sessions", range],
     queryFn: () => analyticsService.loadSessionAnalytics(range),
-    staleTime: 30_000,
+    enabled: activePanel === "sessions",
+    ...ANALYTICS_QUERY_POLICY,
   });
   const tokenQuery = useQuery({
     queryKey: [...AnalyticsCache.queryKeys.root, "tokens", range],
     queryFn: () => analyticsService.loadTokenAnalytics(range),
-    staleTime: 30_000,
+    enabled: activePanel === "tokens",
+    ...ANALYTICS_QUERY_POLICY,
   });
   const toolQuery = useQuery({
     queryKey: [...AnalyticsCache.queryKeys.root, "tools", range],
     queryFn: () => analyticsService.loadToolAnalytics(range),
-    staleTime: 30_000,
+    enabled: activePanel === "tools",
+    ...ANALYTICS_QUERY_POLICY,
   });
   const changeQuery = useQuery({
     queryKey: [...AnalyticsCache.queryKeys.root, "changes", range],
     queryFn: () => analyticsService.loadChangeAnalytics(range),
-    staleTime: 30_000,
+    enabled: activePanel === "changes",
+    ...ANALYTICS_QUERY_POLICY,
+  });
+  const quotaQuery = useQuery({
+    queryKey: [...AnalyticsCache.queryKeys.root, "quota-history", quotaAccountKey],
+    queryFn: () => analyticsService.loadQuotaHistory(quotaAccountKey),
+    enabled: activePanel === "quota" && quotaAccountKey.length > 0,
+    ...ANALYTICS_QUERY_POLICY,
   });
 
   return {
+    activePanel,
     usageQuery,
     sessionQuery,
     tokenQuery,
     toolQuery,
     changeQuery,
+    quotaQuery,
   };
 }

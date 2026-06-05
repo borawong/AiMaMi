@@ -4,6 +4,7 @@ pub(crate) mod analytics;
 pub(crate) mod config;
 pub(crate) mod custom_instructions;
 pub(crate) mod path_guard;
+pub(crate) mod paths;
 pub(crate) mod quota;
 pub(crate) mod registry;
 pub(crate) mod relay;
@@ -17,6 +18,7 @@ use crate::repository::adapter::FileSystemAdapter;
 use crate::repository::analytics::AnalyticsRepository;
 use crate::repository::config::ConfigRepository;
 use crate::repository::custom_instructions::CustomInstructionsRepository;
+use crate::repository::paths::RepositoryPathContext;
 use crate::repository::quota::QuotaRepository;
 use crate::repository::registry::RegistryRepository;
 use crate::repository::relay::RelayRepository;
@@ -48,17 +50,25 @@ impl RepositoryBundle {
 
     /// 中文职责说明：测试或临时运行可注入 fake/temp FS，验证仓储契约时不触碰真实用户环境。
     pub(crate) fn with_fs(fs: Arc<dyn FileSystemAdapter>) -> Self {
+        Self::with_context(fs, RepositoryPathContext::default())
+    }
+
+    /// 中文职责说明：仓储聚合根只分发共享 FS 和相对路径上下文，业务状态必须由文件重建。
+    pub(crate) fn with_context(
+        fs: Arc<dyn FileSystemAdapter>,
+        paths: RepositoryPathContext,
+    ) -> Self {
         Self {
-            accounts: AccountsRepository::new(fs.clone()),
-            analytics: AnalyticsRepository::new(fs.clone()),
-            config: ConfigRepository::new(fs.clone()),
-            registry: RegistryRepository::new(fs.clone()),
-            relay: RelayRepository::new(fs.clone()),
-            runtime_extensions: RuntimeExtensionsRepository::new(fs.clone()),
-            sessions: SessionsRepository::new(fs.clone()),
-            skills: SkillsRepository::new(fs.clone()),
-            quota: QuotaRepository::new(fs.clone()),
-            custom_instructions: CustomInstructionsRepository::new(fs),
+            accounts: AccountsRepository::new(fs.clone(), paths.clone()),
+            analytics: AnalyticsRepository::new(fs.clone(), paths.clone()),
+            config: ConfigRepository::new(fs.clone(), paths.clone()),
+            registry: RegistryRepository::new(fs.clone(), paths.clone()),
+            relay: RelayRepository::new(fs.clone(), paths.clone()),
+            runtime_extensions: RuntimeExtensionsRepository::new(fs.clone(), paths.clone()),
+            sessions: SessionsRepository::new(fs.clone(), paths.clone()),
+            skills: SkillsRepository::new(fs.clone(), paths.clone()),
+            quota: QuotaRepository::new(fs.clone(), paths.clone()),
+            custom_instructions: CustomInstructionsRepository::new(fs, paths),
         }
     }
 

@@ -13,4 +13,4 @@
 
 - 本目录只负责 skills 路由参数、页面骨架、layout 装配和模块入口挂载。
 - skills-page.tsx 不得同时 owning store、query、event、dialog 和 content。
-- 具体业务还原必须进入 src/features/skills、src/components/skills、src/services/skills、src/store/skills 和模块 cache/tests。
+- 具体业务还原必须进入 src/features/skills/components、src/features/skills/services、src/features/skills/store 和模块 cache/tests；src/components/ui 只允许放 primitive。

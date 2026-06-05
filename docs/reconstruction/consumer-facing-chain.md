@@ -8,7 +8,7 @@
 
 1. `docs/reconstruction/full-chain-map.md`
 2. `evidence/full-chain/raw/INDEX.md`
-3. `evidence/full-chain/raw/aimami/1.0.9/frontend-dumped-checksums.zh.md`
+3. 前端 dumped 校验文件（通过 `evidence/full-chain/raw/INDEX.md` 和 raw 清单定位）
 4. `evidence/full-chain/raw/command-index.json`
 5. `evidence/full-chain/raw/validation-summary.json`
 6. `evidence/full-chain/internal/INDEX.md`

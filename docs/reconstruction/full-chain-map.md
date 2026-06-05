@@ -9,7 +9,7 @@
 | raw 索引 | `evidence/full-chain/raw/INDEX.md` |
 | raw 命令索引 | `evidence/full-chain/raw/command-index.json` |
 | raw 校验摘要 | `evidence/full-chain/raw/validation-summary.json` |
-| 前端 dumped 校验 | `evidence/full-chain/raw/aimami/1.0.9/frontend-dumped-checksums.zh.md` |
+| 前端 dumped 校验 | 通过 `evidence/full-chain/raw/INDEX.md` 和 raw 清单定位 |
 | internal 索引 | `evidence/full-chain/internal/INDEX.md` |
 | audit map | `evidence/full-chain/internal/audit-map.json` |
 | frontend map | `evidence/full-chain/internal/frontend-map/INDEX.md` |

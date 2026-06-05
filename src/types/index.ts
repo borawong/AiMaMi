@@ -426,6 +426,24 @@ export interface CoreEnvelope<T> {
   data: T;
 }
 
+export interface BackendSkeletonBoundaryStatus {
+  [key: string]: string | boolean;
+  repositoryChecked: boolean;
+  repositoryPathKnown: boolean;
+  platformChecked: boolean;
+  coreChecked: boolean;
+  effect: "pending" | "no_op" | "unsupported" | string;
+}
+
+export interface BackendSkeletonStatus {
+  [key: string]: string | boolean | BackendSkeletonBoundaryStatus;
+  module: string;
+  command: string;
+  restored: boolean;
+  note: string;
+  boundary: BackendSkeletonBoundaryStatus;
+}
+
 export interface BootstrapStatePayload {
   writtenAt: number | null;
   snapshotProgressive: CoreSnapshotPayload | null;
