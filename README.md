@@ -1,4 +1,4 @@
-<h1 align="center">AiMaMi</h1>
+<h1 align="center">OpenAiMaMi</h1>
 
 <p align="center">
   English · <a href="./README-cn.md">简体中文</a>
