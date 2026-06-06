@@ -1,6 +1,6 @@
-import { AnalyticsPage } from "./components/analytics-page";
-import { DumpedContractBoundary } from "@/features/_shared/dumped-contract-boundary";
-import { DUMPED_ANALYTICS_COMMANDS } from "./dumped-contract";
+import { AnalyticsPage } from "./components/page";
+import { DumpedContractBoundary } from "@/features/_shared/boundary";
+import { DUMPED_ANALYTICS_COMMANDS } from "./contract";
 
 export function AnalyticsContent() {
   return (

@@ -13,7 +13,7 @@ import {
 import {
   createModuleCacheOwner,
   type ModuleCacheSource,
-} from "@/features/_shared/module-cache";
+} from "@/features/_shared/cache";
 
 export const VoiceCache = createModuleCacheOwner("voice");
 export const VoiceQueryKeys = VoiceCache.queryKeys;

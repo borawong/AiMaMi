@@ -1,9 +1,9 @@
 import { useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { formatInvokeError } from "@/lib/invoke-error";
+import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
+import { useModuleCacheController } from "@/features/_shared/controller";
+import { formatInvokeError } from "@/lib/error";
 import { analyticsService } from "@/services/analytics";
 import type { AnalyticsRange } from "@/types";
 import {

@@ -3,7 +3,7 @@
  */
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { useModuleCacheController } from "@/features/_shared/controller";
 import { skillsService } from "@/services/skills";
 import type {
   CoreEnvelope,

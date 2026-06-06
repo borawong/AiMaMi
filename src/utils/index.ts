@@ -1,2 +1,2 @@
 export { cn } from '@/lib/utils';
-export { formatDateTime } from '@/lib/format-time';
+export { formatDateTime } from '@/lib/time';

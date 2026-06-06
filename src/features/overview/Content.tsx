@@ -1,6 +1,6 @@
-import { OverviewPage } from "./components/overview-page";
-import { DumpedContractBoundary } from "@/features/_shared/dumped-contract-boundary";
-import { DUMPED_OVERVIEW_COMMANDS } from "./dumped-contract";
+import { OverviewPage } from "./components/page";
+import { DumpedContractBoundary } from "@/features/_shared/boundary";
+import { DUMPED_OVERVIEW_COMMANDS } from "./contract";
 
 export function OverviewContent() {
   return (

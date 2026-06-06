@@ -1,5 +1,5 @@
 import { invokeIpc } from "@/contracts/ipc";
-import { pickDesktopDirectory } from "@/lib/desktop-adapter";
+import { pickDesktopDirectory } from "@/lib/desktop";
 import type {
   CoreEnvelope,
   SkillBackupListPayload,

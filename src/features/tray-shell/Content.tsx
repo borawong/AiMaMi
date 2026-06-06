@@ -1,4 +1,4 @@
-import { TrayShellPage } from "./components/tray-shell-page";
+import { TrayShellPage } from "./components/page";
 
 export function TrayShellContent() {
   return <TrayShellPage />;

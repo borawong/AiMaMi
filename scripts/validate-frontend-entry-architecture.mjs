@@ -6,20 +6,20 @@ const repoRoot = process.cwd();
 
 const requiredFiles = [
   "src/entry/root.tsx",
-  "src/app/providers/app-providers.tsx",
-  "src/app/providers/prompt-host.tsx",
-  "src/app/router/app-router.tsx",
-  "src/app/router/app-shell.tsx",
-  "src/app/router/use-route-prewarm.ts",
-  "src/app/router/use-sidebar-open-state.ts",
-  "src/app/runtime/runtime-initializer.tsx",
-  "src/app/runtime/runtime-events.ts",
-  "src/routes/registry/route-registry.tsx",
-  "src/routes/registry/route-objects.tsx",
-  "src/routes/registry/route-meta.ts",
-  "src/routes/registry/route-preload.ts",
-  "src/routes/registry/route-skeletons.tsx",
-  "src/routes/registry/high-io-feedback.tsx",
+  "src/app/providers/app.tsx",
+  "src/app/providers/prompt.tsx",
+  "src/app/router/router.tsx",
+  "src/app/router/shell.tsx",
+  "src/app/router/prewarm.ts",
+  "src/app/router/sidebar.ts",
+  "src/app/runtime/initializer.tsx",
+  "src/app/runtime/events.ts",
+  "src/routes/registry/registry.tsx",
+  "src/routes/registry/objects.tsx",
+  "src/routes/registry/meta.ts",
+  "src/routes/registry/preload.ts",
+  "src/routes/registry/skeletons.tsx",
+  "src/routes/registry/feedback.tsx",
   "src/types/navigation.ts",
 ];
 
@@ -136,54 +136,54 @@ expectNotIncludes("src/entry/root.tsx", root, [
   "@/routes/desktop/",
 ]);
 
-const appProviders = readRequiredFile("src/app/providers/app-providers.tsx");
-expectIncludes("src/app/providers/app-providers.tsx", appProviders, [
-  "import { PromptHost } from \"@/app/providers/prompt-host\";",
+const appProviders = readRequiredFile("src/app/providers/app.tsx");
+expectIncludes("src/app/providers/app.tsx", appProviders, [
+  "import { PromptHost } from \"@/app/providers/prompt\";",
   "<I18nProvider>",
   "<AppQueryClientProvider>",
   "<TooltipProvider",
   "<PromptHost>",
   "<RouteSettingsProvider>",
 ]);
-expectNotIncludes("src/app/providers/app-providers.tsx", appProviders, [
+expectNotIncludes("src/app/providers/app.tsx", appProviders, [
   "@/features/",
   "@/services/",
   "@/routes/desktop/",
 ]);
 
-const promptHost = readRequiredFile("src/app/providers/prompt-host.tsx");
-expectIncludes("src/app/providers/prompt-host.tsx", promptHost, [
+const promptHost = readRequiredFile("src/app/providers/prompt.tsx");
+expectIncludes("src/app/providers/prompt.tsx", promptHost, [
   "export function PromptHost",
   "<Toaster />",
   "<InstallLocationPromptDialog",
   "<PendingAutoSwitchPromptDialog",
   "<UpdateOverlay",
 ]);
-expectNotIncludes("src/app/providers/prompt-host.tsx", promptHost, [
+expectNotIncludes("src/app/providers/prompt.tsx", promptHost, [
   "subscribeRuntimeEvent",
   "applyRuntimeEventToQueryCache",
 ]);
 
-const queryProvider = readRequiredFile("src/app/providers/query-client-provider.tsx");
-expectIncludes("src/app/providers/query-client-provider.tsx", queryProvider, [
+const queryProvider = readRequiredFile("src/app/providers/query.tsx");
+expectIncludes("src/app/providers/query.tsx", queryProvider, [
   "const queryClient = createAppQueryClient();",
   "<QueryClientProvider client={queryClient}>",
 ]);
 
-const appRouter = readRequiredFile("src/app/router/app-router.tsx");
-expectIncludes("src/app/router/app-router.tsx", appRouter, [
-  "import { createRegistryRouter } from \"@/routes/registry/route-objects\";",
+const appRouter = readRequiredFile("src/app/router/router.tsx");
+expectIncludes("src/app/router/router.tsx", appRouter, [
+  "import { createRegistryRouter } from \"@/routes/registry/objects\";",
   "useMemo(() => createRegistryRouter(), [])",
   "<RouterProvider router={router} />",
 ]);
-expectNotIncludes("src/app/router/app-router.tsx", appRouter, [
+expectNotIncludes("src/app/router/router.tsx", appRouter, [
   "@/spa/",
   "@/utils/router",
   "desktopRoutes",
 ]);
 
-const appShell = readRequiredFile("src/app/router/app-shell.tsx");
-expectIncludes("src/app/router/app-shell.tsx", appShell, [
+const appShell = readRequiredFile("src/app/router/shell.tsx");
+expectIncludes("src/app/router/shell.tsx", appShell, [
   "getRouteMeta(activeRoute)",
   "getVisibleRouteMeta()",
   "useRoutePrewarm();",
@@ -193,28 +193,28 @@ expectIncludes("src/app/router/app-shell.tsx", appShell, [
   "<SiteHeader routeMeta={activeRouteMeta} />",
   "routeItems={visibleRouteMeta}",
 ]);
-expectNotIncludes("src/app/router/app-shell.tsx", appShell, [
+expectNotIncludes("src/app/router/shell.tsx", appShell, [
   "titleKey:",
   "visible:",
   "preload:",
   "skeleton:",
 ]);
 
-const routePrewarm = readRequiredFile("src/app/router/use-route-prewarm.ts");
-expectIncludes("src/app/router/use-route-prewarm.ts", routePrewarm, [
+const routePrewarm = readRequiredFile("src/app/router/prewarm.ts");
+expectIncludes("src/app/router/prewarm.ts", routePrewarm, [
   "useDeferredReady(900)",
   "preloadVisibleRoutes()",
 ]);
 
-const sidebarOpenState = readRequiredFile("src/app/router/use-sidebar-open-state.ts");
-expectIncludes("src/app/router/use-sidebar-open-state.ts", sidebarOpenState, [
+const sidebarOpenState = readRequiredFile("src/app/router/sidebar.ts");
+expectIncludes("src/app/router/sidebar.ts", sidebarOpenState, [
   "SIDEBAR_COLLAPSED_STORAGE_KEY",
   "localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY)",
   "localStorage.setItem(SIDEBAR_COLLAPSED_STORAGE_KEY",
 ]);
 
-const routeRegistry = readRequiredFile("src/routes/registry/route-registry.tsx");
-expectIncludes("src/routes/registry/route-registry.tsx", routeRegistry, [
+const routeRegistry = readRequiredFile("src/routes/registry/registry.tsx");
+expectIncludes("src/routes/registry/registry.tsx", routeRegistry, [
   "export interface RouteDefinition",
   "route: Route;",
   "path: `/${string}`;",
@@ -232,8 +232,8 @@ expectIncludes("src/routes/registry/route-registry.tsx", routeRegistry, [
   "export const routeDefinitions",
 ]);
 
-const routeObjects = readRequiredFile("src/routes/registry/route-objects.tsx");
-expectIncludes("src/routes/registry/route-objects.tsx", routeObjects, [
+const routeObjects = readRequiredFile("src/routes/registry/objects.tsx");
+expectIncludes("src/routes/registry/objects.tsx", routeObjects, [
   "export const registryRouteObjects",
   "export function createRegistryRouter()",
   "createHashRouter(registryRouteObjects)",
@@ -243,39 +243,39 @@ expectIncludes("src/routes/registry/route-objects.tsx", routeObjects, [
   "<Suspense fallback={definition.skeleton}>",
   "<PageStage state=\"active\" fillHeight={definition.fillHeight}>",
 ]);
-expectNotIncludes("src/routes/registry/route-objects.tsx", routeObjects, [
+expectNotIncludes("src/routes/registry/objects.tsx", routeObjects, [
   "@/spa/",
   "@/utils/router",
 ]);
 
-const routeMeta = readRequiredFile("src/routes/registry/route-meta.ts");
-expectIncludes("src/routes/registry/route-meta.ts", routeMeta, [
+const routeMeta = readRequiredFile("src/routes/registry/meta.ts");
+expectIncludes("src/routes/registry/meta.ts", routeMeta, [
   "export interface RouteMeta",
   "getRouteMeta(route: Route)",
   "getVisibleRouteMeta()",
   "routeDefinitions.filter((definition) => definition.visible).map(toRouteMeta)",
 ]);
 
-const routePreload = readRequiredFile("src/routes/registry/route-preload.ts");
-expectIncludes("src/routes/registry/route-preload.ts", routePreload, [
+const routePreload = readRequiredFile("src/routes/registry/preload.ts");
+expectIncludes("src/routes/registry/preload.ts", routePreload, [
   "resolveRouteDefinition(route).preload()",
   "preloadVisibleRoutes()",
 ]);
 
-const runtimeInitializer = readRequiredFile("src/app/runtime/runtime-initializer.tsx");
-expectIncludes("src/app/runtime/runtime-initializer.tsx", runtimeInitializer, [
+const runtimeInitializer = readRequiredFile("src/app/runtime/initializer.tsx");
+expectIncludes("src/app/runtime/initializer.tsx", runtimeInitializer, [
   "subscribeRuntimeEvent",
   "applyRuntimeEventToQueryCache(queryClient, event)",
   "return null;",
 ]);
-expectNotIncludes("src/app/runtime/runtime-initializer.tsx", runtimeInitializer, [
+expectNotIncludes("src/app/runtime/initializer.tsx", runtimeInitializer, [
   "AlertDialog",
   "toast",
   "Toaster",
 ]);
 
-const runtimeEvents = readRequiredFile("src/app/runtime/runtime-events.ts");
-expectIncludes("src/app/runtime/runtime-events.ts", runtimeEvents, [
+const runtimeEvents = readRequiredFile("src/app/runtime/events.ts");
+expectIncludes("src/app/runtime/events.ts", runtimeEvents, [
   "RUNTIME_QUERY_KEYS_BY_MODULE",
   "getRuntimeEventQueryTargets",
   "acceptRuntimeEventSequence",

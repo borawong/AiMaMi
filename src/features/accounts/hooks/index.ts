@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
+import { useModuleCacheController } from "@/features/_shared/controller";
 import { accountsService } from "@/services/accounts";
 import {
   AccountsAuthoritativeQueryKeys,

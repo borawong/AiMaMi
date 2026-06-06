@@ -277,7 +277,7 @@ function isVoiceDeepOwnerContent(featureId, content) {
   if (featureId !== "voice") return false;
 
   const panelsIndexPath = join(featuresRoot, "voice", "panels", "index.ts");
-  const panelsPath = join(featuresRoot, "voice", "panels", "voice-panels.tsx");
+  const panelsPath = join(featuresRoot, "voice", "panels", "panels.tsx");
   const cachePath = join(featuresRoot, "voice", "cache", "index.ts");
   if (!existsSync(panelsIndexPath) || !existsSync(panelsPath) || !existsSync(cachePath)) return false;
 
@@ -287,7 +287,7 @@ function isVoiceDeepOwnerContent(featureId, content) {
     content.includes("VoicePage") &&
     content.includes("<VoicePage") &&
     !content.includes("DumpedContractBoundary") &&
-    panelsIndex.includes("./voice-panels") &&
+    panelsIndex.includes("./panels") &&
     panels.includes("VoiceWorkspacePanel") &&
     panels.includes("VoiceRuntimePanel") &&
     panels.includes("VoiceConfigPanel") &&
@@ -296,9 +296,9 @@ function isVoiceDeepOwnerContent(featureId, content) {
 }
 
 function assertFeatureContracts(rawCommands) {
-  const contractFiles = walkFiles(featuresRoot, (file) => file.endsWith("dumped-contract.ts"));
+  const contractFiles = walkFiles(featuresRoot, (file) => file.endsWith("contract.ts"));
   const text = readTextFromFiles(contractFiles);
-  assertCommandsMentioned("模块 dumped-contract 命令覆盖", rawCommands, text);
+  assertCommandsMentioned("模块 contract 命令覆盖", rawCommands, text);
   assertFeatureEntrypoints(contractFiles);
 }
 
@@ -308,10 +308,10 @@ function validateRawPageRouteAndContent(rawModules) {
   for (const moduleInfo of rawModules) {
     const moduleId = moduleInfo.id;
     const pascal = pascalCase(moduleId);
-    const routeShellPath = join(routesRoot, "desktop", "main", moduleId, `${moduleId}-page.tsx`);
+    const routeShellPath = join(routesRoot, "desktop", "main", moduleId, "page.tsx");
     const featureIndexPath = join(featuresRoot, moduleId, "index.ts");
     const featureContentPath = join(featuresRoot, moduleId, "Content.tsx");
-    const featurePagePath = join(featuresRoot, moduleId, "components", `${moduleId}-page.tsx`);
+    const featurePagePath = join(featuresRoot, moduleId, "components", "page.tsx");
 
     const routeShell = readRequired(routeShellPath);
     const featureIndex = readRequired(featureIndexPath);
@@ -336,7 +336,7 @@ function validateRawPageRouteAndContent(rawModules) {
     if (!routeOk) failures.push(`${moduleId} raw page chunk 已存在，但 route shell 未正确挂载 ${pascal}Feature`);
     if (!featureOk) failures.push(`${moduleId} raw page chunk 已存在，但 feature index 未建立 Provider/Content 公共入口`);
     if (!contentOk) failures.push(`${moduleId} raw page chunk 已存在，但 Content 未同时挂载真实 ${pascal}Page 和 dumped 合同边界`);
-    if (!pageOk) failures.push(`${moduleId} raw page chunk 已存在，但 components/${moduleId}-page.tsx 未导出 ${pascal}Page`);
+    if (!pageOk) failures.push(`${moduleId} raw page chunk 已存在，但 components/page.tsx 未导出 ${pascal}Page`);
   }
 
   if (failures.length === before) {
@@ -418,7 +418,7 @@ function validateControlFlowOwners(commandsByModule) {
       walkFiles(join(featuresRoot, moduleId), (file) => {
         if (!/\.(ts|tsx)$/.test(file)) return false;
         const normalized = normalizePath(file);
-        return !normalized.endsWith("/dumped-contract.ts") && !normalized.endsWith("/Content.tsx");
+        return !normalized.endsWith("/contract.ts") && !normalized.endsWith("/Content.tsx");
       }),
     );
     const serviceName = `${camelCase(moduleId)}Service`;
@@ -458,12 +458,12 @@ function validateNoEvidenceUiPlaceholders(rawModules) {
   const before = failures.length;
   const forbiddenSourcePatterns = [
     {
-      pattern: /@\/features\/_shared\/evidence-panels/,
-      reason: "引用 _shared/evidence-panels 通用面板，不能证明真实 dumped UI 还原",
+      pattern: /@\/features\/_shared\/panels/,
+      reason: "引用 _shared/panels 通用面板，不能证明真实 dumped UI 还原",
     },
     {
-      pattern: /@\/features\/_shared\/evidence-data/,
-      reason: "引用 _shared/evidence-data 通用读数器，容易把未知 payload 渲染成占位列表",
+      pattern: /@\/features\/_shared\/data/,
+      reason: "引用 _shared/data 通用读数器，容易把未知 payload 渲染成占位列表",
     },
     {
       pattern: /\bEvidence(PageHeader|StatusLine|QueryState|Action)\b/,
@@ -481,7 +481,7 @@ function validateNoEvidenceUiPlaceholders(rawModules) {
       if (!/\.(ts|tsx)$/.test(file)) return false;
       const normalized = normalizePath(file);
       return (
-        !normalized.endsWith("/dumped-contract.ts") &&
+        !normalized.endsWith("/contract.ts") &&
         !normalized.includes("/__tests__/") &&
         !normalized.endsWith("/AGENTS.md") &&
         !normalized.endsWith("/CLAUDE.md")
@@ -533,8 +533,8 @@ function validateNoEvidenceUiPlaceholders(rawModules) {
 }
 
 function validateRouterEvidence(rawModules, routerHits) {
-  const routeRegistryPath = join(routesRoot, "registry", "route-registry.tsx");
-  const routeObjectsPath = join(routesRoot, "registry", "route-objects.tsx");
+  const routeRegistryPath = join(routesRoot, "registry", "registry.tsx");
+  const routeObjectsPath = join(routesRoot, "registry", "objects.tsx");
   const routeRegistry = readRequired(routeRegistryPath);
   const routeObjects = readRequired(routeObjectsPath);
   const before = failures.length;
@@ -544,12 +544,12 @@ function validateRouterEvidence(rawModules, routerHits) {
     const pascal = pascalCase(moduleInfo.id);
     const hasRegistry =
       routeRegistry.includes(`route: "${route}"`) &&
-      routeRegistry.includes(`import("@/routes/desktop/main/${route}/${route}-page")`) &&
+      routeRegistry.includes(`import("@/routes/desktop/main/${route}/page")`) &&
       routeRegistry.includes(`<${pascal}Route`);
     const hasRouteObject = routeObjects.includes("routeDefinitions.map") && routeObjects.includes("RegistryRouteElement");
 
     if (!hasRegistry) failures.push(`${route} 未在 route registry 中集中声明 route/preload/render`);
-    if (!hasRouteObject) failures.push("route-objects 未通过 routeDefinitions 统一生成 React Router 对象");
+    if (!hasRouteObject) failures.push("objects 未通过 routeDefinitions 统一生成 React Router 对象");
   }
 
   const routerHitText = routerHits

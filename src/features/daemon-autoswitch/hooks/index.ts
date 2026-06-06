@@ -6,7 +6,7 @@ import {
   type QueryKey,
 } from "@tanstack/react-query";
 import { useCallback, useEffect } from "react";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { useModuleCacheController } from "@/features/_shared/controller";
 import { daemonAutoswitchService } from "@/services/daemon-autoswitch";
 import {
   DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY,

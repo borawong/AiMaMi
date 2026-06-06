@@ -7,8 +7,8 @@ import {
 } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { toast } from "@/hooks/use-toast";
+import { useModuleCacheController } from "@/features/_shared/controller";
+import { toast } from "@/hooks/toast";
 import {
   relayService,
   type RelayExportDialogInput,

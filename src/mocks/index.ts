@@ -28,4 +28,4 @@ export {
   ipcCommandFixtures,
   type IpcCommandFixture,
   type IpcCommandHandler,
-} from "./fixtures/ipc-command-fixtures";
+} from "./fixtures/commands";

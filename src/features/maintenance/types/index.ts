@@ -1,7 +1,7 @@
 /**
  * 中文职责说明：maintenance 模块只声明边界类型，未证实业务字段不在这里编造。
  */
-import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
+import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 
 export type MaintenanceModuleId = "maintenance";
 export type MaintenanceCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;

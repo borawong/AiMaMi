@@ -4,14 +4,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { useBusyAction } from "@/hooks/use-busy-action";
-import { toast } from "@/hooks/use-toast";
+import { useModuleCacheController } from "@/features/_shared/controller";
+import { useBusyAction } from "@/hooks/busy";
+import { toast } from "@/hooks/toast";
 import {
   builtinCustomInstructionTemplates,
   mergeCustomInstructionTemplates,
   type CustomInstructionTemplate,
-} from "@/lib/custom-instruction-templates";
+} from "@/lib/templates";
 import {
   customInstructionsService,
   type ApplyCustomInstructionParams,

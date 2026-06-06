@@ -3,7 +3,7 @@ import {
   checkDesktopRuntimeUpdate,
   getDesktopAppVersion,
   type DesktopRuntimeUpdate,
-} from "@/lib/desktop-adapter";
+} from "@/lib/desktop";
 import type {
   ApiModePayload,
   ApiProxyDetectPayload,

@@ -4,7 +4,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Root } from "@/entry/root";
-import { applyWindowSurfaceStyle } from "@/entry/window-surface";
+import { applyWindowSurfaceStyle } from "@/entry/surface";
 import "@/index.css";
 
 applyWindowSurfaceStyle();

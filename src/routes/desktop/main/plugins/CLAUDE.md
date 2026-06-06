@@ -12,5 +12,5 @@
 ## plugins route/module shell 边界
 
 - 本目录只负责 plugins 路由参数、页面骨架、layout 装配和模块入口挂载。
-- plugins-page.tsx 不得同时 owning store、query、event、dialog 和 content。
+- page.tsx 不得同时 owning store、query、event、dialog 和 content。
 - 具体业务还原必须进入 src/features/plugins/components、src/features/plugins/services、src/features/plugins/store 和模块 cache/tests；src/components/ui 只允许放 primitive。
