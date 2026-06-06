@@ -497,6 +497,29 @@ function validateKnownInternalFrontendGates() {
     console.log("PASS relay router toggle progress 事件链：listen/cleanup/cache/page");
   }
 
+  const relayTypedPayloadOk =
+    relayService.includes("interface RelayProviderDraftInput") &&
+    relayService.includes('RelayNetworkConfig = "system" | "direct"') &&
+    relayService.includes("CoreEnvelope<RelayStatePayload>") &&
+    relayService.includes("CoreEnvelope<RelayProviderPayload>") &&
+    relayService.includes("CoreEnvelope<RelayRouterTogglePayload>") &&
+    relayService.includes("CoreEnvelope<RelayDiagnosticPayload>") &&
+    relayService.includes("systemService.restartCodex()") &&
+    !relayService.includes("IpcEvidencePayload") &&
+    !relayService.includes('"restart_codex"') &&
+    relayHooks.includes("CoreEnvelope<TPayload>") &&
+    relayHooks.includes("relayActiveStateQueryKey") &&
+    relayHooks.includes("useRelayVoidMutation") &&
+    !relayHooks.includes("useMutation<unknown") &&
+    !relayHooks.includes("Promise<unknown>") &&
+    !relayHooks.includes("writeKnownRelayQueryPayload(queryClient: QueryClient, payload: unknown)") &&
+    !relayCache.includes("RelayCacheEnvelope<TPayload = unknown>");
+  if (!relayTypedPayloadOk) {
+    failures.push("relay IPC payload owner 未收口到 typed envelope、独立 active query key 和 system restart facade");
+  } else {
+    console.log("PASS relay typed IPC payload owner：service/hook/cache");
+  }
+
   const customInstructionsErrorOk =
     customInstructionsHooks.includes("stateQuery.isError") &&
     customInstructionsHooks.includes("templatesQuery.isError") &&

@@ -484,6 +484,168 @@ export interface PendingAutoSwitchStatePayload {
   dismissedAt: string | null;
 }
 
+export interface RelayProviderPayload {
+  backendStatus?: BackendSkeletonStatus;
+  id: string;
+  ide: string;
+  name: string;
+  baseUrl: string;
+  apiKey?: string | null;
+  apiKeyStored: boolean;
+  model: string;
+  wireApi: string;
+  extraHeaders: string | Record<string, string> | null;
+  network: string;
+  active: boolean;
+  healthScore: number | null;
+  latencyMs: number | null;
+  lastTestedAt: number | null;
+  updatedAt?: number | null;
+  lastError: string | null;
+  errorMessage?: string | null;
+  modelsSample?: string[];
+}
+
+export interface RelayProxyPayload {
+  backendStatus?: BackendSkeletonStatus;
+  running: boolean;
+  port: number;
+  baseUrl: string;
+  codexBaseUrl: string;
+  lastError: string | null;
+}
+
+export type RelayActiveByIdePayload = Record<string, string[]>;
+
+export interface RelayActivePayload {
+  backendStatus?: BackendSkeletonStatus;
+  enabled: boolean;
+  activeProvider: string | null;
+  activeProviderId: string | null;
+  ide: string;
+}
+
+export interface RelayStatePayload {
+  backendStatus?: BackendSkeletonStatus;
+  schemaVersion: number;
+  providers: RelayProviderPayload[];
+  activeByIde: RelayActiveByIdePayload;
+  proxy: RelayProxyPayload;
+  codexRouterEnabled: boolean;
+  blockOfficialPassthrough: boolean;
+  lastCodexRoute: string | null;
+  enabled?: boolean;
+  activeProviderId?: string | null;
+  proxyStatus?: RelayProxyPayload;
+  sourcePath?: string;
+}
+
+export interface RelayRouterMigrationPayload {
+  action: string;
+  migratedCount: number;
+  rolledBackCount: number;
+  skippedCount: number;
+  targetProvider: string | null;
+  targetModel: string | null;
+  manifestPath: string | null;
+}
+
+export interface RelayRouterTogglePayload {
+  backendStatus?: BackendSkeletonStatus;
+  state: RelayStatePayload;
+  migration: RelayRouterMigrationPayload;
+  codexLaunchError: string | null;
+}
+
+export interface RelayTestPayload {
+  backendStatus?: BackendSkeletonStatus;
+  ok: boolean;
+  health?: number;
+  latencyMs: number;
+  statusCode?: number | null;
+  message?: string | null;
+  errorMessage: string | null;
+  models: string[];
+}
+
+export interface RelayExportPayload {
+  backendStatus?: BackendSkeletonStatus;
+  schemaVersion?: number;
+  exportedBy?: string;
+  exportedAt?: string | null;
+  filePath: string;
+  includeApiKeys: boolean;
+  providerCount: number;
+  providers?: RelayProviderPayload[];
+}
+
+export interface RelayImportSkipPayload {
+  id: string | null;
+  reason: string;
+  message: string | null;
+}
+
+export interface RelayImportPayload {
+  backendStatus?: BackendSkeletonStatus;
+  filePath: string;
+  importedCount: number;
+  skippedCount: number;
+  total: number;
+  skipped: RelayImportSkipPayload[];
+}
+
+export interface RelayPassthroughAuditEntry {
+  timestamp: string;
+  event: string;
+  direction: string;
+  providerId: string | null;
+  model: string | null;
+  blocked: boolean;
+  message: string | null;
+}
+
+export interface RelayDiagnosticIssuePayload {
+  id: string;
+  title?: string;
+  label?: string;
+  message: string;
+  detail?: string | null;
+  severity: string;
+  status?: string;
+  fixable: boolean;
+}
+
+export interface RelayDiagnosticPayload {
+  backendStatus?: BackendSkeletonStatus;
+  ok: boolean;
+  codexProviderCount: number;
+  catalogPath: string | null;
+  catalogExists: boolean;
+  configTomlHasRouter: boolean;
+  configTomlHasCatalog: boolean;
+  config_toml_has_router?: boolean;
+  config_toml_has_catalog?: boolean;
+  userTopLevelProfile: string | null;
+  configStaleReason: string | null;
+  threadMigrationExists: boolean;
+  routerEnabled: boolean;
+  hasIssues: boolean;
+  issues: RelayDiagnosticIssuePayload[];
+  items: RelayDiagnosticIssuePayload[];
+  summary: string;
+}
+
+export interface RelayRouterIssueFixPayload {
+  backendStatus?: BackendSkeletonStatus;
+  itemId: string;
+  issueId: string;
+  fixed: boolean;
+  requiresRestart: boolean;
+  message: string;
+  details: string | null;
+  diagnostics: RelayDiagnosticPayload;
+}
+
 // ---------------------------------------------------------------------------
 // 分析数据
 // ---------------------------------------------------------------------------

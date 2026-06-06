@@ -325,6 +325,100 @@ function validateSystemEnvelopeServiceTypes() {
 
 validateSystemEnvelopeServiceTypes();
 
+function validateRelayTypedPayloadContracts() {
+  const commandPath = join(backendRoot, "commands", "relay.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "relay.rs");
+  const contractPath = join(backendRoot, "contracts", "relay.rs");
+  const servicePath = join(frontendRoot, "services", "relay", "index.ts");
+  const commandText = readUtf8(commandPath);
+  const usecaseText = readUtf8(usecasePath);
+  const contractText = readUtf8(contractPath);
+  const serviceText = readUtf8(servicePath);
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) struct RelayProviderDraftInput",
+    "pub(crate) struct RelayProviderPayload",
+    "pub(crate) struct RelayStatePayload",
+    "pub(crate) struct RelayActivePayload",
+    "pub(crate) struct RelayProxyPayload",
+    "pub(crate) struct RelayRouterTogglePayload",
+    "pub(crate) struct RelayTestPayload",
+    "pub(crate) struct RelayExportPayload",
+    "pub(crate) struct RelayImportPayload",
+    "pub(crate) struct RelayDiagnosticPayload",
+    "pub(crate) struct RelayRouterIssueFixPayload",
+  ], "relay DTO 鍚堝悓");
+
+  assertContains(commandPath, commandText, [
+    "Result<CoreEnvelope<RelayStatePayload>, String>",
+    "Result<CoreEnvelope<RelayProviderPayload>, String>",
+    "Result<CoreEnvelope<RelayTestPayload>, String>",
+    "Result<CoreEnvelope<Vec<String>>, String>",
+    "Result<CoreEnvelope<RelayActivePayload>, String>",
+    "Result<CoreEnvelope<RelayProxyPayload>, String>",
+    "Result<CoreEnvelope<RelayRouterTogglePayload>, String>",
+    "Result<CoreEnvelope<RelayExportPayload>, String>",
+    "Result<CoreEnvelope<RelayImportPayload>, String>",
+    "Result<CoreEnvelope<Vec<RelayPassthroughAuditEntry>>, String>",
+    "Result<CoreEnvelope<RelayDiagnosticPayload>, String>",
+    "Result<CoreEnvelope<RelayRouterIssueFixPayload>, String>",
+  ], "relay command 寮虹被鍨?envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<RelayStatePayload>, CoreError>",
+    "Result<CoreEnvelope<RelayProviderPayload>, CoreError>",
+    "Result<CoreEnvelope<RelayTestPayload>, CoreError>",
+    "Result<CoreEnvelope<Vec<String>>, CoreError>",
+    "Result<CoreEnvelope<RelayActivePayload>, CoreError>",
+    "Result<CoreEnvelope<RelayProxyPayload>, CoreError>",
+    "Result<CoreEnvelope<RelayRouterTogglePayload>, CoreError>",
+    "Result<CoreEnvelope<RelayExportPayload>, CoreError>",
+    "Result<CoreEnvelope<RelayImportPayload>, CoreError>",
+    "Result<CoreEnvelope<Vec<RelayPassthroughAuditEntry>>, CoreError>",
+    "Result<CoreEnvelope<RelayDiagnosticPayload>, CoreError>",
+    "Result<CoreEnvelope<RelayRouterIssueFixPayload>, CoreError>",
+    "fn state_payload(",
+    "fn provider_payload(",
+    "fn diagnostic_payload(",
+  ], "relay usecase 寮虹被鍨?payload 缁勮");
+
+  assertContains(servicePath, serviceText, [
+    "CoreEnvelope<RelayStatePayload>",
+    "CoreEnvelope<RelayProviderPayload>",
+    "CoreEnvelope<RelayTestPayload>",
+    "CoreEnvelope<string[]>",
+    "CoreEnvelope<RelayActivePayload>",
+    "CoreEnvelope<RelayProxyPayload>",
+    "CoreEnvelope<RelayRouterTogglePayload>",
+    "CoreEnvelope<RelayExportPayload>",
+    "CoreEnvelope<RelayImportPayload>",
+    "CoreEnvelope<RelayPassthroughAuditEntry[]>",
+    "CoreEnvelope<RelayDiagnosticPayload>",
+    "CoreEnvelope<RelayRouterIssueFixPayload>",
+    "systemService.restartCodex()",
+  ], "relay service 寮虹被鍨?envelope");
+
+  assertNotContainsSnippet(contractPath, contractText, [
+    "RelayActionPayload",
+    "pub input: Option<Value>",
+  ], "relay contract 涓嶅緱閫€鍥炲ぇ妗?payload");
+  assertNotContainsSnippet(commandPath, commandText, [
+    "RelayActionPayload",
+    "Option<Value>",
+  ], "relay command 涓嶅緱閫€鍥炴垨閫忎紶 generic payload");
+  assertNotContainsSnippet(usecasePath, usecaseText, [
+    "RelayActionPayload",
+    "pub(crate) fn provider_action(",
+    "pub(crate) fn empty_action(",
+  ], "relay usecase 涓嶅緱澶嶇敤 generic action owner");
+  assertNotContainsSnippet(servicePath, serviceText, [
+    "IpcEvidencePayload",
+    "restart_codex",
+  ], "relay service 涓嶅緱閫€鍥?generic evidence payload 鎴栫洿鎺ヨ皟 system command");
+}
+
+validateRelayTypedPayloadContracts();
+
 function validateVoiceMutationPayloadContracts() {
   const commandPath = join(backendRoot, "commands", "voice.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "voice.rs");

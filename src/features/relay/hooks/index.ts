@@ -16,6 +16,7 @@ import {
   type RelayImportDialogInput,
   type RelayProviderDraft,
 } from "@/services/relay";
+import type { CoreEnvelope, RelayDiagnosticPayload } from "@/types";
 import {
   invalidateRelayContractQueries,
   RelayCache,
@@ -72,6 +73,10 @@ type RelayExportInput = {
 };
 
 const relayProxyStatusQueryKey = [...RelayCache.queryKeys.root, "proxy-status"] as const;
+const relayActiveStateQueryKey = [
+  ...RelayCache.queryKeys.root,
+  "active-state",
+] as const;
 const relayAuditLogQueryKey = [
   ...RelayCache.queryKeys.root,
   "passthrough-audit-log",
@@ -286,12 +291,12 @@ async function runRelayQuery<TPayload>(
   return payload;
 }
 
-function useRelayEvidenceMutation<TVariables>(
-  mutationFn: (variables: TVariables) => Promise<unknown>,
+function useRelayEvidenceMutation<TVariables, TPayload>(
+  mutationFn: (variables: TVariables) => Promise<CoreEnvelope<TPayload>>,
 ) {
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, Error, TVariables, RelayMutationContext>({
+  return useMutation<CoreEnvelope<TPayload>, Error, TVariables, RelayMutationContext>({
     mutationFn,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: RELAY_STATE_QUERY_KEY });
@@ -320,7 +325,16 @@ function useRelayEvidenceMutation<TVariables>(
   });
 }
 
-function writeKnownRelayQueryPayload(queryClient: QueryClient, payload: unknown) {
+function useRelayVoidMutation<TVariables>(
+  mutationFn: (variables: TVariables) => Promise<void>,
+) {
+  return useMutation<void, Error, TVariables>({ mutationFn });
+}
+
+function writeKnownRelayQueryPayload<TPayload>(
+  queryClient: QueryClient,
+  payload: CoreEnvelope<TPayload>,
+) {
   const data = readEnvelopeData(payload);
   if (!isRecord(data)) return;
 
@@ -329,7 +343,7 @@ function writeKnownRelayQueryPayload(queryClient: QueryClient, payload: unknown)
   }
 
   if (hasRelayActiveShape(data)) {
-    writeQueryPayload(queryClient, RelayCache.queryKeys.active, payload, data);
+    writeQueryPayload(queryClient, relayActiveStateQueryKey, payload, data);
   }
 
   if (hasRelayProxyShape(data)) {
@@ -452,9 +466,9 @@ export function useRelayModule() {
     staleTime: 30_000,
   });
   const activeQuery = useQuery({
-    queryKey: RelayCache.queryKeys.active,
+    queryKey: relayActiveStateQueryKey,
     queryFn: () =>
-      runRelayQuery(queryClient, RelayCache.queryKeys.active, () =>
+      runRelayQuery(queryClient, relayActiveStateQueryKey, () =>
         relayService.getActive(),
       ),
     staleTime: 30_000,
@@ -476,62 +490,66 @@ export function useRelayModule() {
     staleTime: 30_000,
   });
 
-  const upsertProviderMutation = useRelayEvidenceMutation<RelayProviderDraft>(
-    (input) => relayService.upsert(input),
+  const upsertProviderMutation = useRelayEvidenceMutation(
+    (input: RelayProviderDraft) => relayService.upsert(input),
   );
-  const deleteProviderMutation = useRelayEvidenceMutation<string>(
-    (providerId) => relayService.delete(providerId),
+  const deleteProviderMutation = useRelayEvidenceMutation(
+    (providerId: string) => relayService.delete(providerId),
   );
-  const activateProviderMutation = useRelayEvidenceMutation<RelayProviderIdeInput>(
-    ({ providerId, ide }) => relayService.activate(providerId, ide),
+  const activateProviderMutation = useRelayEvidenceMutation(
+    ({ providerId, ide }: RelayProviderIdeInput) =>
+      relayService.activate(providerId, ide),
   );
-  const deactivateProviderMutation = useRelayEvidenceMutation<RelayProviderIdeInput>(
-    ({ providerId, ide }) => relayService.deactivate(providerId, ide),
+  const deactivateProviderMutation = useRelayEvidenceMutation(
+    ({ providerId, ide }: RelayProviderIdeInput) =>
+      relayService.deactivate(providerId, ide),
   );
-  const setNetworkMutation = useRelayEvidenceMutation<RelayNetworkInput>(
-    ({ providerId, network }) => relayService.setNetwork(providerId, network),
+  const setNetworkMutation = useRelayEvidenceMutation(
+    ({ providerId, network }: RelayNetworkInput) =>
+      relayService.setNetwork(providerId, network),
   );
-  const testProviderMutation = useRelayEvidenceMutation<string>(
-    (providerId) => relayService.test(providerId),
+  const testProviderMutation = useRelayEvidenceMutation(
+    (providerId: string) => relayService.test(providerId),
   );
-  const testDraftMutation = useRelayEvidenceMutation<RelayProviderDraft>(
-    (input) => relayService.testDraft(input),
+  const testDraftMutation = useRelayEvidenceMutation(
+    (input: RelayProviderDraft) => relayService.testDraft(input),
   );
-  const fetchModelsDraftMutation = useRelayEvidenceMutation<RelayProviderDraft>(
-    (input) => relayService.fetchModelsDraft(input),
+  const fetchModelsDraftMutation = useRelayEvidenceMutation(
+    (input: RelayProviderDraft) => relayService.fetchModelsDraft(input),
   );
-  const setRouterEnabledMutation = useRelayEvidenceMutation<RelayRouterInput>(
-    ({ enabled, relaunch }) => relayService.setCodexRouterEnabled(enabled, relaunch),
+  const setRouterEnabledMutation = useRelayEvidenceMutation(
+    ({ enabled, relaunch }: RelayRouterInput) =>
+      relayService.setCodexRouterEnabled(enabled, relaunch),
   );
-  const restartCodexAppMutation = useRelayEvidenceMutation<void>(
+  const restartCodexAppMutation = useRelayVoidMutation<void>(
     () => relayService.restartCodexApp(),
   );
-  const setBlockPassthroughMutation = useRelayEvidenceMutation<boolean>(
-    (blocked) => relayService.setBlockOfficialPassthrough(blocked),
+  const setBlockPassthroughMutation = useRelayEvidenceMutation(
+    (blocked: boolean) => relayService.setBlockOfficialPassthrough(blocked),
   );
-  const exportConfigMutation = useRelayEvidenceMutation<RelayExportInput>(
-    ({ filePath, includeApiKeys }) =>
+  const exportConfigMutation = useRelayEvidenceMutation(
+    ({ filePath, includeApiKeys }: RelayExportInput) =>
       relayService.exportConfig(filePath, includeApiKeys),
   );
   const exportConfigWithDialogMutation =
-    useRelayEvidenceMutation<RelayExportDialogInput>((input) =>
+    useRelayEvidenceMutation((input: RelayExportDialogInput) =>
       relayService.exportConfigWithDialog(input),
     );
-  const importConfigMutation = useRelayEvidenceMutation<string>(
-    (filePath) => relayService.importConfig(filePath),
+  const importConfigMutation = useRelayEvidenceMutation(
+    (filePath: string) => relayService.importConfig(filePath),
   );
   const importConfigWithDialogMutation =
-    useRelayEvidenceMutation<RelayImportDialogInput>((input) =>
+    useRelayEvidenceMutation((input: RelayImportDialogInput) =>
       relayService.importConfigWithDialog(input),
     );
-  const diagnosticsMutation = useRelayEvidenceMutation<void>(
+  const diagnosticsMutation = useRelayEvidenceMutation<void, RelayDiagnosticPayload>(
     () => relayService.runCodexRouterDiagnostics(),
   );
-  const diagnoseRouterMutation = useRelayEvidenceMutation<void>(
+  const diagnoseRouterMutation = useRelayEvidenceMutation<void, RelayDiagnosticPayload>(
     () => relayService.diagnoseCodexRouter(),
   );
-  const fixRouterIssueMutation = useRelayEvidenceMutation<string>(
-    (itemId) => relayService.fixCodexRouterIssue(itemId),
+  const fixRouterIssueMutation = useRelayEvidenceMutation(
+    (itemId: string) => relayService.fixCodexRouterIssue(itemId),
   );
 
   const isAnyMutationPending =

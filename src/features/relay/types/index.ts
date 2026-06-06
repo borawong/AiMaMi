@@ -1,7 +1,9 @@
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
+import type { RelayStatePayload } from "@/types";
 
 export type RelayModuleId = "relay";
-export type RelayCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
+export type RelayCacheEnvelope<TPayload = RelayStatePayload> =
+  ModuleCacheEnvelope<TPayload>;
 
 export type WireApi = "openai-responses" | "anthropic" | "openai-chat";
 export type RelayNetworkMode = "system" | "direct";

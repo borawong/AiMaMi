@@ -1,7 +1,9 @@
-import { invokeIpc, type IpcEvidencePayload } from "@/contracts/ipc";
+import { invokeIpc } from "@/contracts/ipc";
 import { systemService } from "@/services/system";
 import type {
   CoreEnvelope,
+  RelayDiagnosticPayload,
+  RelayRouterIssueFixPayload,
 } from "@/types";
 
 async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T> {
@@ -27,12 +29,14 @@ export const maintenanceService = {
 
   runCodexRouterDiagnostics: () =>
     readEnvelopeData(
-      invokeIpc<CoreEnvelope<IpcEvidencePayload>>("run_codex_router_diagnostics"),
+      invokeIpc<CoreEnvelope<RelayDiagnosticPayload>>(
+        "run_codex_router_diagnostics",
+      ),
     ),
 
   fixCodexRouterIssue: (itemId: string) =>
     readEnvelopeData(
-      invokeIpc<CoreEnvelope<IpcEvidencePayload>>("fix_codex_router_issue", {
+      invokeIpc<CoreEnvelope<RelayRouterIssueFixPayload>>("fix_codex_router_issue", {
         itemId,
       }),
     ),

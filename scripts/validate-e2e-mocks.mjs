@@ -277,9 +277,47 @@ function validateIpcMockBridge() {
   ]);
 }
 
+function validateRelayMockPayloadHandlers() {
+  const commandFixturePath = path.join(
+    repoRoot,
+    "src",
+    "mocks",
+    "fixtures",
+    "commands.ts",
+  );
+  const ipcCommandsPath = path.join(repoRoot, "src", "contracts", "ipc", "commands.ts");
+  const commandFixtureText = readRequired(commandFixturePath);
+  const ipcCommandsText = readRequired(ipcCommandsPath);
+  const relayCommands = [
+    ...ipcCommandsText.matchAll(
+      /\{\s*"domain":\s*"relay"[\s\S]*?"command":\s*"([^"]+)"/g,
+    ),
+  ].map((match) => match[1]);
+
+  if (relayCommands.length === 0) {
+    failures.push("src/contracts/ipc/commands.ts 没有可验证的 relay command");
+    return;
+  }
+
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+    "const relayCommandHandlers",
+    "relayCommandHandlers[definition.command] ??",
+    "relayStateFromStatus",
+    "relayProviderFromArgs",
+    "relayDiagnosticFromStatus",
+  ]);
+
+  for (const command of relayCommands) {
+    if (!commandFixtureText.includes(`${command}:`)) {
+      failures.push(`src/mocks/fixtures/commands.ts 缺少 relay 专用 handler：${command}`);
+    }
+  }
+}
+
 validateScenarioRegistry();
 validateSkillsCommandMirror();
 validateScenarioFiles();
+validateRelayMockPayloadHandlers();
 validateIpcMockBridge();
 
 if (failures.length > 0) {

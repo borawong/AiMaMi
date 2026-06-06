@@ -4,6 +4,20 @@ import {
   type IpcCommandName,
 } from "@/contracts/ipc";
 import type { CoreEnvelope } from "@/types";
+import type {
+  RelayActivePayload,
+  RelayDiagnosticIssuePayload,
+  RelayDiagnosticPayload,
+  RelayExportPayload,
+  RelayImportPayload,
+  RelayPassthroughAuditEntry,
+  RelayProviderPayload,
+  RelayProxyPayload,
+  RelayRouterIssueFixPayload,
+  RelayRouterTogglePayload,
+  RelayStatePayload,
+  RelayTestPayload,
+} from "@/types";
 import type { IpcMockStepResult } from "@/mocks/ipc";
 import {
   createEvidenceBackedIpcFixture,
@@ -22,6 +36,16 @@ export interface IpcCommandFixture {
 
 export type IpcCommandMockData =
   | EvidenceBackedIpcFixture
+  | RelayActivePayload
+  | RelayDiagnosticPayload
+  | RelayExportPayload
+  | RelayImportPayload
+  | RelayProviderPayload
+  | RelayProxyPayload
+  | RelayRouterIssueFixPayload
+  | RelayRouterTogglePayload
+  | RelayStatePayload
+  | RelayTestPayload
   | null
   | unknown[]
   | boolean
@@ -301,6 +325,323 @@ const remoteDeviceSecretHandler: IpcCommandHandler = (context) =>
 
 const unitHandler: IpcCommandHandler = (context) => withMockData(context, null);
 
+function relayProxyFromStatus(
+  backendStatus: RelayProxyPayload["backendStatus"],
+): RelayProxyPayload {
+  return {
+    backendStatus,
+    running: false,
+    port: 0,
+    baseUrl: "",
+    codexBaseUrl: "",
+    lastError: null,
+  };
+}
+
+function relayStateFromStatus(
+  backendStatus: RelayStatePayload["backendStatus"],
+  overrides: Partial<RelayStatePayload> = {},
+): RelayStatePayload {
+  const proxy = relayProxyFromStatus(backendStatus);
+  return {
+    backendStatus,
+    schemaVersion: 4,
+    providers: [],
+    activeByIde: { codex: [] },
+    proxy,
+    codexRouterEnabled: false,
+    blockOfficialPassthrough: false,
+    lastCodexRoute: null,
+    enabled: false,
+    activeProviderId: null,
+    proxyStatus: proxy,
+    sourcePath: "",
+    ...overrides,
+  };
+}
+
+function readArgRecord(args: IpcArgs | undefined, key: string) {
+  const value = args?.[key];
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+function readRecordString(
+  record: Record<string, unknown>,
+  keys: string[],
+  fallback: string,
+) {
+  for (const key of keys) {
+    const value = record[key];
+    if (typeof value === "string" && value.trim()) return value;
+  }
+  return fallback;
+}
+
+function relayProviderFromArgs(
+  context: Parameters<IpcCommandHandler>[0],
+): RelayProviderPayload {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const input = readArgRecord(context.args, "input");
+  const providerId = readArgString(
+    context.args,
+    "providerId",
+    readRecordString(input, ["id", "providerId"], "mock-relay-provider"),
+  );
+  return {
+    backendStatus: envelope.data.status,
+    id: providerId,
+    ide: readRecordString(input, ["ide"], "codex"),
+    name: readRecordString(input, ["name", "label"], providerId),
+    baseUrl: readRecordString(input, ["baseUrl", "url", "endpoint"], ""),
+    apiKey: null,
+    apiKeyStored: input.apiKeyStored === true,
+    model: readRecordString(input, ["model", "defaultModel"], ""),
+    wireApi: readRecordString(input, ["wireApi"], "openai-chat"),
+    extraHeaders:
+      typeof input.extraHeaders === "string" ||
+      (input.extraHeaders &&
+        typeof input.extraHeaders === "object" &&
+        !Array.isArray(input.extraHeaders))
+        ? (input.extraHeaders as string | Record<string, string>)
+        : null,
+    network: readRecordString(input, ["network"], "system"),
+    active: false,
+    healthScore: null,
+    latencyMs: null,
+    lastTestedAt: null,
+    updatedAt: null,
+    lastError: null,
+    errorMessage: null,
+    modelsSample: [],
+  };
+}
+
+const loadRelayStateHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: relayStateFromStatus(envelope.data.status),
+  };
+};
+
+const relayProviderHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: relayProviderFromArgs(context),
+  };
+};
+
+const relayStateMutationHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const providerId = readArgString(context.args, "providerId", "");
+  const ide = readArgString(context.args, "ide", "codex");
+  const activeByIde =
+    context.command === "activate_relay_provider" && providerId
+      ? { [ide]: [providerId] }
+      : { [ide]: [] };
+  return {
+    ...envelope,
+    data: relayStateFromStatus(envelope.data.status, {
+      activeByIde,
+      activeProviderId: activeByIde[ide][0] ?? null,
+      lastCodexRoute: activeByIde[ide][0] ?? null,
+    }),
+  };
+};
+
+const relayTestHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: RelayTestPayload = {
+    backendStatus: envelope.data.status,
+    ok: true,
+    health: 100,
+    latencyMs: 0,
+    statusCode: 200,
+    message: null,
+    errorMessage: null,
+    models: [],
+  };
+  return { ...envelope, data };
+};
+
+const relayModelsHandler: IpcCommandHandler = (context) => withMockData(context, []);
+
+const relayActiveHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: {
+      backendStatus: envelope.data.status,
+      enabled: false,
+      activeProvider: null,
+      activeProviderId: null,
+      ide: "codex",
+    },
+  };
+};
+
+const relayProxyHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: relayProxyFromStatus(envelope.data.status),
+  };
+};
+
+const relayRouterToggleHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const enabled = context.args?.enabled === true;
+  const data: RelayRouterTogglePayload = {
+    backendStatus: envelope.data.status,
+    state: relayStateFromStatus(envelope.data.status, {
+      codexRouterEnabled: enabled,
+      enabled,
+    }),
+    migration: {
+      action: enabled ? "preserve" : "none",
+      migratedCount: 0,
+      rolledBackCount: 0,
+      skippedCount: 0,
+      targetProvider: null,
+      targetModel: null,
+      manifestPath: null,
+    },
+    codexLaunchError: null,
+  };
+  return { ...envelope, data };
+};
+
+const relayExportHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: RelayExportPayload = {
+    backendStatus: envelope.data.status,
+    schemaVersion: 4,
+    exportedBy: "OpenAiMami",
+    exportedAt: null,
+    filePath: readArgString(context.args, "filePath", ""),
+    includeApiKeys: context.args?.includeApiKeys === true,
+    providerCount: 0,
+    providers: [],
+  };
+  return { ...envelope, data };
+};
+
+const relayImportHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: RelayImportPayload = {
+    backendStatus: envelope.data.status,
+    filePath: readArgString(context.args, "filePath", ""),
+    importedCount: 0,
+    skippedCount: 0,
+    total: 0,
+    skipped: [],
+  };
+  return { ...envelope, data };
+};
+
+const relayAuditHandler: IpcCommandHandler = (context) =>
+  withMockData(context, [] as RelayPassthroughAuditEntry[]);
+
+function relayDiagnosticFromStatus(
+  backendStatus: RelayDiagnosticPayload["backendStatus"],
+): RelayDiagnosticPayload {
+  const items: RelayDiagnosticIssuePayload[] = [];
+  return {
+    backendStatus,
+    ok: true,
+    codexProviderCount: 0,
+    catalogPath: null,
+    catalogExists: false,
+    configTomlHasRouter: false,
+    configTomlHasCatalog: false,
+    config_toml_has_router: false,
+    config_toml_has_catalog: false,
+    userTopLevelProfile: null,
+    configStaleReason: null,
+    threadMigrationExists: false,
+    routerEnabled: false,
+    hasIssues: false,
+    issues: items,
+    items,
+    summary: "",
+  };
+}
+
+const relayDiagnosticHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: relayDiagnosticFromStatus(envelope.data.status),
+  };
+};
+
+const relayFixHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const itemId = readArgString(context.args, "itemId", "");
+  const data: RelayRouterIssueFixPayload = {
+    backendStatus: envelope.data.status,
+    itemId,
+    issueId: itemId,
+    fixed: false,
+    requiresRestart: false,
+    message: "",
+    details: null,
+    diagnostics: relayDiagnosticFromStatus(envelope.data.status),
+  };
+  return { ...envelope, data };
+};
+
 const systemCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
   confirm_pending_auto_switch: unitHandler,
   confirm_pending_auto_switch_and_restart_codex: unitHandler,
@@ -333,6 +674,28 @@ const skillsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> 
   restore_skill_backup: restoreSkillBackupHandler,
 };
 
+const relayCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  activate_relay_provider: relayStateMutationHandler,
+  deactivate_relay_provider: relayStateMutationHandler,
+  delete_relay_provider: relayStateMutationHandler,
+  diagnose_codex_router: relayDiagnosticHandler,
+  export_relay_config: relayExportHandler,
+  fetch_relay_models_draft: relayModelsHandler,
+  fix_codex_router_issue: relayFixHandler,
+  get_passthrough_audit_log: relayAuditHandler,
+  get_relay_active: relayActiveHandler,
+  get_relay_proxy_status: relayProxyHandler,
+  import_relay_config: relayImportHandler,
+  load_relay_state: loadRelayStateHandler,
+  run_codex_router_diagnostics: relayDiagnosticHandler,
+  set_block_official_passthrough: writeBooleanArgHandler,
+  set_codex_router_enabled: relayRouterToggleHandler,
+  set_relay_provider_network: relayProviderHandler,
+  test_relay_draft: relayTestHandler,
+  test_relay_provider: relayTestHandler,
+  upsert_relay_provider: relayProviderHandler,
+};
+
 export const ipcCommandFixtures = IPC_COMMAND_DEFINITIONS.reduce(
   (fixtures, definition) => {
     fixtures[definition.command] = {
@@ -340,6 +703,7 @@ export const ipcCommandFixtures = IPC_COMMAND_DEFINITIONS.reduce(
       command: definition.command,
       domain: definition.domain,
       handler:
+        relayCommandHandlers[definition.command] ??
         skillsCommandHandlers[definition.command] ??
         systemCommandHandlers[definition.command] ??
         defaultHandler,

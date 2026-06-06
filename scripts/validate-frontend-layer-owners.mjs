@@ -368,9 +368,12 @@ function validateNoForbiddenReferenceNames() {
   console.log("PASS 外部参考项目名未写入前端源码和脚本");
 }
 
-function validateNoDuplicateSharedLibraryRoots() {
+function validateNoDuplicatePublicCommonRoots() {
   const forbiddenDirectories = [
     join(srcRoot, "lib" + "s"),
+    join(srcRoot, "shared"),
+    join(srcRoot, "common"),
+    join(srcRoot, "public"),
     join(srcRoot, "shared", "lib"),
   ];
 
@@ -383,8 +386,24 @@ function validateNoDuplicateSharedLibraryRoots() {
   console.log("PASS 前端公共库目录唯一：src/lib");
 }
 
+function validateNoFeaturePublicCommonOwnerRoots() {
+  const forbiddenFeatureOwnerNames = new Set(["shared", "common", "public", "lib", "libs"]);
+  for (const moduleName of featureModules) {
+    const modulePath = join(featuresRoot, moduleName);
+    if (!existsSync(modulePath)) continue;
+    for (const entry of readdirSync(modulePath, { withFileTypes: true })) {
+      if (entry.isDirectory() && forbiddenFeatureOwnerNames.has(entry.name)) {
+        failures.push(`${repoPath(join(modulePath, entry.name))} 是模块内重复公共 owner；复杂模块只能使用既定深层 owner`);
+      }
+    }
+  }
+
+  console.log("PASS 前端模块内无重复公共 owner");
+}
+
 validateSourceFileNames();
-validateNoDuplicateSharedLibraryRoots();
+validateNoDuplicatePublicCommonRoots();
+validateNoFeaturePublicCommonOwnerRoots();
 validateFeatureDeepOwners();
 validateRouteShells();
 validateFeaturePageShells();
