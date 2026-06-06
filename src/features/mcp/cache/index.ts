@@ -1,9 +1,17 @@
 /**
  * 中文职责说明：mcp 模块拥有自己的 TanStack cache key、权威写入和失效合同。
  */
+import type { QueryClient } from "@tanstack/react-query";
 import { createModuleCacheOwner } from "@/features/_shared/module-cache";
 
 export const McpCache = createModuleCacheOwner("mcp");
 export const McpQueryKeys = McpCache.queryKeys;
+export const MCP_SERVERS_QUERY_KEY = ["mcp-servers"] as const;
 export const writeMcpAuthoritativePayload = McpCache.writeAuthoritativePayload;
-export const invalidateMcpContractQueries = McpCache.invalidateContractQueries;
+
+export async function invalidateMcpContractQueries(queryClient: QueryClient) {
+  await Promise.all([
+    McpCache.invalidateContractQueries(queryClient),
+    queryClient.invalidateQueries({ queryKey: MCP_SERVERS_QUERY_KEY }),
+  ]);
+}

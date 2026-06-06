@@ -32,8 +32,6 @@ pub(crate) fn focus_main_window(
 }
 
 #[tauri::command]
-pub(crate) fn hotspot_ready(
-    state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
-    respond(state.services().system().hotspot_ready())
+pub(crate) fn hotspot_ready(state: State<'_, TauriAppState>) -> Result<CoreEnvelope<bool>, String> {
+    respond(state.services().hotspot_ready())
 }

@@ -33,3 +33,8 @@ pub(crate) struct PlatformInfoSnapshot {
 pub(crate) trait SystemInfoPort {
     fn system_info(&self) -> PlatformInfoSnapshot;
 }
+
+/// 中文职责说明：热点运行时端口，只暴露只读 readiness 快照，不在 usecase 中解释平台细节。
+pub(crate) trait HotspotRuntimePort {
+    fn hotspot_ready(&self) -> Result<Option<bool>, CoreError>;
+}

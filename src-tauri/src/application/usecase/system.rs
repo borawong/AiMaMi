@@ -1,5 +1,5 @@
 use crate::application::ports::{
-    PermissionsPort, ProcessPort, ShellPort, SystemInfoPort, WindowPort,
+    HotspotRuntimePort, PermissionsPort, ProcessPort, ShellPort, SystemInfoPort, WindowPort,
 };
 use crate::application::usecase::daemon::DaemonUseCase;
 use crate::contracts::{
@@ -41,7 +41,7 @@ impl<'a> SystemUseCase<'a> {
         &self,
         _local_only: bool,
     ) -> Result<CoreEnvelope<CoreSnapshotPayload>, CoreError> {
-        let plan = self.pending_plan("snapshot");
+        let plan = self.pending_plan("load_snapshot");
         Ok(CoreEnvelope::from_backend_plan(
             self.snapshot_payload(&plan),
             &plan,
@@ -226,7 +226,7 @@ impl<'a> SystemUseCase<'a> {
     pub(crate) fn confirm_pending_auto_switch_and_restart_application(
         &self,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        let plan = self.no_op_plan("confirm_pending_auto_switch_and_restart_application");
+        let plan = self.no_op_plan("confirm_pending_auto_switch_and_restart_codex");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,
@@ -253,7 +253,7 @@ impl<'a> SystemUseCase<'a> {
     pub(crate) fn load_bootstrap_state(
         &self,
     ) -> Result<CoreEnvelope<BootstrapStatePayload>, CoreError> {
-        let plan = self.pending_plan("bootstrap");
+        let plan = self.pending_plan("load_bootstrap_state");
         Ok(CoreEnvelope::from_backend_plan(
             BootstrapStatePayload {
                 backend_status: BackendSkeletonStatus::from_plan(&plan),
@@ -296,7 +296,7 @@ impl<'a> SystemUseCase<'a> {
         process: &dyn ProcessPort,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
         process.restart_application()?;
-        let plan = self.no_op_plan("restart_application");
+        let plan = self.no_op_plan("restart_codex");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,
@@ -304,7 +304,7 @@ impl<'a> SystemUseCase<'a> {
     }
 
     pub(crate) fn force_kill_application(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        let plan = self.no_op_plan("force_kill_application");
+        let plan = self.no_op_plan("force_kill_codex");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,
@@ -312,7 +312,7 @@ impl<'a> SystemUseCase<'a> {
     }
 
     pub(crate) fn reset_application_config(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        let plan = self.no_op_plan("reset_application_config");
+        let plan = self.no_op_plan("reset_codex_config");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,
@@ -455,12 +455,17 @@ impl<'a> SystemUseCase<'a> {
         Ok(CoreEnvelope::from_backend_plan(enabled, &plan))
     }
 
-    pub(crate) fn hotspot_ready(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        let plan = self.no_op_plan("hotspot_ready");
-        Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
-            &plan,
-        ))
+    pub(crate) fn hotspot_ready(
+        &self,
+        hotspot: &dyn HotspotRuntimePort,
+    ) -> Result<CoreEnvelope<bool>, CoreError> {
+        if let Some(ready) = hotspot.hotspot_ready()? {
+            let plan = self.platform_plan("hotspot_ready");
+            return Ok(CoreEnvelope::from_backend_plan(ready, &plan));
+        }
+
+        let plan = self.pending_platform_plan("hotspot_ready");
+        Ok(CoreEnvelope::from_backend_plan(false, &plan))
     }
 
     fn pending_plan(&self, command: &'static str) -> BackendOperationPlan {
@@ -489,6 +494,10 @@ impl<'a> SystemUseCase<'a> {
 
     fn platform_plan(&self, command: &'static str) -> BackendOperationPlan {
         BackendOperationPlan::platform(MODULE, command, BackendBoundaryProbe::from_platform())
+    }
+
+    fn pending_platform_plan(&self, command: &'static str) -> BackendOperationPlan {
+        BackendOperationPlan::pending(MODULE, command, BackendBoundaryProbe::from_platform())
     }
 
     fn repository_boundary(&self, source_path: String) -> BackendBoundaryProbe {

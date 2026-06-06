@@ -20,7 +20,7 @@ impl<'a> VoiceUseCase<'a> {
     }
 
     pub(crate) fn load_workspace(&self) -> Result<CoreEnvelope<VoiceWorkspacePayload>, CoreError> {
-        let plan = self.pending_plan("voice_workspace");
+        let plan = self.pending_plan("load_voice_workspace");
         Ok(CoreEnvelope::from_backend_plan(
             VoiceWorkspacePayload {
                 status: BackendSkeletonStatus::from_plan(&plan),

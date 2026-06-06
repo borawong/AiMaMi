@@ -7,8 +7,8 @@ use crate::application::usecase::{
 };
 use crate::core::single_flight::SingleFlight;
 use crate::platform::{
-    permissions::NoopPermissions, process::NoopProcess, shell::NoopShell, system::CurrentSystem,
-    window::NoopWindow,
+    hotspot::NoopHotspotRuntime, permissions::NoopPermissions, process::NoopProcess,
+    shell::NoopShell, system::CurrentSystem, window::NoopWindow,
 };
 use crate::repository::RepositoryBundle;
 use serde_json::Value;
@@ -24,6 +24,7 @@ pub(crate) struct BackendServices {
     shell: NoopShell,
     permissions: NoopPermissions,
     system_info: CurrentSystem,
+    hotspot: NoopHotspotRuntime,
     window: Box<dyn WindowPort>,
 }
 
@@ -43,6 +44,7 @@ impl BackendServices {
             shell: NoopShell::default(),
             permissions: NoopPermissions::default(),
             system_info: CurrentSystem,
+            hotspot: NoopHotspotRuntime,
             window,
         }
     }
@@ -109,5 +111,9 @@ impl BackendServices {
 
     pub(crate) fn focus_main_window(&self) -> Result<CoreEnvelope<Value>, CoreError> {
         self.system().focus_main_window(self.window.as_ref())
+    }
+
+    pub(crate) fn hotspot_ready(&self) -> Result<CoreEnvelope<bool>, CoreError> {
+        self.system().hotspot_ready(&self.hotspot)
     }
 }

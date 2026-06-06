@@ -21,7 +21,7 @@ impl<'a> SkillsUseCase<'a> {
 
     pub(crate) fn load_installed(&self) -> Result<CoreEnvelope<SkillListPayload>, CoreError> {
         let root_path = self.repositories.skills().root_path();
-        let plan = self.pending_plan("skills", root_path.clone());
+        let plan = self.pending_plan("load_installed_skills", root_path.clone());
         Ok(CoreEnvelope::from_backend_plan(
             SkillListPayload {
                 status: BackendSkeletonStatus::from_plan(&plan),
@@ -34,7 +34,7 @@ impl<'a> SkillsUseCase<'a> {
 
     pub(crate) fn load_backups(&self) -> Result<CoreEnvelope<SkillBackupListPayload>, CoreError> {
         let root_path = self.repositories.skills().backup_root_path();
-        let plan = self.pending_plan("skill_backups", root_path.clone());
+        let plan = self.pending_plan("load_skill_backups", root_path.clone());
         Ok(CoreEnvelope::from_backend_plan(
             SkillBackupListPayload {
                 status: BackendSkeletonStatus::from_plan(&plan),

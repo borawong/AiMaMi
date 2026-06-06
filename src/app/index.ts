@@ -1,1 +1,1 @@
-export { MainAppRoot } from '@/main-app';
+export { Root as MainAppRoot } from "@/entry/root";

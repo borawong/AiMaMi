@@ -1,4 +1,5 @@
 pub(crate) mod daemon;
+pub(crate) mod hotspot;
 pub(crate) mod permissions;
 pub(crate) mod process;
 pub(crate) mod shell;

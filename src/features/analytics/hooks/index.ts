@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { analyticsService } from "@/services/analytics";
 import type { AnalyticsRange } from "@/types";
-import { AnalyticsCache } from "../cache";
+import { AnalyticsCache, AnalyticsDumpedQueryKeys } from "../cache";
 
 export type AnalyticsPanelId =
-  | "usage"
+  | "activity"
   | "sessions"
-  | "tokens"
+  | "token"
   | "tools"
   | "changes"
   | "quota";
@@ -15,10 +15,11 @@ export type AnalyticsPanelId =
 export interface AnalyticsModuleOptions {
   activePanel?: AnalyticsPanelId;
   quotaAccountKey?: string | null;
+  queriesEnabled?: boolean;
 }
 
 const ANALYTICS_QUERY_POLICY = {
-  staleTime: 30_000,
+  staleTime: 5 * 60_000,
   refetchOnMount: false,
   refetchOnWindowFocus: false,
 } as const;
@@ -31,44 +32,47 @@ export function useAnalyticsModule(
   range: AnalyticsRange = "week",
   options: AnalyticsModuleOptions = {},
 ) {
-  const activePanel = options.activePanel ?? "usage";
+  const activePanel = options.activePanel ?? "activity";
   const quotaAccountKey = options.quotaAccountKey?.trim() ?? "";
+  const queriesEnabled = options.queriesEnabled ?? true;
 
   const usageQuery = useQuery({
-    queryKey: [...AnalyticsCache.queryKeys.root, "usage"],
+    queryKey: AnalyticsDumpedQueryKeys.usage,
     queryFn: () => analyticsService.loadUsageAnalytics(),
-    enabled: activePanel === "usage",
-    ...ANALYTICS_QUERY_POLICY,
+    enabled: queriesEnabled && activePanel === "activity",
+    staleTime: Infinity,
   });
   const sessionQuery = useQuery({
-    queryKey: [...AnalyticsCache.queryKeys.root, "sessions", range],
+    queryKey: AnalyticsDumpedQueryKeys.sessions(range),
     queryFn: () => analyticsService.loadSessionAnalytics(range),
-    enabled: activePanel === "sessions",
+    enabled: queriesEnabled && activePanel === "sessions",
     ...ANALYTICS_QUERY_POLICY,
   });
   const tokenQuery = useQuery({
-    queryKey: [...AnalyticsCache.queryKeys.root, "tokens", range],
+    queryKey: AnalyticsDumpedQueryKeys.tokens(range),
     queryFn: () => analyticsService.loadTokenAnalytics(range),
-    enabled: activePanel === "tokens",
+    enabled: queriesEnabled && activePanel === "token",
     ...ANALYTICS_QUERY_POLICY,
   });
   const toolQuery = useQuery({
-    queryKey: [...AnalyticsCache.queryKeys.root, "tools", range],
+    queryKey: AnalyticsDumpedQueryKeys.tools(range),
     queryFn: () => analyticsService.loadToolAnalytics(range),
-    enabled: activePanel === "tools",
+    enabled: queriesEnabled && activePanel === "tools",
     ...ANALYTICS_QUERY_POLICY,
   });
   const changeQuery = useQuery({
-    queryKey: [...AnalyticsCache.queryKeys.root, "changes", range],
+    queryKey: AnalyticsDumpedQueryKeys.changes(range),
     queryFn: () => analyticsService.loadChangeAnalytics(range),
-    enabled: activePanel === "changes",
+    enabled: queriesEnabled && activePanel === "changes",
     ...ANALYTICS_QUERY_POLICY,
   });
   const quotaQuery = useQuery({
-    queryKey: [...AnalyticsCache.queryKeys.root, "quota-history", quotaAccountKey],
+    queryKey: AnalyticsDumpedQueryKeys.quota(quotaAccountKey),
     queryFn: () => analyticsService.loadQuotaHistory(quotaAccountKey),
-    enabled: activePanel === "quota" && quotaAccountKey.length > 0,
-    ...ANALYTICS_QUERY_POLICY,
+    enabled: queriesEnabled && activePanel === "quota" && quotaAccountKey.length > 0,
+    staleTime: 60_000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return {

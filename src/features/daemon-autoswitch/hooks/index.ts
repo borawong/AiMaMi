@@ -1,8 +1,96 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+  type QueryKey,
+} from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
 import { daemonAutoswitchService } from "@/services/daemon-autoswitch";
-import { DaemonAutoswitchCache } from "../cache";
+import {
+  DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY,
+  DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
+  DaemonAutoswitchCache,
+  invalidateDaemonAutoswitchContractQueries,
+} from "../cache";
+
+let daemonAutoswitchCacheSequence = 0;
+let daemonAutoswitchLatestAcceptedSequence = 0;
+
+function nextDaemonAutoswitchCacheSequence() {
+  daemonAutoswitchCacheSequence += 1;
+  return daemonAutoswitchCacheSequence;
+}
+
+function writeDaemonAutoswitchCachePayload<TPayload>(
+  queryClient: QueryClient,
+  payload: TPayload,
+  source: "full-refresh" | "mutation-payload",
+  sequence: number,
+) {
+  if (sequence < daemonAutoswitchLatestAcceptedSequence) {
+    return false;
+  }
+
+  daemonAutoswitchLatestAcceptedSequence = sequence;
+  DaemonAutoswitchCache.writeAuthoritativePayload(queryClient, {
+    payload,
+    source,
+    sequence,
+    receivedAt: Date.now(),
+  });
+  return true;
+}
+
+async function runDaemonAutoswitchQuery<TPayload>(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  load: () => Promise<TPayload>,
+) {
+  const sequence = nextDaemonAutoswitchCacheSequence();
+  const payload = await load();
+  const accepted = writeDaemonAutoswitchCachePayload(
+    queryClient,
+    payload,
+    "full-refresh",
+    sequence,
+  );
+  if (!accepted) {
+    return queryClient.getQueryData<TPayload>(queryKey) ?? payload;
+  }
+  return payload;
+}
+
+async function writeDaemonAutoswitchMutationPayload(
+  queryClient: QueryClient,
+  payload: unknown,
+) {
+  const accepted = writeDaemonAutoswitchCachePayload(
+    queryClient,
+    payload,
+    "mutation-payload",
+    nextDaemonAutoswitchCacheSequence(),
+  );
+  if (!accepted) return;
+
+  await invalidateDaemonAutoswitchContractQueries(queryClient);
+  await Promise.all([
+    queryClient.invalidateQueries({ queryKey: ["accounts"] }),
+    queryClient.invalidateQueries({ queryKey: ["runtime-state", "display"] }),
+    queryClient.invalidateQueries({ queryKey: ["quota-history"] }),
+  ]);
+}
+
+function cancelDaemonAutoswitchQueries(queryClient: QueryClient) {
+  return Promise.all([
+    queryClient.cancelQueries({
+      queryKey: DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY,
+    }),
+    queryClient.cancelQueries({
+      queryKey: DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
+    }),
+  ]);
+}
 
 export function useDaemonAutoswitchCacheController() {
   return useModuleCacheController(DaemonAutoswitchCache);
@@ -10,52 +98,58 @@ export function useDaemonAutoswitchCacheController() {
 
 export function useDaemonAutoswitchModule() {
   const queryClient = useQueryClient();
-  const writeDaemonPayload = (payload: unknown) => {
-    DaemonAutoswitchCache.writeAuthoritativePayload(queryClient, {
-      payload,
-      source: "mutation-payload",
-      sequence: Date.now(),
-      receivedAt: Date.now(),
-    });
-    void DaemonAutoswitchCache.invalidateContractQueries(queryClient);
-    void queryClient.invalidateQueries({ queryKey: ["accounts"] });
-    void queryClient.invalidateQueries({ queryKey: ["runtime-state", "display"] });
-    void queryClient.invalidateQueries({ queryKey: ["quota-history"] });
-  };
+  const writeDaemonPayload = (payload: unknown) =>
+    writeDaemonAutoswitchMutationPayload(queryClient, payload);
 
   const bootstrapQuery = useQuery({
-    queryKey: [...DaemonAutoswitchCache.queryKeys.root, "bootstrap"],
-    queryFn: () => api.loadBootstrapState(),
+    queryKey: DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY,
+    queryFn: () =>
+      runDaemonAutoswitchQuery(
+        queryClient,
+        DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY,
+        () => daemonAutoswitchService.loadBootstrapState(),
+      ),
     staleTime: 30_000,
   });
   const pendingQuery = useQuery({
-    queryKey: [...DaemonAutoswitchCache.queryKeys.root, "pending"],
-    queryFn: () => api.loadPendingAutoSwitch(),
+    queryKey: DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
+    queryFn: () =>
+      runDaemonAutoswitchQuery(
+        queryClient,
+        DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
+        () => daemonAutoswitchService.loadPendingAutoSwitch(),
+      ),
     staleTime: 30_000,
   });
 
   const runOnceMutation = useMutation({
-    mutationFn: () => api.runDaemonOnce(),
+    mutationFn: () => daemonAutoswitchService.runDaemonOnce(),
+    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
     onSuccess: writeDaemonPayload,
   });
 
   const setAutoSwitchMutation = useMutation({
     mutationFn: (enabled: boolean) => daemonAutoswitchService.setAutoSwitch(enabled),
+    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
     onSuccess: writeDaemonPayload,
   });
 
   const dismissPendingMutation = useMutation({
-    mutationFn: () => api.dismissPendingAutoSwitch(),
+    mutationFn: () => daemonAutoswitchService.dismissPendingAutoSwitch(),
+    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
     onSuccess: writeDaemonPayload,
   });
 
   const confirmPendingMutation = useMutation({
-    mutationFn: () => api.confirmPendingAutoSwitch(),
+    mutationFn: () => daemonAutoswitchService.confirmPendingAutoSwitch(),
+    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
     onSuccess: writeDaemonPayload,
   });
 
   const confirmPendingAndRestartMutation = useMutation({
-    mutationFn: () => api.confirmPendingAutoSwitchAndRestartCodex(),
+    mutationFn: () =>
+      daemonAutoswitchService.confirmPendingAutoSwitchAndRestartCodex(),
+    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
     onSuccess: writeDaemonPayload,
   });
 

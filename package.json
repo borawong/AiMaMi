@@ -10,7 +10,10 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "validate:public-boundary": "node scripts/validate-public-boundary.mjs",
-    "validate:frontend-dumped": "node scripts/validate-frontend-dumped.mjs"
+    "validate:frontend-dumped": "node scripts/validate-frontend-dumped.mjs",
+    "validate:frontend-entry": "node scripts/validate-frontend-entry-architecture.mjs",
+    "validate:backend-hexagonal": "node scripts/validate-backend-hexagonal.mjs",
+    "validate:i18n": "node scripts/validate-i18n.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

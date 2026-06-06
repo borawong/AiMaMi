@@ -1,17 +1,28 @@
 /**
  * 中文职责说明：maintenance 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
  */
-import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+  type QueryKey,
+} from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { api } from "@/lib/api";
 import { maintenanceService } from "@/services/maintenance";
-import { MaintenanceCache } from "../cache";
+import {
+  invalidateMaintenanceContractQueries,
+  MaintenanceCache,
+  MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
+} from "../cache";
 import type {
   MaintenanceFixIssueInput,
   MaintenanceImageCompatInput,
 } from "../types";
 
 let maintenanceCacheSequence = 0;
+let maintenanceLatestAcceptedSequence = 0;
 
 function nextMaintenanceCacheSequence() {
   maintenanceCacheSequence += 1;
@@ -22,13 +33,51 @@ async function writeMaintenanceMutationPayload<TPayload>(
   queryClient: QueryClient,
   payload: TPayload,
 ) {
+  const sequence = nextMaintenanceCacheSequence();
+  if (!writeMaintenanceCachePayload(queryClient, payload, "mutation-payload", sequence)) {
+    return false;
+  }
+  await invalidateMaintenanceContractQueries(queryClient);
+  return true;
+}
+
+function writeMaintenanceCachePayload<TPayload>(
+  queryClient: QueryClient,
+  payload: TPayload,
+  source: "full-refresh" | "mutation-payload",
+  sequence: number,
+) {
+  if (sequence < maintenanceLatestAcceptedSequence) {
+    return false;
+  }
+
+  maintenanceLatestAcceptedSequence = sequence;
   MaintenanceCache.writeAuthoritativePayload(queryClient, {
     payload,
-    source: "mutation-payload",
-    sequence: nextMaintenanceCacheSequence(),
+    source,
+    sequence,
     receivedAt: Date.now(),
   });
-  await MaintenanceCache.invalidateContractQueries(queryClient);
+  return true;
+}
+
+async function runMaintenanceQuery<TPayload>(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  load: () => Promise<TPayload>,
+) {
+  const sequence = nextMaintenanceCacheSequence();
+  const payload = await load();
+  const accepted = writeMaintenanceCachePayload(
+    queryClient,
+    payload,
+    "full-refresh",
+    sequence,
+  );
+  if (!accepted) {
+    return queryClient.getQueryData<TPayload>(queryKey) ?? payload;
+  }
+  return payload;
 }
 
 export function useMaintenanceCacheController() {
@@ -46,16 +95,24 @@ export function useMaintenanceActionMutations(options: {
   onRestartError: (error: unknown) => void;
 }) {
   const queryClient = useQueryClient();
-  const imageCompatQueryKey = [...MaintenanceCache.queryKeys.root, "image-compat"] as const;
+  const systemInfoQueryKey = [...MaintenanceCache.queryKeys.root, "system-info"] as const;
 
   const imageCompatQuery = useQuery({
-    queryKey: imageCompatQueryKey,
-    queryFn: () => maintenanceService.getImageCompat(),
+    queryKey: MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
+    queryFn: () =>
+      runMaintenanceQuery(
+        queryClient,
+        MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
+        () => maintenanceService.getImageCompat(),
+      ),
     staleTime: 30_000,
   });
   const systemInfoQuery = useQuery({
-    queryKey: [...MaintenanceCache.queryKeys.root, "system-info"],
-    queryFn: () => maintenanceService.getSystemInfo(),
+    queryKey: systemInfoQueryKey,
+    queryFn: () =>
+      runMaintenanceQuery(queryClient, systemInfoQueryKey, () =>
+        maintenanceService.getSystemInfo(),
+      ),
     staleTime: 30_000,
   });
 
@@ -112,8 +169,12 @@ export function useMaintenanceActionMutations(options: {
   const setImageCompatMutation = useMutation({
     mutationFn: ({ enabled }: MaintenanceImageCompatInput) =>
       maintenanceService.setImageCompat(enabled),
+    onMutate: () =>
+      queryClient.cancelQueries({
+        queryKey: MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
+      }),
     onSuccess: async (result) => {
-      queryClient.setQueryData(imageCompatQueryKey, result);
+      queryClient.setQueryData(MAINTENANCE_IMAGE_COMPAT_QUERY_KEY, result);
       await writeMaintenanceMutationPayload(queryClient, result);
     },
   });
@@ -130,6 +191,8 @@ export function useMaintenanceActionMutations(options: {
       maintenanceService.fixCodexRouterIssue(itemId),
     onSuccess: async (result) => {
       await writeMaintenanceMutationPayload(queryClient, result);
+      const diagnostics = await maintenanceService.runCodexRouterDiagnostics();
+      await writeMaintenanceMutationPayload(queryClient, diagnostics);
     },
   });
 

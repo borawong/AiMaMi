@@ -36,7 +36,7 @@ impl<'a> McpUseCase<'a> {
     }
 
     pub(crate) fn load_servers(&self) -> Result<CoreEnvelope<McpServerListPayload>, CoreError> {
-        let plan = self.pending_plan("mcp_servers");
+        let plan = self.pending_plan("load_mcp_servers");
         Ok(CoreEnvelope::from_backend_plan(
             self.list_payload(&plan),
             &plan,

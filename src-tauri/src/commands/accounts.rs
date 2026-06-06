@@ -68,7 +68,7 @@ pub(crate) fn import_chatgpt_session_account(
 #[tauri::command]
 pub(crate) fn export_accounts_to_file(
     state: State<'_, TauriAppState>,
-    account_keys: Vec<String>,
+    account_keys: Option<Vec<String>>,
     target_path: String,
 ) -> Result<CoreEnvelope<AccountActionPayload>, String> {
     respond(

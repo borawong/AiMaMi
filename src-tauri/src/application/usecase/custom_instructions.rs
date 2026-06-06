@@ -21,7 +21,7 @@ impl<'a> CustomInstructionsUseCase<'a> {
     pub(crate) fn load_state(
         &self,
     ) -> Result<CoreEnvelope<CustomInstructionStatePayload>, CoreError> {
-        let plan = self.pending_plan("custom_instructions");
+        let plan = self.pending_plan("load_custom_instruction_state");
         Ok(CoreEnvelope::from_backend_plan(
             self.state_payload(&plan, None, None),
             &plan,
@@ -39,7 +39,7 @@ impl<'a> CustomInstructionsUseCase<'a> {
             "empty_custom_instruction_content",
             "自定义指令内容不能为空。",
         )?;
-        let plan = self.pending_plan("custom_instruction_preview");
+        let plan = self.pending_plan("preview_custom_instruction_apply");
         Ok(CoreEnvelope::from_backend_plan(
             CustomInstructionPreviewPayload {
                 status: BackendSkeletonStatus::from_plan(&plan),

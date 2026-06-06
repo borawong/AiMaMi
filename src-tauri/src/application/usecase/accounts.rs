@@ -76,16 +76,14 @@ impl<'a> AccountsUseCase<'a> {
 
     pub(crate) fn export_accounts_to_file(
         &self,
-        account_keys: Vec<String>,
+        account_keys: Option<Vec<String>>,
         target_path: String,
     ) -> Result<CoreEnvelope<AccountActionPayload>, CoreError> {
-        let account_keys =
-            required_text_list(account_keys, "empty_account_keys", "账号列表不能为空。")?;
         let target_path =
             required_text(target_path, "empty_export_path", "导出目标路径不能为空。")?;
         let plan = self.no_op_plan("export_accounts_to_file");
         let mut payload = self.payload(&plan);
-        payload.account_keys = account_keys;
+        payload.account_keys = clean_optional_text_list(account_keys);
         payload.target_path = Some(target_path);
         Ok(CoreEnvelope::from_backend_plan(payload, &plan))
     }
