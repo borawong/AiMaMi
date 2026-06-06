@@ -136,6 +136,41 @@ export function useSettingsHotspotMutation(options?: { onChanged?: (enabled: boo
   });
 }
 
+export function useSettingsHotspotReadyMutation() {
+  return useMutation({
+    mutationFn: () => api.hotspotReady(),
+  });
+}
+
+export function useSettingsImageCompat() {
+  const queryClient = useQueryClient();
+  const imageCompatQueryKey = ["image-compat"] as const;
+
+  const imageCompatQuery = useQuery({
+    queryKey: imageCompatQueryKey,
+    queryFn: () => api.getImageCompat(),
+    staleTime: Infinity,
+  });
+
+  const setImageCompatMutation = useMutation({
+    mutationFn: (enabled: boolean) => api.setImageCompat(enabled),
+    onSuccess: (enabled) => {
+      queryClient.setQueryData(imageCompatQueryKey, enabled);
+    },
+  });
+
+  return {
+    imageCompatQuery,
+    setImageCompatMutation,
+  };
+}
+
+export function useSettingsUpdateInstallabilityMutation() {
+  return useMutation({
+    mutationFn: () => api.checkUpdateInstallability(),
+  });
+}
+
 export function useSettingsRefreshInterval() {
   const queryClient = useQueryClient();
   const refreshIntervalQueryKey = ["usage-refresh-interval"] as const;

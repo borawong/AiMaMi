@@ -53,6 +53,11 @@ export function useMaintenanceActionMutations(options: {
     queryFn: () => maintenanceService.getImageCompat(),
     staleTime: 30_000,
   });
+  const systemInfoQuery = useQuery({
+    queryKey: [...MaintenanceCache.queryKeys.root, "system-info"],
+    queryFn: () => maintenanceService.getSystemInfo(),
+    staleTime: 30_000,
+  });
 
   const diagnoseMutation = useMutation({
     mutationFn: () => api.diagnose(),
@@ -130,6 +135,7 @@ export function useMaintenanceActionMutations(options: {
 
   return {
     imageCompatQuery,
+    systemInfoQuery,
     diagnoseMutation,
     cleanMutation,
     rebuildMutation,

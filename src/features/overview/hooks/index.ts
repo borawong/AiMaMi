@@ -30,6 +30,21 @@ export function useOverviewModule() {
     queryFn: () => api.loadInstalledSkills(),
     staleTime: 30_000,
   });
+  const deviceIdQuery = useQuery({
+    queryKey: [...OverviewCache.queryKeys.root, "device-id"],
+    queryFn: () => api.getDeviceId(),
+    staleTime: Infinity,
+  });
+  const notificationStateQuery = useQuery({
+    queryKey: [...OverviewCache.queryKeys.root, "notification-client-state"],
+    queryFn: () => api.getNotificationClientState(),
+    staleTime: 30_000,
+  });
+  const mysteryUnlockGrantsQuery = useQuery({
+    queryKey: [...OverviewCache.queryKeys.root, "mystery-unlock-grants"],
+    queryFn: () => api.getMysteryUnlockGrants(),
+    staleTime: 30_000,
+  });
 
   const refreshUsageMutation = useMutation({
     mutationFn: () => api.refreshUsageSnapshot(),
@@ -45,6 +60,9 @@ export function useOverviewModule() {
       void queryClient.invalidateQueries({ queryKey: ["analytics", "usage"] });
     },
   });
+  const focusMainWindowMutation = useMutation({
+    mutationFn: () => api.focusMainWindow(),
+  });
 
   const refreshUsageAction = {
     id: "refresh-usage-snapshot",
@@ -52,13 +70,23 @@ export function useOverviewModule() {
     isPending: refreshUsageMutation.isPending,
     run: () => refreshUsageMutation.mutateAsync(),
   };
+  const focusMainWindowAction = {
+    id: "focus-main-window",
+    labelKey: "overview.focusMainWindow",
+    isPending: focusMainWindowMutation.isPending,
+    run: () => focusMainWindowMutation.mutateAsync(),
+  };
 
   return {
     snapshotQuery,
     usageQuery,
     mcpQuery,
     skillsQuery,
+    deviceIdQuery,
+    notificationStateQuery,
+    mysteryUnlockGrantsQuery,
     refreshUsageMutation,
     refreshUsageAction,
+    focusMainWindowAction,
   };
 }

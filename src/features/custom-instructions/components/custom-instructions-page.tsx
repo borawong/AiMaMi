@@ -291,13 +291,15 @@ export function CustomInstructionsPage() {
                       {current.globalPath}
                     </div>
                     {current.lastAppliedAt && (
-                      <div className="text-xs">
-                        {t("customInstructions.lastApplied")}：{formatDateTime(current.lastAppliedAt)}
+                      <div className="flex flex-wrap gap-1 text-xs">
+                        <span>{t("customInstructions.lastApplied")}</span>
+                        <span>{formatDateTime(current.lastAppliedAt)}</span>
                       </div>
                     )}
                     {current.lastTemplateTitle && (
-                      <div className="text-xs">
-                        {t("customInstructions.lastTemplate")}：{current.lastTemplateTitle}
+                      <div className="flex flex-wrap gap-1 text-xs">
+                        <span>{t("customInstructions.lastTemplate")}</span>
+                        <span>{current.lastTemplateTitle}</span>
                       </div>
                     )}
                     {current.issueMessage && (

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { analyticsService } from "@/services/analytics";
 import {
   sessionsService,
   type ImportChatGptSessionAccountInput,
@@ -16,18 +16,24 @@ export function useSessionsModule() {
 
   const sessionsQuery = useQuery({
     queryKey: [...SessionsCache.queryKeys.root, "list"],
-    queryFn: () => api.loadSessions(),
+    queryFn: () => sessionsService.loadSessions(),
+    staleTime: 30_000,
+  });
+
+  const sessionAnalyticsQuery = useQuery({
+    queryKey: [...SessionsCache.queryKeys.root, "analytics", "week"],
+    queryFn: () => sessionsService.loadSessionAnalytics("week"),
     staleTime: 30_000,
   });
 
   const usageQuery = useQuery({
     queryKey: [...SessionsCache.queryKeys.root, "usage"],
-    queryFn: () => api.loadUsageAnalytics(),
+    queryFn: () => analyticsService.loadUsageAnalytics(),
     staleTime: 30_000,
   });
 
   const deleteSessionsMutation = useMutation({
-    mutationFn: (ids: string[]) => api.deleteSessions(ids),
+    mutationFn: (ids: string[]) => sessionsService.deleteSessions(ids),
     onSuccess: (payload) => {
       SessionsCache.writeAuthoritativePayload(queryClient, {
         payload,
@@ -59,6 +65,7 @@ export function useSessionsModule() {
 
   return {
     sessionsQuery,
+    sessionAnalyticsQuery,
     usageQuery,
     deleteSessionsMutation,
     importSessionMutation,

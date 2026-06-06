@@ -41,7 +41,7 @@ export function useAccountsModule() {
   });
 
   const attachMonitorMutation = useMutation({
-    mutationFn: () => api.beginAddAccountAttachMonitor(),
+    mutationFn: () => accountsService.beginAddAccountAttachMonitor(),
     onSuccess: writeMutationPayload,
   });
 
@@ -52,30 +52,30 @@ export function useAccountsModule() {
 
   const switchAccountMutation = useMutation({
     mutationFn: ({ accountKey }: AccountSwitchInput) =>
-      api.switchAccount(accountKey),
+      accountsService.switchAccount(accountKey),
     onSuccess: writeMutationPayload,
   });
 
   const switchAccountAndRestartMutation = useMutation({
     mutationFn: ({ accountKey }: AccountSwitchInput) =>
-      api.switchAccountAndRestartCodex(accountKey),
+      accountsService.switchAccountAndRestartCodex(accountKey),
     onSuccess: writeMutationPayload,
   });
 
   const removeAccountsMutation = useMutation({
     mutationFn: ({ accountKeys }: AccountKeysInput) =>
-      api.removeAccounts(accountKeys),
+      accountsService.removeAccounts(accountKeys),
     onSuccess: writeMutationPayload,
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => api.logout(),
+    mutationFn: () => accountsService.logout(),
     onSuccess: writeMutationPayload,
   });
 
   const importSessionMutation = useMutation({
     mutationFn: ({ sessionJson, overwriteExisting }: AccountImportSessionInput) =>
-      api.importChatGptSessionAccount(
+      accountsService.importChatGptSessionAccount(
         sessionJson,
         overwriteExisting,
       ),
@@ -84,13 +84,13 @@ export function useAccountsModule() {
 
   const exportAccountsMutation = useMutation({
     mutationFn: ({ targetPath, accountKeys }: AccountExportFileInput) =>
-      api.exportAccountsToFile(targetPath, accountKeys),
+      accountsService.exportAccountsToFile(targetPath, accountKeys),
     onSuccess: writeMutationPayload,
   });
 
   const previewImportMutation = useMutation({
     mutationFn: ({ filePath }: AccountPreviewImportInput) =>
-      api.previewAccountImport(filePath),
+      accountsService.previewAccountImport(filePath),
     onSuccess: writeMutationPayload,
   });
 
@@ -100,7 +100,7 @@ export function useAccountsModule() {
       overwriteExisting,
       selectedKeys,
     }: AccountImportFileInput) =>
-      api.importAccountsFromFile(
+      accountsService.importAccountsFromFile(
         filePath,
         overwriteExisting,
         selectedKeys,

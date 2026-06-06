@@ -2,7 +2,7 @@
  * 中文职责说明：sessions 页面只渲染会话列表和短生命周期选择状态。
  */
 import { useMemo, useState } from "react";
-import { MessageSquareText, Trash2, Upload } from "lucide-react";
+import { BarChart3, MessageSquareText, Trash2, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,7 +29,9 @@ export function SessionsPage() {
   const module = useSessionsModule();
   const payload = envelopeData(module.sessionsQuery.data);
   const usage = envelopeData(module.usageQuery.data);
+  const sessionAnalytics = envelopeData(module.sessionAnalyticsQuery.data);
   const sessions = readArray(payload, ["items", "sessions", "data.items"]);
+  const sessionSeries = readArray(sessionAnalytics, ["series", "items"]);
   const total = sessions.length || readNumber(payload, ["total", "count"]);
   const totalSize = readNumber(payload, ["totalSizeBytes", "stats.totalSizeBytes"]);
   const todaySessions = readNumber(usage, ["today.sessionCount"]);
@@ -80,6 +82,15 @@ export function SessionsPage() {
         <MetricCard labelKey="sessions.todaySessions" value={todaySessions} />
         <MetricCard labelKey="sessions.selected" value={selectedIds.length} />
         <MetricCard labelKey="sessions.totalSize" value={formatBytes(totalSize)} />
+        <MetricCard
+          labelKey="sessions.analyticsPoints"
+          value={
+            <span className="inline-flex items-center gap-2">
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              {sessionSeries.length}
+            </span>
+          }
+        />
       </div>
 
       <QueryPanel titleKey="sessions.importSession" state={module.sessionsQuery}>
@@ -157,6 +168,13 @@ export function SessionsPage() {
               </div>
             );
           }}
+        />
+      </QueryPanel>
+
+      <QueryPanel titleKey="sessions.analytics" state={module.sessionAnalyticsQuery}>
+        <RecordList
+          items={sessionSeries}
+          emptyKey="sessions.emptyAnalytics"
         />
       </QueryPanel>
     </div>

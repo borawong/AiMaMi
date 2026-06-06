@@ -1,8 +1,10 @@
 /**
  * 中文职责说明：overview 页面聚合各模块只读事实，不 owning 模块私有业务状态。
  */
-import { Activity, FolderCheck, Server, Sparkles } from "lucide-react";
+import type { ReactElement } from "react";
+import { Activity, Bell, FolderCheck, KeyRound, Merge, Server, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 import {
   envelopeData,
   readArray,
@@ -16,6 +18,7 @@ import {
   MetricCard,
   QueryPanel,
   RecordList,
+  RecordSummary,
 } from "@/features/_shared/evidence-panels";
 import { formatDateTime } from "@/lib/format-time";
 import { useOverviewModule } from "../hooks";
@@ -27,6 +30,9 @@ export function OverviewPage() {
   const usage = envelopeData(module.usageQuery.data);
   const mcp = envelopeData(module.mcpQuery.data);
   const skills = envelopeData(module.skillsQuery.data);
+  const notificationState = envelopeData(module.notificationStateQuery.data);
+  const mysteryUnlockGrants = envelopeData(module.mysteryUnlockGrantsQuery.data);
+  const deviceId = module.deviceIdQuery.data ?? "";
   const mcpItems = readArray(mcp, ["items", "servers"]);
   const skillItems = readArray(skills, ["items", "skills"]);
   const authExists = readBoolean(snapshot, ["status.paths.authExists", "paths.authExists"]);
@@ -42,7 +48,7 @@ export function OverviewPage() {
       <EvidencePageHeader
         titleKey="nav.overview"
         descriptionKey="overview.description"
-        actions={[module.refreshUsageAction]}
+        actions={[module.refreshUsageAction, module.focusMainWindowAction]}
       />
 
       <div className="grid gap-3 md:grid-cols-4">
@@ -97,6 +103,10 @@ export function OverviewPage() {
         <QueryPanel titleKey="overview.snapshot" state={module.snapshotQuery}>
           <div className="space-y-3 text-sm">
             <HealthRow
+              label={t("overview.deviceId")}
+              value={deviceId || "-"}
+            />
+            <HealthRow
               label={t("overview.healthCodexHome")}
               value={readString(snapshot, ["status.paths.codexHome", "paths.codexHome"], "")}
             />
@@ -134,6 +144,33 @@ export function OverviewPage() {
             )}
           />
         </QueryPanel>
+        <QueryPanel
+          titleKey="overview.notificationState"
+          state={module.notificationStateQuery}
+        >
+          <RecordSummary value={notificationState} />
+        </QueryPanel>
+        <QueryPanel
+          titleKey="overview.mysteryGrants"
+          state={module.mysteryUnlockGrantsQuery}
+        >
+          <RecordSummary value={mysteryUnlockGrants} />
+          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+            {/* 远端设备密钥与 grants 合并需要完整安全交互证据，当前切片只保留禁用边界。 */}
+            <BoundaryButton
+              icon={<KeyRound />}
+              label={t("overview.remoteSecretBoundary")}
+            />
+            <BoundaryButton
+              icon={<Bell />}
+              label={t("overview.importRemoteSecretBoundary")}
+            />
+            <BoundaryButton
+              icon={<Merge />}
+              label={t("overview.mergeMysteryGrantsBoundary")}
+            />
+          </div>
+        </QueryPanel>
       </div>
     </div>
   );
@@ -150,4 +187,19 @@ function HealthRow({ label, value }: { label: string; value: string }) {
 
 function formatOptionalTime(value: number) {
   return value ? formatDateTime(value) : "";
+}
+
+function BoundaryButton({
+  icon,
+  label,
+}: {
+  icon: ReactElement;
+  label: string;
+}) {
+  return (
+    <Button type="button" size="sm" variant="outline" disabled aria-label={label}>
+      {icon}
+      {label}
+    </Button>
+  );
 }

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { api } from "@/lib/api";
+import { daemonAutoswitchService } from "@/services/daemon-autoswitch";
 import { DaemonAutoswitchCache } from "../cache";
 
 export function useDaemonAutoswitchCacheController() {
@@ -38,6 +39,11 @@ export function useDaemonAutoswitchModule() {
     onSuccess: writeDaemonPayload,
   });
 
+  const setAutoSwitchMutation = useMutation({
+    mutationFn: (enabled: boolean) => daemonAutoswitchService.setAutoSwitch(enabled),
+    onSuccess: writeDaemonPayload,
+  });
+
   const dismissPendingMutation = useMutation({
     mutationFn: () => api.dismissPendingAutoSwitch(),
     onSuccess: writeDaemonPayload,
@@ -61,6 +67,10 @@ export function useDaemonAutoswitchModule() {
       labelKey: "daemonAutoswitch.runOnce",
       run: () => runOnceMutation.mutateAsync(),
       isPending: runOnceMutation.isPending,
+    },
+    setAutoSwitchAction: {
+      run: (enabled: boolean) => setAutoSwitchMutation.mutateAsync(enabled),
+      isPending: setAutoSwitchMutation.isPending,
     },
     dismissPendingAction: {
       id: "dismiss-pending",

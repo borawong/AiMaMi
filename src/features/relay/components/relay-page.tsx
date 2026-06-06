@@ -18,6 +18,7 @@ import {
   ToggleRight,
   Trash2,
   Upload,
+  Wrench,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -340,7 +341,16 @@ export function RelayPage() {
             >
               <ShieldCheck className="h-3.5 w-3.5" />
             </Button>
-            {/* 路由修复动作需要诊断项标识，未还原诊断列表前只保留钩子边界。 */}
+            {/* 路由修复需要诊断项标识；当前切片没有诊断列表 owner，先保留禁用边界。 */}
+            <Button
+              type="button"
+              size="icon-sm"
+              variant="outline"
+              disabled
+              aria-label={t("relay.actionFixRouterIssue")}
+            >
+              <Wrench className="h-3.5 w-3.5" />
+            </Button>
           </div>
         </QueryPanel>
 

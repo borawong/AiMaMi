@@ -19,7 +19,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Sun, Moon, Monitor, Globe, Download, Loader2 } from "lucide-react";
+import { Sun, Moon, Monitor, Globe, Download, Loader2, Image, Power } from "lucide-react";
 import { BentoCard } from "@/components/ui/bento-card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -37,8 +37,11 @@ import {
   useSettingsAppVersion,
   useSettingsAutoSwitchMutations,
   useSettingsHotspotMutation,
+  useSettingsHotspotReadyMutation,
+  useSettingsImageCompat,
   useSettingsRefreshInterval,
   useSettingsRuntimeState,
+  useSettingsUpdateInstallabilityMutation,
 } from "../hooks";
 export interface SettingsPageProps {
   theme: Theme;
@@ -98,6 +101,12 @@ export function SettingsPage({
     refreshIntervalQuery,
     saveRefreshIntervalMutation,
   } = useSettingsRefreshInterval();
+  const {
+    imageCompatQuery,
+    setImageCompatMutation,
+  } = useSettingsImageCompat();
+  const hotspotReadyMutation = useSettingsHotspotReadyMutation();
+  const updateInstallabilityMutation = useSettingsUpdateInstallabilityMutation();
 
   const [thresholdDialogOpen, setThresholdDialogOpen] = useState(false);
   const [draft5h, setDraft5h] = useState(15);
@@ -154,6 +163,7 @@ export function SettingsPage({
   const handleCheckUpdate = async () => {
     await updateCheckAction.run(async () => {
       try {
+        await updateInstallabilityMutation.mutateAsync();
         const result = await onCheckUpdate();
         if (result === "up-to-date") {
           toast({
@@ -272,13 +282,45 @@ export function SettingsPage({
             label={t("settings.hotspot")}
             description={hasNotch ? t("settings.hotspotDesc") : t("settings.hotspotNotSupported")}
           >
-            <Switch
-              checked={hasNotch && (hotspotQuery.data ?? false)}
-              onCheckedChange={(v) => hotspotMutation.mutate(v)}
-              disabled={!hasNotch || hotspotMutation.isPending}
-            />
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={hasNotch && (hotspotQuery.data ?? false)}
+                onCheckedChange={(v) => hotspotMutation.mutate(v)}
+                disabled={!hasNotch || hotspotMutation.isPending}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => hotspotReadyMutation.mutate()}
+                disabled={!hasNotch || hotspotReadyMutation.isPending}
+                aria-busy={hotspotReadyMutation.isPending}
+              >
+                <ButtonBusyContent
+                  busy={hotspotReadyMutation.isPending}
+                  idleLabel={t("settings.hotspotReady")}
+                  busyLabel={t("settings.hotspotReadyBusy")}
+                />
+              </Button>
+            </div>
           </SettingRow>
         )}
+
+        <SettingRow
+          label={
+            <span className="inline-flex items-center gap-2">
+              <Image className="h-3.5 w-3.5 text-muted-foreground" />
+              {t("settings.imageCompat")}
+            </span>
+          }
+          description={t("settings.imageCompatDesc")}
+        >
+          <Switch
+            checked={imageCompatQuery.data ?? false}
+            onCheckedChange={(v) => setImageCompatMutation.mutate(v)}
+            disabled={imageCompatQuery.isLoading || setImageCompatMutation.isPending}
+          />
+        </SettingRow>
 
       </Section>
 
@@ -353,15 +395,25 @@ export function SettingsPage({
             variant="outline"
             size="sm"
             onClick={handleCheckUpdate}
-            disabled={checkingUpdate}
-            aria-busy={checkingUpdate}
+            disabled={checkingUpdate || updateInstallabilityMutation.isPending}
+            aria-busy={checkingUpdate || updateInstallabilityMutation.isPending}
           >
             <ButtonBusyContent
-              busy={checkingUpdate}
+              busy={checkingUpdate || updateInstallabilityMutation.isPending}
               idleIcon={<Download className="h-3.5 w-3.5 shrink-0" />}
               idleLabel={t("settings.checkUpdate")}
               busyLabel={t("settings.checkUpdateBusy")}
             />
+          </Button>
+        </SettingRow>
+        <SettingRow
+          label={t("settings.updateRestart")}
+          description={t("settings.updateRestartDesc")}
+        >
+          {/* 更新重启需要已安装更新的运行时证据，当前切片只暴露禁用边界。 */}
+          <Button variant="outline" size="sm" disabled>
+            <Power className="h-3.5 w-3.5 shrink-0" />
+            {t("settings.updateRestartBoundary")}
           </Button>
         </SettingRow>
       </Section>

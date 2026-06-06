@@ -22,6 +22,8 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  FolderOpen,
+  Info,
   type LucideIcon,
 } from "lucide-react";
 import { useMaintenanceActionMutations } from "../hooks";
@@ -45,6 +47,7 @@ export function MaintenancePage() {
 
   const {
     imageCompatQuery,
+    systemInfoQuery,
     diagnoseMutation,
     cleanMutation,
     rebuildMutation,
@@ -119,6 +122,22 @@ export function MaintenancePage() {
     runAction("restart", () => restartMutation.mutateAsync());
   };
 
+  const systemInfo = systemInfoQuery.data;
+  const systemInfoFields = [
+    {
+      label: t("maintenance.systemInfoOs"),
+      value: readSystemInfoField(systemInfo, [["platform", "os"], ["os"]]),
+    },
+    {
+      label: t("maintenance.systemInfoArch"),
+      value: readSystemInfoField(systemInfo, [["platform", "arch"], ["arch"]]),
+    },
+    {
+      label: t("maintenance.systemInfoVersion"),
+      value: readSystemInfoField(systemInfo, [["coreVersion"], ["version"]]),
+    },
+  ];
+
   const actions: {
     key: string;
     icon: LucideIcon;
@@ -128,6 +147,7 @@ export function MaintenancePage() {
     actionLabel: string;
     loadingLabel: string;
     onAction: () => void;
+    disabled?: boolean;
     variant?: "destructive";
   }[] = [
     {
@@ -183,6 +203,17 @@ export function MaintenancePage() {
       actionLabel: t("maintenance.cleanAction"),
       loadingLabel: t("maintenance.cleaning"),
       onAction: () => runAction("clean", () => cleanMutation.mutateAsync()),
+    },
+    {
+      key: "openPathBoundary",
+      icon: FolderOpen,
+      iconColor: "text-slate-500",
+      label: t("maintenance.openPath"),
+      description: t("maintenance.openPathDesc"),
+      actionLabel: t("maintenance.openPathAction"),
+      loadingLabel: t("maintenance.running"),
+      onAction: () => undefined,
+      disabled: true,
     },
     {
       key: "rebuild",
@@ -271,9 +302,38 @@ export function MaintenancePage() {
     <div className="space-y-6">
       <p className="text-sm text-muted-foreground">{t("maintenance.description")}</p>
 
+      <BentoCard className="p-5">
+        <div className="flex items-start gap-3">
+          <Info className="mt-0.5 h-[18px] w-[18px] shrink-0 text-sky-500" />
+          <div className="min-w-0 flex-1">
+            <h2 className="text-[14px] font-semibold">{t("maintenance.systemInfo")}</h2>
+            <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+              {t("maintenance.systemInfoDesc")}
+            </p>
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              {systemInfoFields.map((field) => (
+                <div key={field.label} className="rounded-[8px] border border-border px-3 py-2">
+                  <p className="text-[11px] font-medium uppercase text-muted-foreground">
+                    {field.label}
+                  </p>
+                  <p className="mt-1 truncate text-sm text-foreground">{field.value}</p>
+                </div>
+              ))}
+            </div>
+            {(systemInfoQuery.isLoading || systemInfoQuery.isError) && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {systemInfoQuery.isLoading
+                  ? t("maintenance.systemInfoLoading")
+                  : String(systemInfoQuery.error)}
+              </p>
+            )}
+          </div>
+        </div>
+      </BentoCard>
+
       <BentoCard className="p-0">
         <div className="divide-y divide-border">
-        {actions.map(({ key, icon: Icon, iconColor, label, description, actionLabel, loadingLabel, onAction, variant }) => {
+        {actions.map(({ key, icon: Icon, iconColor, label, description, actionLabel, loadingLabel, onAction, disabled, variant }) => {
           const result = results[key];
           const busy = !!runningKeys[key];
           return (
@@ -290,7 +350,7 @@ export function MaintenancePage() {
                   variant="outline"
                   size="sm"
                   onClick={onAction}
-                  disabled={busy}
+                  disabled={busy || disabled}
                   className={cn("shrink-0", variant === "destructive" ? "text-muted-foreground hover:bg-destructive hover:text-white hover:border-destructive" : "")}
                 >
                   {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
@@ -339,4 +399,30 @@ export function MaintenancePage() {
       </AlertDialog>
     </div>
   );
+}
+
+function readSystemInfoField(value: unknown, paths: string[][]) {
+  for (const path of paths) {
+    const field = readUnknownPath(value, path);
+    if (
+      typeof field === "string" ||
+      typeof field === "number" ||
+      typeof field === "boolean"
+    ) {
+      return String(field);
+    }
+  }
+
+  return "-";
+}
+
+function readUnknownPath(value: unknown, path: string[]) {
+  let current = value;
+  for (const segment of path) {
+    if (!current || typeof current !== "object" || Array.isArray(current)) {
+      return undefined;
+    }
+    current = (current as Record<string, unknown>)[segment];
+  }
+  return current;
 }
