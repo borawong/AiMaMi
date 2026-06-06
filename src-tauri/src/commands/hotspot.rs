@@ -1,7 +1,6 @@
 use crate::adapters::tauri::state::TauriAppState;
 use crate::commands::respond;
 use crate::contracts::CoreEnvelope;
-use crate::platform::window::TauriWindow;
 use serde_json::Value;
 use tauri::State;
 
@@ -29,8 +28,7 @@ pub(crate) fn set_hotspot_enabled(
 pub(crate) fn focus_main_window(
     state: State<'_, TauriAppState>,
 ) -> Result<CoreEnvelope<Value>, String> {
-    let window = TauriWindow::new(state.app_handle());
-    respond(state.services().system().focus_main_window(&window))
+    respond(state.services().focus_main_window())
 }
 
 #[tauri::command]

@@ -226,7 +226,7 @@ impl<'a> SystemUseCase<'a> {
     pub(crate) fn confirm_pending_auto_switch_and_restart_application(
         &self,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        let plan = self.no_op_plan("confirm_pending_auto_switch_and_restart_codex");
+        let plan = self.no_op_plan("confirm_pending_auto_switch_and_restart_application");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,
@@ -304,7 +304,7 @@ impl<'a> SystemUseCase<'a> {
     }
 
     pub(crate) fn force_kill_application(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        let plan = self.no_op_plan("force_kill_codex");
+        let plan = self.no_op_plan("force_kill_application");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,
@@ -312,7 +312,7 @@ impl<'a> SystemUseCase<'a> {
     }
 
     pub(crate) fn reset_application_config(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        let plan = self.no_op_plan("reset_codex_config");
+        let plan = self.no_op_plan("reset_application_config");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,

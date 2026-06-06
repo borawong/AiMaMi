@@ -1,23 +1,18 @@
 use crate::application::service::BackendServices;
+use crate::platform::window::TauriWindow;
 
 pub(crate) struct TauriAppState {
     services: BackendServices,
-    app: tauri::AppHandle,
 }
 
 impl TauriAppState {
     pub(crate) fn new(app: tauri::AppHandle) -> Self {
         Self {
-            services: BackendServices::default(),
-            app,
+            services: BackendServices::with_window(Box::new(TauriWindow::new(app))),
         }
     }
 
     pub(crate) fn services(&self) -> &BackendServices {
         &self.services
-    }
-
-    pub(crate) fn app_handle(&self) -> &tauri::AppHandle {
-        &self.app
     }
 }

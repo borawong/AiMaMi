@@ -1,3 +1,4 @@
+use crate::application::ports::WindowPort;
 use crate::application::usecase::{
     accounts::AccountsUseCase, analytics::AnalyticsUseCase,
     custom_instructions::CustomInstructionsUseCase, daemon::DaemonUseCase, mcp::McpUseCase,
@@ -7,6 +8,7 @@ use crate::application::usecase::{
 use crate::core::single_flight::SingleFlight;
 use crate::platform::{
     permissions::NoopPermissions, process::NoopProcess, shell::NoopShell, system::CurrentSystem,
+    window::NoopWindow,
 };
 use crate::repository::RepositoryBundle;
 use serde_json::Value;
@@ -22,10 +24,18 @@ pub(crate) struct BackendServices {
     shell: NoopShell,
     permissions: NoopPermissions,
     system_info: CurrentSystem,
+    window: Box<dyn WindowPort>,
 }
 
 impl Default for BackendServices {
     fn default() -> Self {
+        Self::with_window(Box::new(NoopWindow))
+    }
+}
+
+impl BackendServices {
+    /// 中文职责说明：由最外层 adapter 注入窗口端口，command 不负责构造平台对象。
+    pub(crate) fn with_window(window: Box<dyn WindowPort>) -> Self {
         Self {
             repositories: RepositoryBundle::real(),
             single_flight: SingleFlight::default(),
@@ -33,11 +43,10 @@ impl Default for BackendServices {
             shell: NoopShell::default(),
             permissions: NoopPermissions::default(),
             system_info: CurrentSystem,
+            window,
         }
     }
-}
 
-impl BackendServices {
     pub(crate) fn system(&self) -> SystemUseCase<'_> {
         SystemUseCase::new(&self.repositories, &self.single_flight, &self.system_info)
     }
@@ -96,5 +105,9 @@ impl BackendServices {
 
     pub(crate) fn open_privacy_pane(&self, pane: String) -> Result<CoreEnvelope<Value>, CoreError> {
         self.system().open_privacy_pane(&self.permissions, pane)
+    }
+
+    pub(crate) fn focus_main_window(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+        self.system().focus_main_window(self.window.as_ref())
     }
 }

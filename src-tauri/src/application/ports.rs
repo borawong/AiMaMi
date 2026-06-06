@@ -1,7 +1,7 @@
 use crate::core::error::CoreError;
 
 /// 中文职责说明：窗口平台端口，usecase 只依赖本接口，不直接接触 Tauri 窗口对象。
-pub(crate) trait WindowPort {
+pub(crate) trait WindowPort: Send + Sync {
     fn focus_main_window(&self) -> Result<(), CoreError>;
 }
 

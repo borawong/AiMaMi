@@ -444,7 +444,7 @@ export interface BackendSkeletonBoundaryStatus {
   repositoryPathKnown: boolean;
   platformChecked: boolean;
   coreChecked: boolean;
-  effect: "pending" | "no_op" | "unsupported" | string;
+  effect: "pending" | "no_op" | "platform" | "unsupported";
 }
 
 export interface BackendSkeletonStatus {

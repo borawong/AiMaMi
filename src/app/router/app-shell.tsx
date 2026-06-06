@@ -8,7 +8,6 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   AppSidebar,
@@ -17,11 +16,8 @@ import {
 } from "@/components/layout/sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { usePromptHostActions } from "@/app/runtime/prompt-host";
-import { useAccentColor } from "@/hooks/use-accent-color";
-import { useAutoRefresh } from "@/hooks/use-auto-refresh";
+import { useRouteRenderSettings } from "@/app/providers/route-settings-provider";
 import { useDeferredReady } from "@/hooks/use-deferred-ready";
-import { useTheme } from "@/hooks/use-theme";
 import { isMacPlatform } from "@/lib/platform";
 import { getRouteMeta, getVisibleRouteMeta } from "@/routes/registry/route-meta";
 import { preloadVisibleRoutes } from "@/routes/registry/route-preload";
@@ -40,22 +36,11 @@ export function AppRouterShell() {
   const [sidebarOpen, setSidebarOpen] = useState(
     () => localStorage.getItem("sidebar_collapsed") === "false",
   );
-  const { theme, setTheme } = useTheme();
-  const { accent, setAccent, heatmap, setHeatmap } = useAccentColor();
-  const { i18n } = useTranslation();
-  const { refreshInterval, setRefreshInterval } = useAutoRefresh();
-  const { checkForUpdate } = usePromptHostActions();
+  const settings = useRouteRenderSettings();
   const activeRoute = resolveRouteFromPath(location.pathname);
   const activeRouteMeta = getRouteMeta(activeRoute);
   const visibleRouteMeta = useMemo(() => getVisibleRouteMeta(), []);
   const prewarmRoutes = useDeferredReady(900);
-
-  const handleThemeChange = useCallback(
-    (nextTheme: "light" | "dark" | "system") => {
-      setTheme(nextTheme);
-    },
-    [setTheme],
-  );
 
   const handleNavigate = useCallback(
     (nextRoute: Route) => {
@@ -66,35 +51,9 @@ export function AppRouterShell() {
 
   const routeContext = useMemo<RouteRenderContext>(
     () => ({
-      settings: {
-        theme,
-        onThemeChange: handleThemeChange,
-        accent,
-        setAccent,
-        heatmap,
-        setHeatmap,
-        language: i18n.language,
-        setLanguage: (lang: string) => {
-          void i18n.changeLanguage(lang);
-          localStorage.setItem("app_language", lang);
-        },
-        refreshInterval,
-        setRefreshInterval,
-        onCheckUpdate: checkForUpdate,
-      },
+      settings,
     }),
-    [
-      accent,
-      checkForUpdate,
-      handleThemeChange,
-      heatmap,
-      i18n,
-      refreshInterval,
-      setAccent,
-      setHeatmap,
-      setRefreshInterval,
-      theme,
-    ],
+    [settings],
   );
 
   useEffect(() => {
@@ -134,7 +93,7 @@ export function AppRouterShell() {
           activeRoute={activeRoute}
           routeItems={visibleRouteMeta}
           onNavigate={handleNavigate}
-          onThemeChange={handleThemeChange}
+          onThemeChange={settings.onThemeChange}
         />
         <SidebarInset className="max-h-screen overflow-hidden">
           <SiteHeader routeMeta={activeRouteMeta} />

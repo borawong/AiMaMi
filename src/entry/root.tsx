@@ -1,10 +1,9 @@
 /**
- * 中文职责说明：应用根只装配全局 Provider、错误边界、runtime 初始化器、路由和提示宿主。
+ * 中文职责说明：应用根只装配全局 Provider、错误边界、runtime 初始化器和路由。
  */
 import { useTranslation } from "react-i18next";
 import { AppProviders } from "@/app/providers/app-providers";
 import { RuntimeInitializer } from "@/app/runtime/runtime-initializer";
-import { PromptHost } from "@/app/runtime/prompt-host";
 import { AppRouter } from "@/app/router/app-router";
 import { ErrorBoundary } from "@/components/error-boundary";
 
@@ -12,10 +11,8 @@ export function Root() {
   return (
     <AppProviders>
       <ErrorBoundary fallback={<RootErrorFallback />}>
-        <PromptHost>
-          <RuntimeInitializer />
-          <AppRouter />
-        </PromptHost>
+        <RuntimeInitializer />
+        <AppRouter />
       </ErrorBoundary>
     </AppProviders>
   );

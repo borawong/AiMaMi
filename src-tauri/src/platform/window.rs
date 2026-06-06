@@ -3,19 +3,29 @@ use crate::core::error::CoreError;
 use tauri::Manager;
 
 /// 中文职责说明：Tauri 窗口 adapter，只能位于 platform 层，command/usecase 不直接持有窗口对象。
-pub(crate) struct TauriWindow<'a> {
-    app: &'a tauri::AppHandle,
+pub(crate) struct TauriWindow {
+    app: tauri::AppHandle,
 }
 
-impl<'a> TauriWindow<'a> {
-    pub(crate) fn new(app: &'a tauri::AppHandle) -> Self {
+impl TauriWindow {
+    pub(crate) fn new(app: tauri::AppHandle) -> Self {
         Self { app }
     }
 }
 
-impl WindowPort for TauriWindow<'_> {
+impl WindowPort for TauriWindow {
     fn focus_main_window(&self) -> Result<(), CoreError> {
-        focus_main_window(self.app)
+        focus_main_window(&self.app)
+    }
+}
+
+/// 中文职责说明：无窗口运行场景的窗口端口占位，只表达端口边界，不执行 UI 副作用。
+#[derive(Default)]
+pub(crate) struct NoopWindow;
+
+impl WindowPort for NoopWindow {
+    fn focus_main_window(&self) -> Result<(), CoreError> {
+        Ok(())
     }
 }
 
