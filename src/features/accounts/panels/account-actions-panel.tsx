@@ -4,6 +4,7 @@
 import { useMemo, useState } from "react";
 import {
   Download,
+  ExternalLink,
   FileSearch,
   Import,
   LogOut,
@@ -201,6 +202,25 @@ export function AccountActionsPanel({
               type="button"
               size="sm"
               variant="outline"
+              disabled={!canUseImportFile || module.openPath.isPending}
+              aria-label={t("accounts.openImportPath")}
+              onClick={() =>
+                void module.openPath.run({
+                  path: importFilePath.trim(),
+                })
+              }
+            >
+              <ButtonBusyContent
+                busy={module.openPath.isPending}
+                idleIcon={<ExternalLink className="h-3.5 w-3.5" />}
+                idleLabel={t("accounts.openImportPath")}
+                busyLabel={t("common.refreshing")}
+              />
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
               disabled={
                 !canUseImportFile || module.previewAccountImport.isPending
               }
@@ -289,6 +309,25 @@ export function AccountActionsPanel({
             onChange={(event) => setExportTargetPath(event.target.value)}
           />
           <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={!canUseExportTarget || module.openPath.isPending}
+              aria-label={t("accounts.openExportPath")}
+              onClick={() =>
+                void module.openPath.run({
+                  path: exportTargetPath.trim(),
+                })
+              }
+            >
+              <ButtonBusyContent
+                busy={module.openPath.isPending}
+                idleIcon={<ExternalLink className="h-3.5 w-3.5" />}
+                idleLabel={t("accounts.openExportPath")}
+                busyLabel={t("common.refreshing")}
+              />
+            </Button>
             <Button
               type="button"
               size="sm"

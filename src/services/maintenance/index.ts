@@ -1,4 +1,4 @@
-import { invokeIpc } from "@/contracts/ipc";
+import { invokeIpc, type IpcEvidencePayload } from "@/contracts/ipc";
 import type {
   CleanPayload,
   CoreEnvelope,
@@ -31,6 +31,22 @@ export const maintenanceService = {
 
   resetCodexConfig: () =>
     ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("reset_codex_config")),
+
+  getImageCompat: () =>
+    readEnvelopeData(invokeIpc<CoreEnvelope<boolean>>("get_image_compat")),
+
+  setImageCompat: (enabled: boolean) =>
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<boolean>>("set_image_compat", { enabled }),
+    ),
+
+  runCodexRouterDiagnostics: () =>
+    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("run_codex_router_diagnostics"),
+
+  fixCodexRouterIssue: (itemId: string) =>
+    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("fix_codex_router_issue", {
+      itemId,
+    }),
 
   openPath: (path: string) =>
     ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("open_path", { path })),

@@ -136,6 +136,29 @@ export function useSettingsHotspotMutation(options?: { onChanged?: (enabled: boo
   });
 }
 
+export function useSettingsRefreshInterval() {
+  const queryClient = useQueryClient();
+  const refreshIntervalQueryKey = ["usage-refresh-interval"] as const;
+
+  const refreshIntervalQuery = useQuery({
+    queryKey: refreshIntervalQueryKey,
+    queryFn: () => api.getUsageRefreshInterval(),
+    staleTime: Infinity,
+  });
+
+  const saveRefreshIntervalMutation = useMutation({
+    mutationFn: (interval: string) => api.setUsageRefreshInterval(interval),
+    onSuccess: (interval) => {
+      queryClient.setQueryData(refreshIntervalQueryKey, interval);
+    },
+  });
+
+  return {
+    refreshIntervalQuery,
+    saveRefreshIntervalMutation,
+  };
+}
+
 export function useSettingsAppVersion() {
   const [appVersion, setAppVersion] = useState("...");
 

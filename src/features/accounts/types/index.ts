@@ -33,3 +33,7 @@ export interface AccountImportFileInput {
   overwriteExisting: boolean;
   selectedKeys?: string[] | null;
 }
+
+export interface AccountOpenPathInput {
+  path: string;
+}

@@ -9,6 +9,18 @@ export function useDaemonAutoswitchCacheController() {
 
 export function useDaemonAutoswitchModule() {
   const queryClient = useQueryClient();
+  const writeDaemonPayload = (payload: unknown) => {
+    DaemonAutoswitchCache.writeAuthoritativePayload(queryClient, {
+      payload,
+      source: "mutation-payload",
+      sequence: Date.now(),
+      receivedAt: Date.now(),
+    });
+    void DaemonAutoswitchCache.invalidateContractQueries(queryClient);
+    void queryClient.invalidateQueries({ queryKey: ["accounts"] });
+    void queryClient.invalidateQueries({ queryKey: ["runtime-state", "display"] });
+    void queryClient.invalidateQueries({ queryKey: ["quota-history"] });
+  };
 
   const bootstrapQuery = useQuery({
     queryKey: [...DaemonAutoswitchCache.queryKeys.root, "bootstrap"],
@@ -23,15 +35,22 @@ export function useDaemonAutoswitchModule() {
 
   const runOnceMutation = useMutation({
     mutationFn: () => api.runDaemonOnce(),
-    onSuccess: (payload) => {
-      DaemonAutoswitchCache.writeAuthoritativePayload(queryClient, {
-        payload,
-        source: "mutation-payload",
-        sequence: Date.now(),
-        receivedAt: Date.now(),
-      });
-      void DaemonAutoswitchCache.invalidateContractQueries(queryClient);
-    },
+    onSuccess: writeDaemonPayload,
+  });
+
+  const dismissPendingMutation = useMutation({
+    mutationFn: () => api.dismissPendingAutoSwitch(),
+    onSuccess: writeDaemonPayload,
+  });
+
+  const confirmPendingMutation = useMutation({
+    mutationFn: () => api.confirmPendingAutoSwitch(),
+    onSuccess: writeDaemonPayload,
+  });
+
+  const confirmPendingAndRestartMutation = useMutation({
+    mutationFn: () => api.confirmPendingAutoSwitchAndRestartCodex(),
+    onSuccess: writeDaemonPayload,
   });
 
   return {
@@ -42,6 +61,24 @@ export function useDaemonAutoswitchModule() {
       labelKey: "daemonAutoswitch.runOnce",
       run: () => runOnceMutation.mutateAsync(),
       isPending: runOnceMutation.isPending,
+    },
+    dismissPendingAction: {
+      id: "dismiss-pending",
+      labelKey: "daemonAutoswitch.dismissPending",
+      run: () => dismissPendingMutation.mutateAsync(),
+      isPending: dismissPendingMutation.isPending,
+    },
+    confirmPendingAction: {
+      id: "confirm-pending",
+      labelKey: "daemonAutoswitch.confirmPending",
+      run: () => confirmPendingMutation.mutateAsync(),
+      isPending: confirmPendingMutation.isPending,
+    },
+    confirmPendingAndRestartAction: {
+      id: "confirm-pending-restart",
+      labelKey: "daemonAutoswitch.confirmPendingRestart",
+      run: () => confirmPendingAndRestartMutation.mutateAsync(),
+      isPending: confirmPendingAndRestartMutation.isPending,
     },
   };
 }

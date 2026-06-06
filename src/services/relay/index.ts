@@ -45,16 +45,18 @@ export const relayService = {
   getActive: () => invokeIpc<CoreEnvelope<IpcEvidencePayload>>("get_relay_active"),
   getProxyStatus: () =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("get_relay_proxy_status"),
-  setCodexRouterEnabled: (enabled: boolean, relaunch: boolean) =>
+  setCodexRouterEnabled: (enabled: boolean, relaunch = true) =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("set_codex_router_enabled", {
       enabled,
       relaunch,
     }),
+  restartCodexApp: () =>
+    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("restart_codex"),
   setBlockOfficialPassthrough: (blocked: boolean) =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("set_block_official_passthrough", {
       blocked,
     }),
-  getPassthroughAuditLog: (limit: number) =>
+  getPassthroughAuditLog: (limit = 50) =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("get_passthrough_audit_log", {
       limit,
     }),

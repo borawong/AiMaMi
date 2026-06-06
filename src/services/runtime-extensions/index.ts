@@ -5,17 +5,21 @@ import {
 } from "@/contracts/ipc";
 import type { CoreEnvelope } from "@/types";
 
+export type RuntimeExtensionPayload = IpcEvidencePayload;
+export type RuntimeExtensionSettings = IpcJsonValue;
+export type RuntimeExtensionEnvelope = CoreEnvelope<RuntimeExtensionPayload>;
+
 export const runtimeExtensionsService = {
-  listPlugins: () => invokeIpc<CoreEnvelope<IpcEvidencePayload>>("list_plugins"),
+  listPlugins: () => invokeIpc<RuntimeExtensionEnvelope>("list_plugins"),
 
   togglePlugin: (id: string, enabled: boolean) =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("toggle_plugin", { id, enabled }),
+    invokeIpc<RuntimeExtensionEnvelope>("toggle_plugin", { id, enabled }),
 
   getPluginConfig: (id: string) =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("get_plugin_config", { id }),
+    invokeIpc<RuntimeExtensionEnvelope>("get_plugin_config", { id }),
 
-  updatePluginConfig: (id: string, settings: IpcJsonValue) =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("update_plugin_config", {
+  updatePluginConfig: (id: string, settings: RuntimeExtensionSettings) =>
+    invokeIpc<RuntimeExtensionEnvelope>("update_plugin_config", {
       id,
       settings,
     }),

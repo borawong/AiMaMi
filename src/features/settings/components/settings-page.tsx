@@ -1,7 +1,7 @@
 /**
  * 中文职责说明：设置模块现有可运行页面，由 features/settings/Content 作为模块 Content 接入。
  */
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import type { ApiProxyMode } from "@/types";
 import { cn } from "@/lib/utils";
@@ -37,6 +37,7 @@ import {
   useSettingsAppVersion,
   useSettingsAutoSwitchMutations,
   useSettingsHotspotMutation,
+  useSettingsRefreshInterval,
   useSettingsRuntimeState,
 } from "../hooks";
 export interface SettingsPageProps {
@@ -63,6 +64,13 @@ function proxyModeBadgeLabel(
     : t("settings.apiProxyModeDirect");
 }
 
+function isRefreshInterval(value: unknown): value is RefreshInterval {
+  return (
+    typeof value === "string" &&
+    REFRESH_OPTIONS.some((item) => item.value === value)
+  );
+}
+
 export function SettingsPage({
   theme,
   onThemeChange,
@@ -86,6 +94,10 @@ export function SettingsPage({
     hotspotQuery,
   } = useSettingsRuntimeState(supportsHotspot);
   const autoSwitch = status?.autoSwitch;
+  const {
+    refreshIntervalQuery,
+    saveRefreshIntervalMutation,
+  } = useSettingsRefreshInterval();
 
   const [thresholdDialogOpen, setThresholdDialogOpen] = useState(false);
   const [draft5h, setDraft5h] = useState(15);
@@ -167,6 +179,33 @@ export function SettingsPage({
   };
 
   const appVersion = useSettingsAppVersion();
+
+  useEffect(() => {
+    const nextRefreshInterval = refreshIntervalQuery.data;
+    if (
+      isRefreshInterval(nextRefreshInterval) &&
+      nextRefreshInterval !== refreshInterval
+    ) {
+      setRefreshInterval(nextRefreshInterval);
+    }
+  }, [refreshIntervalQuery.data, refreshInterval, setRefreshInterval]);
+
+  const handleRefreshIntervalChange = (value: string) => {
+    if (!isRefreshInterval(value) || value === refreshInterval) return;
+
+    const previousRefreshInterval = refreshInterval;
+    setRefreshInterval(value);
+    saveRefreshIntervalMutation.mutate(value, {
+      onError: () => {
+        setRefreshInterval(previousRefreshInterval);
+        toast({
+          title: t("settings.refreshIntervalSaveFailedTitle"),
+          description: t("settings.refreshIntervalSaveFailedDesc"),
+          variant: "destructive",
+        });
+      },
+    });
+  };
 
   return (
     <div className="space-y-8">
@@ -282,7 +321,7 @@ export function SettingsPage({
               label: t(labelKey),
             }))}
             value={refreshInterval}
-            onChange={(v) => setRefreshInterval(v as RefreshInterval)}
+            onChange={handleRefreshIntervalChange}
             compact
           />
         </SettingRow>

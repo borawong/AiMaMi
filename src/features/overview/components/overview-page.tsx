@@ -39,7 +39,11 @@ export function OverviewPage() {
 
   return (
     <div className="space-y-5">
-      <EvidencePageHeader titleKey="nav.overview" descriptionKey="overview.description" />
+      <EvidencePageHeader
+        titleKey="nav.overview"
+        descriptionKey="overview.description"
+        actions={[module.refreshUsageAction]}
+      />
 
       <div className="grid gap-3 md:grid-cols-4">
         <MetricCard

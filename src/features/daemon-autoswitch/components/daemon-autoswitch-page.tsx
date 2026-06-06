@@ -32,7 +32,12 @@ export function DaemonAutoswitchPage() {
       <EvidencePageHeader
         titleKey="nav.daemonAutoswitch"
         descriptionKey="daemonAutoswitch.description"
-        actions={[module.runOnceAction]}
+        actions={[
+          module.runOnceAction,
+          module.dismissPendingAction,
+          module.confirmPendingAction,
+          module.confirmPendingAndRestartAction,
+        ]}
       />
 
       <div className="grid gap-3 md:grid-cols-3">

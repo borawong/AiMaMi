@@ -362,15 +362,15 @@ function McpEditorDialog({
           {transport === "stdio" ? (
             <>
               <InputField label={t("mcp.command")} value={command} onChange={setCommand} mono />
-              <InputField label={t("mcp.args")} value={args} onChange={setArgs} mono placeholder="arg1, arg2, ..." />
+              <InputField label={t("mcp.args")} value={args} onChange={setArgs} mono placeholder={t("mcp.argsPlaceholder")} />
             </>
           ) : (
             <>
               <InputField label={t("mcp.url")} value={url} onChange={setUrl} mono />
-              <TextareaField label={t("mcp.headers")} value={headersText} onChange={setHeadersText} placeholder="Authorization: Bearer ..." mono />
+              <TextareaField label={t("mcp.headers")} value={headersText} onChange={setHeadersText} placeholder={t("mcp.headersPlaceholder")} mono />
             </>
           )}
-          <TextareaField label={t("mcp.env")} value={envText} onChange={setEnvText} placeholder="KEY=value" mono />
+          <TextareaField label={t("mcp.env")} value={envText} onChange={setEnvText} placeholder={t("mcp.envPlaceholder")} mono />
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>

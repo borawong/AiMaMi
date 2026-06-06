@@ -22,6 +22,7 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  type LucideIcon,
 } from "lucide-react";
 import { useMaintenanceActionMutations } from "../hooks";
 
@@ -43,10 +44,16 @@ export function MaintenancePage() {
   };
 
   const {
+    imageCompatQuery,
     diagnoseMutation,
     cleanMutation,
     rebuildMutation,
     restartMutation,
+    forceKillMutation,
+    resetConfigMutation,
+    setImageCompatMutation,
+    routerDiagnosticsMutation,
+    fixRouterIssueMutation,
   } = useMaintenanceActionMutations({
     onDiagnosed: (res) => {
       const d = res.data;
@@ -92,6 +99,8 @@ export function MaintenancePage() {
     const startedAt = Date.now();
     try {
       await mutateAsync();
+    } catch (error) {
+      setActionResult(key, { type: "error", message: String(error) });
     } finally {
       const elapsed = Date.now() - startedAt;
       if (elapsed < MIN_FEEDBACK_MS) {
@@ -112,7 +121,7 @@ export function MaintenancePage() {
 
   const actions: {
     key: string;
-    icon: typeof Stethoscope;
+    icon: LucideIcon;
     iconColor: string;
     label: string;
     description: string;
@@ -130,6 +139,40 @@ export function MaintenancePage() {
       actionLabel: t("maintenance.diagnoseAction"),
       loadingLabel: t("maintenance.diagnosing"),
       onAction: () => runAction("diagnose", () => diagnoseMutation.mutateAsync()),
+    },
+    {
+      key: "routerDiagnostics",
+      icon: Stethoscope,
+      iconColor: "text-cyan-500",
+      label: t("maintenance.routerDiagnostics"),
+      description: t("maintenance.routerDiagnosticsDesc"),
+      actionLabel: t("maintenance.routerDiagnosticsAction"),
+      loadingLabel: t("maintenance.routerDiagnosing"),
+      onAction: () =>
+        runAction("routerDiagnostics", async () => {
+          await routerDiagnosticsMutation.mutateAsync();
+          setActionResult("routerDiagnostics", {
+            type: "success",
+            message: t("maintenance.routerDiagnosticsResult"),
+          });
+        }),
+    },
+    {
+      key: "fixRouterAll",
+      icon: CheckCircle2,
+      iconColor: "text-emerald-500",
+      label: t("maintenance.fixRouterAll"),
+      description: t("maintenance.fixRouterAllDesc"),
+      actionLabel: t("maintenance.fixRouterAllAction"),
+      loadingLabel: t("maintenance.fixingRouter"),
+      onAction: () =>
+        runAction("fixRouterAll", async () => {
+          await fixRouterIssueMutation.mutateAsync({ itemId: "all" });
+          setActionResult("fixRouterAll", {
+            type: "success",
+            message: t("maintenance.routerFixAllResult"),
+          });
+        }),
     },
     {
       key: "clean",
@@ -150,6 +193,66 @@ export function MaintenancePage() {
       actionLabel: t("maintenance.rebuildAction"),
       loadingLabel: t("maintenance.rebuilding"),
       onAction: () => runAction("rebuild", () => rebuildMutation.mutateAsync()),
+    },
+    {
+      key: "forceKill",
+      icon: AlertCircle,
+      iconColor: "text-orange-500",
+      label: t("maintenance.forceKillCodex"),
+      description: t("maintenance.forceKillCodexDesc"),
+      actionLabel: t("maintenance.forceKillCodexAction"),
+      loadingLabel: t("maintenance.forceKilling"),
+      onAction: () =>
+        runAction("forceKill", async () => {
+          await forceKillMutation.mutateAsync();
+          setActionResult("forceKill", {
+            type: "success",
+            message: t("maintenance.forceKillResult"),
+          });
+        }),
+      variant: "destructive",
+    },
+    {
+      key: "resetConfig",
+      icon: RotateCcw,
+      iconColor: "text-rose-500",
+      label: t("maintenance.resetCodexConfig"),
+      description: t("maintenance.resetCodexConfigDesc"),
+      actionLabel: t("maintenance.resetCodexConfigAction"),
+      loadingLabel: t("maintenance.resettingConfig"),
+      onAction: () =>
+        runAction("resetConfig", async () => {
+          await resetConfigMutation.mutateAsync();
+          setActionResult("resetConfig", {
+            type: "success",
+            message: t("maintenance.resetConfigResult"),
+          });
+        }),
+      variant: "destructive",
+    },
+    {
+      key: "imageCompat",
+      icon: CheckCircle2,
+      iconColor: "text-sky-500",
+      label: t("maintenance.imageCompat"),
+      description: t("maintenance.imageCompatDesc"),
+      actionLabel: imageCompatQuery.data
+        ? t("maintenance.imageCompatDisable")
+        : t("maintenance.imageCompatEnable"),
+      loadingLabel: t("maintenance.imageCompatRunning"),
+      onAction: () =>
+        runAction("imageCompat", async () => {
+          const enabled = !(imageCompatQuery.data ?? false);
+          const nextEnabled = await setImageCompatMutation.mutateAsync({
+            enabled,
+          });
+          setActionResult("imageCompat", {
+            type: "success",
+            message: t("maintenance.imageCompatResult", {
+              state: t(nextEnabled ? "maintenance.enabled" : "maintenance.disabled"),
+            }),
+          });
+        }),
     },
     {
       key: "restart",

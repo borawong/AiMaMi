@@ -57,6 +57,10 @@ export function AccountsPage() {
       <EvidencePageHeader
         titleKey="nav.accounts"
         descriptionKey="accounts.description"
+        actions={[
+          module.refreshUsageSnapshotAction,
+          module.attachMonitorAction,
+        ]}
       />
 
       <div className="grid gap-3 md:grid-cols-3">

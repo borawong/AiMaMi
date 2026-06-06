@@ -1,10 +1,15 @@
 /**
  * 中文职责说明：maintenance 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
  */
-import { useMutation, useQueryClient, type QueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { api } from "@/lib/api";
+import { maintenanceService } from "@/services/maintenance";
 import { MaintenanceCache } from "../cache";
+import type {
+  MaintenanceFixIssueInput,
+  MaintenanceImageCompatInput,
+} from "../types";
 
 let maintenanceCacheSequence = 0;
 
@@ -41,6 +46,13 @@ export function useMaintenanceActionMutations(options: {
   onRestartError: (error: unknown) => void;
 }) {
   const queryClient = useQueryClient();
+  const imageCompatQueryKey = [...MaintenanceCache.queryKeys.root, "image-compat"] as const;
+
+  const imageCompatQuery = useQuery({
+    queryKey: imageCompatQueryKey,
+    queryFn: () => maintenanceService.getImageCompat(),
+    staleTime: 30_000,
+  });
 
   const diagnoseMutation = useMutation({
     mutationFn: () => api.diagnose(),
@@ -78,10 +90,54 @@ export function useMaintenanceActionMutations(options: {
     onError: options.onRestartError,
   });
 
+  const forceKillMutation = useMutation({
+    mutationFn: () => maintenanceService.forceKillCodex(),
+    onSuccess: async (result) => {
+      await writeMaintenanceMutationPayload(queryClient, result);
+    },
+  });
+
+  const resetConfigMutation = useMutation({
+    mutationFn: () => maintenanceService.resetCodexConfig(),
+    onSuccess: async (result) => {
+      await writeMaintenanceMutationPayload(queryClient, result);
+    },
+  });
+
+  const setImageCompatMutation = useMutation({
+    mutationFn: ({ enabled }: MaintenanceImageCompatInput) =>
+      maintenanceService.setImageCompat(enabled),
+    onSuccess: async (result) => {
+      queryClient.setQueryData(imageCompatQueryKey, result);
+      await writeMaintenanceMutationPayload(queryClient, result);
+    },
+  });
+
+  const routerDiagnosticsMutation = useMutation({
+    mutationFn: () => maintenanceService.runCodexRouterDiagnostics(),
+    onSuccess: async (result) => {
+      await writeMaintenanceMutationPayload(queryClient, result);
+    },
+  });
+
+  const fixRouterIssueMutation = useMutation({
+    mutationFn: ({ itemId }: MaintenanceFixIssueInput) =>
+      maintenanceService.fixCodexRouterIssue(itemId),
+    onSuccess: async (result) => {
+      await writeMaintenanceMutationPayload(queryClient, result);
+    },
+  });
+
   return {
+    imageCompatQuery,
     diagnoseMutation,
     cleanMutation,
     rebuildMutation,
     restartMutation,
+    forceKillMutation,
+    resetConfigMutation,
+    setImageCompatMutation,
+    routerDiagnosticsMutation,
+    fixRouterIssueMutation,
   };
 }

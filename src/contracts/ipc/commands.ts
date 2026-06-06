@@ -1020,7 +1020,7 @@ export const IPC_COMMAND_DEFINITIONS = [
     "command": "import_remote_device_secret_if_empty",
     "wrapperNames": [],
     "argKeys": [
-      "sensitive-field"
+      "secret"
     ],
     "source": "minified",
     "tier": "P1"

@@ -5,3 +5,8 @@ import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
 
 export type DaemonAutoswitchModuleId = "daemon-autoswitch";
 export type DaemonAutoswitchCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
+
+export interface DaemonAutoSwitchConfigInput {
+  threshold5hPercent?: number;
+  thresholdWeeklyPercent?: number;
+}

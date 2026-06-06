@@ -2,6 +2,7 @@ import { useRef, type MutableRefObject } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { api } from "@/lib/api";
+import { relayService } from "@/services/relay";
 import { RelayCache } from "../cache";
 
 export function useRelayCacheController() {
@@ -126,6 +127,10 @@ export function useRelayModule() {
     latestMutationSequenceRef,
     ({ enabled, relaunch }) => api.setCodexRouterEnabled(enabled, relaunch),
   );
+  const restartCodexAppMutation = useRelayEvidenceMutation<void>(
+    latestMutationSequenceRef,
+    () => relayService.restartCodexApp(),
+  );
   const setBlockPassthroughMutation = useRelayEvidenceMutation<boolean>(
     latestMutationSequenceRef,
     (blocked) => api.setBlockOfficialPassthrough(blocked),
@@ -162,6 +167,7 @@ export function useRelayModule() {
     testDraftMutation.isPending ||
     fetchModelsDraftMutation.isPending ||
     setRouterEnabledMutation.isPending ||
+    restartCodexAppMutation.isPending ||
     setBlockPassthroughMutation.isPending ||
     exportConfigMutation.isPending ||
     importConfigMutation.isPending ||
@@ -214,6 +220,10 @@ export function useRelayModule() {
       setCodexRouterEnabled: {
         run: (input: RelayRouterInput) => setRouterEnabledMutation.mutateAsync(input),
         isPending: setRouterEnabledMutation.isPending,
+      },
+      restartCodexApp: {
+        run: () => restartCodexAppMutation.mutateAsync(),
+        isPending: restartCodexAppMutation.isPending,
       },
       setBlockOfficialPassthrough: {
         run: (blocked: boolean) => setBlockPassthroughMutation.mutateAsync(blocked),

@@ -5,3 +5,11 @@ import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
 
 export type MaintenanceModuleId = "maintenance";
 export type MaintenanceCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
+
+export interface MaintenanceFixIssueInput {
+  itemId: string;
+}
+
+export interface MaintenanceImageCompatInput {
+  enabled: boolean;
+}

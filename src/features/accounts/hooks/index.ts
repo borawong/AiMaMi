@@ -1,12 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { api } from "@/lib/api";
+import { accountsService } from "@/services/accounts";
 import { AccountsCache } from "../cache";
 import type {
   AccountExportFileInput,
   AccountImportFileInput,
   AccountImportSessionInput,
   AccountKeysInput,
+  AccountOpenPathInput,
   AccountPreviewImportInput,
   AccountSwitchInput,
 } from "../types";
@@ -17,6 +19,11 @@ export function useAccountsCacheController() {
 
 export function useAccountsModule() {
   const queryClient = useQueryClient();
+  const invalidateDumpedContractQueries = () => {
+    void AccountsCache.invalidateContractQueries(queryClient);
+    void queryClient.invalidateQueries({ queryKey: ["runtime-state", "display"] });
+    void queryClient.invalidateQueries({ queryKey: ["quota-history"] });
+  };
   const writeMutationPayload = (payload: unknown) => {
     AccountsCache.writeAuthoritativePayload(queryClient, {
       payload,
@@ -24,7 +31,7 @@ export function useAccountsModule() {
       sequence: Date.now(),
       receivedAt: Date.now(),
     });
-    void AccountsCache.invalidateContractQueries(queryClient);
+    invalidateDumpedContractQueries();
   };
 
   const snapshotQuery = useQuery({
@@ -35,6 +42,11 @@ export function useAccountsModule() {
 
   const attachMonitorMutation = useMutation({
     mutationFn: () => api.beginAddAccountAttachMonitor(),
+    onSuccess: writeMutationPayload,
+  });
+
+  const refreshUsageSnapshotMutation = useMutation({
+    mutationFn: () => accountsService.refreshUsageSnapshot(),
     onSuccess: writeMutationPayload,
   });
 
@@ -96,8 +108,18 @@ export function useAccountsModule() {
     onSuccess: writeMutationPayload,
   });
 
+  const openPathMutation = useMutation({
+    mutationFn: ({ path }: AccountOpenPathInput) => accountsService.openPath(path),
+  });
+
   return {
     snapshotQuery,
+    refreshUsageSnapshotAction: {
+      id: "refresh-usage-snapshot",
+      labelKey: "accounts.refreshUsageSnapshot",
+      run: () => refreshUsageSnapshotMutation.mutateAsync(),
+      isPending: refreshUsageSnapshotMutation.isPending,
+    },
     attachMonitorAction: {
       id: "attach-monitor",
       labelKey: "accounts.beginAttachMonitor",
@@ -139,6 +161,10 @@ export function useAccountsModule() {
     importAccountsFromFile: {
       run: (input: AccountImportFileInput) => importFileMutation.mutateAsync(input),
       isPending: importFileMutation.isPending,
+    },
+    openPath: {
+      run: (input: AccountOpenPathInput) => openPathMutation.mutateAsync(input),
+      isPending: openPathMutation.isPending,
     },
   };
 }

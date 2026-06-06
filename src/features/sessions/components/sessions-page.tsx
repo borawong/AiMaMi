@@ -2,7 +2,7 @@
  * 中文职责说明：sessions 页面只渲染会话列表和短生命周期选择状态。
  */
 import { useMemo, useState } from "react";
-import { MessageSquareText, Trash2 } from "lucide-react";
+import { MessageSquareText, Trash2, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,11 +24,15 @@ import { useSessionsModule } from "../hooks";
 export function SessionsPage() {
   const { t } = useTranslation();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [sessionJsonDraft, setSessionJsonDraft] = useState("");
+  const [overwriteExisting, setOverwriteExisting] = useState(false);
   const module = useSessionsModule();
   const payload = envelopeData(module.sessionsQuery.data);
+  const usage = envelopeData(module.usageQuery.data);
   const sessions = readArray(payload, ["items", "sessions", "data.items"]);
   const total = sessions.length || readNumber(payload, ["total", "count"]);
   const totalSize = readNumber(payload, ["totalSizeBytes", "stats.totalSizeBytes"]);
+  const todaySessions = readNumber(usage, ["today.sessionCount"]);
 
   const selectedSet = useMemo(() => new Set(selectedIds), [selectedIds]);
 
@@ -44,6 +48,17 @@ export function SessionsPage() {
     setSelectedIds([]);
   };
 
+  const importSession = async () => {
+    const sessionJson = sessionJsonDraft.trim();
+    if (!sessionJson) return;
+    await module.importSessionMutation.mutateAsync({
+      sessionJson,
+      overwriteExisting,
+    });
+    setSessionJsonDraft("");
+    setOverwriteExisting(false);
+  };
+
   return (
     <div className="space-y-5">
       <EvidencePageHeader
@@ -52,7 +67,7 @@ export function SessionsPage() {
         actions={[]}
       />
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-4">
         <MetricCard
           labelKey="sessions.total"
           value={
@@ -62,9 +77,45 @@ export function SessionsPage() {
             </span>
           }
         />
+        <MetricCard labelKey="sessions.todaySessions" value={todaySessions} />
         <MetricCard labelKey="sessions.selected" value={selectedIds.length} />
         <MetricCard labelKey="sessions.totalSize" value={formatBytes(totalSize)} />
       </div>
+
+      <QueryPanel titleKey="sessions.importSession" state={module.sessionsQuery}>
+        <div className="grid gap-3">
+          <label className="min-w-0 text-xs text-muted-foreground">
+            <span>{t("sessions.sessionJsonInput")}</span>
+            <textarea
+              className="mt-1 min-h-28 w-full resize-y rounded-[8px] border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
+              value={sessionJsonDraft}
+              placeholder={t("sessions.sessionJsonPlaceholder")}
+              onChange={(event) => setSessionJsonDraft(event.target.value)}
+            />
+          </label>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <label className="inline-flex items-center gap-2 text-sm text-foreground">
+              <Checkbox
+                checked={overwriteExisting}
+                onCheckedChange={(checked) => setOverwriteExisting(checked === true)}
+              />
+              <span>{t("sessions.overwriteExisting")}</span>
+            </label>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={
+                !sessionJsonDraft.trim() || module.importSessionMutation.isPending
+              }
+              onClick={() => void importSession()}
+            >
+              <Upload className="h-3.5 w-3.5" />
+              {t("sessions.importSession")}
+            </Button>
+          </div>
+        </div>
+      </QueryPanel>
 
       <QueryPanel titleKey="sessions.list" state={module.sessionsQuery}>
         <div className="mb-3 flex justify-end">

@@ -11,6 +11,7 @@ import {
   Power,
   PowerOff,
   RadioTower,
+  RotateCw,
   Save,
   ShieldAlert,
   ShieldCheck,
@@ -164,7 +165,7 @@ export function RelayPage() {
                       type="button"
                       size="icon-sm"
                       variant="ghost"
-                      aria-label="activate_relay_provider"
+                      aria-label={t("relay.actionActivateProvider")}
                       disabled={!commandId || !currentIde || module.isAnyMutationPending}
                       onClick={() =>
                         void module.providerActions.activateProvider.run({
@@ -179,7 +180,7 @@ export function RelayPage() {
                       type="button"
                       size="icon-sm"
                       variant="ghost"
-                      aria-label="deactivate_relay_provider"
+                      aria-label={t("relay.actionDeactivateProvider")}
                       disabled={!commandId || !currentIde || module.isAnyMutationPending}
                       onClick={() =>
                         void module.providerActions.deactivateProvider.run({
@@ -194,7 +195,7 @@ export function RelayPage() {
                       type="button"
                       size="icon-sm"
                       variant="ghost"
-                      aria-label="test_relay_provider"
+                      aria-label={t("relay.actionTestProvider")}
                       disabled={!commandId || module.isAnyMutationPending}
                       onClick={() =>
                         void module.providerActions.testProvider.run(commandId)
@@ -207,7 +208,7 @@ export function RelayPage() {
                       size="icon-sm"
                       variant="ghost"
                       className="text-destructive hover:text-destructive"
-                      aria-label="delete_relay_provider"
+                      aria-label={t("relay.actionDeleteProvider")}
                       disabled={!commandId || module.isAnyMutationPending}
                       onClick={() =>
                         void module.providerActions.deleteProvider.run(commandId)
@@ -222,24 +223,24 @@ export function RelayPage() {
           />
           <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
             {/* 新增或更新与网络测试的真实表单字段未由本轮证据补齐，先只暴露禁用边界。 */}
-            <Button type="button" size="icon-sm" variant="outline" disabled aria-label="upsert_relay_provider">
+            <Button type="button" size="icon-sm" variant="outline" disabled aria-label={t("relay.actionUpsertProvider")}>
               <Save className="h-3.5 w-3.5" />
             </Button>
-            <Button type="button" size="icon-sm" variant="outline" disabled aria-label="set_relay_provider_network">
+            <Button type="button" size="icon-sm" variant="outline" disabled aria-label={t("relay.actionSetProviderNetwork")}>
               <Network className="h-3.5 w-3.5" />
             </Button>
             {/* 草稿测试和模型拉取只有输入结构边界，未还原草稿传输结构前不直发。 */}
-            <Button type="button" size="icon-sm" variant="outline" disabled aria-label="test_relay_draft">
+            <Button type="button" size="icon-sm" variant="outline" disabled aria-label={t("relay.actionTestDraft")}>
               <FileInput className="h-3.5 w-3.5" />
             </Button>
-            <Button type="button" size="icon-sm" variant="outline" disabled aria-label="fetch_relay_models_draft">
+            <Button type="button" size="icon-sm" variant="outline" disabled aria-label={t("relay.actionFetchModelsDraft")}>
               <Download className="h-3.5 w-3.5" />
             </Button>
             {/* 导入导出证据指向文件对话，当前写入范围内不新增系统文件选择器。 */}
-            <Button type="button" size="icon-sm" variant="outline" disabled aria-label="export_relay_config">
+            <Button type="button" size="icon-sm" variant="outline" disabled aria-label={t("relay.actionExportConfig")}>
               <Upload className="h-3.5 w-3.5" />
             </Button>
-            <Button type="button" size="icon-sm" variant="outline" disabled aria-label="import_relay_config">
+            <Button type="button" size="icon-sm" variant="outline" disabled aria-label={t("relay.actionImportConfig")}>
               <Download className="h-3.5 w-3.5" />
             </Button>
           </div>
@@ -296,7 +297,7 @@ export function RelayPage() {
               type="button"
               size="icon-sm"
               variant="outline"
-              aria-label="set_codex_router_enabled"
+              aria-label={t("relay.actionSetRouterEnabled")}
               disabled={module.isAnyMutationPending}
               onClick={() =>
                 void module.routerActions.setCodexRouterEnabled.run({
@@ -311,7 +312,17 @@ export function RelayPage() {
               type="button"
               size="icon-sm"
               variant="outline"
-              aria-label="set_block_official_passthrough"
+              aria-label={t("relay.actionRestartApplication")}
+              disabled={module.isAnyMutationPending}
+              onClick={() => void module.routerActions.restartCodexApp.run()}
+            >
+              <RotateCw className="h-3.5 w-3.5" />
+            </Button>
+            <Button
+              type="button"
+              size="icon-sm"
+              variant="outline"
+              aria-label={t("relay.actionSetBlockPassthrough")}
               disabled={module.isAnyMutationPending}
               onClick={() =>
                 void module.routerActions.setBlockOfficialPassthrough.run(!blocked)
@@ -323,7 +334,7 @@ export function RelayPage() {
               type="button"
               size="icon-sm"
               variant="outline"
-              aria-label="diagnose_codex_router"
+              aria-label={t("relay.actionDiagnoseRouter")}
               disabled={module.isAnyMutationPending}
               onClick={() => void module.routerActions.diagnoseCodexRouter.run()}
             >

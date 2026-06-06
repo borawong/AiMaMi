@@ -123,7 +123,7 @@ export function VoicePage() {
                   size="icon-sm"
                   variant="ghost"
                   className="shrink-0 text-destructive hover:text-destructive"
-                  aria-label="remove_voice_template"
+                  aria-label={t("voice.removeTemplate")}
                   disabled={!readString(template, ["id"], "") || isBusy}
                   onClick={() =>
                     void module.workspaceActions.removeTemplate.run(
@@ -141,7 +141,6 @@ export function VoicePage() {
             <BoundaryButton
               icon={<Save />}
               label={t("voice.upsertTemplateBoundary")}
-              ariaLabel="upsert_voice_template"
             />
           </div>
         </QueryPanel>
@@ -165,7 +164,7 @@ export function VoicePage() {
                   size="icon-sm"
                   variant="ghost"
                   className="shrink-0 text-destructive hover:text-destructive"
-                  aria-label="remove_voice_vocabulary"
+                  aria-label={t("voice.removeVocabulary")}
                   disabled={!readString(entry, ["id"], "") || isBusy}
                   onClick={() =>
                     void module.workspaceActions.removeVocabulary.run(
@@ -183,17 +182,22 @@ export function VoicePage() {
             <BoundaryButton
               icon={<Save />}
               label={t("voice.upsertVocabularyBoundary")}
-              ariaLabel="upsert_voice_vocabulary"
             />
             <BoundaryButton
               icon={<Wand2 />}
               label={t("voice.replaceVocabularyBoundary")}
-              ariaLabel="replace_voice_vocabulary_kind"
             />
             <BoundaryButton
               icon={<Search />}
               label={t("voice.vocabularyAppBoundary")}
-              ariaLabel="upsert_voice_vocabulary_app_scope"
+            />
+            <BoundaryButton
+              icon={<X />}
+              label={t("voice.removeVocabularyAppScopeBoundary")}
+            />
+            <BoundaryButton
+              icon={<Search />}
+              label={t("voice.resolveVocabularyAppInfoBoundary")}
             />
           </div>
         </QueryPanel>
@@ -308,22 +312,22 @@ export function VoicePage() {
             <BoundaryButton
               icon={<Keyboard />}
               label={t("voice.setTriggerKeyBoundary")}
-              ariaLabel="set_voice_trigger_key"
             />
             <BoundaryButton
               icon={<Keyboard />}
               label={t("voice.setTriggerBindingsBoundary")}
-              ariaLabel="set_voice_trigger_bindings"
             />
             <BoundaryButton
               icon={<Save />}
               label={t("voice.setProcessingModeBoundary")}
-              ariaLabel="set_voice_processing_mode_id"
             />
             <BoundaryButton
               icon={<Keyboard />}
               label={t("voice.modeShortcutBoundary")}
-              ariaLabel="set_voice_mode_shortcut"
+            />
+            <BoundaryButton
+              icon={<X />}
+              label={t("voice.removeModeShortcutBoundary")}
             />
           </div>
         </QueryPanel>
@@ -347,7 +351,7 @@ export function VoicePage() {
                   size="icon-sm"
                   variant="ghost"
                   className="shrink-0 text-destructive hover:text-destructive"
-                  aria-label="remove_voice_history_entry"
+              aria-label={t("voice.removeHistoryEntry")}
                   disabled={!readString(entry, ["id"], "") || isBusy}
                   onClick={() =>
                     void module.workspaceActions.removeHistoryEntry.run(
@@ -365,7 +369,6 @@ export function VoicePage() {
             <BoundaryButton
               icon={<Wand2 />}
               label={t("voice.generatePromptBoundary")}
-              ariaLabel="generate_voice_prompt"
             />
           </div>
         </QueryPanel>
@@ -491,12 +494,18 @@ export function VoicePage() {
             <BoundaryButton
               icon={<Save />}
               label={t("voice.saveLlmConfigBoundary")}
-              ariaLabel="save_voice_llm_config"
             />
             <BoundaryButton
               icon={<Save />}
               label={t("voice.saveAsrConfigBoundary")}
-              ariaLabel="save_voice_asr_config"
+            />
+            <BoundaryButton
+              icon={<Search />}
+              label={t("voice.testLlmConfigBoundary")}
+            />
+            <BoundaryButton
+              icon={<Search />}
+              label={t("voice.testAsrConfigBoundary")}
             />
           </div>
         </QueryPanel>
@@ -550,14 +559,12 @@ function ActionButton({
 function BoundaryButton({
   icon,
   label,
-  ariaLabel,
 }: {
   icon: ReactElement;
   label: string;
-  ariaLabel: string;
 }) {
   return (
-    <Button type="button" size="sm" variant="outline" disabled aria-label={ariaLabel}>
+    <Button type="button" size="sm" variant="outline" disabled aria-label={label}>
       {icon}
       {label}
     </Button>
