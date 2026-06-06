@@ -4,7 +4,7 @@ import type { ModuleCacheEnvelope, ModuleCacheSource } from "@/features/_shared/
 import type { AnalyticsRange } from "@/types";
 import type { AnalyticsCachePayload } from "../types";
 
-export const AnalyticsCache = createModuleCacheOwner("analytics");
+export const AnalyticsCache = createModuleCacheOwner<AnalyticsCachePayload>("analytics");
 export const AnalyticsQueryKeys = AnalyticsCache.queryKeys;
 export const writeAnalyticsAuthoritativePayload = AnalyticsCache.writeAuthoritativePayload;
 export const invalidateAnalyticsContractQueries = AnalyticsCache.invalidateContractQueries;

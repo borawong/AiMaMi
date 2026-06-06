@@ -3,7 +3,7 @@ import { createModuleCacheOwner } from "@/features/_shared/cache";
 import type { ModuleCacheEnvelope, ModuleCacheSource } from "@/features/_shared/cache";
 import type { SessionsCachePayload } from "../types";
 
-export const SessionsCache = createModuleCacheOwner("sessions");
+export const SessionsCache = createModuleCacheOwner<SessionsCachePayload>("sessions");
 export const SessionsQueryKeys = SessionsCache.queryKeys;
 export const writeSessionsAuthoritativePayload = SessionsCache.writeAuthoritativePayload;
 export const invalidateSessionsContractQueries = SessionsCache.invalidateContractQueries;

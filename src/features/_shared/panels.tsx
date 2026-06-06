@@ -144,14 +144,14 @@ export function QueryPanel({
   );
 }
 
-export function RecordList({
+export function RecordList<TItem = unknown>({
   items,
   emptyKey,
   renderItem,
 }: {
-  items: unknown[];
+  items: TItem[];
   emptyKey: string;
-  renderItem?: (item: unknown, index: number) => ReactNode;
+  renderItem?: (item: TItem, index: number) => ReactNode;
 }) {
   const { t } = useTranslation();
 

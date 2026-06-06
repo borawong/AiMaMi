@@ -704,6 +704,39 @@ function validateMcpTypedPayloadGate() {
   }
 }
 
+function validateSharedCacheTypedGate() {
+  const sharedCachePath = join(repoRoot, "src", "features", "_shared", "cache.ts");
+  const sharedUpdaterPath = join(repoRoot, "src", "features", "_shared", "updater.tsx");
+  const sharedPanelsPath = join(repoRoot, "src", "features", "_shared", "panels.tsx");
+  const sharedCache = readRequired(sharedCachePath);
+  const sharedUpdater = readRequired(sharedUpdaterPath);
+  const sharedPanels = readRequired(sharedPanelsPath);
+
+  const sharedCacheTypedOk =
+    sharedCache.includes("export interface ModuleCacheOwner<TPayload = unknown>") &&
+    sharedCache.includes("ModuleCacheWriteEnvelope<TPayload>") &&
+    sharedCache.includes("createModuleCacheOwner<TPayload = unknown>") &&
+    sharedCache.includes("ModuleCacheEnvelope<TPayload>") &&
+    !sharedCache.includes("ModuleCacheEnvelope<unknown>");
+
+  const sharedUpdaterTypedOk =
+    sharedUpdater.includes("ModuleCacheOwner<TPayload>") &&
+    sharedUpdater.includes("ModuleCacheEnvelope<TPayload>") &&
+    !sharedUpdater.includes("ModuleCacheEnvelope<unknown>");
+
+  const sharedPanelsTypedOk =
+    sharedPanels.includes("RecordList<TItem") &&
+    sharedPanels.includes("items: TItem[]") &&
+    sharedPanels.includes("renderItem?: (item: TItem, index: number) => ReactNode") &&
+    !sharedPanels.includes("items: unknown[]");
+
+  if (!sharedCacheTypedOk || !sharedUpdaterTypedOk || !sharedPanelsTypedOk) {
+    failures.push("_shared cache/updater/panel 蹇呴』淇濇寔 owner 绾ф硾鍨?payload 鍜岀粍浠?item 杈圭晫");
+  } else {
+    console.log("PASS _shared cache/updater/panel typed owner 杈圭晫");
+  }
+}
+
 function validatePluginsFrontendNoPromotionGate() {
   const acceptance = parseJsonFile(pluginsGateFiles.acceptanceMatrix) ?? {};
   const composite = parseJsonFile(pluginsGateFiles.compositeGateMatrix) ?? {};
@@ -936,6 +969,7 @@ validateQueryKeys(raw.queryHits);
 validatePageChunks(raw.frontendFiles);
 validateRoutesAndLocales(raw.controlFlow);
 validateKnownInternalFrontendGates();
+validateSharedCacheTypedGate();
 validateMcpTypedPayloadGate();
 validatePluginsFrontendNoPromotionGate();
 validatePluginsTypedPayloadGate();

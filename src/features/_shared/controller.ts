@@ -7,13 +7,18 @@ export interface ModuleRefreshRequest<TPayload> {
   load: (signal: AbortSignal) => Promise<TPayload>;
 }
 
-export function useModuleCacheController(cacheOwner: ModuleCacheOwner) {
+export function useModuleCacheController<TPayload = unknown>(
+  cacheOwner: ModuleCacheOwner<TPayload>,
+) {
   const queryClient = useQueryClient();
   const sequenceRef = useRef(0);
   const abortRef = useRef<AbortController | null>(null);
 
   const refresh = useCallback(
-    async <TPayload,>({ source, load }: ModuleRefreshRequest<TPayload>) => {
+    async <TNextPayload extends TPayload>({
+      source,
+      load,
+    }: ModuleRefreshRequest<TNextPayload>) => {
       abortRef.current?.abort();
       const abortController = new AbortController();
       abortRef.current = abortController;

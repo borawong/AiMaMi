@@ -17,7 +17,18 @@ export interface ModuleCacheEnvelope<TPayload> {
   mutationFenceAt?: number;
 }
 
-export interface ModuleCacheOwner {
+export type ModuleCachePayloadGuard<TPayload> = (value: unknown) => value is TPayload;
+
+export type ModuleCacheWriteEnvelope<TPayload> = Omit<
+  ModuleCacheEnvelope<TPayload>,
+  "moduleId"
+>;
+
+export interface ModuleCacheOwnerOptions<TPayload> {
+  isPayload?: ModuleCachePayloadGuard<TPayload>;
+}
+
+export interface ModuleCacheOwner<TPayload = unknown> {
   moduleId: Route;
   queryKeys: {
     root: QueryKey;
@@ -25,14 +36,18 @@ export interface ModuleCacheOwner {
     active: QueryKey;
     mutation: QueryKey;
   };
-  writeAuthoritativePayload: <TPayload>(
+  isPayload?: ModuleCachePayloadGuard<TPayload>;
+  writeAuthoritativePayload: <TNextPayload extends TPayload>(
     queryClient: QueryClient,
-    envelope: Omit<ModuleCacheEnvelope<TPayload>, "moduleId">,
-  ) => ModuleCacheEnvelope<TPayload>;
+    envelope: ModuleCacheWriteEnvelope<TNextPayload>,
+  ) => ModuleCacheEnvelope<TNextPayload>;
   invalidateContractQueries: (queryClient: QueryClient) => Promise<void>;
 }
 
-export function createModuleCacheOwner(moduleId: Route): ModuleCacheOwner {
+export function createModuleCacheOwner<TPayload = unknown>(
+  moduleId: Route,
+  options: ModuleCacheOwnerOptions<TPayload> = {},
+): ModuleCacheOwner<TPayload> {
   const queryKeys = {
     root: [moduleId] as const,
     state: [moduleId, "state"] as const,
@@ -43,15 +58,19 @@ export function createModuleCacheOwner(moduleId: Route): ModuleCacheOwner {
   return {
     moduleId,
     queryKeys,
-    writeAuthoritativePayload: (queryClient, envelope) => {
-      const next = {
+    isPayload: options.isPayload,
+    writeAuthoritativePayload: <TNextPayload extends TPayload>(
+      queryClient: QueryClient,
+      envelope: ModuleCacheWriteEnvelope<TNextPayload>,
+    ) => {
+      const next: ModuleCacheEnvelope<TNextPayload> = {
         ...envelope,
         moduleId,
         mutationFenceAt:
           envelope.source === "mutation-payload" ? envelope.receivedAt : envelope.mutationFenceAt,
       };
 
-      queryClient.setQueryData<ModuleCacheEnvelope<unknown>>(queryKeys.state, (current) => {
+      queryClient.setQueryData<ModuleCacheEnvelope<TPayload>>(queryKeys.state, (current) => {
         if (isStaleEnvelope(current, next)) {
           return current;
         }
@@ -69,9 +88,9 @@ export function createModuleCacheOwner(moduleId: Route): ModuleCacheOwner {
   };
 }
 
-function isStaleEnvelope(
-  current: ModuleCacheEnvelope<unknown> | undefined,
-  next: ModuleCacheEnvelope<unknown>,
+function isStaleEnvelope<TCurrentPayload, TNextPayload>(
+  current: ModuleCacheEnvelope<TCurrentPayload> | undefined,
+  next: ModuleCacheEnvelope<TNextPayload>,
 ) {
   if (!current) {
     return false;
