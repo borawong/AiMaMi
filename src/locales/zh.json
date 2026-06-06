@@ -884,6 +884,9 @@
     "ready": "就绪"
   },
   "voice": {
+    "skeletonTitle": "语音模块空骨架",
+    "skeletonDescription": "原始语音功能不作为当前公开范围内的已还原功能处理，前端只保留路由入口和合同边界。",
+    "skeletonBoundary": "后续补齐必须从仓库证据开始，先补模块 owner，再加入任何可执行的语音行为。",
     "description": "基于语音工作区、运行时状态和权限 IPC 契约恢复语音模块入口。",
     "workspace": "语音工作区",
     "runtime": "语音运行时",
