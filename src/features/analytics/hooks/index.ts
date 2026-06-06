@@ -1,11 +1,18 @@
 import { useMemo, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import { useModuleCacheController } from "@/features/_shared/controller";
 import { formatInvokeError } from "@/lib/error";
 import { analyticsService } from "@/services/analytics";
-import type { AnalyticsRange } from "@/types";
+import type {
+  AnalyticsRange,
+  ChangeAnalyticsPayload,
+  QuotaHistoryPayload,
+  SessionAnalyticsPayload,
+  TokenAnalyticsPayload,
+  ToolAnalyticsPayload,
+  UsageAnalyticsPayload,
+} from "@/types";
 import {
   AnalyticsAuthoritativeQueryKeys,
   AnalyticsCache,
@@ -29,16 +36,23 @@ import type {
   AnalyticsChangesPanelModel,
   AnalyticsDataPoint,
   AnalyticsHeatmapDay,
+  AnalyticsCacheEnvelope,
+  AnalyticsChangeEnvelope,
+  AnalyticsQuotaEnvelope,
   AnalyticsPageController,
   AnalyticsPanelId,
   AnalyticsQuotaPanelModel,
   AnalyticsQuotaPoint,
+  AnalyticsSessionEnvelope,
   AnalyticsSessionsPanelModel,
   AnalyticsSessionPoint,
+  AnalyticsTokenEnvelope,
   AnalyticsTokenPanelModel,
   AnalyticsTokenPoint,
+  AnalyticsToolEnvelope,
   AnalyticsToolsPanelModel,
   AnalyticsToolPoint,
+  AnalyticsUsageEnvelope,
 } from "../types";
 
 export type { AnalyticsPanelId } from "../types";
@@ -262,52 +276,60 @@ export function useAnalyticsModule(
   const changeStateKey = AnalyticsAuthoritativeQueryKeys.changes(range);
   const quotaStateKey = AnalyticsAuthoritativeQueryKeys.quota(quotaAccountKey);
 
-  const usageEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+  const usageEnvelopeQuery = useQuery<AnalyticsCacheEnvelope<AnalyticsUsageEnvelope> | null>({
     queryKey: AnalyticsAuthoritativeQueryKeys.usage,
     queryFn: async () =>
-      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(
+      queryClient.getQueryData<AnalyticsCacheEnvelope<AnalyticsUsageEnvelope>>(
         AnalyticsAuthoritativeQueryKeys.usage,
       ) ?? null,
     enabled: false,
     staleTime: Infinity,
     gcTime: Infinity,
   });
-  const sessionEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+  const sessionEnvelopeQuery = useQuery<AnalyticsCacheEnvelope<AnalyticsSessionEnvelope> | null>({
     queryKey: sessionStateKey,
     queryFn: async () =>
-      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(sessionStateKey) ?? null,
+      queryClient.getQueryData<AnalyticsCacheEnvelope<AnalyticsSessionEnvelope>>(
+        sessionStateKey,
+      ) ?? null,
     enabled: false,
     staleTime: Infinity,
     gcTime: Infinity,
   });
-  const tokenEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+  const tokenEnvelopeQuery = useQuery<AnalyticsCacheEnvelope<AnalyticsTokenEnvelope> | null>({
     queryKey: tokenStateKey,
     queryFn: async () =>
-      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(tokenStateKey) ?? null,
+      queryClient.getQueryData<AnalyticsCacheEnvelope<AnalyticsTokenEnvelope>>(
+        tokenStateKey,
+      ) ?? null,
     enabled: false,
     staleTime: Infinity,
     gcTime: Infinity,
   });
-  const toolEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+  const toolEnvelopeQuery = useQuery<AnalyticsCacheEnvelope<AnalyticsToolEnvelope> | null>({
     queryKey: toolStateKey,
     queryFn: async () =>
-      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(toolStateKey) ?? null,
+      queryClient.getQueryData<AnalyticsCacheEnvelope<AnalyticsToolEnvelope>>(toolStateKey) ??
+      null,
     enabled: false,
     staleTime: Infinity,
     gcTime: Infinity,
   });
-  const changeEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+  const changeEnvelopeQuery = useQuery<AnalyticsCacheEnvelope<AnalyticsChangeEnvelope> | null>({
     queryKey: changeStateKey,
     queryFn: async () =>
-      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(changeStateKey) ?? null,
+      queryClient.getQueryData<AnalyticsCacheEnvelope<AnalyticsChangeEnvelope>>(
+        changeStateKey,
+      ) ?? null,
     enabled: false,
     staleTime: Infinity,
     gcTime: Infinity,
   });
-  const quotaEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+  const quotaEnvelopeQuery = useQuery<AnalyticsCacheEnvelope<AnalyticsQuotaEnvelope> | null>({
     queryKey: quotaStateKey,
     queryFn: async () =>
-      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(quotaStateKey) ?? null,
+      queryClient.getQueryData<AnalyticsCacheEnvelope<AnalyticsQuotaEnvelope>>(quotaStateKey) ??
+      null,
     enabled: false,
     staleTime: Infinity,
     gcTime: Infinity,
@@ -429,10 +451,10 @@ export function useAnalyticsModule(
   };
 }
 
-function resolvePanelPayload(
-  envelope: ModuleCacheEnvelope<unknown> | null | undefined,
-  queryData: unknown,
-) {
+function resolvePanelPayload<TPayload>(
+  envelope: AnalyticsCacheEnvelope<TPayload> | null | undefined,
+  queryData: TPayload | undefined,
+): TPayload | null | undefined {
   return envelope?.payload ?? (envelope ? null : queryData);
 }
 
@@ -445,7 +467,7 @@ function panelError(payload: unknown, query: PanelQueryState, t: Translate) {
 }
 
 function buildActivityPanel(
-  payload: unknown,
+  payload: UsageAnalyticsPayload | null,
   loading: boolean,
   errorMessage: string | null,
   range: AnalyticsActivityRange,
@@ -493,7 +515,7 @@ function buildActivityPanel(
 }
 
 function buildSessionsPanel(
-  payload: unknown,
+  payload: SessionAnalyticsPayload | null,
   loading: boolean,
   errorMessage: string | null,
   range: AnalyticsRange,
@@ -537,7 +559,7 @@ function buildSessionsPanel(
 }
 
 function buildTokenPanel(
-  payload: unknown,
+  payload: TokenAnalyticsPayload | null,
   loading: boolean,
   errorMessage: string | null,
   range: AnalyticsRange,
@@ -605,7 +627,7 @@ function buildTokenPanel(
 }
 
 function buildToolsPanel(
-  payload: unknown,
+  payload: ToolAnalyticsPayload | null,
   loading: boolean,
   errorMessage: string | null,
   t: Translate,
@@ -663,7 +685,7 @@ function buildToolsPanel(
 }
 
 function buildChangesPanel(
-  payload: unknown,
+  payload: ChangeAnalyticsPayload | null,
   loading: boolean,
   errorMessage: string | null,
   range: AnalyticsRange,
@@ -718,7 +740,7 @@ function buildChangesPanel(
 }
 
 function buildQuotaPanel(
-  payload: unknown,
+  payload: QuotaHistoryPayload | null,
   loading: boolean,
   errorMessage: string | null,
   quotaAccountKey: string,

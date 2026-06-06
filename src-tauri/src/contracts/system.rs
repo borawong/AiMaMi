@@ -302,6 +302,8 @@ pub(crate) struct DailyActivity {
     pub session_count: i32,
     pub total_file_size: i64,
     pub activity_level: i32,
+    pub active_minutes: i32,
+    pub tokens: i64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
@@ -326,6 +328,8 @@ pub(crate) struct SessionStats {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct UsageAnalyticsPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub today: TodaySummary,
     pub session_stats: SessionStats,
     pub daily_activity: Vec<DailyActivity>,
@@ -343,6 +347,9 @@ pub(crate) struct QuotaHistoryPoint {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct QuotaHistoryPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
+    pub account_key: Option<String>,
     pub points: Vec<QuotaHistoryPoint>,
 }
 

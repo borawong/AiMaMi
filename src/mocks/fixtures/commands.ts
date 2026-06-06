@@ -10,6 +10,8 @@ import type {
   AccountImportPreviewPayload,
   AccountMonitorPayload,
   AccountSessionImportPayload,
+  ChangeAnalyticsPayload,
+  QuotaHistoryPayload,
   RelayActivePayload,
   RelayDiagnosticIssuePayload,
   RelayDiagnosticPayload,
@@ -25,6 +27,8 @@ import type {
   SessionAnalyticsPayload,
   SessionsDeletePayload,
   SessionsListPayload,
+  TokenAnalyticsPayload,
+  ToolAnalyticsPayload,
   LogoutPayload,
   RemovePayload,
   SwitchPayload,
@@ -53,6 +57,7 @@ export type IpcCommandMockData =
   | AccountImportPreviewPayload
   | AccountMonitorPayload
   | AccountSessionImportPayload
+  | ChangeAnalyticsPayload
   | LogoutPayload
   | RemovePayload
   | RelayActivePayload
@@ -65,10 +70,13 @@ export type IpcCommandMockData =
   | RelayRouterTogglePayload
   | RelayStatePayload
   | RelayTestPayload
+  | QuotaHistoryPayload
   | SessionAnalyticsPayload
   | SessionsDeletePayload
   | SessionsListPayload
   | SwitchPayload
+  | TokenAnalyticsPayload
+  | ToolAnalyticsPayload
   | UsageAnalyticsPayload
   | null
   | unknown[]
@@ -344,6 +352,7 @@ const loadUsageAnalyticsHandler: IpcCommandHandler = (context) => {
     context.steps,
   );
   const data: UsageAnalyticsPayload = {
+    backendStatus: envelope.data.status,
     today: {
       sessionCount: 0,
       totalFileSize: 0,
@@ -362,6 +371,20 @@ const loadUsageAnalyticsHandler: IpcCommandHandler = (context) => {
   return { ...envelope, data };
 };
 
+const loadQuotaHistoryHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: QuotaHistoryPayload = {
+    backendStatus: envelope.data.status,
+    accountKey: readArgOptionalString(context.args, "accountKey"),
+    points: [],
+  };
+  return { ...envelope, data };
+};
+
 const loadSessionAnalyticsHandler: IpcCommandHandler = (context) => {
   const envelope = createEvidenceBackedIpcFixture(
     context.command,
@@ -371,7 +394,7 @@ const loadSessionAnalyticsHandler: IpcCommandHandler = (context) => {
   const range = readArgString(context.args, "range", "week");
   const data: SessionAnalyticsPayload = {
     backendStatus: envelope.data.status,
-    range: range === "today" || range === "month" ? range : "week",
+    range: normalizeAnalyticsRange(range),
     totalSessions: 0,
     avgTurns: 0,
     activeDays: 0,
@@ -379,6 +402,71 @@ const loadSessionAnalyticsHandler: IpcCommandHandler = (context) => {
   };
   return { ...envelope, data };
 };
+
+const loadTokenAnalyticsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const range = readArgString(context.args, "range", "week");
+  const data: TokenAnalyticsPayload = {
+    backendStatus: envelope.data.status,
+    range: normalizeAnalyticsRange(range),
+    totalTokens: 0,
+    avgPerSession: 0,
+    inputPct: 0,
+    outputPct: 0,
+    reasoningPct: 0,
+    inputTotal: 0,
+    outputTotal: 0,
+    reasoningTotal: 0,
+    series: [],
+  };
+  return { ...envelope, data };
+};
+
+const loadToolAnalyticsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const range = readArgString(context.args, "range", "week");
+  const data: ToolAnalyticsPayload = {
+    backendStatus: envelope.data.status,
+    range: normalizeAnalyticsRange(range),
+    totalCalls: 0,
+    distinctCount: 0,
+    searchCount: 0,
+    editCount: 0,
+    topTools: [],
+  };
+  return { ...envelope, data };
+};
+
+const loadChangeAnalyticsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const range = readArgString(context.args, "range", "week");
+  const data: ChangeAnalyticsPayload = {
+    backendStatus: envelope.data.status,
+    range: normalizeAnalyticsRange(range),
+    totalCommands: 0,
+    writeCommands: 0,
+    readCommands: 0,
+    otherCommands: 0,
+    series: [],
+  };
+  return { ...envelope, data };
+};
+
+function normalizeAnalyticsRange(value: string) {
+  return value === "today" || value === "month" ? value : "week";
+}
 
 function readArgString(args: IpcArgs | undefined, key: string, fallback: string) {
   const value = args?.[key];
@@ -929,7 +1017,11 @@ const accountsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>
 };
 
 const analyticsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  load_change_analytics: loadChangeAnalyticsHandler,
+  load_quota_history: loadQuotaHistoryHandler,
   load_session_analytics: loadSessionAnalyticsHandler,
+  load_token_analytics: loadTokenAnalyticsHandler,
+  load_tool_analytics: loadToolAnalyticsHandler,
   load_usage_analytics: loadUsageAnalyticsHandler,
 };
 

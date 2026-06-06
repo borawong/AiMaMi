@@ -353,6 +353,46 @@ function validateAccountsMockPayloadHandlers() {
   }
 }
 
+function validateAnalyticsMockPayloadHandlers() {
+  const commandFixturePath = path.join(
+    repoRoot,
+    "src",
+    "mocks",
+    "fixtures",
+    "commands.ts",
+  );
+  const ipcCommandsPath = path.join(repoRoot, "src", "contracts", "ipc", "commands.ts");
+  const commandFixtureText = readRequired(commandFixturePath);
+  const ipcCommandsText = readRequired(ipcCommandsPath);
+  const analyticsCommands = [
+    ...ipcCommandsText.matchAll(
+      /\{\s*"domain":\s*"analytics"[\s\S]*?"command":\s*"([^"]+)"/g,
+    ),
+  ].map((match) => match[1]);
+
+  if (analyticsCommands.length === 0) {
+    failures.push("src/contracts/ipc/commands.ts 没有可验证的 analytics command");
+    return;
+  }
+
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+    "const analyticsCommandHandlers",
+    "analyticsCommandHandlers[definition.command] ??",
+    "loadUsageAnalyticsHandler",
+    "loadQuotaHistoryHandler",
+    "loadSessionAnalyticsHandler",
+    "loadTokenAnalyticsHandler",
+    "loadToolAnalyticsHandler",
+    "loadChangeAnalyticsHandler",
+  ]);
+
+  for (const command of analyticsCommands) {
+    if (!commandFixtureText.includes(`${command}:`)) {
+      failures.push(`src/mocks/fixtures/commands.ts 缺少 analytics 专用 handler：${command}`);
+    }
+  }
+}
+
 function validateSessionsMockPayloadHandlers() {
   const commandFixturePath = path.join(
     repoRoot,
@@ -397,6 +437,7 @@ validateScenarioRegistry();
 validateSkillsCommandMirror();
 validateScenarioFiles();
 validateAccountsMockPayloadHandlers();
+validateAnalyticsMockPayloadHandlers();
 validateSessionsMockPayloadHandlers();
 validateRelayMockPayloadHandlers();
 validateIpcMockBridge();

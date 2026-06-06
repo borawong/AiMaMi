@@ -783,6 +783,8 @@ export interface DailyActivity {
   sessionCount: number;
   totalFileSize: number;
   activityLevel: number;
+  activeMinutes?: number;
+  tokens?: number;
 }
 
 export interface TodaySummary {
@@ -801,6 +803,7 @@ export interface SessionStats {
 }
 
 export interface UsageAnalyticsPayload {
+  backendStatus?: BackendSkeletonStatus;
   today: TodaySummary;
   sessionStats: SessionStats;
   dailyActivity: DailyActivity[];
@@ -814,6 +817,8 @@ export interface QuotaHistoryPoint {
 }
 
 export interface QuotaHistoryPayload {
+  backendStatus?: BackendSkeletonStatus;
+  accountKey?: string | null;
   points: QuotaHistoryPoint[];
 }
 
@@ -847,6 +852,8 @@ export interface TokenDaySeries {
 }
 
 export interface TokenAnalyticsPayload {
+  backendStatus?: BackendSkeletonStatus;
+  range: AnalyticsRange;
   totalTokens: number;
   avgPerSession: number;
   inputPct: number;
@@ -864,6 +871,8 @@ export interface ToolRankItem {
 }
 
 export interface ToolAnalyticsPayload {
+  backendStatus?: BackendSkeletonStatus;
+  range: AnalyticsRange;
   totalCalls: number;
   distinctCount: number;
   searchCount: number;
@@ -879,6 +888,8 @@ export interface ChangeDaySeries {
 }
 
 export interface ChangeAnalyticsPayload {
+  backendStatus?: BackendSkeletonStatus;
+  range: AnalyticsRange;
   totalCommands: number;
   writeCommands: number;
   readCommands: number;

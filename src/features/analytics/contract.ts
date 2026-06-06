@@ -32,6 +32,22 @@ export const DUMPED_ANALYTICS_COMMANDS = [
     "controlFlowCount": 1
   },
   {
+    "command": "load_session_analytics",
+    "domain": "sessions",
+    "wrappers": [
+      "loadSessionAnalytics"
+    ],
+    "argKeys": [
+      "range"
+    ],
+    "files": [
+      "assets/analytics-panel-D01GGJ7u.js",
+      "assets/index-CL22l5v8.js"
+    ],
+    "i18nKeys": [],
+    "controlFlowCount": 1
+  },
+  {
     "command": "load_token_analytics",
     "domain": "analytics",
     "wrappers": [

@@ -442,6 +442,9 @@ function validateKnownInternalFrontendGates() {
   const sessionsCachePath = join(repoRoot, "src", "features", "sessions", "cache", "index.ts");
   const sessionsTypesPath = join(repoRoot, "src", "features", "sessions", "types", "index.ts");
   const sessionsServicePath = join(repoRoot, "src", "services", "sessions", "index.ts");
+  const analyticsHooksPath = join(repoRoot, "src", "features", "analytics", "hooks", "index.ts");
+  const analyticsCachePath = join(repoRoot, "src", "features", "analytics", "cache", "index.ts");
+  const analyticsTypesPath = join(repoRoot, "src", "features", "analytics", "types", "index.ts");
   const analyticsServicePath = join(repoRoot, "src", "services", "analytics", "index.ts");
   const relayHooksPath = join(repoRoot, "src", "features", "relay", "hooks", "index.ts");
   const relayCachePath = join(repoRoot, "src", "features", "relay", "cache", "index.ts");
@@ -485,6 +488,9 @@ function validateKnownInternalFrontendGates() {
   const sessionsCache = readRequired(sessionsCachePath);
   const sessionsTypes = readRequired(sessionsTypesPath);
   const sessionsService = readRequired(sessionsServicePath);
+  const analyticsHooks = readRequired(analyticsHooksPath);
+  const analyticsCache = readRequired(analyticsCachePath);
+  const analyticsTypes = readRequired(analyticsTypesPath);
   const analyticsService = readRequired(analyticsServicePath);
   const relayHooks = readRequired(relayHooksPath);
   const relayCache = readRequired(relayCachePath);
@@ -544,6 +550,35 @@ function validateKnownInternalFrontendGates() {
     failures.push("sessions IPC payload owner 未收口到 typed envelope、模块 types 和 cache helper");
   } else {
     console.log("PASS sessions typed IPC payload owner：service/hook/cache");
+  }
+
+  const analyticsTypedPayloadOk =
+    analyticsService.includes("CoreEnvelope<UsageAnalyticsPayload>") &&
+    analyticsService.includes("CoreEnvelope<QuotaHistoryPayload>") &&
+    analyticsService.includes("CoreEnvelope<SessionAnalyticsPayload>") &&
+    analyticsService.includes("CoreEnvelope<TokenAnalyticsPayload>") &&
+    analyticsService.includes("CoreEnvelope<ToolAnalyticsPayload>") &&
+    analyticsService.includes("CoreEnvelope<ChangeAnalyticsPayload>") &&
+    !analyticsService.includes("IpcEvidencePayload") &&
+    analyticsTypes.includes("export type AnalyticsUsageEnvelope") &&
+    analyticsTypes.includes("export type AnalyticsSessionEnvelope") &&
+    analyticsTypes.includes("export type AnalyticsTokenEnvelope") &&
+    analyticsTypes.includes("export type AnalyticsToolEnvelope") &&
+    analyticsTypes.includes("export type AnalyticsChangeEnvelope") &&
+    analyticsTypes.includes("export type AnalyticsQuotaEnvelope") &&
+    analyticsTypes.includes("export type AnalyticsCachePayload") &&
+    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsUsageEnvelope>") &&
+    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsSessionEnvelope>") &&
+    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsTokenEnvelope>") &&
+    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsToolEnvelope>") &&
+    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsChangeEnvelope>") &&
+    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsQuotaEnvelope>") &&
+    analyticsCache.includes("AnalyticsCachePayload") &&
+    !analyticsCache.includes("ModuleCacheEnvelope<unknown>");
+  if (!analyticsTypedPayloadOk) {
+    failures.push("analytics IPC payload owner 未收口到 typed envelope、模块 types 和 cache helper");
+  } else {
+    console.log("PASS analytics typed IPC payload owner：service/hook/cache");
   }
 
   const relayEventOk =

@@ -1,8 +1,32 @@
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
-import type { AnalyticsRange } from "@/types";
+import type {
+  AnalyticsRange,
+  ChangeAnalyticsPayload,
+  CoreEnvelope,
+  QuotaHistoryPayload,
+  SessionAnalyticsPayload,
+  TokenAnalyticsPayload,
+  ToolAnalyticsPayload,
+  UsageAnalyticsPayload,
+} from "@/types";
 
 export type AnalyticsModuleId = "analytics";
-export type AnalyticsCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
+export type AnalyticsUsageEnvelope = CoreEnvelope<UsageAnalyticsPayload>;
+export type AnalyticsSessionEnvelope = CoreEnvelope<SessionAnalyticsPayload>;
+export type AnalyticsTokenEnvelope = CoreEnvelope<TokenAnalyticsPayload>;
+export type AnalyticsToolEnvelope = CoreEnvelope<ToolAnalyticsPayload>;
+export type AnalyticsChangeEnvelope = CoreEnvelope<ChangeAnalyticsPayload>;
+export type AnalyticsQuotaEnvelope = CoreEnvelope<QuotaHistoryPayload>;
+export type AnalyticsCachePayload =
+  | AnalyticsUsageEnvelope
+  | AnalyticsSessionEnvelope
+  | AnalyticsTokenEnvelope
+  | AnalyticsToolEnvelope
+  | AnalyticsChangeEnvelope
+  | AnalyticsQuotaEnvelope
+  | null;
+export type AnalyticsCacheEnvelope<TPayload = AnalyticsCachePayload> =
+  ModuleCacheEnvelope<TPayload>;
 
 export type AnalyticsPanelId =
   | "activity"

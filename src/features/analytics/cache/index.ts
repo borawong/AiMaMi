@@ -2,6 +2,7 @@ import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { createModuleCacheOwner } from "@/features/_shared/cache";
 import type { ModuleCacheEnvelope, ModuleCacheSource } from "@/features/_shared/cache";
 import type { AnalyticsRange } from "@/types";
+import type { AnalyticsCachePayload } from "../types";
 
 export const AnalyticsCache = createModuleCacheOwner("analytics");
 export const AnalyticsQueryKeys = AnalyticsCache.queryKeys;
@@ -39,7 +40,7 @@ export interface AnalyticsPanelCacheWrite<TPayload> {
   receivedAt: number;
 }
 
-export function writeAnalyticsPanelPayload<TPayload>(
+export function writeAnalyticsPanelPayload<TPayload extends AnalyticsCachePayload>(
   queryClient: QueryClient,
   queryKey: QueryKey,
   write: AnalyticsPanelCacheWrite<TPayload>,
@@ -50,23 +51,26 @@ export function writeAnalyticsPanelPayload<TPayload>(
     mutationFenceAt: write.source === "mutation-payload" ? write.receivedAt : undefined,
   };
 
-  queryClient.setQueryData<ModuleCacheEnvelope<unknown>>(queryKey, (current) => {
-    if (isStaleEnvelope(current, next)) return current;
-    return {
-      ...next,
-      mutationFenceAt: next.mutationFenceAt ?? current?.mutationFenceAt,
-    };
-  });
+  queryClient.setQueryData<ModuleCacheEnvelope<AnalyticsCachePayload>>(
+    queryKey,
+    (current) => {
+      if (isStaleEnvelope(current, next)) return current;
+      return {
+        ...next,
+        mutationFenceAt: next.mutationFenceAt ?? current?.mutationFenceAt,
+      };
+    },
+  );
 
   return next;
 }
 
-export function fenceAnalyticsPanelPayload(
+export function fenceAnalyticsPanelPayload<TPayload>(
   queryClient: QueryClient,
   queryKey: QueryKey,
-  mutationEnvelope: ModuleCacheEnvelope<unknown>,
+  mutationEnvelope: ModuleCacheEnvelope<TPayload>,
 ) {
-  queryClient.setQueryData<ModuleCacheEnvelope<unknown>>(queryKey, (current) => {
+  queryClient.setQueryData<ModuleCacheEnvelope<AnalyticsCachePayload>>(queryKey, (current) => {
     if (!current) {
       return {
         ...mutationEnvelope,
@@ -82,8 +86,8 @@ export function fenceAnalyticsPanelPayload(
 }
 
 function isStaleEnvelope(
-  current: ModuleCacheEnvelope<unknown> | undefined,
-  next: ModuleCacheEnvelope<unknown>,
+  current: ModuleCacheEnvelope<AnalyticsCachePayload> | undefined,
+  next: ModuleCacheEnvelope<AnalyticsCachePayload>,
 ) {
   if (!current) return false;
   if (next.sequence < current.sequence) return true;

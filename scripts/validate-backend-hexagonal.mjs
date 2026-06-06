@@ -505,6 +505,104 @@ function validateSessionsTypedPayloadContracts() {
 
 validateSessionsTypedPayloadContracts();
 
+function validateAnalyticsTypedPayloadContracts() {
+  const commandPath = join(backendRoot, "commands", "analytics.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "analytics.rs");
+  const contractPath = join(backendRoot, "contracts", "analytics.rs");
+  const systemContractPath = join(backendRoot, "contracts", "system.rs");
+  const servicePath = join(frontendRoot, "services", "analytics", "index.ts");
+  const featureTypesPath = join(frontendRoot, "features", "analytics", "types", "index.ts");
+  const featureCachePath = join(frontendRoot, "features", "analytics", "cache", "index.ts");
+  const featureHooksPath = join(frontendRoot, "features", "analytics", "hooks", "index.ts");
+  const commandText = readUtf8(commandPath);
+  const usecaseText = readUtf8(usecasePath);
+  const contractText = readUtf8(contractPath);
+  const systemContractText = readUtf8(systemContractPath);
+  const serviceText = readUtf8(servicePath);
+  const featureTypesText = readUtf8(featureTypesPath);
+  const featureCacheText = readUtf8(featureCachePath);
+  const featureHooksText = readUtf8(featureHooksPath);
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) struct SessionAnalyticsPayload",
+    "pub(crate) struct TokenAnalyticsPayload",
+    "pub(crate) struct ToolAnalyticsPayload",
+    "pub(crate) struct ChangeAnalyticsPayload",
+    "pub backend_status: BackendSkeletonStatus",
+  ], "analytics 后端 typed DTO");
+
+  assertContains(systemContractPath, systemContractText, [
+    "pub(crate) struct UsageAnalyticsPayload",
+    "pub(crate) struct QuotaHistoryPayload",
+    "pub backend_status: BackendSkeletonStatus",
+  ], "usage/quota analytics 后端 typed DTO");
+
+  assertContains(commandPath, commandText, [
+    "Result<CoreEnvelope<UsageAnalyticsPayload>, String>",
+    "Result<CoreEnvelope<QuotaHistoryPayload>, String>",
+    "Result<CoreEnvelope<SessionAnalyticsPayload>, String>",
+    "Result<CoreEnvelope<TokenAnalyticsPayload>, String>",
+    "Result<CoreEnvelope<ToolAnalyticsPayload>, String>",
+    "Result<CoreEnvelope<ChangeAnalyticsPayload>, String>",
+  ], "analytics command typed envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<UsageAnalyticsPayload>, CoreError>",
+    "Result<CoreEnvelope<QuotaHistoryPayload>, CoreError>",
+    "Result<CoreEnvelope<SessionAnalyticsPayload>, CoreError>",
+    "Result<CoreEnvelope<TokenAnalyticsPayload>, CoreError>",
+    "Result<CoreEnvelope<ToolAnalyticsPayload>, CoreError>",
+    "Result<CoreEnvelope<ChangeAnalyticsPayload>, CoreError>",
+    "BackendOperationPlan::pending",
+    "BackendOperationPlan::no_op",
+    "BackendBoundaryProbe::from_repository_source",
+  ], "analytics usecase 六边形 typed payload");
+
+  assertContains(servicePath, serviceText, [
+    "CoreEnvelope<UsageAnalyticsPayload>",
+    "CoreEnvelope<QuotaHistoryPayload>",
+    "CoreEnvelope<SessionAnalyticsPayload>",
+    "CoreEnvelope<TokenAnalyticsPayload>",
+    "CoreEnvelope<ToolAnalyticsPayload>",
+    "CoreEnvelope<ChangeAnalyticsPayload>",
+  ], "analytics service typed envelope");
+
+  assertContains(featureTypesPath, featureTypesText, [
+    "export type AnalyticsUsageEnvelope",
+    "export type AnalyticsSessionEnvelope",
+    "export type AnalyticsTokenEnvelope",
+    "export type AnalyticsToolEnvelope",
+    "export type AnalyticsChangeEnvelope",
+    "export type AnalyticsQuotaEnvelope",
+    "export type AnalyticsCachePayload",
+  ], "analytics 前端模块 typed cache payload");
+
+  assertContains(featureHooksPath, featureHooksText, [
+    "AnalyticsCacheEnvelope<AnalyticsUsageEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsSessionEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsTokenEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsToolEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsChangeEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsQuotaEnvelope>",
+  ], "analytics hooks typed authoritative envelope");
+
+  assertNotContainsSnippet(contractPath, contractText, [
+    "pub(crate) struct AnalyticsPayload",
+    "serde_json::Value",
+  ], "analytics 合同不得退回泛型 AnalyticsPayload");
+
+  assertNotContainsSnippet(commandPath, commandText, [
+    "CoreEnvelope<AnalyticsPayload>",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "analytics command 不得退回泛型 payload");
+
+  assertNotContainsSnippet(featureCachePath, featureCacheText, [
+    "ModuleCacheEnvelope<unknown>",
+  ], "analytics cache helper 不得使用 unknown authoritative envelope");
+}
+
+validateAnalyticsTypedPayloadContracts();
+
 function validateRelayTypedPayloadContracts() {
   const commandPath = join(backendRoot, "commands", "relay.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "relay.rs");

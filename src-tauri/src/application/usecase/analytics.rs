@@ -1,5 +1,6 @@
 use crate::contracts::{
-    AnalyticsPayload, BackendSkeletonStatus, CoreEnvelope, SessionAnalyticsPayload,
+    BackendSkeletonStatus, ChangeAnalyticsPayload, CoreEnvelope, QuotaHistoryPayload,
+    SessionAnalyticsPayload, TokenAnalyticsPayload, ToolAnalyticsPayload, UsageAnalyticsPayload,
 };
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
@@ -16,10 +17,13 @@ impl<'a> AnalyticsUseCase<'a> {
         Self { repositories }
     }
 
-    pub(crate) fn load_usage(&self) -> Result<CoreEnvelope<AnalyticsPayload>, CoreError> {
+    pub(crate) fn load_usage(&self) -> Result<CoreEnvelope<UsageAnalyticsPayload>, CoreError> {
         let plan = self.pending_plan("load_usage_analytics");
         Ok(CoreEnvelope::from_backend_plan(
-            self.payload(&plan, None, None),
+            UsageAnalyticsPayload {
+                backend_status: self.status(&plan),
+                ..Default::default()
+            },
             &plan,
         ))
     }
@@ -27,23 +31,14 @@ impl<'a> AnalyticsUseCase<'a> {
     pub(crate) fn load_quota_history(
         &self,
         account_key: Option<String>,
-    ) -> Result<CoreEnvelope<AnalyticsPayload>, CoreError> {
+    ) -> Result<CoreEnvelope<QuotaHistoryPayload>, CoreError> {
         let plan = self.no_op_quota_plan("load_quota_history");
         Ok(CoreEnvelope::from_backend_plan(
-            self.payload(&plan, clean_optional_text(account_key), None),
-            &plan,
-        ))
-    }
-
-    pub(crate) fn load_range(
-        &self,
-        command: &'static str,
-        range: Option<String>,
-    ) -> Result<CoreEnvelope<AnalyticsPayload>, CoreError> {
-        let plan = self.no_op_plan(command);
-        let range = clean_optional_text(range).unwrap_or_else(|| "today".into());
-        Ok(CoreEnvelope::from_backend_plan(
-            self.payload(&plan, None, Some(range)),
+            QuotaHistoryPayload {
+                backend_status: self.status(&plan),
+                account_key: clean_optional_text(account_key),
+                points: Vec::new(),
+            },
             &plan,
         ))
     }
@@ -53,11 +48,10 @@ impl<'a> AnalyticsUseCase<'a> {
         range: Option<String>,
     ) -> Result<CoreEnvelope<SessionAnalyticsPayload>, CoreError> {
         let plan = self.no_op_plan("load_session_analytics");
-        let range = clean_optional_text(range).unwrap_or_else(|| "week".into());
         Ok(CoreEnvelope::from_backend_plan(
             SessionAnalyticsPayload {
-                backend_status: BackendSkeletonStatus::from_plan(&plan),
-                range,
+                backend_status: self.status(&plan),
+                range: self.analytics_range(range),
                 total_sessions: 0,
                 avg_turns: 0.0,
                 active_days: 0,
@@ -67,18 +61,53 @@ impl<'a> AnalyticsUseCase<'a> {
         ))
     }
 
-    fn payload(
+    pub(crate) fn load_token_analytics(
         &self,
-        plan: &BackendOperationPlan,
-        account_key: Option<String>,
         range: Option<String>,
-    ) -> AnalyticsPayload {
-        AnalyticsPayload {
-            status: BackendSkeletonStatus::from_plan(plan),
-            account_key,
-            range,
-            ..Default::default()
-        }
+    ) -> Result<CoreEnvelope<TokenAnalyticsPayload>, CoreError> {
+        let plan = self.no_op_plan("load_token_analytics");
+        Ok(CoreEnvelope::from_backend_plan(
+            TokenAnalyticsPayload {
+                backend_status: self.status(&plan),
+                range: self.analytics_range(range),
+                ..Default::default()
+            },
+            &plan,
+        ))
+    }
+
+    pub(crate) fn load_tool_analytics(
+        &self,
+        range: Option<String>,
+    ) -> Result<CoreEnvelope<ToolAnalyticsPayload>, CoreError> {
+        let plan = self.no_op_plan("load_tool_analytics");
+        Ok(CoreEnvelope::from_backend_plan(
+            ToolAnalyticsPayload {
+                backend_status: self.status(&plan),
+                range: self.analytics_range(range),
+                ..Default::default()
+            },
+            &plan,
+        ))
+    }
+
+    pub(crate) fn load_change_analytics(
+        &self,
+        range: Option<String>,
+    ) -> Result<CoreEnvelope<ChangeAnalyticsPayload>, CoreError> {
+        let plan = self.no_op_plan("load_change_analytics");
+        Ok(CoreEnvelope::from_backend_plan(
+            ChangeAnalyticsPayload {
+                backend_status: self.status(&plan),
+                range: self.analytics_range(range),
+                ..Default::default()
+            },
+            &plan,
+        ))
+    }
+
+    fn analytics_range(&self, value: Option<String>) -> String {
+        clean_optional_text(value).unwrap_or_else(|| "week".into())
     }
 
     fn pending_plan(&self, command: &'static str) -> BackendOperationPlan {
@@ -99,6 +128,10 @@ impl<'a> AnalyticsUseCase<'a> {
 
     fn quota_repository_boundary(&self) -> BackendBoundaryProbe {
         BackendBoundaryProbe::from_repository_source(self.repositories.quota().source_path())
+    }
+
+    fn status(&self, plan: &BackendOperationPlan) -> BackendSkeletonStatus {
+        BackendSkeletonStatus::from_plan(plan)
     }
 }
 
