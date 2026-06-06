@@ -1,5 +1,5 @@
 /**
- * ????????????????? dumped ??????????wrapper??????????
+ * 中文职责说明：记录 maintenance 模块由 dumped 证据确认的命令、来源文件和包装调用链。
  */
 
 export const DUMPED_MAINTENANCE_COMMANDS = [
@@ -112,6 +112,36 @@ export const DUMPED_MAINTENANCE_COMMANDS = [
       "assets/maintenance-page-j6kXR210.js",
       "assets/relay-page-CljGSoid.js",
       "assets/use-relay-providers-BNphfsn5.js"
+    ],
+    "i18nKeys": [],
+    "controlFlowCount": 2
+  },
+  {
+    "command": "run_codex_router_diagnostics",
+    "domain": "maintenance",
+    "wrappers": [
+      "runCodexRouterDiagnostics"
+    ],
+    "argKeys": [],
+    "files": [
+      "assets/maintenance-page-j6kXR210.js"
+    ],
+    "i18nKeys": [
+      "relay.diagnostic.dataFormatError"
+    ],
+    "controlFlowCount": 3
+  },
+  {
+    "command": "fix_codex_router_issue",
+    "domain": "maintenance",
+    "wrappers": [
+      "fixCodexRouterIssue"
+    ],
+    "argKeys": [
+      "itemId"
+    ],
+    "files": [
+      "assets/maintenance-page-j6kXR210.js"
     ],
     "i18nKeys": [],
     "controlFlowCount": 2

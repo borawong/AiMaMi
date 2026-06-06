@@ -296,7 +296,7 @@ impl<'a> SystemUseCase<'a> {
         process: &dyn ProcessPort,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
         process.restart_application()?;
-        let plan = self.no_op_plan("restart_codex");
+        let plan = self.platform_plan("restart_codex");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,
@@ -324,7 +324,7 @@ impl<'a> SystemUseCase<'a> {
         process: &dyn ProcessPort,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
         process.graceful_restart_for_update()?;
-        let plan = self.no_op_plan("graceful_restart_for_update");
+        let plan = self.platform_plan("graceful_restart_for_update");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,
@@ -338,7 +338,7 @@ impl<'a> SystemUseCase<'a> {
     ) -> Result<CoreEnvelope<Value>, CoreError> {
         let path = required_text(path, "empty_open_path", "打开路径不能为空。")?;
         shell.open_path(&path)?;
-        let plan = self.no_op_plan("open_path");
+        let plan = self.platform_plan("open_path");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,
@@ -420,7 +420,7 @@ impl<'a> SystemUseCase<'a> {
     ) -> Result<CoreEnvelope<Value>, CoreError> {
         let pane = required_text(pane, "empty_privacy_pane", "权限面板标识不能为空。")?;
         permissions.open_privacy_pane(&pane)?;
-        let plan = self.no_op_plan("open_privacy_pane");
+        let plan = self.platform_plan("open_privacy_pane");
         Ok(CoreEnvelope::from_backend_plan(
             json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
             &plan,

@@ -11,9 +11,9 @@
 | raw 校验摘要 | `evidence/full-chain/raw/validation-summary.json` |
 | 前端 dumped 校验 | 通过 `evidence/full-chain/raw/INDEX.md` 和 raw 清单定位 |
 | internal 索引 | `evidence/full-chain/internal/INDEX.md` |
-| audit map | `evidence/full-chain/internal/audit-map.json` |
-| frontend map | `evidence/full-chain/internal/frontend-map/INDEX.md` |
-| leaf ledger map | `evidence/full-chain/internal/leaf-ledger-map.json` |
+| 审计地图 | `evidence/full-chain/internal/audit-map.json` |
+| 前端地图 | `evidence/full-chain/internal/frontend-map/INDEX.md` |
+| 叶子账本地图 | `evidence/full-chain/internal/leaf-ledger-map.json` |
 
 ## 覆盖范围
 
@@ -25,7 +25,7 @@ internal 链条覆盖：
 - audit 链条。
 - leaf 摘要。
 - version diff 材料。
-- frontend map。
+- 前端地图。
 
 raw 链条覆盖：
 

@@ -3,6 +3,12 @@
     "name": "App Console",
     "subtitle": "Local Assistant"
   },
+  "messageBoard": {
+    "defaultTitle": "Messages",
+    "openAria": "Open messages",
+    "loadError": "Failed to load messages",
+    "empty": "No messages"
+  },
   "nav": {
     "overview": "Dashboard",
     "import": "Import",
@@ -238,7 +244,7 @@
     "systemInfoLoading": "Loading system info...",
     "openPath": "Open Path",
     "openPathDesc": "open_path requires a real path parameter; this slice has not restored a path source, so only a disabled boundary is exposed.",
-    "openPathAction": "Waiting for path evidence",
+    "openPathAction": "Path source unavailable",
     "forceKillCodex": "Force Kill Codex",
     "forceKillCodexDesc": "Invoke the dumped force_kill_codex command to terminate local Codex processes.",
     "forceKillCodexAction": "Force Kill",
@@ -341,7 +347,13 @@
     "autoSwitchEnabled": "Auto switch enabled",
     "autoSwitchEnabledDesc": "The background flow checks thresholds and switches accounts.",
     "autoSwitchDisabled": "Auto switch disabled",
-    "autoSwitchDisabledDesc": "The background flow will not switch accounts automatically."
+    "autoSwitchDisabledDesc": "The background flow will not switch accounts automatically.",
+    "autoSwitchPromptTitle": "Confirm auto switch",
+    "autoSwitchPromptDesc": "A switchable account is available: current {{current}}, candidate {{candidate}}. Confirming will switch and restart the desktop app.",
+    "autoSwitchPromptCurrent": "Current account",
+    "autoSwitchPromptCandidate": "Candidate account",
+    "autoSwitchPromptSkip": "Skip for now",
+    "autoSwitchPromptConfirm": "Switch and restart"
   },
   "tray": {
     "openMain": "Open the app",
@@ -429,7 +441,7 @@
     "authMissing": "Auth missing",
     "registryExists": "Registry exists",
     "registryMissing": "Registry missing",
-    "empty": "No account entries were found in the current evidence payload",
+    "empty": "No accounts were found",
     "io": {
       "saveDialogTitle": "Save account backup",
       "openDialogTitle": "Open account backup"
@@ -527,8 +539,8 @@
     "sessionJsonInput": "Session JSON",
     "sessionJsonPlaceholder": "Paste dumped session JSON",
     "overwriteExisting": "Overwrite existing session account",
-    "empty": "No session entries were found in the current evidence payload",
-    "emptyAnalytics": "No session analytics series was found in the current evidence payload",
+    "empty": "No sessions were found",
+    "emptyAnalytics": "No session analytics series was found",
     "select": "Select session",
     "untitled": "Untitled session",
     "childThread": "Child thread",
@@ -581,7 +593,7 @@
     "quotaAccountKey": "Account key",
     "quotaAccountKeyPlaceholder": "Enter an account key to load quota history",
     "quotaAccountKeyRequired": "Enter an account key to load quota history",
-    "emptySeries": "No series data was found in the current evidence payload",
+    "emptySeries": "No series data was found",
     "unknownTool": "Unknown tool",
     "activityTitle": "Activity overview",
     "avgTokenPerSession": "Avg tokens per session",
@@ -636,7 +648,7 @@
     "passthrough": "Passthrough",
     "blocked": "Blocked",
     "allowed": "Allowed",
-    "emptyProviders": "No providers were found in the current evidence payload",
+    "emptyProviders": "No providers were found",
     "unknownProvider": "Unknown provider",
     "proxyReachable": "Proxy reachable",
     "proxyCode": "Proxy status",
@@ -664,21 +676,146 @@
       "toggleFailed": "Failed to toggle router",
       "toggleSucceeded": "Router setting updated",
       "warnUserProfileExists": "An existing user profile was detected. Confirm it will not be overwritten before continuing.",
-      "warnUserProfileExistsTitle": "User profile exists"
+      "warnUserProfileExistsTitle": "User profile exists",
+      "title": "Router",
+      "subtitle": "Controls the local router capability and passthrough behavior.",
+      "switchLabel": "Router state",
+      "switchOn": "Enable router",
+      "switchOff": "Disable router",
+      "providerOperationLockedBadge": "Close running process first",
+      "providerOperationLocked": "Close the running process before changing this provider."
     },
     "diagnostic": {
-      "dataFormatError": "Diagnostic data format error"
+      "dataFormatError": "Diagnostic data format error",
+      "title": "Router diagnostics",
+      "description": "Run diagnostics, inspect items, and fix router issues one by one.",
+      "running": "Running diagnostics...",
+      "allClear": "No router issues were found.",
+      "recheck": "Recheck",
+      "fixAll": "Fix all",
+      "fixingAll": "Fixing...",
+      "fixLog": "Fix log",
+      "fix": "Fix"
     },
     "form": {
       "fetchModels": {
         "empty": "No models were returned.",
         "failed": "Failed to fetch models.",
-        "success": "Model list updated."
+        "success": "Model list updated.",
+        "openDropdown": "Open model list",
+        "tooltip": "Fetch models from the draft provider settings"
+      },
+      "scope": "Provider scope",
+      "name": "Name",
+      "namePlaceholder": "Provider name",
+      "baseUrl": "Base URL",
+      "baseUrlPlaceholder": "https://api.example.com/v1",
+      "apiKey": "API key",
+      "apiKeyStored": "Stored",
+      "apiKeyPlaceholderStored": "Leave blank to keep the stored key",
+      "apiKeyPlaceholder": "Enter API key",
+      "apiKeyStoredHint": "A stored key exists. Leave the field blank to keep it.",
+      "model": "Model",
+      "modelPlaceholder": "Model name",
+      "wireApi": "Wire API",
+      "wireApiOpenaiResponses": "OpenAI Responses",
+      "wireApiAnthropic": "Anthropic",
+      "wireApiOpenaiChat": "OpenAI Chat",
+      "extraHeaders": "Extra headers",
+      "extraHeadersPlaceholder": "{\n  \"X-Header\": \"value\"\n}",
+      "network": {
+        "label": "Network",
+        "tunHintAria": "Network mode hint",
+        "tunHint": "TUN routes traffic through the configured tunnel.",
+        "description": "Choose how this provider should connect to the upstream API."
       }
     },
     "io": {
       "openDialogTitle": "Select relay config file",
-      "saveDialogTitle": "Save relay config file"
+      "saveDialogTitle": "Save relay config file",
+      "importNothingTitle": "Nothing imported",
+      "importNothingDesc": "{{skipped}} providers were skipped: {{reason}}",
+      "importNothingDescEmpty": "The selected file did not contain importable providers.",
+      "importSuccess": "Import succeeded",
+      "importSuccessDescPartial": "Imported {{imported}} providers; skipped {{skipped}}.",
+      "importSuccessDesc": "Imported {{imported}} providers.",
+      "importFailed": "Import failed",
+      "exportSuccess": "Export succeeded",
+      "exportSuccessDescWithKeys": "Relay config was exported with API keys.",
+      "exportSuccessDesc": "Relay config was exported.",
+      "exportFailed": "Export failed",
+      "menuLabel": "Import/export",
+      "importBtn": "Import",
+      "exportBtn": "Export",
+      "exportEmptyHint": "Add a provider before exporting.",
+      "confirmExportTitle": "Export relay config",
+      "confirmExportDesc": "Choose whether to include stored API keys in the exported file.",
+      "includeApiKeysLabel": "Include API keys",
+      "includeApiKeysHint": "Only include keys when you trust the destination file.",
+      "cancel": "Cancel",
+      "confirmExport": "Export",
+      "skipReason": {
+        "duplicate": "duplicate",
+        "invalid": "invalid",
+        "unsupported": "unsupported",
+        "unknown": "unknown"
+      }
+    },
+    "empty": "No relay providers were found",
+    "newProvider": "New provider",
+    "fromPreset": "From preset",
+    "test": "Test",
+    "edit": "Edit",
+    "deactivate": "Deactivate",
+    "enable": "Enable",
+    "delete": "Delete",
+    "save": "Save",
+    "saveAndEnable": "Save and enable",
+    "confirmDelete": "Delete this provider? This cannot be undone.",
+    "deleteFailed": "Failed to delete provider",
+    "extraHeadersInvalid": "Extra headers must be valid JSON object text.",
+    "anthropicBaseUrlHint": "Use the Anthropic-compatible base URL for Anthropic wire API providers.",
+    "proxy": {
+      "running": "Running",
+      "stopped": "Stopped"
+    },
+    "status": {
+      "misconfigured": "Misconfigured",
+      "ms": "{{ms}} ms",
+      "unknown": "Unknown"
+    },
+    "ide": {
+      "codex": "Codex"
+    },
+    "toast": {
+      "enabled": "Provider enabled",
+      "disabled": "Provider disabled",
+      "saved": "Provider saved",
+      "savedButEnableFailed": "Provider saved, but enabling failed",
+      "saveFailed": "Failed to save provider",
+      "testOk": "Provider test succeeded",
+      "testFailed": "Provider test failed",
+      "deleted": "Provider deleted",
+      "enableFailed": "Failed to enable provider",
+      "disableFailed": "Failed to disable provider"
+    },
+    "preset": {
+      "title": "Provider presets",
+      "description": "Create a provider draft from a known API shape."
+    },
+    "network": {
+      "button": "Network",
+      "toast": {
+        "saved": "Network setting saved",
+        "saveFailed": "Failed to save network setting"
+      },
+      "dialog": {
+        "title": "Provider network",
+        "description": "Set the network mode for this provider.",
+        "tunHint": "TUN mode sends provider traffic through the tunnel.",
+        "cancel": "Cancel",
+        "save": "Save"
+      }
     }
   },
   "plugins": {
@@ -688,7 +825,7 @@
     "total": "Plugins",
     "enabledCount": "Enabled",
     "disabledCount": "Disabled",
-    "empty": "No plugins were found in the current evidence payload",
+    "empty": "No plugins were found",
     "unknown": "Unknown plugin",
     "config": "Plugin config",
     "configJson": "Config JSON",
@@ -730,7 +867,7 @@
     "runtimeEnabled": "Runtime",
     "supported": "Supported",
     "unsupported": "Unsupported",
-    "emptyTemplates": "No voice templates were found in the current evidence payload",
+    "emptyTemplates": "No voice templates were found",
     "unknownTemplate": "Unknown template",
     "captureState": "Capture state",
     "shortcut": "Global shortcut",
@@ -740,8 +877,8 @@
     "history": "Voice History",
     "config": "Voice Config",
     "injectOverlay": "Inject and Overlay",
-    "emptyVocabulary": "No voice vocabulary was found in the current evidence payload",
-    "emptyHistory": "No voice history was found in the current evidence payload",
+    "emptyVocabulary": "No voice vocabulary was found",
+    "emptyHistory": "No voice history was found",
     "unknownVocabulary": "Unknown vocabulary",
     "unknownHistory": "Unknown history",
     "upsertTemplateBoundary": "Template write boundary",

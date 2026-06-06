@@ -6,7 +6,7 @@
 
 | 位置 | 内容 |
 | --- | --- |
-| `evidence/full-chain/internal/` | audit map、frontend map、distilled logic、raw leaf、版本差异和结构化摘要。 |
+| `evidence/full-chain/internal/` | 审计地图、前端地图、蒸馏逻辑、原始叶子、版本差异和结构化摘要。 |
 | `evidence/full-chain/raw/` | raw 链条、前端 dumped 文件、IPC、CCF、manifest、命令索引和校验摘要。 |
 | `docs/reconstruction/` | 重建规则、证据入口、架构骨架、发布规则和大文件策略。 |
 | `evidence/binary-manifests/` | 独立大文件状态、大小和哈希清单。 |

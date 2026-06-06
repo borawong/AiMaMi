@@ -44,8 +44,7 @@ import {
   readNumber,
   readPath,
   readString,
-} from "@/features/_shared/evidence-data";
-import { EvidencePageHeader } from "@/features/_shared/evidence-panels";
+} from "../utils";
 import { cn } from "@/lib/utils";
 import { useAccountsModule } from "../hooks";
 
@@ -144,11 +143,7 @@ export function AccountsPage() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <EvidencePageHeader
-        titleKey="nav.accounts"
-        descriptionKey="accounts.description"
-        actions={[]}
-      />
+      <AccountsPageHeader />
 
       <div className="flex shrink-0 flex-wrap items-center gap-2 py-4">
         <Button type="button" size="sm" onClick={() => setAddOpen(true)}>
@@ -460,6 +455,23 @@ export function AccountsPage() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+function AccountsPageHeader() {
+  const { t } = useTranslation();
+
+  return (
+    <header className="flex shrink-0 items-start justify-between gap-4 border-b border-border pb-4">
+      <div className="min-w-0">
+        <h1 className="truncate text-xl font-semibold tracking-normal">
+          {t("nav.accounts")}
+        </h1>
+        <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
+          {t("accounts.description")}
+        </p>
+      </div>
+    </header>
   );
 }
 

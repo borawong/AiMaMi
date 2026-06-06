@@ -41,12 +41,16 @@ export const maintenanceService = {
     ),
 
   runCodexRouterDiagnostics: () =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("run_codex_router_diagnostics"),
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<IpcEvidencePayload>>("run_codex_router_diagnostics"),
+    ),
 
   fixCodexRouterIssue: (itemId: string) =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("fix_codex_router_issue", {
-      itemId,
-    }),
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<IpcEvidencePayload>>("fix_codex_router_issue", {
+        itemId,
+      }),
+    ),
 
   openPath: (path: string) =>
     ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("open_path", { path })),

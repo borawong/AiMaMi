@@ -15,7 +15,7 @@
 | 位置 | 允许内容 |
 | --- | --- |
 | `evidence/full-chain/raw/` | 匿名化 raw 链条、前端 dumped 文件、IPC、CCF、manifest、命令索引和校验摘要。 |
-| `evidence/full-chain/internal/` | 匿名化 audit map、frontend map、distilled logic、raw leaf 和结构化摘要。 |
+| `evidence/full-chain/internal/` | 匿名化审计地图、前端地图、蒸馏逻辑、原始叶子和结构化摘要。 |
 | `docs/reconstruction/` | 中文重建说明、发布规则、架构规则和大文件策略。 |
 | `evidence/binary-manifests/` | 独立大文件状态、大小和哈希清单。 |
 

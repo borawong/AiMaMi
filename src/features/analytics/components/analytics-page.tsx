@@ -10,8 +10,7 @@ import {
   readArray,
   readNumber,
   readString,
-} from "@/features/_shared/evidence-data";
-import { EvidencePageHeader } from "@/features/_shared/evidence-panels";
+} from "../utils";
 import type { AnalyticsRange } from "@/types";
 import { type AnalyticsPanelId, useAnalyticsModule } from "../hooks";
 import { Heatmap, HeatmapLegend, type HeatmapDay } from "./heatmap";
@@ -69,7 +68,7 @@ export function AnalyticsPage() {
 
   return (
     <div className="space-y-5">
-      <EvidencePageHeader titleKey="nav.analytics" descriptionKey="analytics.description" />
+      <AnalyticsPageHeader />
 
       <BentoCard className="overflow-visible rounded-[15px]">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -157,6 +156,16 @@ export function AnalyticsPage() {
           ) : null}
         </div>
       </BentoCard>
+    </div>
+  );
+}
+
+function AnalyticsPageHeader() {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col gap-1">
+      <h1 className="text-xl font-semibold tracking-normal">{t("nav.analytics")}</h1>
+      <p className="text-sm text-muted-foreground">{t("analytics.description")}</p>
     </div>
   );
 }

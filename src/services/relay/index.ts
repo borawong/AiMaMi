@@ -8,6 +8,16 @@ import type { CoreEnvelope } from "@/types";
 
 export type RelayProviderDraft = IpcJsonObject;
 export type RelayNetworkConfig = IpcJsonValue;
+export type RelayExportDialogInput = {
+  title: string;
+  defaultPath: string;
+  filterName: string;
+  includeApiKeys: boolean;
+};
+export type RelayImportDialogInput = {
+  title: string;
+  filterName: string;
+};
 
 export const relayService = {
   loadState: () => invokeIpc<CoreEnvelope<IpcEvidencePayload>>("load_relay_state"),
@@ -65,10 +75,31 @@ export const relayService = {
       filePath,
       includeApiKeys,
     }),
+  exportConfigWithDialog: async (input: RelayExportDialogInput) => {
+    const { save } = await import("@tauri-apps/plugin-dialog");
+    const filePath = await save({
+      title: input.title,
+      defaultPath: input.defaultPath,
+      filters: [{ name: input.filterName, extensions: ["json"] }],
+    });
+    if (!filePath) throw new Error("CANCELLED");
+    return relayService.exportConfig(filePath, input.includeApiKeys);
+  },
   importConfig: (filePath: string) =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("import_relay_config", {
       filePath,
     }),
+  importConfigWithDialog: async (input: RelayImportDialogInput) => {
+    const { open } = await import("@tauri-apps/plugin-dialog");
+    const filePath = await open({
+      title: input.title,
+      multiple: false,
+      directory: false,
+      filters: [{ name: input.filterName, extensions: ["json"] }],
+    });
+    if (!filePath || typeof filePath !== "string") throw new Error("CANCELLED");
+    return relayService.importConfig(filePath);
+  },
   runCodexRouterDiagnostics: () =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("run_codex_router_diagnostics"),
   diagnoseCodexRouter: () =>

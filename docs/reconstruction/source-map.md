@@ -22,7 +22,7 @@
 | `src-tauri/` | 当前公开 Tauri 与 Rust 后端骨架。 |
 | `docs/reconstruction/` | 中文重建说明。 |
 | `evidence/full-chain/raw/` | raw 链条、前端 dumped 文件、IPC、CCF、manifest 和校验摘要。 |
-| `evidence/full-chain/internal/` | audit map、frontend map、distilled logic、raw leaf 和结构化摘要。 |
+| `evidence/full-chain/internal/` | 审计地图、前端地图、蒸馏逻辑、原始叶子和结构化摘要。 |
 | `evidence/binary-manifests/1.0.9/i64-databases.json` | `OpenAiMami IDB` 状态、大小和哈希清单。 |
 | `package.json` | 前端脚本和依赖声明。 |
 | `src-tauri/Cargo.toml` | Rust 包和依赖声明。 |
@@ -39,7 +39,7 @@
 | `features` | 功能公开接口和私有实现。 |
 | `services` | IPC 包装、运行期适配和服务契约。 |
 | `store` | 类型化状态骨架、选择器和 StoreUpdater。 |
-| `hooks` | 共享 React hooks。 |
+| `hooks` | 共享 React 钩子。 |
 | `utils` | 共享工具函数。 |
 | `types` | 共享 TypeScript 类型。 |
 | `config` | 公开配置常量和默认值。 |
@@ -80,7 +80,7 @@ OpenAiMami 1.0.9 前端覆盖面：
 | `src/components/update/` | 更新覆盖层。 |
 | `src/components/runtime/` | 运行期对话框。 |
 | `src/components/ui/` | 共享 primitive 基础组件；不得放业务组合组件或模块私有状态。 |
-| `src/hooks/` | React hooks。 |
+| `src/hooks/` | React 钩子。 |
 | `src/locales/` | 本地化资源。 |
 | `src/types/` | 共享 TypeScript 类型。 |
 

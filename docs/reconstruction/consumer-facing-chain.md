@@ -15,7 +15,7 @@
 7. `evidence/full-chain/internal/audit-map.json`
 8. `evidence/full-chain/internal/frontend-map/INDEX.md`
 
-raw 链条用于确认原始来源、manifest、校验摘要、IPC、CCF 和前端 dumped 文件。internal 链条用于理解 audit map、frontend map、distilled logic、raw leaf 和结构化摘要。两者应互相校验，不能只引用其中一边。
+raw 链条用于确认原始来源、manifest、校验摘要、IPC、CCF 和前端 dumped 文件。internal 链条用于理解审计地图、前端地图、蒸馏逻辑、原始叶子和结构化摘要。两者应互相校验，不能只引用其中一边。
 
 ## 可公开材料
 

@@ -5,6 +5,7 @@ import {
   type QueryClient,
   type QueryKey,
 } from "@tanstack/react-query";
+import { useCallback, useEffect } from "react";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { daemonAutoswitchService } from "@/services/daemon-autoswitch";
 import {
@@ -92,8 +93,94 @@ function cancelDaemonAutoswitchQueries(queryClient: QueryClient) {
   ]);
 }
 
+function loadDaemonAutoswitchBootstrap(queryClient: QueryClient) {
+  return runDaemonAutoswitchQuery(
+    queryClient,
+    DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY,
+    () => daemonAutoswitchService.loadBootstrapState(),
+  );
+}
+
+function loadDaemonAutoswitchPending(queryClient: QueryClient) {
+  return runDaemonAutoswitchQuery(
+    queryClient,
+    DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
+    () => daemonAutoswitchService.loadPendingAutoSwitch(),
+  );
+}
+
 export function useDaemonAutoswitchCacheController() {
   return useModuleCacheController(DaemonAutoswitchCache);
+}
+
+export function useDaemonAutoswitchBootstrapQuery() {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY,
+    queryFn: () => loadDaemonAutoswitchBootstrap(queryClient),
+    staleTime: 30_000,
+  });
+}
+
+export function useDaemonAutoswitchPendingQuery() {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
+    queryFn: () => loadDaemonAutoswitchPending(queryClient),
+    staleTime: 30_000,
+  });
+}
+
+export function useDaemonAutoswitchPendingPrompt() {
+  const queryClient = useQueryClient();
+  const pendingQuery = useDaemonAutoswitchPendingQuery();
+  const writePendingMutationPayload = useCallback(
+    async (payload: unknown) => {
+      queryClient.setQueryData(DAEMON_AUTOSWITCH_PENDING_QUERY_KEY, payload);
+      await writeDaemonAutoswitchMutationPayload(queryClient, payload);
+    },
+    [queryClient],
+  );
+
+  useEffect(() => {
+    return daemonAutoswitchService.subscribePendingAutoSwitch(() => {
+      void queryClient.invalidateQueries({
+        queryKey: DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
+        type: "active",
+      });
+    });
+  }, [queryClient]);
+
+  const dismissPendingMutation = useMutation({
+    mutationFn: () => daemonAutoswitchService.dismissPendingAutoSwitch(),
+    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
+    onSuccess: writePendingMutationPayload,
+  });
+
+  const confirmPendingAndRestartMutation = useMutation({
+    mutationFn: () =>
+      daemonAutoswitchService.confirmPendingAutoSwitchAndRestartCodex(),
+    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
+    onSuccess: writePendingMutationPayload,
+  });
+
+  return {
+    pendingQuery,
+    dismissPendingAction: {
+      id: "dismiss-pending",
+      labelKey: "daemonAutoswitch.dismissPending",
+      run: () => dismissPendingMutation.mutateAsync(),
+      isPending: dismissPendingMutation.isPending,
+    },
+    confirmPendingAndRestartAction: {
+      id: "confirm-pending-restart",
+      labelKey: "daemonAutoswitch.confirmPendingRestart",
+      run: () => confirmPendingAndRestartMutation.mutateAsync(),
+      isPending: confirmPendingAndRestartMutation.isPending,
+    },
+  };
 }
 
 export function useDaemonAutoswitchModule() {
@@ -101,26 +188,8 @@ export function useDaemonAutoswitchModule() {
   const writeDaemonPayload = (payload: unknown) =>
     writeDaemonAutoswitchMutationPayload(queryClient, payload);
 
-  const bootstrapQuery = useQuery({
-    queryKey: DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY,
-    queryFn: () =>
-      runDaemonAutoswitchQuery(
-        queryClient,
-        DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY,
-        () => daemonAutoswitchService.loadBootstrapState(),
-      ),
-    staleTime: 30_000,
-  });
-  const pendingQuery = useQuery({
-    queryKey: DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
-    queryFn: () =>
-      runDaemonAutoswitchQuery(
-        queryClient,
-        DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
-        () => daemonAutoswitchService.loadPendingAutoSwitch(),
-      ),
-    staleTime: 30_000,
-  });
+  const bootstrapQuery = useDaemonAutoswitchBootstrapQuery();
+  const pendingQuery = useDaemonAutoswitchPendingQuery();
 
   const runOnceMutation = useMutation({
     mutationFn: () => daemonAutoswitchService.runDaemonOnce(),
@@ -130,25 +199,6 @@ export function useDaemonAutoswitchModule() {
 
   const setAutoSwitchMutation = useMutation({
     mutationFn: (enabled: boolean) => daemonAutoswitchService.setAutoSwitch(enabled),
-    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
-    onSuccess: writeDaemonPayload,
-  });
-
-  const dismissPendingMutation = useMutation({
-    mutationFn: () => daemonAutoswitchService.dismissPendingAutoSwitch(),
-    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
-    onSuccess: writeDaemonPayload,
-  });
-
-  const confirmPendingMutation = useMutation({
-    mutationFn: () => daemonAutoswitchService.confirmPendingAutoSwitch(),
-    onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
-    onSuccess: writeDaemonPayload,
-  });
-
-  const confirmPendingAndRestartMutation = useMutation({
-    mutationFn: () =>
-      daemonAutoswitchService.confirmPendingAutoSwitchAndRestartCodex(),
     onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
     onSuccess: writeDaemonPayload,
   });
@@ -165,24 +215,6 @@ export function useDaemonAutoswitchModule() {
     setAutoSwitchAction: {
       run: (enabled: boolean) => setAutoSwitchMutation.mutateAsync(enabled),
       isPending: setAutoSwitchMutation.isPending,
-    },
-    dismissPendingAction: {
-      id: "dismiss-pending",
-      labelKey: "daemonAutoswitch.dismissPending",
-      run: () => dismissPendingMutation.mutateAsync(),
-      isPending: dismissPendingMutation.isPending,
-    },
-    confirmPendingAction: {
-      id: "confirm-pending",
-      labelKey: "daemonAutoswitch.confirmPending",
-      run: () => confirmPendingMutation.mutateAsync(),
-      isPending: confirmPendingMutation.isPending,
-    },
-    confirmPendingAndRestartAction: {
-      id: "confirm-pending-restart",
-      labelKey: "daemonAutoswitch.confirmPendingRestart",
-      run: () => confirmPendingAndRestartMutation.mutateAsync(),
-      isPending: confirmPendingAndRestartMutation.isPending,
     },
   };
 }

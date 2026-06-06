@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useUpdateCheck } from "@/hooks/use-update-check";
 import { useInstallLocationPrompt } from "./use-install-location-prompt";
+import { usePendingAutoSwitchPrompt } from "./use-pending-auto-switch-prompt";
 
 interface PromptHostActions {
   checkForUpdate: () => Promise<"available" | "up-to-date" | "error">;
@@ -27,6 +28,9 @@ const PromptHostContext = createContext<PromptHostActions | null>(null);
 export function PromptHost({ children }: { children: ReactNode }) {
   const update = useUpdateCheck();
   const installLocationPrompt = useInstallLocationPrompt();
+  const pendingAutoSwitchPrompt = usePendingAutoSwitchPrompt();
+  const showPendingAutoSwitchPrompt =
+    pendingAutoSwitchPrompt.open && !installLocationPrompt.open;
   const showUpdateOverlay =
     update.status === "available" ||
     update.status === "downloading" ||
@@ -45,7 +49,11 @@ export function PromptHost({ children }: { children: ReactNode }) {
       {children}
       <Toaster />
       <InstallLocationPromptDialog prompt={installLocationPrompt} />
-      {showUpdateOverlay && !installLocationPrompt.open && (
+      <PendingAutoSwitchPromptDialog
+        open={showPendingAutoSwitchPrompt}
+        prompt={pendingAutoSwitchPrompt}
+      />
+      {showUpdateOverlay && !installLocationPrompt.open && !showPendingAutoSwitchPrompt && (
         <UpdateOverlay
           status={update.status as "checking" | "available" | "downloading" | "installing" | "error"}
           currentVersion={update.updateInfo?.currentVersion ?? "0.0.0"}
@@ -59,6 +67,76 @@ export function PromptHost({ children }: { children: ReactNode }) {
         />
       )}
     </PromptHostContext.Provider>
+  );
+}
+
+function PendingAutoSwitchPromptDialog({
+  open,
+  prompt,
+}: {
+  open: boolean;
+  prompt: ReturnType<typeof usePendingAutoSwitchPrompt>;
+}) {
+  const { t } = useTranslation();
+  const unknown = t("accounts.unknown");
+
+  return (
+    <AlertDialog open={open}>
+      <AlertDialogContent className="max-w-md">
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t("settings.autoSwitchPromptTitle")}</AlertDialogTitle>
+          <AlertDialogDescription asChild>
+            <div className="space-y-3">
+              <p>
+                {t("settings.autoSwitchPromptDesc", {
+                  current: prompt.currentText || unknown,
+                  candidate: prompt.candidateText || unknown,
+                })}
+              </p>
+              <PromptAccountLine
+                label={t("settings.autoSwitchPromptCurrent")}
+                value={prompt.currentText || unknown}
+              />
+              <PromptAccountLine
+                label={t("settings.autoSwitchPromptCandidate")}
+                value={prompt.candidateText || unknown}
+              />
+            </div>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel
+            disabled={prompt.isPending}
+            onClick={() => void prompt.dismiss()}
+          >
+            {t("settings.autoSwitchPromptSkip")}
+          </AlertDialogCancel>
+          <AlertDialogAction
+            disabled={prompt.isPending}
+            onClick={() => void prompt.confirmAndRestart()}
+          >
+            {t("settings.autoSwitchPromptConfirm")}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+function PromptAccountLine({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-[8px] border border-border bg-muted/30 px-3 py-2">
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className="mt-1 break-words text-sm font-medium text-foreground">
+        {value}
+      </div>
+    </div>
   );
 }
 

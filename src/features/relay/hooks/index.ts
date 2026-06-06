@@ -8,7 +8,9 @@ import {
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import {
   relayService,
+  type RelayExportDialogInput,
   type RelayNetworkConfig,
+  type RelayImportDialogInput,
   type RelayProviderDraft,
 } from "@/services/relay";
 import {
@@ -273,9 +275,17 @@ export function useRelayModule() {
     ({ filePath, includeApiKeys }) =>
       relayService.exportConfig(filePath, includeApiKeys),
   );
+  const exportConfigWithDialogMutation =
+    useRelayEvidenceMutation<RelayExportDialogInput>((input) =>
+      relayService.exportConfigWithDialog(input),
+    );
   const importConfigMutation = useRelayEvidenceMutation<string>(
     (filePath) => relayService.importConfig(filePath),
   );
+  const importConfigWithDialogMutation =
+    useRelayEvidenceMutation<RelayImportDialogInput>((input) =>
+      relayService.importConfigWithDialog(input),
+    );
   const diagnosticsMutation = useRelayEvidenceMutation<void>(
     () => relayService.runCodexRouterDiagnostics(),
   );
@@ -299,7 +309,9 @@ export function useRelayModule() {
     restartCodexAppMutation.isPending ||
     setBlockPassthroughMutation.isPending ||
     exportConfigMutation.isPending ||
+    exportConfigWithDialogMutation.isPending ||
     importConfigMutation.isPending ||
+    importConfigWithDialogMutation.isPending ||
     diagnosticsMutation.isPending ||
     diagnoseRouterMutation.isPending ||
     fixRouterIssueMutation.isPending;
@@ -372,9 +384,19 @@ export function useRelayModule() {
         run: (input: RelayExportInput) => exportConfigMutation.mutateAsync(input),
         isPending: exportConfigMutation.isPending,
       },
+      exportConfigWithDialog: {
+        run: (input: RelayExportDialogInput) =>
+          exportConfigWithDialogMutation.mutateAsync(input),
+        isPending: exportConfigWithDialogMutation.isPending,
+      },
       importConfig: {
         run: (filePath: string) => importConfigMutation.mutateAsync(filePath),
         isPending: importConfigMutation.isPending,
+      },
+      importConfigWithDialog: {
+        run: (input: RelayImportDialogInput) =>
+          importConfigWithDialogMutation.mutateAsync(input),
+        isPending: importConfigWithDialogMutation.isPending,
       },
     },
     diagnosticsAction: {

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   Check,
   ChevronDown,
@@ -23,13 +23,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  envelopeData,
-  readArray,
+  formatBytes,
+  formatSessionTime,
   readBoolean,
   readNumber,
   readString,
-} from "@/features/_shared/evidence-data";
-import { EvidencePageHeader, MetricCard } from "@/features/_shared/evidence-panels";
+  selectSessionRecords,
+  selectSessionsEnvelopeData,
+} from "../utils";
 import { cn } from "@/lib/utils";
 import { useSessionsModule } from "../hooks";
 
@@ -71,9 +72,9 @@ export function SessionsPage() {
   const usagePayload =
     module.usageEnvelope?.payload ??
     (module.usageEnvelope ? null : module.usageQuery.data);
-  const payload = envelopeData(sessionsPayload);
-  const usage = envelopeData(usagePayload);
-  const sessions = readArray(payload, ["items", "sessions", "data.items"]);
+  const payload = selectSessionsEnvelopeData(sessionsPayload);
+  const usage = selectSessionsEnvelopeData(usagePayload);
+  const sessions = selectSessionRecords(payload);
   const groups = useMemo(() => buildSessionGroups(sessions), [sessions]);
   const allIds = useMemo(() => flattenGroups(groups), [groups]);
   const allIdSet = useMemo(() => new Set(allIds), [allIds]);
@@ -147,27 +148,26 @@ export function SessionsPage() {
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-5 overflow-hidden">
-      <EvidencePageHeader
+      <SessionsPageHeader
         titleKey="nav.sessions"
         descriptionKey="sessions.description"
-        actions={[]}
       />
 
       <div className="flex shrink-0 items-center justify-between gap-4">
         <div className="grid flex-1 gap-3 md:grid-cols-4">
-          <MetricCard
+          <SessionMetricCard
             labelKey="sessions.totalSessions"
             value={readNumber(usage, ["sessionStats.totalSessions"], sessions.length)}
           />
-          <MetricCard
+          <SessionMetricCard
             labelKey="sessions.totalSize"
             value={formatBytes(readNumber(usage, ["sessionStats.totalSizeBytes"]))}
           />
-          <MetricCard
+          <SessionMetricCard
             labelKey="sessions.activeDays"
             value={readNumber(usage, ["sessionStats.activeDays"])}
           />
-          <MetricCard
+          <SessionMetricCard
             labelKey="sessions.avgPerDay"
             value={readNumber(usage, ["sessionStats.avgSessionsPerActiveDay"]).toFixed(1)}
           />
@@ -289,6 +289,44 @@ export function SessionsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </div>
+  );
+}
+
+function SessionsPageHeader({
+  titleKey,
+  descriptionKey,
+}: {
+  titleKey: string;
+  descriptionKey: string;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className="shrink-0">
+      <h1 className="truncate text-xl font-semibold text-foreground">
+        {t(titleKey)}
+      </h1>
+      <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
+        {t(descriptionKey)}
+      </p>
+    </div>
+  );
+}
+
+function SessionMetricCard({
+  labelKey,
+  value,
+}: {
+  labelKey: string;
+  value: ReactNode;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+      <div className="text-xs font-medium text-muted-foreground">
+        {t(labelKey)}
+      </div>
+      <div className="mt-2 text-lg font-semibold text-foreground">{value}</div>
     </div>
   );
 }
@@ -697,24 +735,4 @@ function sessionKindLabel(node: SessionNode, t: (key: string, options?: Record<s
   if (readString(node.session, ["parentSessionId"], "")) return t("sessions.childThread");
   const count = node.children.length;
   return `${t("sessions.mainThread")} - ${t("sessions.childThreadsInline", { count })}`;
-}
-
-function formatSessionTime(value: number) {
-  if (!value) return "";
-  const date = new Date(value > 10_000_000_000 ? value : value * 1000);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleString(undefined, {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-function formatBytes(bytes: number) {
-  if (!bytes) return "0 B";
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
 }

@@ -13,3 +13,20 @@ export interface MaintenanceFixIssueInput {
 export interface MaintenanceImageCompatInput {
   enabled: boolean;
 }
+
+export interface MaintenanceRouterDiagnosticItem {
+  id: string;
+  label: string;
+  status: string;
+  fixable: boolean;
+  detail?: string;
+}
+
+export interface MaintenanceRouterDiagnosticsPayload {
+  hasIssues: boolean;
+  items: MaintenanceRouterDiagnosticItem[];
+}
+
+export interface MaintenanceRouterFixPayload {
+  details: string[];
+}

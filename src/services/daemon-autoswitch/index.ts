@@ -1,3 +1,4 @@
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { invokeIpc, type IpcEvidencePayload } from "@/contracts/ipc";
 import type {
   AutoSwitchConfigPayload,
@@ -5,6 +6,47 @@ import type {
   CoreEnvelope,
   DaemonRunPayload,
 } from "@/types";
+
+export type PendingAutoSwitchEventPayload = IpcEvidencePayload;
+export type PendingAutoSwitchEventHandler = (
+  payload: PendingAutoSwitchEventPayload,
+) => void;
+
+const AUTO_SWITCH_PENDING_EVENT = "auto-switch-pending";
+
+function subscribePendingAutoSwitch(
+  handler: PendingAutoSwitchEventHandler,
+  onError?: (error: unknown) => void,
+) {
+  let disposed = false;
+  let unlisten: UnlistenFn | null = null;
+
+  void listen<PendingAutoSwitchEventPayload>(
+    AUTO_SWITCH_PENDING_EVENT,
+    (event) => {
+      handler(event.payload);
+    },
+  )
+    .then((nextUnlisten) => {
+      if (disposed) {
+        nextUnlisten();
+        return;
+      }
+
+      unlisten = nextUnlisten;
+    })
+    .catch((error: unknown) => {
+      if (!disposed) {
+        onError?.(error);
+      }
+    });
+
+  return () => {
+    disposed = true;
+    unlisten?.();
+    unlisten = null;
+  };
+}
 
 export const daemonAutoswitchService = {
   setAutoSwitch: (enabled: boolean) =>
@@ -37,6 +79,8 @@ export const daemonAutoswitchService = {
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>(
       "confirm_pending_auto_switch_and_restart_codex",
     ),
+
+  subscribePendingAutoSwitch,
 
   runDaemonOnce: () =>
     invokeIpc<CoreEnvelope<DaemonRunPayload>>("run_daemon_once"),

@@ -1,6 +1,7 @@
 /**
  * 中文职责说明：maintenance 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
  */
+import { useCallback } from "react";
 import {
   useMutation,
   useQuery,
@@ -139,10 +140,25 @@ export function useMaintenanceActionMutations(options: {
       maintenanceService.fixCodexRouterIssue(itemId),
     onSuccess: async (result) => {
       await writeMaintenanceActionPayload(queryClient, result);
-      const diagnostics = await maintenanceService.runCodexRouterDiagnostics();
-      await writeMaintenanceActionPayload(queryClient, diagnostics);
     },
   });
+
+  const runRouterDiagnosticsMutation = routerDiagnosticsMutation.mutateAsync;
+  const fixRouterIssue = fixRouterIssueMutation.mutateAsync;
+
+  const runRouterDiagnostics = useCallback(
+    () => runRouterDiagnosticsMutation(),
+    [runRouterDiagnosticsMutation],
+  );
+
+  const fixRouterIssueAndRefresh = useCallback(
+    async (input: MaintenanceFixIssueInput) => {
+      const fixResult = await fixRouterIssue(input);
+      const diagnosticsResult = await runRouterDiagnosticsMutation();
+      return { fixResult, diagnosticsResult };
+    },
+    [fixRouterIssue, runRouterDiagnosticsMutation],
+  );
 
   const openPathMutation = useMutation({
     mutationFn: ({ path }: { path: string }) => maintenanceService.openPath(path),
@@ -163,6 +179,8 @@ export function useMaintenanceActionMutations(options: {
     setImageCompatMutation,
     routerDiagnosticsMutation,
     fixRouterIssueMutation,
+    runRouterDiagnostics,
+    fixRouterIssueAndRefresh,
     openPathMutation,
   };
 }

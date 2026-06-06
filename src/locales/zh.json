@@ -3,6 +3,12 @@
     "name": "应用控制台",
     "subtitle": "本地助手"
   },
+  "messageBoard": {
+    "defaultTitle": "消息",
+    "openAria": "打开消息",
+    "loadError": "消息加载失败",
+    "empty": "暂无消息"
+  },
   "nav": {
     "overview": "仪表盘",
     "import": "导入",
@@ -238,7 +244,7 @@
     "systemInfoLoading": "系统信息读取中...",
     "openPath": "打开路径",
     "openPathDesc": "open_path 需要真实 path 参数；当前切片未恢复路径来源，只保留禁用边界。",
-    "openPathAction": "等待路径证据",
+    "openPathAction": "路径来源不可用",
     "forceKillCodex": "强制结束 Codex",
     "forceKillCodexDesc": "调用 dumped 的 force_kill_codex 命令，终止本地 Codex 进程。",
     "forceKillCodexAction": "强制结束",
@@ -341,7 +347,13 @@
     "autoSwitchEnabled": "???????",
     "autoSwitchEnabledDesc": "??????????????",
     "autoSwitchDisabled": "???????",
-    "autoSwitchDisabledDesc": "???????????"
+    "autoSwitchDisabledDesc": "???????????",
+    "autoSwitchPromptTitle": "???????",
+    "autoSwitchPromptDesc": "???????????? {{current}}???? {{candidate}}??????????????",
+    "autoSwitchPromptCurrent": "????",
+    "autoSwitchPromptCandidate": "????",
+    "autoSwitchPromptSkip": "????",
+    "autoSwitchPromptConfirm": "?????"
   },
   "tray": {
     "openMain": "打开 OpenAiMami",
@@ -429,7 +441,7 @@
     "authMissing": "认证缺失",
     "registryExists": "注册表存在",
     "registryMissing": "注册表缺失",
-    "empty": "当前证据载荷中没有找到账号条目",
+    "empty": "没有找到账号",
     "io": {
       "saveDialogTitle": "保存账号备份",
       "openDialogTitle": "打开账号备份"
@@ -527,8 +539,8 @@
     "sessionJsonInput": "会话 JSON",
     "sessionJsonPlaceholder": "粘贴 dumped 会话 JSON",
     "overwriteExisting": "覆盖已存在会话账号",
-    "empty": "当前证据 payload 中没有会话条目",
-    "emptyAnalytics": "当前证据 payload 中没有会话分析序列",
+    "empty": "没有找到会话",
+    "emptyAnalytics": "没有找到会话分析序列",
     "select": "选择会话",
     "untitled": "未命名会话",
     "childThread": "???",
@@ -581,7 +593,7 @@
     "quotaAccountKey": "账号 key",
     "quotaAccountKeyPlaceholder": "输入账号 key 后读取配额历史",
     "quotaAccountKeyRequired": "请输入账号 key 后读取配额历史",
-    "emptySeries": "当前证据 payload 中没有序列数据",
+    "emptySeries": "没有找到序列数据",
     "unknownTool": "未知工具",
     "activityTitle": "????",
     "avgTokenPerSession": "????? Token",
@@ -636,7 +648,7 @@
     "passthrough": "直通",
     "blocked": "已阻断",
     "allowed": "允许",
-    "emptyProviders": "当前证据 payload 中没有 provider",
+    "emptyProviders": "没有找到 provider",
     "unknownProvider": "未知 provider",
     "proxyReachable": "代理可达",
     "proxyCode": "代理状态",
@@ -664,21 +676,146 @@
       "toggleFailed": "????????",
       "toggleSucceeded": "???????",
       "warnUserProfileExists": "?????????????????????????",
-      "warnUserProfileExistsTitle": "???????"
+      "warnUserProfileExistsTitle": "???????",
+      "title": "???",
+      "subtitle": "??????????????",
+      "switchLabel": "????",
+      "switchOn": "????",
+      "switchOff": "????",
+      "providerOperationLockedBadge": "??????????",
+      "providerOperationLocked": "?? provider ???????????????"
     },
     "diagnostic": {
-      "dataFormatError": "????????"
+      "dataFormatError": "????????",
+      "title": "????",
+      "description": "?????????????????????",
+      "running": "????...",
+      "allClear": "?????????",
+      "recheck": "????",
+      "fixAll": "????",
+      "fixingAll": "????...",
+      "fixLog": "????",
+      "fix": "??"
     },
     "form": {
       "fetchModels": {
         "empty": "?????????",
         "failed": "?????????",
-        "success": "????????"
+        "success": "????????",
+        "openDropdown": "??????",
+        "tooltip": "????? provider ??????"
+      },
+      "scope": "Provider ??",
+      "name": "??",
+      "namePlaceholder": "Provider ??",
+      "baseUrl": "Base URL",
+      "baseUrlPlaceholder": "https://api.example.com/v1",
+      "apiKey": "API Key",
+      "apiKeyStored": "???",
+      "apiKeyPlaceholderStored": "???????? key",
+      "apiKeyPlaceholder": "?? API Key",
+      "apiKeyStoredHint": "?????? key????????? key?",
+      "model": "??",
+      "modelPlaceholder": "????",
+      "wireApi": "??",
+      "wireApiOpenaiResponses": "OpenAI Responses",
+      "wireApiAnthropic": "Anthropic",
+      "wireApiOpenaiChat": "OpenAI Chat",
+      "extraHeaders": "?????",
+      "extraHeadersPlaceholder": "{\n  \"X-Header\": \"value\"\n}",
+      "network": {
+        "label": "??",
+        "tunHintAria": "??????",
+        "tunHint": "TUN ?????????????",
+        "description": "???? provider ???? API ??????"
       }
     },
     "io": {
       "openDialogTitle": "????????",
-      "saveDialogTitle": "????????"
+      "saveDialogTitle": "????????",
+      "importNothingTitle": "??????",
+      "importNothingDesc": "??? {{skipped}} ? provider?{{reason}}",
+      "importNothingDescEmpty": "??????????? provider?",
+      "importSuccess": "????",
+      "importSuccessDescPartial": "??? {{imported}} ? provider??? {{skipped}} ??",
+      "importSuccessDesc": "??? {{imported}} ? provider?",
+      "importFailed": "????",
+      "exportSuccess": "????",
+      "exportSuccessDescWithKeys": "??????????? API key?",
+      "exportSuccessDesc": "????????",
+      "exportFailed": "????",
+      "menuLabel": "??/??",
+      "importBtn": "??",
+      "exportBtn": "??",
+      "exportEmptyHint": "?? provider ??????",
+      "confirmExportTitle": "??????",
+      "confirmExportDesc": "??????????????? API key?",
+      "includeApiKeysLabel": "?? API key",
+      "includeApiKeysHint": "??????????????? key?",
+      "cancel": "??",
+      "confirmExport": "??",
+      "skipReason": {
+        "duplicate": "??",
+        "invalid": "??",
+        "unsupported": "???",
+        "unknown": "??"
+      }
+    },
+    "empty": "?????? provider",
+    "newProvider": "?? provider",
+    "fromPreset": "?????",
+    "test": "??",
+    "edit": "??",
+    "deactivate": "??",
+    "enable": "??",
+    "delete": "??",
+    "save": "??",
+    "saveAndEnable": "?????",
+    "confirmDelete": "?????? provider?????????",
+    "deleteFailed": "?? provider ??",
+    "extraHeadersInvalid": "??????????? JSON ?????",
+    "anthropicBaseUrlHint": "Anthropic ?? provider ???? Anthropic ? base URL?",
+    "proxy": {
+      "running": "???",
+      "stopped": "???"
+    },
+    "status": {
+      "misconfigured": "?????",
+      "ms": "{{ms}} ??",
+      "unknown": "??"
+    },
+    "ide": {
+      "codex": "Codex"
+    },
+    "toast": {
+      "enabled": "Provider ???",
+      "disabled": "Provider ???",
+      "saved": "Provider ???",
+      "savedButEnableFailed": "Provider ?????????",
+      "saveFailed": "?? provider ??",
+      "testOk": "Provider ????",
+      "testFailed": "Provider ????",
+      "deleted": "Provider ???",
+      "enableFailed": "?? provider ??",
+      "disableFailed": "?? provider ??"
+    },
+    "preset": {
+      "title": "Provider ??",
+      "description": "??? API ???? provider ???"
+    },
+    "network": {
+      "button": "??",
+      "toast": {
+        "saved": "???????",
+        "saveFailed": "????????"
+      },
+      "dialog": {
+        "title": "Provider ??",
+        "description": "???? provider ??????",
+        "tunHint": "TUN ????????? provider ???",
+        "cancel": "??",
+        "save": "??"
+      }
     }
   },
   "plugins": {
@@ -688,7 +825,7 @@
     "total": "插件",
     "enabledCount": "已启用",
     "disabledCount": "已禁用",
-    "empty": "当前证据 payload 中没有插件",
+    "empty": "没有找到插件",
     "unknown": "未知插件",
     "config": "插件配置",
     "configJson": "配置 JSON",
@@ -730,7 +867,7 @@
     "runtimeEnabled": "运行时",
     "supported": "支持",
     "unsupported": "不支持",
-    "emptyTemplates": "当前证据 payload 中没有语音模板",
+    "emptyTemplates": "没有找到语音模板",
     "unknownTemplate": "未知模板",
     "captureState": "捕获状态",
     "shortcut": "全局快捷键",
@@ -740,8 +877,8 @@
     "history": "语音历史",
     "config": "语音配置",
     "injectOverlay": "注入与浮层",
-    "emptyVocabulary": "当前证据 payload 中没有语音词汇",
-    "emptyHistory": "当前证据 payload 中没有语音历史",
+    "emptyVocabulary": "没有找到语音词汇",
+    "emptyHistory": "没有找到语音历史",
     "unknownVocabulary": "未知词汇",
     "unknownHistory": "未知历史",
     "upsertTemplateBoundary": "模板写入边界",

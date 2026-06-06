@@ -7,9 +7,7 @@ export const DESKTOP_MESSAGE_STALE_TIME = 60_000;
 export interface DesktopMessagePayload {
   title?: string | null;
   body?: string | null;
-  createdAt?: string | number | null;
-  actionText?: string | null;
-  actionUrl?: string | null;
+  imageUrl?: string | null;
 }
 
 // 中文职责说明：raw 只暴露 getDesktopMessage 调用点，未公开远端协议或 IPC 命令；因此公开仓库只保留可替换的边界读取。

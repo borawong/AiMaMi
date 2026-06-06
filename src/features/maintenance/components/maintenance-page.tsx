@@ -22,10 +22,10 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
-  FolderOpen,
   Info,
   type LucideIcon,
 } from "lucide-react";
+import { RouterDiagnosticsDialog } from "../dialogs";
 import { useMaintenanceActionMutations } from "../hooks";
 
 const MIN_FEEDBACK_MS = 800;
@@ -40,6 +40,7 @@ export function MaintenancePage() {
   const [results, setResults] = useState<Record<string, ActionResult>>({});
   const [runningKeys, setRunningKeys] = useState<Record<string, boolean>>({});
   const [restartConfirmOpen, setRestartConfirmOpen] = useState(false);
+  const [routerDiagnosticsOpen, setRouterDiagnosticsOpen] = useState(false);
 
   const setActionResult = (key: string, result: ActionResult) => {
     setResults((prev) => ({ ...prev, [key]: result }));
@@ -55,8 +56,8 @@ export function MaintenancePage() {
     forceKillMutation,
     resetConfigMutation,
     setImageCompatMutation,
-    routerDiagnosticsMutation,
-    fixRouterIssueMutation,
+    runRouterDiagnostics,
+    fixRouterIssueAndRefresh,
   } = useMaintenanceActionMutations({
     onDiagnosed: (res) => {
       const d = res.data;
@@ -147,7 +148,6 @@ export function MaintenancePage() {
     actionLabel: string;
     loadingLabel: string;
     onAction: () => void;
-    disabled?: boolean;
     variant?: "destructive";
   }[] = [
     {
@@ -168,31 +168,7 @@ export function MaintenancePage() {
       description: t("maintenance.routerDiagnosticsDesc"),
       actionLabel: t("maintenance.routerDiagnosticsAction"),
       loadingLabel: t("maintenance.routerDiagnosing"),
-      onAction: () =>
-        runAction("routerDiagnostics", async () => {
-          await routerDiagnosticsMutation.mutateAsync();
-          setActionResult("routerDiagnostics", {
-            type: "success",
-            message: t("maintenance.routerDiagnosticsResult"),
-          });
-        }),
-    },
-    {
-      key: "fixRouterAll",
-      icon: CheckCircle2,
-      iconColor: "text-emerald-500",
-      label: t("maintenance.fixRouterAll"),
-      description: t("maintenance.fixRouterAllDesc"),
-      actionLabel: t("maintenance.fixRouterAllAction"),
-      loadingLabel: t("maintenance.fixingRouter"),
-      onAction: () =>
-        runAction("fixRouterAll", async () => {
-          await fixRouterIssueMutation.mutateAsync({ itemId: "all" });
-          setActionResult("fixRouterAll", {
-            type: "success",
-            message: t("maintenance.routerFixAllResult"),
-          });
-        }),
+      onAction: () => setRouterDiagnosticsOpen(true),
     },
     {
       key: "clean",
@@ -203,17 +179,6 @@ export function MaintenancePage() {
       actionLabel: t("maintenance.cleanAction"),
       loadingLabel: t("maintenance.cleaning"),
       onAction: () => runAction("clean", () => cleanMutation.mutateAsync()),
-    },
-    {
-      key: "openPathBoundary",
-      icon: FolderOpen,
-      iconColor: "text-slate-500",
-      label: t("maintenance.openPath"),
-      description: t("maintenance.openPathDesc"),
-      actionLabel: t("maintenance.openPathAction"),
-      loadingLabel: t("maintenance.running"),
-      onAction: () => undefined,
-      disabled: true,
     },
     {
       key: "rebuild",
@@ -333,7 +298,7 @@ export function MaintenancePage() {
 
       <BentoCard className="p-0">
         <div className="divide-y divide-border">
-        {actions.map(({ key, icon: Icon, iconColor, label, description, actionLabel, loadingLabel, onAction, disabled, variant }) => {
+        {actions.map(({ key, icon: Icon, iconColor, label, description, actionLabel, loadingLabel, onAction, variant }) => {
           const result = results[key];
           const busy = !!runningKeys[key];
           return (
@@ -350,7 +315,7 @@ export function MaintenancePage() {
                   variant="outline"
                   size="sm"
                   onClick={onAction}
-                  disabled={busy || disabled}
+                  disabled={busy}
                   className={cn("shrink-0", variant === "destructive" ? "text-muted-foreground hover:bg-destructive hover:text-white hover:border-destructive" : "")}
                 >
                   {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
@@ -397,6 +362,13 @@ export function MaintenancePage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <RouterDiagnosticsDialog
+        open={routerDiagnosticsOpen}
+        onOpenChange={setRouterDiagnosticsOpen}
+        runDiagnostics={runRouterDiagnostics}
+        fixIssueAndRefresh={fixRouterIssueAndRefresh}
+      />
     </div>
   );
 }
