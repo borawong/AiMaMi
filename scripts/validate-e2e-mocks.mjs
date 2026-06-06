@@ -353,10 +353,51 @@ function validateAccountsMockPayloadHandlers() {
   }
 }
 
+function validateSessionsMockPayloadHandlers() {
+  const commandFixturePath = path.join(
+    repoRoot,
+    "src",
+    "mocks",
+    "fixtures",
+    "commands.ts",
+  );
+  const ipcCommandsPath = path.join(repoRoot, "src", "contracts", "ipc", "commands.ts");
+  const commandFixtureText = readRequired(commandFixturePath);
+  const ipcCommandsText = readRequired(ipcCommandsPath);
+  const sessionsCommands = [
+    ...ipcCommandsText.matchAll(
+      /\{\s*"domain":\s*"sessions"[\s\S]*?"command":\s*"([^"]+)"/g,
+    ),
+  ].map((match) => match[1]);
+
+  if (sessionsCommands.length === 0) {
+    failures.push("src/contracts/ipc/commands.ts 没有可验证的 sessions command");
+    return;
+  }
+
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+    "const sessionsCommandHandlers",
+    "sessionsCommandHandlers[definition.command] ??",
+    "loadSessionsHandler",
+    "deleteSessionsHandler",
+    "loadSessionAnalyticsHandler",
+    "loadUsageAnalyticsHandler",
+    "deletedIds",
+    "items: []",
+  ]);
+
+  for (const command of sessionsCommands) {
+    if (!commandFixtureText.includes(`${command}:`)) {
+      failures.push(`src/mocks/fixtures/commands.ts 缺少 sessions 专用 handler：${command}`);
+    }
+  }
+}
+
 validateScenarioRegistry();
 validateSkillsCommandMirror();
 validateScenarioFiles();
 validateAccountsMockPayloadHandlers();
+validateSessionsMockPayloadHandlers();
 validateRelayMockPayloadHandlers();
 validateIpcMockBridge();
 

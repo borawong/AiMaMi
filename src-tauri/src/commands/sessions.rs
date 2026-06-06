@@ -1,12 +1,12 @@
 use crate::adapters::tauri::state::TauriAppState;
 use crate::commands::respond;
-use crate::contracts::{CoreEnvelope, SessionsPayload};
+use crate::contracts::{CoreEnvelope, SessionsDeletePayload, SessionsListPayload};
 use tauri::State;
 
 #[tauri::command]
 pub(crate) fn load_sessions(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<SessionsPayload>, String> {
+) -> Result<CoreEnvelope<SessionsListPayload>, String> {
     respond(state.services().sessions().load_sessions())
 }
 
@@ -14,6 +14,6 @@ pub(crate) fn load_sessions(
 pub(crate) fn delete_sessions(
     state: State<'_, TauriAppState>,
     ids: Vec<String>,
-) -> Result<CoreEnvelope<SessionsPayload>, String> {
+) -> Result<CoreEnvelope<SessionsDeletePayload>, String> {
     respond(state.services().sessions().delete_sessions(ids))
 }

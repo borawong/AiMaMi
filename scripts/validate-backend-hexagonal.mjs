@@ -410,6 +410,101 @@ function validateAccountsTypedPayloadContracts() {
 
 validateAccountsTypedPayloadContracts();
 
+function validateSessionsTypedPayloadContracts() {
+  const commandPath = join(backendRoot, "commands", "sessions.rs");
+  const analyticsCommandPath = join(backendRoot, "commands", "analytics.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "sessions.rs");
+  const analyticsUsecasePath = join(backendRoot, "application", "usecase", "analytics.rs");
+  const contractPath = join(backendRoot, "contracts", "sessions.rs");
+  const analyticsContractPath = join(backendRoot, "contracts", "analytics.rs");
+  const servicePath = join(frontendRoot, "services", "sessions", "index.ts");
+  const analyticsServicePath = join(frontendRoot, "services", "analytics", "index.ts");
+  const featureTypesPath = join(frontendRoot, "features", "sessions", "types", "index.ts");
+  const commandText = readUtf8(commandPath);
+  const analyticsCommandText = readUtf8(analyticsCommandPath);
+  const usecaseText = readUtf8(usecasePath);
+  const analyticsUsecaseText = readUtf8(analyticsUsecasePath);
+  const contractText = readUtf8(contractPath);
+  const analyticsContractText = readUtf8(analyticsContractPath);
+  const serviceText = readUtf8(servicePath);
+  const analyticsServiceText = readUtf8(analyticsServicePath);
+  const featureTypesText = readUtf8(featureTypesPath);
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) struct SessionRecordPayload",
+    "pub(crate) struct SessionsListPayload",
+    "pub(crate) struct SessionsDeletePayload",
+    "pub backend_status: BackendSkeletonStatus",
+    "pub items: Vec<SessionRecordPayload>",
+    "pub deleted_ids: Vec<String>",
+  ], "sessions 后端 typed DTO");
+
+  assertContains(analyticsContractPath, analyticsContractText, [
+    "pub(crate) struct SessionAnalyticsPayload",
+    "pub(crate) struct SessionAnalyticsSeriesPoint",
+    "pub backend_status: BackendSkeletonStatus",
+    "pub series: Vec<SessionAnalyticsSeriesPoint>",
+  ], "session analytics 后端 typed DTO");
+
+  assertContains(commandPath, commandText, [
+    "Result<CoreEnvelope<SessionsListPayload>, String>",
+    "Result<CoreEnvelope<SessionsDeletePayload>, String>",
+  ], "sessions command typed envelope");
+
+  assertContains(analyticsCommandPath, analyticsCommandText, [
+    "Result<CoreEnvelope<SessionAnalyticsPayload>, String>",
+    "load_session_analytics(range)",
+  ], "load_session_analytics command typed envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<SessionsListPayload>, CoreError>",
+    "Result<CoreEnvelope<SessionsDeletePayload>, CoreError>",
+    "BackendOperationPlan::pending",
+    "BackendOperationPlan::no_op",
+    "BackendBoundaryProbe::from_repository_source",
+  ], "sessions usecase 六边形 typed payload");
+
+  assertContains(analyticsUsecasePath, analyticsUsecaseText, [
+    "Result<CoreEnvelope<SessionAnalyticsPayload>, CoreError>",
+    "SessionAnalyticsPayload {",
+    "BackendOperationPlan::no_op",
+  ], "session analytics usecase typed payload");
+
+  assertContains(servicePath, serviceText, [
+    "CoreEnvelope<SessionsListPayload>",
+    "CoreEnvelope<SessionsDeletePayload>",
+    "CoreEnvelope<SessionAnalyticsPayload>",
+  ], "sessions service typed envelope");
+
+  assertContains(analyticsServicePath, analyticsServiceText, [
+    "CoreEnvelope<SessionAnalyticsPayload>",
+  ], "analytics service session payload typed envelope");
+
+  assertContains(featureTypesPath, featureTypesText, [
+    "export type SessionsListEnvelope",
+    "export type SessionsDeleteEnvelope",
+    "export type SessionsMutationPayload",
+    "export type SessionsCachePayload",
+  ], "sessions 前端模块 typed cache payload");
+
+  assertNotContainsSnippet(contractPath, contractText, [
+    "SessionsPayload",
+    "serde_json::Value",
+  ], "sessions 合同不得退回单一泛型 payload");
+
+  assertNotContainsSnippet(commandPath, commandText, [
+    "SessionsPayload",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "sessions command 不得退回泛型 payload");
+
+  assertNotContainsSnippet(servicePath, serviceText, [
+    "IpcEvidencePayload",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "sessions service 不得退回 generic evidence payload");
+}
+
+validateSessionsTypedPayloadContracts();
+
 function validateRelayTypedPayloadContracts() {
   const commandPath = join(backendRoot, "commands", "relay.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "relay.rs");

@@ -1,6 +1,6 @@
 use crate::adapters::tauri::state::TauriAppState;
 use crate::commands::respond;
-use crate::contracts::{AnalyticsPayload, CoreEnvelope};
+use crate::contracts::{AnalyticsPayload, CoreEnvelope, SessionAnalyticsPayload};
 use tauri::State;
 
 #[tauri::command]
@@ -22,13 +22,8 @@ pub(crate) fn load_quota_history(
 pub(crate) fn load_session_analytics(
     state: State<'_, TauriAppState>,
     range: Option<String>,
-) -> Result<CoreEnvelope<AnalyticsPayload>, String> {
-    respond(
-        state
-            .services()
-            .analytics()
-            .load_range("load_session_analytics", range),
-    )
+) -> Result<CoreEnvelope<SessionAnalyticsPayload>, String> {
+    respond(state.services().analytics().load_session_analytics(range))
 }
 
 #[tauri::command]

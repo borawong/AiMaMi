@@ -22,9 +22,13 @@ import type {
   RelayRouterTogglePayload,
   RelayStatePayload,
   RelayTestPayload,
+  SessionAnalyticsPayload,
+  SessionsDeletePayload,
+  SessionsListPayload,
   LogoutPayload,
   RemovePayload,
   SwitchPayload,
+  UsageAnalyticsPayload,
 } from "@/types";
 import type { IpcMockStepResult } from "@/mocks/ipc";
 import {
@@ -61,7 +65,11 @@ export type IpcCommandMockData =
   | RelayRouterTogglePayload
   | RelayStatePayload
   | RelayTestPayload
+  | SessionAnalyticsPayload
+  | SessionsDeletePayload
+  | SessionsListPayload
   | SwitchPayload
+  | UsageAnalyticsPayload
   | null
   | unknown[]
   | boolean
@@ -291,6 +299,83 @@ const accountPreviewImportHandler: IpcCommandHandler = (context) => {
     entries: [],
     accountCount: 0,
     conflictCount: 0,
+  };
+  return { ...envelope, data };
+};
+
+const loadSessionsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: SessionsListPayload = {
+    backendStatus: envelope.data.status,
+    items: [],
+    total: 0,
+    sourcePath: "",
+    lastScanAt: 0,
+  };
+  return { ...envelope, data };
+};
+
+const deleteSessionsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const ids = readArgStringArray(context.args, "ids");
+  const data: SessionsDeletePayload = {
+    backendStatus: envelope.data.status,
+    requestedIds: ids,
+    deletedIds: ids,
+    skippedIds: [],
+    deletedCount: ids.length,
+    sourcePath: "",
+  };
+  return { ...envelope, data };
+};
+
+const loadUsageAnalyticsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: UsageAnalyticsPayload = {
+    today: {
+      sessionCount: 0,
+      totalFileSize: 0,
+      activeMinutesEstimate: 0,
+    },
+    sessionStats: {
+      totalSessions: 0,
+      totalSizeBytes: 0,
+      activeDays: 0,
+      avgSessionsPerActiveDay: 0,
+      mostActiveDate: null,
+      mostActiveCount: 0,
+    },
+    dailyActivity: [],
+  };
+  return { ...envelope, data };
+};
+
+const loadSessionAnalyticsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const range = readArgString(context.args, "range", "week");
+  const data: SessionAnalyticsPayload = {
+    backendStatus: envelope.data.status,
+    range: range === "today" || range === "month" ? range : "week",
+    totalSessions: 0,
+    avgTurns: 0,
+    activeDays: 0,
+    series: [],
   };
   return { ...envelope, data };
 };
@@ -843,6 +928,18 @@ const accountsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>
   switch_account_and_restart_codex: accountSwitchHandler,
 };
 
+const analyticsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  load_session_analytics: loadSessionAnalyticsHandler,
+  load_usage_analytics: loadUsageAnalyticsHandler,
+};
+
+const sessionsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  delete_sessions: deleteSessionsHandler,
+  import_chatgpt_session_account: accountSessionImportHandler,
+  load_session_analytics: loadSessionAnalyticsHandler,
+  load_sessions: loadSessionsHandler,
+};
+
 const skillsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
   delete_skill_backup: deleteSkillBackupHandler,
   import_skill: importSkillHandler,
@@ -882,6 +979,8 @@ export const ipcCommandFixtures = IPC_COMMAND_DEFINITIONS.reduce(
       domain: definition.domain,
       handler:
         accountsCommandHandlers[definition.command] ??
+        sessionsCommandHandlers[definition.command] ??
+        analyticsCommandHandlers[definition.command] ??
         relayCommandHandlers[definition.command] ??
         skillsCommandHandlers[definition.command] ??
         systemCommandHandlers[definition.command] ??

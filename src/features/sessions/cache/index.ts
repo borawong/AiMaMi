@@ -1,6 +1,7 @@
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { createModuleCacheOwner } from "@/features/_shared/cache";
 import type { ModuleCacheEnvelope, ModuleCacheSource } from "@/features/_shared/cache";
+import type { SessionsCachePayload } from "../types";
 
 export const SessionsCache = createModuleCacheOwner("sessions");
 export const SessionsQueryKeys = SessionsCache.queryKeys;
@@ -25,14 +26,14 @@ export interface SessionsCacheWrite<TPayload> {
   receivedAt: number;
 }
 
-export function writeSessionsListPayload<TPayload>(
+export function writeSessionsListPayload<TPayload extends SessionsCachePayload>(
   queryClient: QueryClient,
   write: SessionsCacheWrite<TPayload>,
 ) {
   return writeAuthoritativeEnvelope(queryClient, SessionsAuthoritativeQueryKeys.sessions, write);
 }
 
-export function writeSessionsMutationPayload<TPayload>(
+export function writeSessionsMutationPayload<TPayload extends SessionsCachePayload>(
   queryClient: QueryClient,
   write: SessionsCacheWrite<TPayload>,
 ) {
@@ -52,7 +53,7 @@ export async function invalidateSessionsDumpedQueries(queryClient: QueryClient) 
   ]);
 }
 
-function writeAuthoritativeEnvelope<TPayload>(
+function writeAuthoritativeEnvelope<TPayload extends SessionsCachePayload>(
   queryClient: QueryClient,
   queryKey: QueryKey,
   write: SessionsCacheWrite<TPayload>,
@@ -63,7 +64,7 @@ function writeAuthoritativeEnvelope<TPayload>(
     mutationFenceAt: write.source === "mutation-payload" ? write.receivedAt : undefined,
   };
 
-  queryClient.setQueryData<ModuleCacheEnvelope<unknown>>(queryKey, (current) => {
+  queryClient.setQueryData<ModuleCacheEnvelope<SessionsCachePayload>>(queryKey, (current) => {
     if (isStaleEnvelope(current, next)) return current;
     return {
       ...next,
@@ -77,9 +78,9 @@ function writeAuthoritativeEnvelope<TPayload>(
 function fenceAuthoritativeEnvelope(
   queryClient: QueryClient,
   queryKey: QueryKey,
-  mutationEnvelope: ModuleCacheEnvelope<unknown>,
+  mutationEnvelope: ModuleCacheEnvelope<SessionsCachePayload>,
 ) {
-  queryClient.setQueryData<ModuleCacheEnvelope<unknown>>(queryKey, (current) => {
+  queryClient.setQueryData<ModuleCacheEnvelope<SessionsCachePayload>>(queryKey, (current) => {
     if (!current) {
       return {
         ...mutationEnvelope,
@@ -95,8 +96,8 @@ function fenceAuthoritativeEnvelope(
 }
 
 function isStaleEnvelope(
-  current: ModuleCacheEnvelope<unknown> | undefined,
-  next: ModuleCacheEnvelope<unknown>,
+  current: ModuleCacheEnvelope<SessionsCachePayload> | undefined,
+  next: ModuleCacheEnvelope<SessionsCachePayload>,
 ) {
   if (!current) return false;
   if (next.sequence < current.sequence) return true;

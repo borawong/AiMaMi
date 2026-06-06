@@ -1,26 +1,42 @@
-import type { SessionGroup, SessionNode } from "../types";
+import type {
+  CoreEnvelope,
+  SessionsDeletePayload,
+  SessionsListPayload,
+} from "@/types";
+import type { SessionGroup, SessionNode, SessionRecord } from "../types";
 
-export type SessionEvidenceRecord = Record<string, unknown>;
+type ReadableRecord = Record<string, unknown>;
 
 export const SESSIONS_CONVERSATION_GROUP_KEY = "__conversations__";
 
-export function selectSessionsEnvelopeData(value: unknown) {
+export function selectSessionsEnvelopeData<TPayload>(
+  value: CoreEnvelope<TPayload> | TPayload | null | undefined,
+): TPayload | null {
   return unwrapEnvelope(value);
 }
 
-export function selectSessionRecords(payload: unknown) {
-  return readArray(payload, ["items", "sessions", "data.items"]);
+export function selectSessionRecords(
+  payload: SessionsListPayload | SessionsDeletePayload | null | undefined,
+): SessionRecord[] {
+  if (!payload || !("items" in payload)) return [];
+  return payload.items;
 }
 
-export function readArray(value: unknown, paths: string[]) {
-  if (Array.isArray(value)) return value;
+export function selectDeletedSessionIds(
+  envelope: CoreEnvelope<SessionsDeletePayload>,
+): string[] {
+  return envelope.data.deletedIds;
+}
+
+export function readArray<TItem = unknown>(value: unknown, paths: string[]) {
+  if (Array.isArray(value)) return value as TItem[];
 
   for (const path of paths) {
     const candidate = readPath(value, path);
-    if (Array.isArray(candidate)) return candidate;
+    if (Array.isArray(candidate)) return candidate as TItem[];
   }
 
-  return [];
+  return [] as TItem[];
 }
 
 export function readBoolean(value: unknown, paths: string[], fallback = false) {
@@ -84,8 +100,8 @@ export function formatBytes(bytes: number) {
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
 }
 
-export function buildSessionGroups(sessions: unknown[]): SessionGroup[] {
-  const grouped = new Map<string, unknown[]>();
+export function buildSessionGroups(sessions: SessionRecord[]): SessionGroup[] {
+  const grouped = new Map<string, SessionRecord[]>();
   for (const session of sessions) {
     const key = readBoolean(session, ["isConversationThread"])
       ? SESSIONS_CONVERSATION_GROUP_KEY
@@ -158,7 +174,7 @@ export function countOrphans(groups: SessionGroup[]) {
   return count;
 }
 
-export function sessionId(session: unknown) {
+export function sessionId(session: SessionRecord) {
   return readString(session, ["id", "sessionId", "conversationId", "path"], "");
 }
 
@@ -189,11 +205,13 @@ function latestUpdated(nodes: SessionNode[]) {
   return latest;
 }
 
-function unwrapEnvelope(value: unknown) {
-  if (!isRecord(value)) return value;
-  if ("data" in value) return value.data;
-  if ("payload" in value) return value.payload;
-  return value;
+function unwrapEnvelope<TPayload>(
+  value: CoreEnvelope<TPayload> | TPayload | null | undefined,
+): TPayload | null {
+  if (!isRecord(value)) return (value ?? null) as TPayload | null;
+  if ("data" in value) return value.data as TPayload;
+  if ("payload" in value) return value.payload as TPayload;
+  return value as TPayload;
 }
 
 function readPath(value: unknown, path: string) {
@@ -205,6 +223,6 @@ function readPath(value: unknown, path: string) {
   return current;
 }
 
-function isRecord(value: unknown): value is SessionEvidenceRecord {
+function isRecord(value: unknown): value is ReadableRecord {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }

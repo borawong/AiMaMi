@@ -1,9 +1,10 @@
-import { invokeIpc, type IpcEvidencePayload } from "@/contracts/ipc";
+import { invokeIpc } from "@/contracts/ipc";
 import type {
   AnalyticsRange,
   ChangeAnalyticsPayload,
   CoreEnvelope,
   QuotaHistoryPayload,
+  SessionAnalyticsPayload,
   TokenAnalyticsPayload,
   ToolAnalyticsPayload,
   UsageAnalyticsPayload,
@@ -19,7 +20,7 @@ export const analyticsService = {
     }),
 
   loadSessionAnalytics: (range: AnalyticsRange = "week") =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("load_session_analytics", { range }),
+    invokeIpc<CoreEnvelope<SessionAnalyticsPayload>>("load_session_analytics", { range }),
 
   loadTokenAnalytics: (range: AnalyticsRange = "week") =>
     invokeIpc<CoreEnvelope<TokenAnalyticsPayload>>("load_token_analytics", {

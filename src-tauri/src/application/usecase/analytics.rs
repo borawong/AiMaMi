@@ -1,4 +1,6 @@
-use crate::contracts::{AnalyticsPayload, BackendSkeletonStatus, CoreEnvelope};
+use crate::contracts::{
+    AnalyticsPayload, BackendSkeletonStatus, CoreEnvelope, SessionAnalyticsPayload,
+};
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::repository::RepositoryBundle;
@@ -42,6 +44,25 @@ impl<'a> AnalyticsUseCase<'a> {
         let range = clean_optional_text(range).unwrap_or_else(|| "today".into());
         Ok(CoreEnvelope::from_backend_plan(
             self.payload(&plan, None, Some(range)),
+            &plan,
+        ))
+    }
+
+    pub(crate) fn load_session_analytics(
+        &self,
+        range: Option<String>,
+    ) -> Result<CoreEnvelope<SessionAnalyticsPayload>, CoreError> {
+        let plan = self.no_op_plan("load_session_analytics");
+        let range = clean_optional_text(range).unwrap_or_else(|| "week".into());
+        Ok(CoreEnvelope::from_backend_plan(
+            SessionAnalyticsPayload {
+                backend_status: BackendSkeletonStatus::from_plan(&plan),
+                range,
+                total_sessions: 0,
+                avg_turns: 0.0,
+                active_days: 0,
+                series: Vec::new(),
+            },
             &plan,
         ))
     }
