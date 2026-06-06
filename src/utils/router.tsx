@@ -8,8 +8,8 @@ import {
   useRouteError,
   type RouteObject,
 } from "react-router-dom";
-import { ErrorBoundary } from "@/components/error-boundary";
-import { RouteShellSkeleton } from "@/routes/registry/route-skeletons";
+import { ErrorBoundary } from "@/components/boundary";
+import { RouteShellSkeleton } from "@/routes/registry/skeletons";
 
 export function createAppRouter(routes: RouteObject[]) {
   return createHashRouter(routes);

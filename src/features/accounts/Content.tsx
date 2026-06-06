@@ -1,6 +1,6 @@
-import { AccountsPage } from "./components/accounts-page";
-import { DumpedContractBoundary } from "@/features/_shared/dumped-contract-boundary";
-import { DUMPED_ACCOUNTS_COMMANDS } from "./dumped-contract";
+import { AccountsPage } from "./components/page";
+import { DumpedContractBoundary } from "@/features/_shared/boundary";
+import { DUMPED_ACCOUNTS_COMMANDS } from "./contract";
 
 export function AccountsContent() {
   return (

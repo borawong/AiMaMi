@@ -1,6 +1,6 @@
-import { DaemonAutoswitchPage } from "./components/daemon-autoswitch-page";
-import { DumpedContractBoundary } from "@/features/_shared/dumped-contract-boundary";
-import { DUMPED_DAEMON_AUTOSWITCH_COMMANDS } from "./dumped-contract";
+import { DaemonAutoswitchPage } from "./components/page";
+import { DumpedContractBoundary } from "@/features/_shared/boundary";
+import { DUMPED_DAEMON_AUTOSWITCH_COMMANDS } from "./contract";
 
 export function DaemonAutoswitchContent() {
   return (

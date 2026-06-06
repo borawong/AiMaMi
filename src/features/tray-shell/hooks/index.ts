@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { useModuleCacheController } from "@/features/_shared/controller";
 import { systemService } from "@/services/system";
 import { TrayShellCache } from "../cache";
 

@@ -1,4 +1,4 @@
-import { VoicePage } from "./components/voice-page";
+import { VoicePage } from "./components/page";
 
 export function VoiceContent() {
   return <VoicePage />;

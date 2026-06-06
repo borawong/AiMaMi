@@ -59,7 +59,7 @@ const requiredScenarios = [
   },
   {
     kind: "event-replay",
-    file: "event-replay.ts",
+    file: "replay.ts",
     exportName: "eventReplayScenario",
     outcomes: ["resolve", "replay"],
     requiresReplayOlderThanMutation: true,
@@ -188,7 +188,7 @@ function validateIpcMockBridge() {
     "src",
     "mocks",
     "fixtures",
-    "ipc-command-fixtures.ts",
+    "commands.ts",
   );
   const ipcMockText = readRequired(ipcMockPath);
   const fixtureText = readRequired(fixturePath);
@@ -209,7 +209,7 @@ function validateIpcMockBridge() {
     "stepName: step.stepName",
     "resolveEnvelopeStatus",
   ]);
-  assertIncludes("src/mocks/fixtures/ipc-command-fixtures.ts", commandFixtureText, [
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
     "assertIpcFixtureCoverage",
     "IPC_COMMAND_DEFINITIONS.reduce",
     "createEvidenceBackedIpcFixture",

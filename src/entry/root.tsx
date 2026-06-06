@@ -2,10 +2,10 @@
  * 中文职责说明：应用根只装配全局 Provider、错误边界、runtime 初始化器和路由。
  */
 import { useTranslation } from "react-i18next";
-import { AppProviders } from "@/app/providers/app-providers";
-import { RuntimeInitializer } from "@/app/runtime/runtime-initializer";
-import { AppRouter } from "@/app/router/app-router";
-import { ErrorBoundary } from "@/components/error-boundary";
+import { AppProviders } from "@/app/providers/app";
+import { RuntimeInitializer } from "@/app/runtime/initializer";
+import { AppRouter } from "@/app/router/router";
+import { ErrorBoundary } from "@/components/boundary";
 
 export function Root() {
   return (

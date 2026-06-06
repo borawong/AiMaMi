@@ -4,9 +4,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
-import { toast } from "@/hooks/use-toast";
-import { useBusyAction } from "@/hooks/use-busy-action";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { toast } from "@/hooks/toast";
+import { useBusyAction } from "@/hooks/busy";
+import { useModuleCacheController } from "@/features/_shared/controller";
 import { mcpService, type UpsertMcpServerInput } from "@/services/mcp";
 import type {
   CoreEnvelope,

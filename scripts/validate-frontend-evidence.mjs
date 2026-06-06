@@ -311,7 +311,7 @@ function validatePageChunks(frontendFiles) {
       "desktop",
       "main",
       moduleId,
-      `${moduleId}-page.tsx`,
+      "page.tsx",
     );
     const featureIndexPath = join(repoRoot, "src", "features", moduleId, "index.ts");
     const featureContentPath = join(repoRoot, "src", "features", moduleId, "Content.tsx");
@@ -321,7 +321,7 @@ function validatePageChunks(frontendFiles) {
       "features",
       moduleId,
       "components",
-      `${moduleId}-page.tsx`,
+      "page.tsx",
     );
 
     const routeShell = readRequired(routeShellPath);
@@ -355,7 +355,7 @@ function validatePageChunks(frontendFiles) {
 
 function validateRoutesAndLocales(controlFlowRows) {
   const navigationPath = join(repoRoot, "src", "types", "navigation.ts");
-  const routeRegistryPath = join(repoRoot, "src", "routes", "registry", "route-registry.tsx");
+  const routeRegistryPath = join(repoRoot, "src", "routes", "registry", "registry.tsx");
   const zhPath = join(repoRoot, "src", "locales", "zh.json");
   const enPath = join(repoRoot, "src", "locales", "en.json");
 
@@ -410,8 +410,8 @@ function validateRoutesAndLocales(controlFlowRows) {
 function validateKnownInternalFrontendGates() {
   const relayHooksPath = join(repoRoot, "src", "features", "relay", "hooks", "index.ts");
   const relayCachePath = join(repoRoot, "src", "features", "relay", "cache", "index.ts");
-  const relayPagePath = join(repoRoot, "src", "features", "relay", "components", "relay-page.tsx");
-  const relayPanelsPath = join(repoRoot, "src", "features", "relay", "panels", "relay-page-panels.tsx");
+  const relayPagePath = join(repoRoot, "src", "features", "relay", "components", "page.tsx");
+  const relayPanelsPath = join(repoRoot, "src", "features", "relay", "panels", "panels.tsx");
   const relayServicePath = join(repoRoot, "src", "services", "relay", "index.ts");
   const customInstructionsPagePath = join(
     repoRoot,
@@ -419,7 +419,7 @@ function validateKnownInternalFrontendGates() {
     "features",
     "custom-instructions",
     "components",
-    "custom-instructions-page.tsx",
+    "page.tsx",
   );
   const customInstructionsHooksPath = join(
     repoRoot,
@@ -435,11 +435,11 @@ function validateKnownInternalFrontendGates() {
     "features",
     "custom-instructions",
     "panels",
-    "load-error-panel.tsx",
+    "error.tsx",
   );
-  const skillsPagePath = join(repoRoot, "src", "features", "skills", "components", "skills-page.tsx");
+  const skillsPagePath = join(repoRoot, "src", "features", "skills", "components", "page.tsx");
   const skillsHooksPath = join(repoRoot, "src", "features", "skills", "hooks", "index.ts");
-  const skillsPanelPath = join(repoRoot, "src", "features", "skills", "panels", "skills-page-panel.tsx");
+  const skillsPanelPath = join(repoRoot, "src", "features", "skills", "panels", "page.tsx");
 
   const relayHooks = readRequired(relayHooksPath);
   const relayCache = readRequired(relayCachePath);

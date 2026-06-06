@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
+import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import {
   AnalyticsAuthoritativeQueryKeys,
   AnalyticsDumpedQueryKeys,
   fenceAnalyticsPanelPayload,
   writeAnalyticsPanelPayload,
 } from "@/features/analytics/cache";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { useModuleCacheController } from "@/features/_shared/controller";
 import { analyticsService } from "@/services/analytics";
 import { sessionsService } from "@/services/sessions";
 import {

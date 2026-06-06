@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { basename, join, relative, sep } from "node:path";
 
 // 中文职责说明：验证前端 owner 分层已经落到 route、feature、service、cache、hook 的真实目录边界。
 const repoRoot = process.cwd();
@@ -111,6 +111,17 @@ function walkFiles(root, predicate) {
   return files.sort();
 }
 
+function validateSourceFileNames() {
+  const sourceFiles = walkFiles(srcRoot, (file) => /\.(css|json|md|ts|tsx)$/i.test(file));
+  for (const file of sourceFiles) {
+    if (basename(file).includes("-")) {
+      failures.push(`${repoPath(file)} 文件名不得使用连字符；目录已表达 owner，文件名只能保留单词职责`);
+    }
+  }
+
+  console.log(`PASS src 文件名单词化：${sourceFiles.length}/${sourceFiles.length}`);
+}
+
 function assertIncludes(file, content, snippets) {
   for (const snippet of snippets) {
     if (!content.includes(snippet)) {
@@ -147,13 +158,13 @@ function validateFeatureDeepOwners() {
 
 function validateRouteShells() {
   for (const moduleId of featureModules) {
-    const routeFile = join(routesRoot, moduleId, `${moduleId}-page.tsx`);
+    const routeFile = join(routesRoot, moduleId, "page.tsx");
     const text = readRequired(routeFile);
-    assertIncludes(`src/routes/desktop/main/${moduleId}/${moduleId}-page.tsx`, text, [
+    assertIncludes(`src/routes/desktop/main/${moduleId}/page.tsx`, text, [
       `@/features/${moduleId}`,
       "Route",
     ]);
-    assertNotMatches(`src/routes/desktop/main/${moduleId}/${moduleId}-page.tsx`, text, [
+    assertNotMatches(`src/routes/desktop/main/${moduleId}/page.tsx`, text, [
       [/\buse(State|Reducer|Effect|Memo|Callback)\b/, "route shell 不得持有页面私有业务状态"],
       [/\buse(Query|Mutation)\b/, "route shell 不得 owning TanStack 查询或 mutation"],
       [/@\/lib\/api|@\/services|invokeIpc/, "route shell 不得直接访问 API/service/IPC"],
@@ -165,9 +176,9 @@ function validateRouteShells() {
 
 function validateFeaturePageShells() {
   for (const moduleId of strictFeaturePageShells) {
-    const pageFile = join(featuresRoot, moduleId, "components", `${moduleId}-page.tsx`);
+    const pageFile = join(featuresRoot, moduleId, "components", "page.tsx");
     const text = readRequired(pageFile);
-    const label = `src/features/${moduleId}/components/${moduleId}-page.tsx`;
+    const label = `src/features/${moduleId}/components/page.tsx`;
     const declaredFunctions = [
       ...text.matchAll(/(?:^|\n)function\s+([A-Z][A-Za-z0-9_]*)\s*\(/g),
     ].map((match) => match[1]);
@@ -258,6 +269,7 @@ function validateNoForbiddenReferenceNames() {
   console.log("PASS 外部参考项目名未写入前端源码和脚本");
 }
 
+validateSourceFileNames();
 validateFeatureDeepOwners();
 validateRouteShells();
 validateFeaturePageShells();

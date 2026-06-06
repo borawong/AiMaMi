@@ -6,7 +6,7 @@ import {
   type IpcArgs,
   type IpcCommandName,
 } from "@/contracts/ipc";
-import { getIpcCommandFixture } from "@/mocks/fixtures/ipc-command-fixtures";
+import { getIpcCommandFixture } from "@/mocks/fixtures/commands";
 import {
   createE2eScenarioConfig,
   getE2eScenario,

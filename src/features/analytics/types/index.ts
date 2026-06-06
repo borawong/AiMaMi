@@ -1,7 +1,7 @@
 /**
  * 中文职责说明：analytics 模块只声明边界类型，未证实业务字段不在这里编造。
  */
-import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
+import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import type { AnalyticsRange } from "@/types";
 
 export type AnalyticsModuleId = "analytics";

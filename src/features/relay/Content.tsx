@@ -1,6 +1,6 @@
-import { RelayPage } from "./components/relay-page";
-import { DumpedContractBoundary } from "@/features/_shared/dumped-contract-boundary";
-import { DUMPED_RELAY_COMMANDS } from "./dumped-contract";
+import { RelayPage } from "./components/page";
+import { DumpedContractBoundary } from "@/features/_shared/boundary";
+import { DUMPED_RELAY_COMMANDS } from "./contract";
 
 export function RelayContent() {
   return (

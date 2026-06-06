@@ -1,6 +1,6 @@
 import type { IpcCommandName } from "./commands";
 import type { IpcArgs } from "./dto";
-import { isTauriRuntime } from "@/lib/tauri-runtime";
+import { isTauriRuntime } from "@/lib/tauri";
 
 export async function invokeIpc<T>(
   command: IpcCommandName,

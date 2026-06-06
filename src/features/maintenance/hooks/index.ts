@@ -19,7 +19,7 @@ import {
   Trash2,
   type LucideIcon,
 } from "lucide-react";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
+import { useModuleCacheController } from "@/features/_shared/controller";
 import { maintenanceService } from "@/services/maintenance";
 import {
   beginMaintenanceMutation,

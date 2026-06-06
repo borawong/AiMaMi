@@ -4,9 +4,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { useBusyAction } from "@/hooks/use-busy-action";
-import { toast } from "@/hooks/use-toast";
+import { useModuleCacheController } from "@/features/_shared/controller";
+import { useBusyAction } from "@/hooks/busy";
+import { toast } from "@/hooks/toast";
 import { isMacPlatform } from "@/lib/platform";
 import { settingsService } from "@/services/settings";
 import type { ApiProxyDetectPayload, ApiProxyMode, ApiProxyTestPayload } from "@/types";

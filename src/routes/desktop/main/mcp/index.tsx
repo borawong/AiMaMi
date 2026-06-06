@@ -1,4 +1,4 @@
 /**
- * 中文职责说明：保留 route 目录公共出口，真实页面 shell 位于 mcp-page。
+ * 中文职责说明：保留 route 目录公共出口，真实页面 shell 位于 page.tsx。
  */
-export { McpRoute } from "./mcp-page";
+export { McpRoute } from "./page";

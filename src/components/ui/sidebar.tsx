@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
-import { useIsMobile } from "@/hooks/use-mobile"
+import { useIsMobile } from "@/hooks/mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

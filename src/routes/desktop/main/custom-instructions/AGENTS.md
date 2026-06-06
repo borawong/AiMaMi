@@ -11,5 +11,5 @@
 ## custom-instructions route/module shell 边界
 
 - 本目录只负责 custom-instructions 路由参数、页面骨架、layout 装配和模块入口挂载。
-- custom-instructions-page.tsx 不得同时 owning store、query、event、dialog 和 content。
+- page.tsx 不得同时 owning store、query、event、dialog 和 content。
 - 具体业务还原必须进入 src/features/custom-instructions/components、src/features/custom-instructions/services、src/features/custom-instructions/store 和模块 cache/tests；src/components/ui 只允许放 primitive。

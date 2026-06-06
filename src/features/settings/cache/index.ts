@@ -6,7 +6,7 @@ import type { QueryKey } from "@tanstack/react-query";
 import {
   createModuleCacheOwner,
   type ModuleCacheSource,
-} from "@/features/_shared/module-cache";
+} from "@/features/_shared/cache";
 
 export const SettingsCache = createModuleCacheOwner("settings");
 export const SettingsQueryKeys = SettingsCache.queryKeys;

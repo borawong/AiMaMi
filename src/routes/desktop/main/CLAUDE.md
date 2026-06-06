@@ -11,6 +11,6 @@
 
 ## main route 边界
 
-- 每个 <module>-page.tsx 只能作为 route/module shell。
+- 每个 <module>/page.tsx 只能作为 route/module shell。
 - route 目录下的 loading、layout、components、features、hooks 只做路由级装配，不 owning 模块业务事实。
 - 业务流程必须进入 src/features/<module> 和模块 service/cache owner。

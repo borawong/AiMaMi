@@ -1,1 +1,1 @@
-export { OverviewShell } from "./overview-shell";
+export { OverviewShell } from "./shell";

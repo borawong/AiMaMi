@@ -4,10 +4,10 @@
 import { useTranslation } from "react-i18next";
 import { Moon, Sun } from "lucide-react";
 
-import { useThemeValue, type Theme } from "@/hooks/use-theme";
+import { useThemeValue, type Theme } from "@/hooks/theme";
 import { cn } from "@/lib/utils";
 import type { Route } from "@/types/navigation";
-import type { RouteMeta } from "@/routes/registry/route-meta";
+import type { RouteMeta } from "@/routes/registry/meta";
 import {
   Sidebar,
   SidebarContent,
@@ -17,7 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { AnimatedSegmentedControl } from "@/components/ui/animated-segmented-control";
+import { AnimatedSegmentedControl } from "@/components/ui/segmented";
 
 export const SIDEBAR_EXPANDED_WIDTH_PX = 176 * 1.05;
 export const SIDEBAR_COLLAPSED_WIDTH_PX = 64;

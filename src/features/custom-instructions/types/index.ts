@@ -1,8 +1,8 @@
 /**
  * 中文职责说明：custom-instructions 模块只声明边界类型，未证实业务字段不在这里编造。
  */
-import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
-import type { CustomInstructionTemplate } from "@/lib/custom-instruction-templates";
+import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
+import type { CustomInstructionTemplate } from "@/lib/templates";
 
 export type CustomInstructionsModuleId = "custom-instructions";
 export type CustomInstructionsCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;

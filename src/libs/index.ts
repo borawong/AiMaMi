@@ -1,2 +1,2 @@
-export { createAppQueryClient } from '@/lib/query-client';
-export { isTauriRuntime, getTauriWindowLabel } from '@/lib/tauri-runtime';
+export { createAppQueryClient } from '@/lib/query';
+export { isTauriRuntime, getTauriWindowLabel } from '@/lib/tauri';

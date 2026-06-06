@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
-import { formatMonthShort, formatHeatmapDate, formatDuration } from "@/lib/format-time";
+import { formatMonthShort, formatHeatmapDate, formatDuration } from "@/lib/time";
 import { useTranslation } from "react-i18next";
-import { ChartTooltip } from "./chart-tooltip";
+import { ChartTooltip } from "./tooltip";
 
 export interface HeatmapDay {
   date: string;
