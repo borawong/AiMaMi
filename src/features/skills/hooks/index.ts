@@ -3,7 +3,7 @@
  */
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { skillsService } from "@/services/skills";
 import type {
   CoreEnvelope,
   InstalledSkillSummary,
@@ -75,7 +75,7 @@ export function useSkillsPageQueries(tab: SkillsPageTab) {
     queryKey: SKILLS_INSTALLED_QUERY_KEY,
     queryFn: async () => {
       const sequence = nextSkillsCacheSequence();
-      const payload = await api.loadInstalledSkills();
+      const payload = await skillsService.loadInstalled();
       const accepted = writeSkillsCachePayload(
         queryClient,
         payload,
@@ -97,7 +97,7 @@ export function useSkillsPageQueries(tab: SkillsPageTab) {
     queryKey: SKILLS_BACKUPS_QUERY_KEY,
     queryFn: async () => {
       const sequence = nextSkillsCacheSequence();
-      const payload = await api.loadSkillBackups();
+      const payload = await skillsService.loadBackups();
       const accepted = writeSkillsCachePayload(
         queryClient,
         payload,
@@ -129,8 +129,8 @@ export function useSkillsPageMutations(options?: {
 
   const importMutation = useMutation({
     mutationFn: async () => {
-      const path = await api.pickSkillDirectory();
-      if (path) return api.importSkill(path);
+      const path = await skillsService.pickSkillDirectory();
+      if (path) return skillsService.importSkill(path);
       throw new Error("cancelled");
     },
     onMutate: () =>
@@ -142,7 +142,7 @@ export function useSkillsPageMutations(options?: {
   });
 
   const removeMutation = useMutation({
-    mutationFn: (id: string) => api.removeSkill(id),
+    mutationFn: (id: string) => skillsService.removeSkill(id),
     onMutate: () =>
       Promise.all([
         queryClient.cancelQueries({ queryKey: SKILLS_INSTALLED_QUERY_KEY }),
@@ -155,7 +155,7 @@ export function useSkillsPageMutations(options?: {
   });
 
   const restoreMutation = useMutation({
-    mutationFn: (id: string) => api.restoreSkillBackup(id),
+    mutationFn: (id: string) => skillsService.restoreBackup(id),
     onMutate: () =>
       Promise.all([
         queryClient.cancelQueries({ queryKey: SKILLS_INSTALLED_QUERY_KEY }),
@@ -165,7 +165,7 @@ export function useSkillsPageMutations(options?: {
   });
 
   const deleteBackupMutation = useMutation({
-    mutationFn: (id: string) => api.deleteSkillBackup(id),
+    mutationFn: (id: string) => skillsService.deleteBackup(id),
     onMutate: () =>
       queryClient.cancelQueries({ queryKey: SKILLS_BACKUPS_QUERY_KEY }),
     onSuccess: async (payload) => {

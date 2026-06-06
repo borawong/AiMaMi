@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { accountsService } from "@/services/accounts";
+import { analyticsService } from "@/services/analytics";
+import { mcpService } from "@/services/mcp";
+import { skillsService } from "@/services/skills";
+import { systemService } from "@/services/system";
 import { OverviewCache } from "../cache";
 
 export function useOverviewCacheController() {
@@ -12,42 +16,42 @@ export function useOverviewModule() {
 
   const snapshotQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "snapshot"],
-    queryFn: () => api.loadSnapshot(true),
+    queryFn: () => accountsService.loadSnapshot(true),
     staleTime: 30_000,
   });
   const usageQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "usage"],
-    queryFn: () => api.loadUsageAnalytics(),
+    queryFn: () => analyticsService.loadUsageAnalytics(),
     staleTime: 30_000,
   });
   const mcpQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "mcp"],
-    queryFn: () => api.loadMcpServers(),
+    queryFn: () => mcpService.loadServers(),
     staleTime: 30_000,
   });
   const skillsQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "skills"],
-    queryFn: () => api.loadInstalledSkills(),
+    queryFn: () => skillsService.loadInstalled(),
     staleTime: 30_000,
   });
   const deviceIdQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "device-id"],
-    queryFn: () => api.getDeviceId(),
+    queryFn: () => systemService.getDeviceId(),
     staleTime: Infinity,
   });
   const notificationStateQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "notification-client-state"],
-    queryFn: () => api.getNotificationClientState(),
+    queryFn: () => systemService.getNotificationClientState(),
     staleTime: 30_000,
   });
   const mysteryUnlockGrantsQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "mystery-unlock-grants"],
-    queryFn: () => api.getMysteryUnlockGrants(),
+    queryFn: () => systemService.getMysteryUnlockGrants(),
     staleTime: 30_000,
   });
 
   const refreshUsageMutation = useMutation({
-    mutationFn: () => api.refreshUsageSnapshot(),
+    mutationFn: () => accountsService.refreshUsageSnapshot(),
     onSuccess: (payload) => {
       OverviewCache.writeAuthoritativePayload(queryClient, {
         payload,
@@ -61,7 +65,7 @@ export function useOverviewModule() {
     },
   });
   const focusMainWindowMutation = useMutation({
-    mutationFn: () => api.focusMainWindow(),
+    mutationFn: () => systemService.focusMainWindow(),
   });
 
   const refreshUsageAction = {

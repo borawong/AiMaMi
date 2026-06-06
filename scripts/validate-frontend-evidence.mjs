@@ -37,10 +37,7 @@ const targetModules = [
   { id: "skills", chunk: /^assets\/skills-page-[^/]+\.js$/ },
 ];
 
-const queryKeyAllowlist = {
-  "desktop-message":
-    "raw 主 chunk 中消息面板的 queryKey；当前仓库没有该面板的 raw/internal 证据和 owner 边界，待补证据后再落入 feature cache/hook。",
-};
+const queryKeyAllowlist = {};
 
 const forbiddenReferenceNames = [
   [108, 111, 98, 101, 104, 117, 98],

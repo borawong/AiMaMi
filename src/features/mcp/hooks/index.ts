@@ -4,7 +4,7 @@
 import { useCallback } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api, type UpsertMcpServerInput } from "@/lib/api";
+import { mcpService, type UpsertMcpServerInput } from "@/services/mcp";
 import type {
   CoreEnvelope,
   McpServerListPayload,
@@ -16,7 +16,7 @@ import {
   MCP_SERVERS_QUERY_KEY,
 } from "../cache";
 
-export type { UpsertMcpServerInput } from "@/lib/api";
+export type { UpsertMcpServerInput } from "@/services/mcp";
 
 let mcpCacheSequence = 0;
 let mcpLatestAcceptedSequence = 0;
@@ -73,7 +73,7 @@ export function useMcpServers() {
     queryKey: MCP_SERVERS_QUERY_KEY,
     queryFn: async () => {
       const sequence = nextMcpCacheSequence();
-      const payload = await api.loadMcpServers();
+      const payload = await mcpService.loadServers();
       const accepted = writeMcpCachePayload(
         queryClient,
         payload,
@@ -104,14 +104,14 @@ export function useMcpServerMutations(options?: { onRemoved?: () => void }) {
 
   const toggleMutation = useMutation({
     mutationFn: ({ name, enabled }: { name: string; enabled: boolean }) =>
-      api.setMcpServerEnabled(name, enabled),
+      mcpService.setServerEnabled(name, enabled),
     onMutate: () =>
       queryClient.cancelQueries({ queryKey: MCP_SERVERS_QUERY_KEY }),
     onSuccess: (payload) => writeMcpMutationPayload(queryClient, payload),
   });
 
   const removeMutation = useMutation({
-    mutationFn: (name: string) => api.removeMcpServer(name),
+    mutationFn: (name: string) => mcpService.removeServer(name),
     onMutate: () =>
       queryClient.cancelQueries({ queryKey: MCP_SERVERS_QUERY_KEY }),
     onSuccess: async (payload) => {
@@ -130,7 +130,7 @@ export function useUpsertMcpServerMutation(options?: { onSaved?: () => void }) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: UpsertMcpServerInput) => api.upsertMcpServer(input),
+    mutationFn: (input: UpsertMcpServerInput) => mcpService.upsertServer(input),
     onMutate: () =>
       queryClient.cancelQueries({ queryKey: MCP_SERVERS_QUERY_KEY }),
     onSuccess: async (payload) => {

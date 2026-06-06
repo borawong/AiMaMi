@@ -27,7 +27,7 @@ impl<'a> AnalyticsUseCase<'a> {
         &self,
         account_key: Option<String>,
     ) -> Result<CoreEnvelope<AnalyticsPayload>, CoreError> {
-        let plan = self.no_op_plan("load_quota_history");
+        let plan = self.no_op_quota_plan("load_quota_history");
         Ok(CoreEnvelope::from_backend_plan(
             self.payload(&plan, clean_optional_text(account_key), None),
             &plan,
@@ -69,8 +69,16 @@ impl<'a> AnalyticsUseCase<'a> {
         BackendOperationPlan::no_op(MODULE, command, self.repository_boundary())
     }
 
+    fn no_op_quota_plan(&self, command: &'static str) -> BackendOperationPlan {
+        BackendOperationPlan::no_op(MODULE, command, self.quota_repository_boundary())
+    }
+
     fn repository_boundary(&self) -> BackendBoundaryProbe {
         BackendBoundaryProbe::from_repository_source(self.repositories.analytics().source_path())
+    }
+
+    fn quota_repository_boundary(&self) -> BackendBoundaryProbe {
+        BackendBoundaryProbe::from_repository_source(self.repositories.quota().source_path())
     }
 }
 

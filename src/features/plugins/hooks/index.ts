@@ -6,10 +6,10 @@ import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tansta
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import {
   pluginsService,
+  type PluginJsonValue,
   type PluginSettingsPayload,
   type PluginsEnvelope,
 } from "@/services/plugins";
-import type { IpcJsonValue } from "@/contracts/ipc";
 import {
   invalidatePluginsContractQueries,
   pluginConfigQueryKey,
@@ -195,7 +195,7 @@ function updatePluginEnabled(
   return current;
 }
 
-function updatePluginRecord(plugin: IpcJsonValue, id: string, enabled: boolean): IpcJsonValue {
+function updatePluginRecord(plugin: PluginJsonValue, id: string, enabled: boolean): PluginJsonValue {
   if (!isRecord(plugin)) return plugin;
   const pluginId = readPluginId(plugin);
   if (pluginId !== id) return plugin;
@@ -205,7 +205,7 @@ function updatePluginRecord(plugin: IpcJsonValue, id: string, enabled: boolean):
   };
 }
 
-function readPluginId(plugin: Record<string, IpcJsonValue>) {
+function readPluginId(plugin: Record<string, PluginJsonValue>) {
   for (const key of ["id", "name", "key"]) {
     const value = plugin[key];
     if (typeof value === "string" && value.length > 0) return value;
@@ -213,6 +213,6 @@ function readPluginId(plugin: Record<string, IpcJsonValue>) {
   return "";
 }
 
-function isRecord(value: IpcJsonValue): value is Record<string, IpcJsonValue> {
+function isRecord(value: PluginJsonValue): value is Record<string, PluginJsonValue> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }

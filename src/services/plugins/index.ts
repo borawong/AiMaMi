@@ -6,6 +6,7 @@ import {
 import type { CoreEnvelope } from "@/types";
 
 export type PluginsPayload = IpcEvidencePayload;
+export type PluginJsonValue = IpcJsonValue;
 export type PluginSettingsPayload = IpcJsonValue;
 export type PluginsEnvelope = CoreEnvelope<PluginsPayload>;
 

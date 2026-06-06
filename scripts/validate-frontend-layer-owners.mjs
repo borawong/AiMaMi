@@ -178,6 +178,23 @@ function validateNoBypassIpcInComponents() {
   console.log(`PASS 业务组件 IPC 边界：${componentFiles.length}/${componentFiles.length}`);
 }
 
+function validateNoGlobalApiInFeatureHooks() {
+  const hookFiles = walkFiles(featuresRoot, (file) => {
+    const normalized = repoPath(file);
+    return normalized.endsWith("/hooks/index.ts") || normalized.endsWith("/hooks/index.tsx");
+  });
+
+  for (const file of hookFiles) {
+    const text = readRequired(file);
+    assertNotMatches(repoPath(file), text, [
+      [/@\/lib\/api/, "模块 hook 不得直接消费全局 API 门面，必须经模块 service wrapper"],
+      [/@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "模块 hook 不得绕过 service 直接拼 IPC"],
+    ]);
+  }
+
+  console.log(`PASS 模块 hook service 边界：${hookFiles.length}/${hookFiles.length}`);
+}
+
 function validateNoForbiddenReferenceNames() {
   const files = walkFiles(srcRoot, (file) => /\.(css|js|json|jsx|md|mjs|ts|tsx|txt)$/i.test(file));
   files.push(
@@ -201,6 +218,7 @@ validateFeatureDeepOwners();
 validateRouteShells();
 validateServiceOwners();
 validateNoBypassIpcInComponents();
+validateNoGlobalApiInFeatureHooks();
 validateNoForbiddenReferenceNames();
 
 if (failures.length > 0) {

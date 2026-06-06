@@ -3,6 +3,7 @@
  */
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { seedDesktopMessageBoundary } from "@/app/runtime/desktop-message";
 import {
   applyRuntimeEventToQueryCache,
   subscribeRuntimeEvent,
@@ -10,6 +11,10 @@ import {
 
 export function RuntimeInitializer() {
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    seedDesktopMessageBoundary(queryClient);
+  }, [queryClient]);
 
   useEffect(() => {
     return subscribeRuntimeEvent((event) => {
