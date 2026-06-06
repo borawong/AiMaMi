@@ -1,13 +1,13 @@
 /**
- * Magic UI Cool Mode — click/drag particle burst (https://magicui.design/docs/components/cool-mode)
- * Div circles, single transform update. RAF runs only while particles exist or drag-spawn is active
- * (aligned with upstream behavior: no perpetual idle loop).
+ * Cool Mode：点击 / 拖拽时触发粒子爆发。
+ * 使用 div 圆点并集中更新 transform；仅在粒子存在或拖拽生成激活时运行 RAF，
+ * 避免空闲时永久循环。
  */
 import { type ReactNode, useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
-/** Below modal stack (see `dialog.tsx`); above app chrome (~z-70). */
+/** 低于 modal 栈（见 `dialog.tsx`），高于应用 chrome（约 z-70）。 */
 const COOL_MODE_Z = 90;
 
 export interface BaseParticle {
@@ -34,7 +34,7 @@ export interface CoolParticleOptions extends BaseParticleOptions {
   particleCount?: number;
   speedHorz?: number;
   speedUp?: number;
-  /** Max simultaneous particles — upstream default ~45 */
+  /** 最大同时存在的粒子数，默认约 45。 */
   maxParticles?: number;
   spawnIntervalMs?: number;
   burstOnPress?: number;

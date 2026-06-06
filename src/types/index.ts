@@ -55,6 +55,7 @@ export interface ApiConnectivityPayload {
 }
 
 export interface UpdateInstallabilityPayload {
+  backendStatus: BackendSkeletonStatus;
   canInstall: boolean;
   code: string;
   executablePath: string | null;
@@ -63,6 +64,13 @@ export interface UpdateInstallabilityPayload {
   quarantined: boolean;
 }
 
+export interface SystemInfoPayload {
+  backendStatus: BackendSkeletonStatus;
+  os: string;
+  osVersion: string;
+  arch: string;
+  hostname: string;
+}
 
 export interface AppStatusPayload {
   paths: AppPathState;
@@ -74,6 +82,7 @@ export interface AppStatusPayload {
 }
 
 export interface CoreSnapshotPayload {
+  backendStatus: BackendSkeletonStatus;
   status: AppStatusPayload;
 }
 
@@ -282,6 +291,7 @@ export interface McpServerSummary {
 }
 
 export interface McpServerListPayload {
+  status: BackendSkeletonStatus;
   items: McpServerSummary[];
   total: number;
   sourcePath: string;
@@ -289,12 +299,14 @@ export interface McpServerListPayload {
 }
 
 export interface McpServerMutationPayload {
+  status: BackendSkeletonStatus;
   server: McpServerSummary;
   total: number;
   sourcePath: string;
 }
 
 export interface McpServerRemovePayload {
+  status: BackendSkeletonStatus;
   removedName: string;
   total: number;
   sourcePath: string;
@@ -426,6 +438,24 @@ export interface CoreEnvelope<T> {
   data: T;
 }
 
+export interface BackendSkeletonBoundaryStatus {
+  [key: string]: string | boolean;
+  repositoryChecked: boolean;
+  repositoryPathKnown: boolean;
+  platformChecked: boolean;
+  coreChecked: boolean;
+  effect: "pending" | "no_op" | "platform" | "unsupported";
+}
+
+export interface BackendSkeletonStatus {
+  [key: string]: string | boolean | BackendSkeletonBoundaryStatus;
+  module: string;
+  command: string;
+  restored: boolean;
+  note: string;
+  boundary: BackendSkeletonBoundaryStatus;
+}
+
 export interface BootstrapStatePayload {
   writtenAt: number | null;
   snapshotProgressive: CoreSnapshotPayload | null;
@@ -435,7 +465,7 @@ export interface BootstrapStatePayload {
 }
 
 // ---------------------------------------------------------------------------
-// Analytics
+// 分析数据
 // ---------------------------------------------------------------------------
 
 export interface DailyActivity {
@@ -478,7 +508,7 @@ export interface QuotaHistoryPayload {
 }
 
 // ---------------------------------------------------------------------------
-// Session analytics (new 4 endpoints)
+// 会话分析（新增 4 个端点）
 // ---------------------------------------------------------------------------
 
 export type AnalyticsRange = "today" | "week" | "month";

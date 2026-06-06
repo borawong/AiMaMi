@@ -1,19 +1,13 @@
+/**
+ * 中文职责说明：侧边栏只消费 route registry 派生的导航 meta，不再持有 route label 或可见性。
+ */
 import { useTranslation } from "react-i18next";
-import {
-  LayoutDashboard,
-  FileCode2,
-  Server,
-  Sparkles,
-  Wrench,
-  Settings,
-  Sun,
-  Moon,
-  type LucideIcon,
-} from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 
 import { useThemeValue, type Theme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import type { Route } from "@/types/navigation";
+import type { RouteMeta } from "@/routes/registry/route-meta";
 import {
   Sidebar,
   SidebarContent,
@@ -24,21 +18,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { AnimatedSegmentedControl } from "@/components/ui/animated-segmented-control";
-
-export const appNavItems: {
-  route: Route;
-  icon: LucideIcon;
-  labelKey: string;
-}[] = [
-  { route: "overview", icon: LayoutDashboard, labelKey: "nav.overview" },
-  { route: "customInstructions", icon: FileCode2, labelKey: "nav.customInstructions" },
-  { route: "mcp", icon: Server, labelKey: "nav.mcp" },
-  { route: "skills", icon: Sparkles, labelKey: "nav.skills" },
-  { route: "maintenance", icon: Wrench, labelKey: "nav.maintenance" },
-  { route: "settings", icon: Settings, labelKey: "nav.settings" },
-];
-
-const hiddenNavRoutes = new Set<Route>([]);
 
 export const SIDEBAR_EXPANDED_WIDTH_PX = 176 * 1.05;
 export const SIDEBAR_COLLAPSED_WIDTH_PX = 64;
@@ -59,6 +38,7 @@ const iconInactiveClass =
 
 interface AppSidebarProps {
   activeRoute: Route;
+  routeItems: RouteMeta[];
   onNavigate: (route: Route) => void;
   onThemeChange: (theme: Theme) => void;
 }
@@ -120,6 +100,7 @@ function SidebarThemeToggle({
 
 export function AppSidebar({
   activeRoute,
+  routeItems,
   onNavigate,
   onThemeChange,
 }: AppSidebarProps) {
@@ -139,7 +120,7 @@ export function AppSidebar({
         >
           <img
             src={SIDEBAR_LOGO_SRC}
-            alt="AiMaMi"
+            alt={t("app.name")}
             className="h-[35px] w-[35px] select-none rounded-full object-cover md:translate-x-1"
             draggable={false}
           />
@@ -153,7 +134,7 @@ export function AppSidebar({
           <div className="relative h-[35px] w-[35px] shrink-0">
             <img
               src={SIDEBAR_LOGO_SRC}
-              alt="AiMaMi"
+              alt={t("app.name")}
               className="h-full w-full select-none rounded-full object-cover"
               draggable={false}
             />
@@ -164,25 +145,28 @@ export function AppSidebar({
           </div>
           <div className="flex min-w-0 flex-col leading-tight">
             <span className="truncate text-[15px] font-semibold text-sidebar-foreground">
-              AiMaMi
+              {t("app.name")}
             </span>
             <span className="truncate text-[11px] text-sidebar-foreground/60">
-              Codex Assistant
+              {t("app.subtitle")}
             </span>
           </div>
         </button>
       </SidebarHeader>
       <SidebarContent className="pt-[18px]">
         <SidebarMenu>
-          {appNavItems
-            .filter((item) => !hiddenNavRoutes.has(item.route))
-            .map(({ route, icon: Icon, labelKey }) => {
+          {routeItems
+            .filter((item) => item.visible)
+            .map(({ route, icon: Icon, titleKey }) => {
               const isActive = activeRoute === route;
+              const label = t(titleKey);
               return (
                 <SidebarMenuItem key={route}>
                   <SidebarMenuButton
                     isActive={isActive}
-                    tooltip={t(labelKey)}
+                    tooltip={label}
+                    aria-label={label}
+                    title={label}
                     className={navButtonClassName}
                     onClick={() => onNavigate(route)}
                   >
@@ -195,7 +179,7 @@ export function AppSidebar({
                           : "text-sidebar-foreground/80 group-hover/menu-item:text-sidebar-accent-foreground",
                       )}
                     />
-                    <span className="truncate">{t(labelKey)}</span>
+                    <span className="truncate">{label}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );

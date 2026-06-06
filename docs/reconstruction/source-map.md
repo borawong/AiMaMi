@@ -1,102 +1,127 @@
-# Public Source Map
+# 公开源码地图
 
-This map describes the current public repository structure for reconstruction
-work. All paths are repository-relative.
+本文件描述当前公开仓库结构，以及它在 OpenAiMami 1.0.9 重建中的角色。所有路径均为仓库相对路径。
 
-## Project Metadata
+## 项目元信息
 
-| Item | Value |
+| 项目 | 值 |
 | --- | --- |
-| Package | `aimami` |
-| Public version in repository | `1.0.0` |
-| License | Apache-2.0 |
-| Desktop product name | `AiMaMi` |
-| Stack | Tauri 2 + React + Rust |
-| Frontend build | Vite + TypeScript |
+| 包名 | 以 `package.json` 为准 |
+| 仓库内公开版本 | `1.0.0` |
+| 目标重建版本 | `1.0.9` |
+| 许可 | Apache License |
+| 桌面应用名称 | OpenAiMami |
+| 技术栈 | Tauri 2、React、Rust |
+| 前端构建 | Vite、TypeScript |
 
-## Top-Level Structure
+## 顶层结构
 
-| Path | Role |
+| 路径 | 角色 |
 | --- | --- |
-| `src/` | React app source |
-| `src-tauri/` | Tauri 2 desktop shell and Rust commands |
-| `scripts/` | Repository utility scripts |
-| `assets/` | Public image assets |
-| `evidence/binary-manifests/1.0.9/i64-databases.json` | Bundle status, sizes, and hashes |
-| External: `https://github.com/MapleEve/OpenAiMami-IDB` at `1.0.9/AiMaMi-1.0.9-i64-databases.zip` | macOS and Windows `.i64` reference database bundle |
-| `package.json` | Frontend scripts and dependency declarations |
-| `src-tauri/Cargo.toml` | Rust package and dependency declarations |
-| `src-tauri/tauri.conf.json` | Tauri app and bundle configuration |
+| `src/` | 当前公开前端源码和重构入口。 |
+| `src-tauri/` | 当前公开 Tauri 与 Rust 后端骨架。 |
+| `docs/reconstruction/` | 中文重建说明。 |
+| `evidence/full-chain/raw/` | raw 链条、前端 dumped 文件、IPC、CCF、manifest 和校验摘要。 |
+| `evidence/full-chain/internal/` | 审计地图、前端地图、蒸馏逻辑、原始叶子和结构化摘要。 |
+| `evidence/binary-manifests/1.0.9/i64-databases.json` | `OpenAiMami IDB` 状态、大小和哈希清单。 |
+| `package.json` | 前端脚本和依赖声明。 |
+| `src-tauri/Cargo.toml` | Rust 包和依赖声明。 |
+| `src-tauri/tauri.conf.json` | Tauri 应用和打包配置。 |
 
-## Frontend Areas
+## 前端目标边界
 
-| Path | Role |
+前端按主流模块化架构重构并还原，目标边界包括：
+
+| 边界 | 角色 |
 | --- | --- |
-| `src/main.tsx` | React boot entry |
-| `src/App.tsx` | App root wrapper |
-| `src/main-app.tsx` | Main route state, page loading, and shell composition |
-| `src/components/layout/` | App sidebar and layout components |
-| `src/components/custom-instructions/` | Custom instruction workflow UI |
-| `src/components/mcp/` | MCP management UI |
-| `src/components/skills/` | Skills management UI |
-| `src/components/maintenance/` | Maintenance actions UI |
-| `src/components/settings/` | Settings UI |
-| `src/components/update/` | Update overlay UI |
-| `src/components/runtime/` | Runtime-related dialogs |
-| `src/components/ui/` | Shared UI primitives |
-| `src/hooks/` | React hooks |
-| `src/locales/` | Localization resources |
-| `src/types/` | Shared TypeScript types |
+| `app` | 应用启动、Provider 和根组合。 |
+| `routes` | 懒加载路由、页面壳、加载态、错误态和空态。 |
+| `features` | 功能公开接口和私有实现。 |
+| `services` | IPC 包装、运行期适配和服务契约。 |
+| `store` | 类型化状态骨架、选择器和 StoreUpdater。 |
+| `hooks` | 共享 React 钩子。 |
+| `utils` | 共享工具函数。 |
+| `types` | 共享 TypeScript 类型。 |
+| `config` | 公开配置常量和默认值。 |
+| `locales` | 本地化资源。 |
+| `libs` | 第三方库包装和稳定门面。 |
+| `layout` | 应用外壳、导航、托盘相关外壳和公共布局。 |
 
-## Navigation Surface
-
-The public sidebar routes found in `src/components/layout/sidebar.tsx` are:
+OpenAiMami 1.0.9 前端覆盖面：
 
 - `overview`
-- `customInstructions`
+- `accounts`
+- `sessions`
+- `analytics`
+- `custom-instructions`
 - `mcp`
 - `skills`
-- `maintenance`
+- `relay`
 - `settings`
+- `maintenance`
+- `daemon-autoswitch`
+- `tray-shell`
+- `voice`
 
-## Tauri Command Surface
+## 当前前端入口
 
-The command registration point is `src-tauri/src/lib.rs`. Public command modules
-are under `src-tauri/src/commands/`.
-
-| Module | Commands |
+| 路径 | 说明 |
 | --- | --- |
-| `custom_instructions.rs` | `load_custom_instruction_state`, `preview_custom_instruction_apply`, `apply_custom_instruction`, `clear_custom_instruction_block`, `rollback_custom_instruction` |
-| `hotspot.rs` | `has_notch`, `get_hotspot_enabled`, `set_hotspot_enabled`, `focus_main_window`, `hotspot_ready` |
-| `mcp.rs` | `load_mcp_servers`, `upsert_mcp_server`, `set_mcp_server_enabled`, `remove_mcp_server` |
-| `skills.rs` | `load_installed_skills`, `load_skill_backups`, `import_skill`, `remove_skill`, `restore_skill_backup`, `delete_skill_backup` |
-| `system.rs` | `clean`, `rebuild_registry`, `set_auto_switch`, `configure_auto_switch`, `set_api_proxy_config`, `get_usage_refresh_interval`, `set_usage_refresh_interval`, `test_api_proxy_config`, `detect_api_proxy_config`, `run_daemon_once`, `diagnose`, `restart_codex`, `load_bootstrap_state`, `get_system_info`, `graceful_restart_for_update`, `check_update_installability`, `open_path` |
+| `src/main.tsx` | React 启动入口。 |
+| `src/App.tsx` | 应用根包装。 |
+| `src/main-app.tsx` | 主路由状态、页面加载和外壳组合。 |
+| `src/components/layout/` | 侧栏和布局组件。 |
+| `src/features/custom-instructions/components/` | 自定义指令工作流界面。 |
+| `src/features/mcp/components/` | MCP 管理界面。 |
+| `src/features/skills/components/` | Skills 管理界面。 |
+| `src/features/maintenance/components/` | 维护操作界面。 |
+| `src/features/plugins/components/` | 插件管理界面。 |
+| `src/features/settings/components/` | 设置界面。 |
+| `src/components/update/` | 更新覆盖层。 |
+| `src/components/runtime/` | 运行期对话框。 |
+| `src/components/ui/` | 共享 primitive 基础组件；不得放业务组合组件或模块私有状态。 |
+| `src/hooks/` | React 钩子。 |
+| `src/locales/` | 本地化资源。 |
+| `src/types/` | 共享 TypeScript 类型。 |
 
-Only commands registered through `tauri::generate_handler!` are part of the
-frontend IPC surface. Helper functions in command modules are not treated as IPC
-entries unless registered.
+## 后端目标边界
 
-## Build And Packaging
+后端是六边形架构骨架：
 
-| Path | Notes |
+| 边界 | 角色 |
 | --- | --- |
-| `package.json` | Defines `dev`, `dev:web`, `build`, `preview`, and `tauri` scripts. |
-| `src-tauri/tauri.conf.json` | Uses Tauri bundle settings and `../dist` frontend output. |
-| `src-tauri/Cargo.toml` | Defines Rust package metadata, Apache-2.0 license, Tauri 2 dependencies, and platform-specific dependencies. |
+| `commands` | Tauri 命令薄适配层。 |
+| `application` | 用例编排和服务组合。 |
+| `core` | 稳定领域类型和错误。 |
+| `platform` | 平台能力边界。 |
+| `repository` | 存储边界。 |
+| `adapters` | 外部适配和桩实现。 |
+| `contracts` | 前后端可序列化 DTO 和默认响应。 |
 
-## Asset Map
+不还原后端业务实现是项目范围选择。未来业务补齐必须通过 contracts、application、repository、platform 和 adapters 进入，commands 不能变成业务逻辑容器。
 
-Public assets in `assets/` include application icons and UI images. Treat these
-as publishable repository assets unless a separate review marks a specific file
-out of scope.
+## Tauri 命令表面
 
-The reference database bundle is published outside this source repository:
+命令注册点是 `src-tauri/src/lib.rs`。公开命令模块位于 `src-tauri/src/commands/`。
 
-`https://github.com/MapleEve/OpenAiMami-IDB`
+| 模块 | 命令 |
+| --- | --- |
+| `custom_instructions.rs` | `load_custom_instruction_state`、`preview_custom_instruction_apply`、`apply_custom_instruction`、`clear_custom_instruction_block`、`rollback_custom_instruction` |
+| `hotspot.rs` | `has_notch`、`get_hotspot_enabled`、`set_hotspot_enabled`、`focus_main_window`、`hotspot_ready` |
+| `mcp.rs` | `load_mcp_servers`、`upsert_mcp_server`、`set_mcp_server_enabled`、`remove_mcp_server` |
+| `skills.rs` | `load_installed_skills`、`load_skill_backups`、`import_skill`、`remove_skill`、`restore_skill_backup`、`delete_skill_backup` |
+| `system.rs` | `clean`、`rebuild_registry`、`set_auto_switch`、`configure_auto_switch`、`set_api_proxy_config`、`get_usage_refresh_interval`、`set_usage_refresh_interval`、`test_api_proxy_config`、`detect_api_proxy_config`、`run_daemon_once`、`diagnose`、`restart_codex`、`load_bootstrap_state`、`get_system_info`、`graceful_restart_for_update`、`check_update_installability`、`open_path` |
 
-Archive path:
+只有通过 `tauri::generate_handler!` 注册的命令属于前端 IPC 表面。模块内辅助函数不应被当成 IPC 入口，除非它被注册。
 
-`1.0.9/AiMaMi-1.0.9-i64-databases.zip`
+## 构建和打包
 
-Use `evidence/binary-manifests/1.0.9/i64-databases.json` as the source of truth
-for archive status, sizes, and hashes.
+| 路径 | 说明 |
+| --- | --- |
+| `package.json` | 定义 `dev`、`dev:web`、`build`、`preview`、`tauri` 等脚本。 |
+| `src-tauri/tauri.conf.json` | 使用 Tauri 打包配置和 `../dist` 前端输出。 |
+| `src-tauri/Cargo.toml` | 定义 Rust 包元信息、Apache License、Tauri 2 依赖和平台依赖。 |
+
+## 资产
+
+`assets/` 中保存公开应用资产。`OpenAiMami IDB` 是独立参考资产，主仓库只保存它的 manifest、大小和哈希信息。需要还原完整实现时，应先使用 raw/internal，再按需要核对 IDB 清单。

@@ -1,68 +1,57 @@
-use crate::core::custom_instructions;
-use crate::core::models::{
+use crate::adapters::tauri::state::TauriAppState;
+use crate::commands::respond;
+use crate::contracts::{
     CoreEnvelope, CustomInstructionPreviewPayload, CustomInstructionStatePayload,
 };
-use crate::core::repository::Repository;
-use std::sync::Mutex;
 use tauri::State;
 
 #[tauri::command]
-pub fn load_custom_instruction_state(
-    repo: State<'_, Mutex<Repository>>,
+pub(crate) fn load_custom_instruction_state(
+    state: State<'_, TauriAppState>,
 ) -> Result<CoreEnvelope<CustomInstructionStatePayload>, String> {
-    let repo = repo.lock().map_err(|e| e.to_string())?;
-    let payload = custom_instructions::load_state(repo.paths()).map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    respond(state.services().custom_instructions().load_state())
 }
 
 #[tauri::command]
-pub fn preview_custom_instruction_apply(
-    repo: State<'_, Mutex<Repository>>,
-    content: String,
+pub(crate) fn preview_custom_instruction_apply(
+    state: State<'_, TauriAppState>,
+    content: Option<String>,
 ) -> Result<CoreEnvelope<CustomInstructionPreviewPayload>, String> {
-    let repo = repo.lock().map_err(|e| e.to_string())?;
-    let payload =
-        custom_instructions::preview_apply(repo.paths(), &content).map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    respond(
+        state
+            .services()
+            .custom_instructions()
+            .preview_apply(content),
+    )
 }
 
 #[tauri::command]
-pub fn apply_custom_instruction(
-    repo: State<'_, Mutex<Repository>>,
-    content: String,
+pub(crate) fn apply_custom_instruction(
+    state: State<'_, TauriAppState>,
+    content: Option<String>,
+    source: Option<String>,
     template_code: Option<String>,
     template_title: Option<String>,
-    source: Option<String>,
 ) -> Result<CoreEnvelope<CustomInstructionStatePayload>, String> {
-    let repo = repo.lock().map_err(|e| e.to_string())?;
-    let payload = custom_instructions::apply_managed_content(
-        repo.paths(),
-        &content,
+    respond(state.services().custom_instructions().apply(
+        content,
+        source,
         template_code,
         template_title,
-        source,
-    )
-    .map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    ))
 }
 
 #[tauri::command]
-pub fn clear_custom_instruction_block(
-    repo: State<'_, Mutex<Repository>>,
+pub(crate) fn clear_custom_instruction_block(
+    state: State<'_, TauriAppState>,
 ) -> Result<CoreEnvelope<CustomInstructionStatePayload>, String> {
-    let repo = repo.lock().map_err(|e| e.to_string())?;
-    let payload =
-        custom_instructions::clear_managed_block(repo.paths()).map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    respond(state.services().custom_instructions().clear_block())
 }
 
 #[tauri::command]
-pub fn rollback_custom_instruction(
-    repo: State<'_, Mutex<Repository>>,
-    history_id: String,
+pub(crate) fn rollback_custom_instruction(
+    state: State<'_, TauriAppState>,
+    history_id: Option<String>,
 ) -> Result<CoreEnvelope<CustomInstructionStatePayload>, String> {
-    let repo = repo.lock().map_err(|e| e.to_string())?;
-    let payload = custom_instructions::rollback_history(repo.paths(), &history_id)
-        .map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    respond(state.services().custom_instructions().rollback(history_id))
 }

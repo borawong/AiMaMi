@@ -34,7 +34,7 @@ export function useTheme() {
   return { theme, setTheme: setThemeState };
 }
 
-/** Returns the resolved visual theme ("light" | "dark"), reacting to system preference changes. */
+/** 返回解析后的视觉主题（"light" | "dark"），并响应系统偏好变化。 */
 export function useThemeValue(): "light" | "dark" {
   const [resolved, setResolved] = useState<"light" | "dark">(() =>
     document.documentElement.classList.contains("dark") ? "dark" : "light",

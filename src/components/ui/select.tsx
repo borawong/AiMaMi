@@ -65,9 +65,9 @@ const SelectScrollDownButton = React.forwardRef<
 SelectScrollDownButton.displayName =
   SelectPrimitive.ScrollDownButton.displayName
 
-// 项目里 DialogContent 使用 inline `zIndex: 200`（高于 CoolMode ~90）。
-// Select 的 Portal 也外挂到 body，必须显式高于 Dialog 才能在弹窗内点开下拉。
-// 选 300：留 100 余量，未来若再加更高层级 overlay 仍可叠加。
+// 项目里弹窗内容直接使用 200 层级（高于动效层约 90）。
+// 下拉选择也外挂到页面根节点，必须显式高于弹窗才能在弹窗内点开下拉。
+// 选 300：留 100 余量，未来若再加更高层级覆层仍可叠加。
 const SELECT_STACK_Z = 300
 
 const SelectContent = React.forwardRef<

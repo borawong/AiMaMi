@@ -47,7 +47,7 @@ export function useAutoRefresh() {
         try {
           applyResolvedInterval(await api.getUsageRefreshInterval());
         } catch {
-          // Preserve current display when latest state cannot be reloaded.
+          // 最新状态无法重新加载时，保留当前显示。
         }
         toast({
           title: t("settings.refreshIntervalSaveFailedTitle"),

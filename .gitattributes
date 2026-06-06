@@ -1,0 +1,15 @@
+# 中文职责说明：主仓库只保存可审计文本、源码和脱敏证据索引；IDB 与压缩包应作为独立发布资产处理。
+*.i64 -diff -merge
+*.idb -diff -merge
+*.zip -diff -merge
+*.7z -diff -merge
+*.rar -diff -merge
+*.tar -diff -merge
+*.tar.gz -diff -merge
+*.tgz -diff -merge
+*.gz -diff -merge
+*.exe -diff -merge
+*.msi -diff -merge
+*.dmg -diff -merge
+*.pkg -diff -merge
+*.iso -diff -merge

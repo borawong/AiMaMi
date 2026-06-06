@@ -1,155 +1,240 @@
-import type {
-  CoreEnvelope,
-  CleanPayload,
-  RebuildRegistryPayload,
-  AutoSwitchConfigPayload,
-  ApiProxyMode,
-  ApiModePayload,
-  ApiProxyDetectPayload,
-  ApiProxyTestPayload,
-  UpdateInstallabilityPayload,
-  DaemonRunPayload,
-  DiagnosePayload,
-  McpServerListPayload,
-  McpServerMutationPayload,
-  McpServerRemovePayload,
-  SkillListPayload,
-  SkillBackupListPayload,
-  SkillImportPayload,
-  SkillRemovePayload,
-  SkillRestorePayload,
-  SkillDeleteBackupPayload,
-  CustomInstructionPreviewPayload,
-  CustomInstructionStatePayload,
-} from "@/types";
-import { isTauriRuntime } from "@/lib/tauri-runtime";
+import {
+  accountsService,
+  analyticsService,
+  customInstructionsService,
+  daemonAutoswitchService,
+  maintenanceService,
+  mcpService,
+  relayService,
+  runtimeExtensionsService,
+  sessionsService,
+  settingsService,
+  skillsService,
+  systemService,
+  voiceService,
+  type ApplyCustomInstructionParams,
+  type UpsertMcpServerInput,
+} from "@/services";
 
-async function invoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
-  if (isTauriRuntime()) {
-    const { invoke: tauriInvoke } = await import("@tauri-apps/api/core");
-    return tauriInvoke<T>(cmd, args);
+export type { UpsertMcpServerInput } from "@/services";
+
+function normalizeCustomInstructionApply(
+  input: ApplyCustomInstructionParams | string,
+  content?: string,
+): ApplyCustomInstructionParams {
+  if (typeof input !== "string") return input;
+  return {
+    content: content ?? "",
+    templateCode: input,
+    source: "legacy-adapter",
+  };
+}
+
+function asStringRecord(value: unknown): Record<string, string> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return {};
   }
-  throw new Error(`Command "${cmd}" is only available in Tauri runtime`);
+
+  return Object.fromEntries(
+    Object.entries(value).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  );
+}
+
+function asStringArray(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
+
+function asOptionalString(value: unknown): string | null {
+  return typeof value === "string" ? value : null;
+}
+
+function normalizeMcpServerInput(
+  input: UpsertMcpServerInput | string,
+  config?: Record<string, unknown>,
+): UpsertMcpServerInput {
+  if (typeof input !== "string") return input;
+
+  const legacyConfig =
+    config?.config && typeof config.config === "object" && !Array.isArray(config.config)
+      ? (config.config as Record<string, unknown>)
+      : config ?? {};
+
+  return {
+    name: input,
+    transport:
+      (legacyConfig.transport as UpsertMcpServerInput["transport"] | undefined) ??
+      "stdio",
+    enabled:
+      typeof legacyConfig.enabled === "boolean" ? legacyConfig.enabled : undefined,
+    command: asOptionalString(legacyConfig.command),
+    args: asStringArray(legacyConfig.args),
+    url: asOptionalString(legacyConfig.url),
+    headers: asStringRecord(legacyConfig.headers),
+    environment: asStringRecord(legacyConfig.environment),
+  };
 }
 
 export const api = {
-  loadSnapshot: (localOnly = false) =>
-    invoke<CoreEnvelope<Record<string, unknown>>>("load_snapshot", { localOnly }),
+  loadSnapshot: systemService.loadSnapshot,
+  refreshUsageSnapshot: systemService.refreshUsageSnapshot,
+  focusMainWindow: systemService.focusMainWindow,
+  getDeviceId: systemService.getDeviceId,
+  getNotificationClientState: systemService.getNotificationClientState,
+  getMysteryUnlockGrants: systemService.getMysteryUnlockGrants,
+  mergeMysteryUnlockGrants: systemService.mergeMysteryUnlockGrants,
+  getOrCreateRemoteDeviceSecret: systemService.getOrCreateRemoteDeviceSecret,
+  importRemoteDeviceSecretIfEmpty: systemService.importRemoteDeviceSecretIfEmpty,
 
-  clean: () =>
-    invoke<CoreEnvelope<CleanPayload>>("clean"),
+  beginAddAccountAttachMonitor: accountsService.beginAddAccountAttachMonitor,
+  switchAccount: accountsService.switchAccount,
+  switchAccountAndRestartCodex: accountsService.switchAccountAndRestartCodex,
+  removeAccounts: accountsService.removeAccounts,
+  logout: accountsService.logout,
+  importChatGptSessionAccount: accountsService.importChatGptSessionAccount,
+  exportAccountsToFile: accountsService.exportAccountsToFile,
+  previewAccountImport: accountsService.previewAccountImport,
+  importAccountsFromFile: accountsService.importAccountsFromFile,
 
-  rebuildRegistry: () =>
-    invoke<CoreEnvelope<RebuildRegistryPayload>>("rebuild_registry"),
+  loadSessions: sessionsService.loadSessions,
+  deleteSessions: sessionsService.deleteSessions,
 
-  setAutoSwitch: (enabled: boolean) =>
-    invoke<CoreEnvelope<AutoSwitchConfigPayload>>("set_auto_switch", { enabled }),
+  loadUsageAnalytics: analyticsService.loadUsageAnalytics,
+  loadQuotaHistory: analyticsService.loadQuotaHistory,
+  loadSessionAnalytics: analyticsService.loadSessionAnalytics,
+  loadTokenAnalytics: analyticsService.loadTokenAnalytics,
+  loadToolAnalytics: analyticsService.loadToolAnalytics,
+  loadChangeAnalytics: analyticsService.loadChangeAnalytics,
 
-  configureAutoSwitch: (threshold5hPercent?: number, thresholdWeeklyPercent?: number) =>
-    invoke<CoreEnvelope<AutoSwitchConfigPayload>>("configure_auto_switch", {
-      threshold5hPercent,
-      thresholdWeeklyPercent,
-    }),
+  setAutoSwitch: daemonAutoswitchService.setAutoSwitch,
+  configureAutoSwitch: daemonAutoswitchService.configureAutoSwitch,
+  loadBootstrapState: daemonAutoswitchService.loadBootstrapState,
+  loadPendingAutoSwitch: daemonAutoswitchService.loadPendingAutoSwitch,
+  dismissPendingAutoSwitch: daemonAutoswitchService.dismissPendingAutoSwitch,
+  confirmPendingAutoSwitch: daemonAutoswitchService.confirmPendingAutoSwitch,
+  confirmPendingAutoSwitchAndRestartCodex:
+    daemonAutoswitchService.confirmPendingAutoSwitchAndRestartCodex,
+  runDaemonOnce: daemonAutoswitchService.runDaemonOnce,
 
-  setApiProxyConfig: (mode: ApiProxyMode, url?: string) =>
-    invoke<CoreEnvelope<ApiModePayload>>("set_api_proxy_config", { mode, url }),
+  setApiProxyConfig: settingsService.setApiProxyConfig,
+  loadSettingsSnapshot: settingsService.loadSnapshot,
+  getUsageRefreshInterval: settingsService.getUsageRefreshInterval,
+  setUsageRefreshInterval: settingsService.setUsageRefreshInterval,
+  testApiProxyConfig: settingsService.testApiProxyConfig,
+  detectApiProxyConfig: settingsService.detectApiProxyConfig,
+  checkUpdateInstallability: settingsService.checkUpdateInstallability,
+  gracefulRestartForUpdate: settingsService.gracefulRestartForUpdate,
+  checkRuntimeUpdate: settingsService.checkRuntimeUpdate,
+  installRuntimeUpdate: settingsService.installRuntimeUpdate,
+  dismissRuntimeUpdate: settingsService.dismissRuntimeUpdate,
+  getAppVersion: settingsService.getAppVersion,
+  hasNotch: settingsService.hasNotch,
+  getHotspotEnabled: settingsService.getHotspotEnabled,
+  setHotspotEnabled: settingsService.setHotspotEnabled,
+  hotspotReady: settingsService.hotspotReady,
+  getImageCompat: settingsService.getImageCompat,
+  setImageCompat: settingsService.setImageCompat,
 
-  getUsageRefreshInterval: () =>
-    invoke<string>("get_usage_refresh_interval"),
+  clean: maintenanceService.clean,
+  rebuildRegistry: maintenanceService.rebuildRegistry,
+  diagnose: maintenanceService.diagnose,
+  restartCodex: maintenanceService.restartCodex,
+  forceKillCodex: maintenanceService.forceKillCodex,
+  resetCodexConfig: maintenanceService.resetCodexConfig,
+  openPath: maintenanceService.openPath,
+  getSystemInfo: maintenanceService.getSystemInfo,
 
-  setUsageRefreshInterval: (interval: string) =>
-    invoke<string>("set_usage_refresh_interval", { interval }),
+  loadMcpServers: mcpService.loadServers,
+  upsertMcpServer: (
+    input: UpsertMcpServerInput | string,
+    config?: Record<string, unknown>,
+  ) => mcpService.upsertServer(normalizeMcpServerInput(input, config)),
+  setMcpServerEnabled: mcpService.setServerEnabled,
+  removeMcpServer: mcpService.removeServer,
 
-  testApiProxyConfig: (mode: ApiProxyMode, url?: string) =>
-    invoke<CoreEnvelope<ApiProxyTestPayload>>("test_api_proxy_config", { mode, url }),
+  loadInstalledSkills: skillsService.loadInstalled,
+  loadSkillBackups: skillsService.loadBackups,
+  importSkill: skillsService.importSkill,
+  pickSkillDirectory: skillsService.pickSkillDirectory,
+  removeSkill: skillsService.removeSkill,
+  restoreSkillBackup: skillsService.restoreBackup,
+  deleteSkillBackup: skillsService.deleteBackup,
 
-  detectApiProxyConfig: () =>
-    invoke<CoreEnvelope<ApiProxyDetectPayload>>("detect_api_proxy_config"),
+  loadCustomInstructionState: customInstructionsService.loadState,
+  previewCustomInstructionApply: (input: string, content?: string) =>
+    customInstructionsService.previewApply(content ?? input),
+  applyCustomInstruction: (
+    input: ApplyCustomInstructionParams | string,
+    content?: string,
+  ) =>
+    customInstructionsService.apply(
+      normalizeCustomInstructionApply(input, content),
+    ),
+  clearCustomInstructionBlock: customInstructionsService.clearBlock,
+  rollbackCustomInstruction: customInstructionsService.rollback,
+  openCustomInstructionPath: customInstructionsService.openPath,
 
-  checkUpdateInstallability: () =>
-    invoke<UpdateInstallabilityPayload>("check_update_installability"),
+  loadRelayState: relayService.loadState,
+  upsertRelayProvider: relayService.upsert,
+  deleteRelayProvider: relayService.delete,
+  activateRelayProvider: relayService.activate,
+  deactivateRelayProvider: relayService.deactivate,
+  setRelayProviderNetwork: relayService.setNetwork,
+  testRelayProvider: relayService.test,
+  testRelayDraft: relayService.testDraft,
+  fetchRelayModelsDraft: relayService.fetchModelsDraft,
+  getRelayActive: relayService.getActive,
+  getRelayProxyStatus: relayService.getProxyStatus,
+  setCodexRouterEnabled: relayService.setCodexRouterEnabled,
+  setBlockOfficialPassthrough: relayService.setBlockOfficialPassthrough,
+  getPassthroughAuditLog: relayService.getPassthroughAuditLog,
+  exportRelayConfig: relayService.exportConfig,
+  importRelayConfig: relayService.importConfig,
+  runCodexRouterDiagnostics: relayService.runCodexRouterDiagnostics,
+  diagnoseCodexRouter: relayService.diagnoseCodexRouter,
+  fixCodexRouterIssue: relayService.fixCodexRouterIssue,
 
-  runDaemonOnce: () =>
-    invoke<CoreEnvelope<DaemonRunPayload>>("run_daemon_once"),
+  listPlugins: runtimeExtensionsService.listPlugins,
+  togglePlugin: runtimeExtensionsService.togglePlugin,
+  getPluginConfig: runtimeExtensionsService.getPluginConfig,
+  updatePluginConfig: runtimeExtensionsService.updatePluginConfig,
 
-  diagnose: () =>
-    invoke<CoreEnvelope<DiagnosePayload>>("diagnose"),
-
-  restartCodex: () =>
-    invoke<void>("restart_codex"),
-
-  gracefulRestartForUpdate: () =>
-    invoke<void>("graceful_restart_for_update"),
-
-  loadMcpServers: () =>
-    invoke<CoreEnvelope<McpServerListPayload>>("load_mcp_servers"),
-
-  upsertMcpServer: (name: string, config: Record<string, unknown>) =>
-    invoke<CoreEnvelope<McpServerMutationPayload>>("upsert_mcp_server", { name, config }),
-
-  setMcpServerEnabled: (name: string, enabled: boolean) =>
-    invoke<CoreEnvelope<McpServerMutationPayload>>("set_mcp_server_enabled", { name, enabled }),
-
-  removeMcpServer: (name: string) =>
-    invoke<CoreEnvelope<McpServerRemovePayload>>("remove_mcp_server", { name }),
-
-  loadInstalledSkills: () =>
-    invoke<CoreEnvelope<SkillListPayload>>("load_installed_skills"),
-
-  loadSkillBackups: () =>
-    invoke<CoreEnvelope<SkillBackupListPayload>>("load_skill_backups"),
-
-  importSkill: (sourcePath: string) =>
-    invoke<CoreEnvelope<SkillImportPayload>>("import_skill", { sourcePath }),
-
-  removeSkill: (name: string) =>
-    invoke<CoreEnvelope<SkillRemovePayload>>("remove_skill", { name }),
-
-  restoreSkillBackup: (name: string) =>
-    invoke<CoreEnvelope<SkillRestorePayload>>("restore_skill_backup", { name }),
-
-  deleteSkillBackup: (name: string) =>
-    invoke<CoreEnvelope<SkillDeleteBackupPayload>>("delete_skill_backup", { name }),
-
-  loadCustomInstructionState: () =>
-    invoke<CoreEnvelope<CustomInstructionStatePayload>>("load_custom_instruction_state"),
-
-  previewCustomInstructionApply: (templateId: string, content: string) =>
-    invoke<CoreEnvelope<CustomInstructionPreviewPayload>>("preview_custom_instruction_apply", {
-      templateId,
-      content,
-    }),
-
-  applyCustomInstruction: (templateId: string, content: string) =>
-    invoke<CoreEnvelope<CustomInstructionStatePayload>>("apply_custom_instruction", {
-      templateId,
-      content,
-    }),
-
-  clearCustomInstructionBlock: () =>
-    invoke<CoreEnvelope<CustomInstructionStatePayload>>("clear_custom_instruction_block"),
-
-  rollbackCustomInstruction: () =>
-    invoke<CoreEnvelope<CustomInstructionStatePayload>>("rollback_custom_instruction"),
-
-  hasNotch: () =>
-    invoke<boolean>("has_notch").catch(() => false),
-
-  getHotspotEnabled: () =>
-    invoke<boolean>("get_hotspot_enabled"),
-
-  setHotspotEnabled: (enabled: boolean) =>
-    invoke<boolean>("set_hotspot_enabled", { enabled }),
-
-  focusMainWindow: () =>
-    invoke<void>("focus_main_window"),
-
-  hotspotReady: () =>
-    invoke<void>("hotspot_ready"),
-
-  openPath: (path: string) =>
-    invoke<void>("open_path", { path }),
-
-  getSystemInfo: () =>
-    invoke<{ os: string; osVersion: string; arch: string; hostname: string }>("get_system_info"),
+  loadVoiceWorkspace: voiceService.loadWorkspace,
+  upsertVoiceTemplate: voiceService.upsertTemplate,
+  removeVoiceTemplate: voiceService.removeTemplate,
+  upsertVoiceVocabulary: voiceService.upsertVocabulary,
+  removeVoiceVocabulary: voiceService.removeVocabulary,
+  replaceVoiceVocabularyKind: voiceService.replaceVocabularyKind,
+  removeVoiceVocabularyAppScope: voiceService.removeVocabularyAppScope,
+  upsertVoiceVocabularyAppScope: voiceService.upsertVocabularyAppScope,
+  resolveVoiceVocabularyAppInfo: voiceService.resolveVocabularyAppInfo,
+  generateVoicePrompt: voiceService.generatePrompt,
+  loadVoiceLlmConfig: voiceService.loadLlmConfig,
+  saveVoiceLlmConfig: voiceService.saveLlmConfig,
+  testVoiceLlmConfig: voiceService.testLlmConfig,
+  loadVoiceAsrConfig: voiceService.loadAsrConfig,
+  saveVoiceAsrConfig: voiceService.saveAsrConfig,
+  testVoiceAsrConfig: voiceService.testAsrConfig,
+  removeVoiceHistoryEntry: voiceService.removeHistoryEntry,
+  loadVoiceRuntimeStatus: voiceService.loadRuntimeStatus,
+  requestVoicePermissions: voiceService.requestPermissions,
+  requestAccessibilityPermission: voiceService.requestAccessibilityPermission,
+  setVoiceGlobalShortcut: voiceService.setGlobalShortcut,
+  captureVoiceTriggerKey: voiceService.captureTriggerKey,
+  cancelVoiceTriggerCapture: voiceService.cancelTriggerCapture,
+  setVoiceTriggerListenerSuppressed:
+    voiceService.setTriggerListenerSuppressed,
+  setVoiceTriggerKey: voiceService.setTriggerKey,
+  setVoiceTriggerBindings: voiceService.setTriggerBindings,
+  updateVoiceRuntimeSettings: voiceService.updateRuntimeSettings,
+  setVoiceProcessingModeId: voiceService.setProcessingModeId,
+  startVoiceCapture: voiceService.startCapture,
+  stopVoiceCapture: voiceService.stopCapture,
+  injectVoiceText: voiceService.injectText,
+  showVoiceSearchOverlay: voiceService.showSearchOverlay,
+  setVoiceModeShortcut: voiceService.setModeShortcut,
+  removeVoiceModeShortcut: voiceService.removeModeShortcut,
 };

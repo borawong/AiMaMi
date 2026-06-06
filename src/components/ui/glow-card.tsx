@@ -4,14 +4,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type GlowColor = "blue" | "amber" | "green" | "red" | "purple";
 
-interface ColorTokens {
+interface GlowPaletteEntry {
   bar: string;
-  strong: [string, string]; // [light, dark]
+  strong: [string, string]; // [亮色，暗色]
   mid: [string, string];
   edge: [string, string];
 }
 
-const palette: Record<GlowColor, ColorTokens> = {
+const palette: Record<GlowColor, GlowPaletteEntry> = {
   blue: {
     bar: "#3b82f6",
     strong: ["rgba(59,130,246,0.10)", "rgba(59,130,246,0.22)"],
@@ -72,7 +72,7 @@ export function GlowCard({ color, label, value, sub, loading = false, className 
         "--g2-glow-edge": c.edge[i],
       } as React.CSSProperties}
     >
-      {/* Color bar — top-left, 40px */}
+      {/* 左上色条，宽 40px */}
       <div
         style={{
           position: "absolute",
@@ -85,7 +85,7 @@ export function GlowCard({ color, label, value, sub, loading = false, className 
         }}
       />
 
-      {/* Primary glow — large diffuse aurora from top-left */}
+      {/* 主光晕，从左上角大面积扩散 */}
       <div
         className="glow-card-aurora"
         style={{
@@ -100,7 +100,7 @@ export function GlowCard({ color, label, value, sub, loading = false, className 
         }}
       />
 
-      {/* Secondary edge glow — subtle right-side reflection */}
+      {/* 次级边缘光晕，右侧轻微反射 */}
       <div
         className="glow-card-edge"
         style={{
@@ -114,7 +114,7 @@ export function GlowCard({ color, label, value, sub, loading = false, className 
         }}
       />
 
-      {/* Content */}
+      {/* 内容 */}
       <div className="relative z-10">
         <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
           {label}

@@ -34,7 +34,7 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
-    {/* Flex 居中：避免 WebView 下 fixed + translate 与 zoom 动画叠加导致偏移；z 高于 CoolMode (~90) */}
+    {/* 弹性居中：避免网页视图下固定定位、平移动画与缩放动画叠加导致偏移；层级高于动效层约 90。 */}
     <div
       className="fixed inset-0 flex items-center justify-center p-4 sm:p-6 pointer-events-none"
       style={{ zIndex: DIALOG_STACK_Z }}

@@ -1,31 +1,52 @@
-# Full Chain Map
+# 全链条地图
 
-This map points to the imported full-chain evidence set for AiMaMi 1.0.9
-reconstruction. It covers root status/specs, data rollups, audit chain
-summaries, distilled leaves, frontend maps, version diff notes, raw command
-manifests, and validation summaries.
+本文件列出 OpenAiMami 1.0.9 重建所需的 raw/internal 证据入口。还原工作应以全链条为依据，不能只依赖 `OpenAiMami IDB`。
 
-## Evidence Entry Points
+## 主要入口
 
-- Internal index: `evidence/full-chain/internal/INDEX.md`
-- Audit map: `evidence/full-chain/internal/audit-map.json`
-- Leaf ledger map: `evidence/full-chain/internal/leaf-ledger-map.json`
-- Frontend map: `evidence/full-chain/internal/frontend-map/INDEX.md`
-- Raw index: `evidence/full-chain/raw/INDEX.md`
-- Raw command index: `evidence/full-chain/raw/command-index.json`
-- Raw validation summary: `evidence/full-chain/raw/validation-summary.json`
+| 类型 | 路径 |
+| --- | --- |
+| raw 索引 | `evidence/full-chain/raw/INDEX.md` |
+| raw 命令索引 | `evidence/full-chain/raw/command-index.json` |
+| raw 校验摘要 | `evidence/full-chain/raw/validation-summary.json` |
+| 前端 dumped 校验 | 通过 `evidence/full-chain/raw/INDEX.md` 和 raw 清单定位 |
+| internal 索引 | `evidence/full-chain/internal/INDEX.md` |
+| 审计地图 | `evidence/full-chain/internal/audit-map.json` |
+| 前端地图 | `evidence/full-chain/internal/frontend-map/INDEX.md` |
+| 叶子账本地图 | `evidence/full-chain/internal/leaf-ledger-map.json` |
 
-## Imported Coverage
+## 覆盖范围
 
-- Imported files: 548
-- Skipped candidates: 13
-- Areas: root=6, logic=7, data=5, audit=451, leaf=61, version-diff=7, frontend-map=9
-- Extensions: .md=390, .jsonl=6, .json=148, .txt=2
+internal 链条覆盖：
 
-Raw chain:
+- root 状态和规格。
+- logic 摘要。
+- data 汇总。
+- audit 链条。
+- leaf 摘要。
+- version diff 材料。
+- 前端地图。
 
-- Imported files: 1360
-- Skipped files: 1229
-- Command groups: 326
-- Validation results summarized: 165
-- Extensions: .md=548, .json=685, .jsonl=113, .txt=14
+raw 链条覆盖：
+
+- macOS/Windows 前端 dumped 文件。
+- IPC、CCF、manifest 和命令索引。
+- 校验摘要和命令级输出。
+- raw leaf 与原始证据组织。
+
+## 使用方法
+
+1. 先校验前端 dumped 文件和 manifest hash。
+2. 用 raw 链条确认来源、文件、命令和校验结果。
+3. 用 internal 链条理解结构、页面、IPC、DTO、数据流和 distilled logic。
+4. 形成实现时同时引用 raw 和 internal 路径。
+5. 需要 IDB 时引用 `OpenAiMami IDB` 的 manifest 状态，但仍以 raw/internal 为主线。
+
+## 贡献要求
+
+新增重建说明或实现 PR 必须写明：
+
+- 使用了哪些 raw/internal 路径。
+- 是否需要 `OpenAiMami IDB`。
+- 校验了哪些 manifest、哈希或 dumped 文件。
+- 哪些行为已经实现，哪些仍是桩或待实现项。

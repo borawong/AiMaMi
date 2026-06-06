@@ -9,10 +9,10 @@ import { cn } from "@/lib/utils"
 
 const ToastProvider = ToastPrimitives.Provider
 
-// Toast 是「系统级即时反馈」，必须高于所有可能挡住它的覆层。
-// 现有 stack 梯度：Tooltip/Drawer/Sheet 50 < Popover 100 < Dialog/AlertDialog 200 < Select 300。
+// 即时反馈是「系统级即时反馈」，必须高于所有可能挡住它的覆层。
+// 现有层级梯度：悬浮提示、抽屉和侧边浮层为 50，弹出层为 100，弹窗和确认弹窗为 200，下拉选择为 300。
 // 用 400 高于所有梯度，并留出 100 缓冲给未来潜在层级。
-// 历史 bug：曾设为 110，导致在 Dialog（z=200，含遮罩）打开时点击触发的 toast 被遮罩盖住看不到。
+// 历史缺陷：曾设为 110，导致在弹窗（层级 200，含遮罩）打开时点击触发的即时反馈被遮罩盖住看不到。
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
@@ -64,7 +64,7 @@ const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
     VariantProps<typeof toastVariants> & {
-      /** ms; bottom bar animates for this length. Omit to hide bar. */
+      /** 单位毫秒；底部条按该时长播放动画。省略时隐藏底部条。 */
       duration?: number
     }
 >(({ className, variant, duration, style, children, ...props }, ref) => {

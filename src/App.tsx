@@ -1,5 +1,5 @@
-import { MainAppRoot } from "./main-app";
+import { Root } from "@/entry/root";
 
 export default function App() {
-  return <MainAppRoot />;
+  return <Root />;
 }

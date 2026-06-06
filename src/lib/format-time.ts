@@ -10,8 +10,8 @@ function locale(): string {
 
 /**
  * 完整日期时间
- * zh → 2026/03/03 14:41
- * en → Mar 3, 2026 14:41
+ * 中文环境示例 → 2026/03/03 14:41
+ * 英文环境示例 → Mar 3, 2026 14:41
  */
 export function formatDateTime(epochSec: number): string {
   const d = new Date(epochSec * 1000);
@@ -43,8 +43,8 @@ export function formatDateTime(epochSec: number): string {
 
 /**
  * 仅日期
- * zh → 2026/04/01
- * en → Apr 1, 2026
+ * 中文环境示例 → 2026/04/01
+ * 英文环境示例 → Apr 1, 2026
  */
 export function formatDate(epochSec: number): string {
   const d = new Date(epochSec * 1000);
@@ -73,8 +73,8 @@ export function formatDateShort(epochSec: number): string {
 
 /**
  * 相对时间
- * zh → 刚刚 / 5 分钟前 / 3 小时前 / 2 天前 / 回退到 formatDate
- * en → just now / 5m ago / 3h ago / 2d ago / 回退到 formatDate
+ * 中文环境示例 → 刚刚 / 5 分钟前 / 3 小时前 / 2 天前 / 回退到 formatDate
+ * 英文环境示例 → just now / 5m ago / 3h ago / 2d ago / 回退到 formatDate
  */
 export function formatRelative(epochSec: number): string {
   const diff = Math.floor(Date.now() / 1000 - epochSec);
@@ -98,8 +98,8 @@ export function formatRelative(epochSec: number): string {
 
 /**
  * 剩余倒计时
- * zh → 剩余 2 小时 5 分 / 剩余 45 分
- * en → 2h 5m remaining / 45m remaining
+ * 中文环境示例 → 剩余 2 小时 5 分 / 剩余 45 分
+ * 英文环境示例 → 2h 5m remaining / 45m remaining
  */
 export function formatRemaining(diffSec: number): string {
   const isZh = lang() === "zh";
@@ -116,8 +116,8 @@ export function formatRemaining(diffSec: number): string {
 
 /**
  * 时长
- * zh → 45 分钟 / 2 小时 30 分
- * en → 45m / 2h 30m
+ * 中文环境示例 → 45 分钟 / 2 小时 30 分
+ * 英文环境示例 → 45m / 2h 30m
  */
 export function formatDuration(minutes: number): string {
   const isZh = lang() === "zh";
@@ -132,8 +132,8 @@ export function formatDuration(minutes: number): string {
 
 /**
  * 重置标签 (带倒计时)
- * zh → 4/5 14:41 重置 | 剩余 2 小时 5 分
- * en → 4/5 14:41 reset | 2h 5m remaining
+ * 中文环境示例 → 4/5 14:41 重置 | 剩余 2 小时 5 分
+ * 英文环境示例 → 4/5 14:41 reset | 2h 5m remaining
  */
 export function formatResetLabel(epochSec: number): string {
   const d = new Date(epochSec * 1000);
@@ -157,8 +157,8 @@ export function formatResetLabel(epochSec: number): string {
 
 /**
  * 热力图月份缩写
- * zh → 1月 / 2月
- * en → Jan / Feb
+ * 中文环境示例 → 1月 / 2月
+ * 英文环境示例 → Jan / Feb
  */
 export function formatMonthShort(date: Date): string {
   return date.toLocaleString(locale(), { month: "short" });
@@ -166,8 +166,8 @@ export function formatMonthShort(date: Date): string {
 
 /**
  * 热力图 tooltip 日期
- * zh → 2026/04/01
- * en → Apr 1, 2026
+ * 中文环境示例 → 2026/04/01
+ * 英文环境示例 → Apr 1, 2026
  */
 export function formatHeatmapDate(dateStr: string): string {
   const d = new Date(dateStr + "T00:00:00");
@@ -177,8 +177,8 @@ export function formatHeatmapDate(dateStr: string): string {
 
 /**
  * 完整日期时间用于 title 悬停提示
- * zh → 2026/04/02 14:30
- * en → Apr 2, 2026 14:30
+ * 中文环境示例 → 2026/04/02 14:30
+ * 英文环境示例 → Apr 2, 2026 14:30
  */
 export function formatDateTimeFull(epochSec: number): string {
   return formatDateTime(epochSec);

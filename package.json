@@ -8,7 +8,15 @@
     "dev:web": "vite --open",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "validate:public-boundary": "node scripts/validate-public-boundary.mjs",
+    "validate:frontend-dumped": "node scripts/validate-frontend-dumped.mjs",
+    "validate:frontend-evidence": "node scripts/validate-frontend-evidence.mjs",
+    "validate:frontend-layer-owners": "node scripts/validate-frontend-layer-owners.mjs",
+    "validate:frontend-entry": "node scripts/validate-frontend-entry-architecture.mjs",
+    "validate:backend-hexagonal": "node scripts/validate-backend-hexagonal.mjs",
+    "validate:i18n": "node scripts/validate-i18n.mjs",
+    "validate:e2e-mocks": "node scripts/validate-e2e-mocks.mjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -47,6 +55,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.1.3",
+    "react-router-dom": "^6.30.4",
     "recharts": "2.15.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^2.6.0",
