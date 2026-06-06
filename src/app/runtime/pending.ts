@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：全局 pending 切换提示只负责把模块查询结果转换成可展示的提示状态。
- */
 import { useMemo } from "react";
 import { useDaemonAutoswitchPendingPrompt } from "@/features/daemon-autoswitch/hooks";
 

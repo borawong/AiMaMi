@@ -1,7 +1,3 @@
-/**
- * 中文职责说明：记录 overview 模块由 dumped 证据确认的命令、来源文件和包装调用链。
- */
-
 export const DUMPED_OVERVIEW_COMMANDS = [
   {
     "command": "focus_main_window",

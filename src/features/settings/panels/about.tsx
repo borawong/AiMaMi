@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings about 面板只展示版本和更新入口，保存/检查动作由 controller owning。
- */
 import { useTranslation } from "react-i18next";
 import { Download, Power } from "lucide-react";
 import { Button } from "@/components/ui/button";

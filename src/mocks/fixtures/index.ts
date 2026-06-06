@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：fixture 只从 IPC 合同生成脱敏响应形状，不伪造真实业务事实。
- */
 import {
   getIpcCommandDefinition,
   type IpcArgs,

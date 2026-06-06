@@ -1,7 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
-// 中文职责说明：从 1.0.9 dumped 前端 raw evidence 验证当前源码的 query、页面 chunk、route 和静态 locale key 覆盖。
 const repoRoot = process.cwd();
 const evidenceRoot = join(
   repoRoot,

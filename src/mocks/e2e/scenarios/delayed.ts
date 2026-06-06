@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：模拟 delayed response，验证晚返回不覆盖更新后的 cache。
- */
 import type { E2eScenario } from "./types";
 
 export const delayedScenario: E2eScenario = {

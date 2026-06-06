@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：accounts 页面 panel owning 页面骨架和筛选控件，route shell 只传入 controller 与 dialogs。
- */
 import type { ReactNode } from "react";
 import { CheckCircle2, KeyRound, RefreshCw, Search, ShieldAlert } from "lucide-react";
 import { useTranslation } from "react-i18next";

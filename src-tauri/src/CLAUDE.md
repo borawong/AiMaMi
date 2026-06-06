@@ -17,4 +17,4 @@
 - core owning domain model、解析、迁移、状态机、DTO 转换、错误语义和 single-flight；core 不依赖 Tauri UI 对象。
 - platform 只封装 OS、进程、路径、权限、窗口、通知、shell/no-console、daemon/task/launchd 等能力。
 - repository/adapter 集中文件系统读写和路径安全；真实 FS 与 fake/temp FS 必须可替换。
-- 无 raw/internal 证据支撑的业务实现不得伪造成真实逻辑，只能保留中文职责注释、边界、接口、DTO、错误语义、测试占位和待补证据位置。
+- 无 raw/internal 证据支撑的业务实现不得伪造成真实逻辑，只能保留边界、接口、DTO、错误语义、测试占位和待补证据位置。

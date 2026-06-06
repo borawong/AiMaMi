@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：启动前设置特殊窗口的透明背景，仅处理宿主 DOM 外观。
- */
 import { getTauriWindowLabel } from "@/lib/tauri";
 
 const TRANSPARENT_WINDOW_LABELS = new Set([

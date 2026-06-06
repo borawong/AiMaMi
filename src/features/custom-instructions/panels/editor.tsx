@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：编辑面板只展示 draft 并发出预览、重置和文本变更意图。
- */
 import { PencilLine, Wand2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

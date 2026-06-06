@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：账号动作面板只收集 1.0.9 证据支持的 IPC 参数，并把用户意图交给模块 mutation owner。
- */
 import { useMemo, useState } from "react";
 import {
   Download,

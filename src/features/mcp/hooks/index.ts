@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：mcp 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
- */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
@@ -154,7 +151,6 @@ export function useUpsertMcpServerMutation(options?: { onSaved?: () => void }) {
   });
 }
 
-// 中文职责说明：页面 controller owning mcp 页面短生命周期 UI 状态、表单草稿和请求派发。
 export function useMcpPageController() {
   const { t } = useTranslation();
   const [editing, setEditing] = useState<McpEditingTarget>(null);

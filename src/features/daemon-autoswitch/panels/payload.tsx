@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：daemon-autoswitch payload 摘要只做脱敏预览，不推断未证实业务字段。
- */
 import { previewText, recordEntries } from "../utils";
 
 export function DaemonPayloadSummary({ value }: { value: unknown }) {

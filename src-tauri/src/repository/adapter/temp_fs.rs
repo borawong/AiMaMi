@@ -3,7 +3,6 @@ use crate::repository::adapter::FileSystemAdapter;
 use crate::repository::path_guard::ensure_relative_path;
 use std::path::{Path, PathBuf};
 
-/// 中文职责说明：临时根目录 FS adapter，用真实磁盘验证契约但隔离到调用方提供的临时根。
 pub(crate) struct TempFileSystem {
     root: PathBuf,
 }

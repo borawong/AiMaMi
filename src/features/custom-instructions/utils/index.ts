@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：custom-instructions 模块 UI 辅助只表达已证实状态到样式的映射，不写业务规则。
- */
 import type { CustomInstructionStatePayload } from "@/types";
 
 export function getCustomInstructionProtectionTone(

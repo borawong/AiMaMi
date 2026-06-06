@@ -9,7 +9,6 @@ use crate::repository::RepositoryBundle;
 
 const MODULE: &str = "skills";
 
-/// 中文职责说明：技能安装、备份、恢复和删除事务 owner，真实文件变更后续只能在本边界补齐。
 pub(crate) struct SkillsUseCase<'a> {
     repositories: &'a RepositoryBundle,
 }

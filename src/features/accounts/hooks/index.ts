@@ -268,7 +268,6 @@ export interface AccountsPageController {
   refresh: () => Promise<void>;
 }
 
-// 中文职责说明：页面 controller owning accounts 快照派生、筛选状态和选择回退，route shell 只负责装配。
 export function useAccountsPageController(): AccountsPageController {
   const module = useAccountsModule();
   const [query, setQuery] = useState("");

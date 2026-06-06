@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：配置面板只组合当前状态、编辑区和历史子面板。
- */
 import type { CustomInstructionsPageController } from "../hooks";
 import { CustomInstructionsCurrentStatusPanel } from "./status";
 import { CustomInstructionsEditorPanel } from "./editor";

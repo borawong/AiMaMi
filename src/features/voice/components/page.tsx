@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：voice feature 页面只装配本模块交互壳，具体交互归 panels owner。
- */
 import type { ReactElement, ReactNode } from "react";
 import { History, Mic, ScrollText, Wand2 } from "lucide-react";
 import { useTranslation } from "react-i18next";

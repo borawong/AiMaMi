@@ -60,7 +60,6 @@ export interface SliceDDumpedCommandCoverage {
   note: string;
 }
 
-// 中文职责说明：slice D 只记录 dumped 命令在当前前端 owner 内的覆盖状态，不改写 raw 命令名。
 export const FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE = [
   {
     module: "sessions",

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：账号动作确认弹窗 owning 确认目标，页面只接收 switch/remove 意图入口。
- */
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";

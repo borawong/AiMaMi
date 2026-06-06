@@ -1,7 +1,6 @@
 use crate::contracts::BackendSkeletonStatus;
 use serde::{Deserialize, Serialize};
 
-/// 中文职责说明：账号命令的 IPC DTO，只描述命令输入回显和后续补齐边界。
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct AccountActionPayload {

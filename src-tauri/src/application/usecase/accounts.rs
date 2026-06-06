@@ -5,7 +5,6 @@ use crate::repository::RepositoryBundle;
 
 const MODULE: &str = "accounts";
 
-/// 中文职责说明：账号动作事务 owner，后续真实导入、切换、删除逻辑只能在本边界内补齐。
 pub(crate) struct AccountsUseCase<'a> {
     repositories: &'a RepositoryBundle,
 }

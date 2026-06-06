@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：加载错误面板只展示 query 状态和重试意图，不拥有刷新流程。
- */
 import { AlertTriangle, RotateCw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

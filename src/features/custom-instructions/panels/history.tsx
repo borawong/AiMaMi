@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：历史面板只渲染历史记录和 rollback 意图。
- */
 import { History } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：应用路由壳只装配全局布局、导航 meta、预加载和 Outlet 上下文，不拥有模块业务流程。
- */
 import {
   useCallback,
   useMemo,

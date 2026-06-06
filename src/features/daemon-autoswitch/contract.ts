@@ -1,7 +1,3 @@
-/**
- * 中文职责说明：记录 daemon-autoswitch 模块由 dumped 证据确认的命令、来源文件和包装调用链。
- */
-
 export const DUMPED_DAEMON_AUTOSWITCH_COMMANDS = [
   {
     "command": "configure_auto_switch",

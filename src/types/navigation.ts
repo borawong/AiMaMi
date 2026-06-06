@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：定义应用 route 标识，具体 meta 由 route registry 持有。
- */
 export type Route =
   | "overview"
   | "accounts"

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings 模块拥有自己的 TanStack cache key、权威写入和失效合同。
- */
 import type { QueryClient } from "@tanstack/react-query";
 import type { QueryKey } from "@tanstack/react-query";
 import {

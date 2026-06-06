@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：daemon-autoswitch status 只把 query 状态映射为 locale key。
- */
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import type { DaemonAutoswitchQueryState } from "../types";

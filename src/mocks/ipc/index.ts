@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：集中声明 IPC mock 可覆盖命令和状态竞争配置，不绕过 IPC 合同语义。
- */
 import {
   IPC_COMMAND_DEFINITIONS,
   type IpcArgs,

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：预览应用弹窗只展示 preview payload 和确认意图，不拥有 apply 状态机。
- */
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";

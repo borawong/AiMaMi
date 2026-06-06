@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：模块 query hook 的共享执行器，提供 single-flight、abort、delayed response 和 replay 防护。
- */
 import { useCallback, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { ModuleCacheOwner, ModuleCacheSource } from "@/features/_shared/cache";

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：定义运行时事件总线和事件到查询缓存的集中映射，不持有界面状态。
- */
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import type { IpcJsonValue } from "@/contracts/ipc";
 import { AccountsCache } from "@/features/accounts/cache";

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：mcp types 只声明模块内 UI/controller 边界类型，不承载 IPC DTO 或业务规则。
- */
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import type { McpServerSummary, McpTransport } from "@/types";
 

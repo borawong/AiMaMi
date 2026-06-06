@@ -8,7 +8,6 @@ use crate::repository::RepositoryBundle;
 
 const MODULE: &str = "daemon";
 
-/// 中文职责说明：后台守护进程单次运行事务 owner，负责 single-flight 和仓储边界组织。
 pub(crate) struct DaemonUseCase<'a> {
     repositories: &'a RepositoryBundle,
     single_flight: &'a SingleFlight,

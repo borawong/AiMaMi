@@ -1,6 +1,5 @@
 use thiserror::Error;
 
-/// 中文职责说明：后端错误分类，所有错误 code 都按 Domain/Repository/Platform/Runtime 前缀脱敏暴露。
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum CoreErrorCategory {
     Domain,
@@ -20,7 +19,6 @@ impl CoreErrorCategory {
     }
 }
 
-/// 中文职责说明：核心错误只对外暴露稳定 code 和脱敏 message，诊断信息进入内部字段并统一脱敏。
 #[derive(Debug, Clone, Error)]
 #[error("{code}: {public_message}")]
 pub(crate) struct CoreError {

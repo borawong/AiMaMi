@@ -31,7 +31,6 @@ use crate::repository::skills::SkillsRepository;
 use crate::repository::voice::VoiceRepository;
 use std::sync::Arc;
 
-/// 中文职责说明：仓储聚合根，只持有可替换 FS adapter 和可重建路径上下文，不保存跨命令业务状态。
 #[derive(Clone)]
 pub(crate) struct RepositoryBundle {
     accounts: AccountsRepository,
@@ -49,17 +48,14 @@ pub(crate) struct RepositoryBundle {
 }
 
 impl RepositoryBundle {
-    /// 中文职责说明：生产入口使用真实 FS，具体读写仍由 repository/adapter 集中封装。
     pub(crate) fn real() -> Self {
         Self::with_fs(Arc::new(RealFileSystem))
     }
 
-    /// 中文职责说明：测试或临时运行可注入 fake/temp FS，验证仓储契约时不触碰真实用户环境。
     pub(crate) fn with_fs(fs: Arc<dyn FileSystemAdapter>) -> Self {
         Self::with_context(fs, RepositoryPathContext::default())
     }
 
-    /// 中文职责说明：仓储聚合根只分发共享 FS 和相对路径上下文，业务状态必须由文件重建。
     pub(crate) fn with_context(
         fs: Arc<dyn FileSystemAdapter>,
         paths: RepositoryPathContext,

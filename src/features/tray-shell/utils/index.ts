@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：tray-shell 模块本地读取器只解析通知客户端 envelope，不外借共享证据面板。
- */
 export function envelopeData(value: unknown): unknown {
   if (isRecord(value) && "data" in value) {
     return value.data;

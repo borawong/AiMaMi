@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：accounts 模块只在本 owner 内安全读取已由 raw/internal 证据确认的快照字段。
- */
 import type { AccountQuotaWindowSlot, AccountRecord } from "../types";
 
 export type AccountsUnknownRecord = Record<string, unknown>;

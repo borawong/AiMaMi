@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：skills 页面面板只渲染安装列表、备份列表和局部 UI 意图，不持有确认弹窗状态。
- */
 import {
   AlertTriangle,
   Archive,

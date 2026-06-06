@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：sessions 模块本地 selector/formatter 只解包会话和用量 envelope，不拥有业务状态。
- */
 import type { SessionGroup, SessionNode } from "../types";
 
 export type SessionEvidenceRecord = Record<string, unknown>;

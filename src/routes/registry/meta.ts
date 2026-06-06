@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：从 route registry 派生导航和标题 meta，供 sidebar、header 和页面标题共同消费。
- */
 import type { LucideIcon } from "lucide-react";
 import type { Route } from "@/types/navigation";
 import { resolveRouteDefinition, routeDefinitions } from "@/routes/registry/registry";

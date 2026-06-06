@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：mcp utils 只处理前端表单草稿、分页和文本解析，不调用 IPC 或写入后端事实。
- */
 import type { UpsertMcpServerInput } from "@/services/mcp";
 import type { McpServerSummary, McpTransport } from "@/types";
 import type {

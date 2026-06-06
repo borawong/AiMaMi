@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：集中提供路由渲染需要的全局设置上下文，不承载具体页面业务。
- */
 import {
   createContext,
   useCallback,

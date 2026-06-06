@@ -5,7 +5,6 @@ use crate::repository::RepositoryBundle;
 
 const MODULE: &str = "analytics";
 
-/// 中文职责说明：分析读取事务 owner，聚合算法后续只能在本边界内补齐。
 pub(crate) struct AnalyticsUseCase<'a> {
     repositories: &'a RepositoryBundle,
 }

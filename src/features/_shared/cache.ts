@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：提供模块级 TanStack cache owner 工具，处理权威 mutation payload 与旧响应覆盖防护。
- */
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import type { Route } from "@/types/navigation";
 

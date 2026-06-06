@@ -1,4 +1,3 @@
-/// 中文职责说明：后端骨架效果只表达边界状态，不代表闭源业务已经恢复。
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum BackendOperationEffect {
     Pending,
@@ -22,7 +21,6 @@ impl BackendOperationEffect {
     }
 }
 
-/// 中文职责说明：repository 边界探针只记录是否经过仓储入口，不暴露本机路径。
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) struct BackendBoundaryProbe {
     repository_checked: bool,
@@ -81,7 +79,6 @@ impl BackendBoundaryProbe {
     }
 }
 
-/// 中文职责说明：core 层操作计划承接 usecase 校验后的意图，后续真实实现只能沿该计划扩展。
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct BackendOperationPlan {
     module: &'static str,

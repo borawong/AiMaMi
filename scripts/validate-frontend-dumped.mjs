@@ -1,10 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 
-/**
- * 中文职责说明：基于 dumped frontend raw evidence 验证当前前端是否还原到真实 route/module/UI，
- * 不能只用命令清单、evidence 面板或占位文案冒充 dumped UI 还原。
- */
 const repoRoot = process.cwd();
 const evidenceRoot = join(
   repoRoot,

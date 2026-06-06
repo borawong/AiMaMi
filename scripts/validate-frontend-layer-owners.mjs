@@ -1,7 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, join, relative, sep } from "node:path";
 
-// 中文职责说明：验证前端 owner 分层已经落到 route、feature、service、cache、hook 的真实目录边界。
 const repoRoot = process.cwd();
 const srcRoot = join(repoRoot, "src");
 const featuresRoot = join(srcRoot, "features");
@@ -53,6 +52,7 @@ const strictFeaturePageShells = [
   "sessions",
   "settings",
   "skills",
+  "tray-shell",
 ];
 
 const requiredFeatureFiles = [

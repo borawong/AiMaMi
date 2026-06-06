@@ -11,7 +11,6 @@ use std::collections::HashMap;
 
 const MODULE: &str = "mcp";
 
-/// 中文职责说明：MCP upsert 输入 DTO，由 command 反序列化后交给 MCP 事务 owner 解释。
 #[derive(Debug, Clone, Default)]
 pub(crate) struct McpUpsertInput {
     pub name: String,
@@ -25,7 +24,6 @@ pub(crate) struct McpUpsertInput {
     pub environment: Option<HashMap<String, String>>,
 }
 
-/// 中文职责说明：MCP 服务配置用户动作事务 owner，真实配置读写后续只能在本边界补齐。
 pub(crate) struct McpUseCase<'a> {
     repositories: &'a RepositoryBundle,
 }

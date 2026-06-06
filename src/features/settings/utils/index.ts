@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings 模块展示格式与窄类型守卫 owner，不触碰 IPC 或服务状态。
- */
 import { REFRESH_OPTIONS, type RefreshInterval } from "@/hooks/refresh";
 import type { ApiProxyMode, ApiProxyTestPayload } from "@/types";
 

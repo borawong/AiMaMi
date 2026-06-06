@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：页面顶部面板只渲染说明和 tab 入口，tab owner 由页面 controller 提供。
- */
 import { useTranslation } from "react-i18next";
 
 import { SegmentedOptions } from "@/components/ui/options";

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：定义 E2E 状态架构场景描述，mock 只模拟时序风险和 IPC 合同形状，不伪造业务事实。
- */
 import type { IpcCommandName } from "@/contracts/ipc";
 
 export type E2eScenarioKind =

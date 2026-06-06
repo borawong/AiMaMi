@@ -3,7 +3,6 @@ use crate::core::error::CoreError;
 use crate::core::migration;
 use serde::Serialize;
 
-/// 中文职责说明：统一 envelope 警告项，只暴露脱敏 code/message，不携带本机路径。
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct CoreWarning {
@@ -11,7 +10,6 @@ pub(crate) struct CoreWarning {
     pub message: String,
 }
 
-/// 中文职责说明：IPC 统一返回 envelope，pending/no-op 是后端骨架合同，不伪造成真实业务成功。
 #[derive(Debug, Clone, Serialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct CoreEnvelope<T: Serialize> {

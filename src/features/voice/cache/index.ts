@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：voice 模块拥有自己的 TanStack cache key、权威写入、查询防护和只读视图模型。
- */
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import {
   envelopeData,

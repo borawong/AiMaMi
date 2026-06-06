@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：plugins 模块本地 selector/formatter 只解包 dumped/API envelope，不拥有业务状态。
- */
 export type PluginEvidenceRecord = Record<string, unknown>;
 
 export function selectPluginEnvelopeData(value: unknown) {

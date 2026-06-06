@@ -3,7 +3,6 @@ use crate::repository::adapter::FileSystemAdapter;
 use crate::repository::path_guard::ensure_relative_path;
 use std::path::Path;
 
-/// 中文职责说明：生产文件系统 adapter，只在仓储层集中执行真实磁盘读写。
 pub(crate) struct RealFileSystem;
 
 impl FileSystemAdapter for RealFileSystem {

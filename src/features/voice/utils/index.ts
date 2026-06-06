@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：voice 模块只在本目录内安全读取未知 DTO，不把未证实字段解释成完整业务语义。
- */
 export type UnknownRecord = Record<string, unknown>;
 
 export function isRecord(value: unknown): value is UnknownRecord {

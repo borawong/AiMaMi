@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：sessions 主面板拥有指标、加载/空态和树形视图装配；page shell 只挂载控制器与弹窗。
- */
 import {
   MessageSquareText,
   RefreshCw,

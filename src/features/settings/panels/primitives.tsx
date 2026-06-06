@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings 面板基础布局只负责模块内展示骨架，不持有服务端事实状态。
- */
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import { AnimatedSegmentedControl } from "@/components/ui/segmented";

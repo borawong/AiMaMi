@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：账号 token 状态展示只读取 accounts 快照字段，不 owning mutation 或刷新流程。
- */
 import { ShieldAlert } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";

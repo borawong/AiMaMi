@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：还原 raw 主 chunk 中的 desktop-message 全局消息 popover，只消费 runtime 查询边界。
- */
 import { useState } from "react";
 import { Bell, Inbox, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";

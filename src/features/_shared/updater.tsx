@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：模块 StoreUpdater 的共享同步边界，只把已有 TanStack cache/runtime envelope 收敛到 active cache。
- */
 import { useEffect } from "react";
 import {
   useQuery,

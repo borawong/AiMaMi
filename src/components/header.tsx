@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：顶部标题栏只消费 route registry 派生的 route meta。
- */
 import { useTranslation } from "react-i18next";
 import { DesktopMessagePopover } from "@/app/runtime/popover";
 import { SidebarTrigger } from "@/components/ui/sidebar";

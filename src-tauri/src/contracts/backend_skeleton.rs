@@ -1,7 +1,6 @@
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use serde::{Deserialize, Serialize};
 
-/// 中文职责说明：骨架边界状态用于 IPC 侧说明命令已经过哪些后端 owner，不暴露路径和业务细节。
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct BackendSkeletonBoundaryStatus {
@@ -34,7 +33,6 @@ impl BackendSkeletonBoundaryStatus {
     }
 }
 
-/// 中文职责说明：标记后端闭源业务未在本仓库恢复，但命令契约与六边形 owner 已落位。
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct BackendSkeletonStatus {

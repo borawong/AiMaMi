@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：应用根只装配全局 Provider、错误边界、runtime 初始化器和路由。
- */
 import { useTranslation } from "react-i18next";
 import { AppProviders } from "@/app/providers/app";
 import { RuntimeInitializer } from "@/app/runtime/initializer";

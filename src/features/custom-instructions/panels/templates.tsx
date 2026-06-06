@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：模板面板只渲染模板列表和用户意图，不直接触碰 service 或 cache。
- */
 import { RotateCw, Wand2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

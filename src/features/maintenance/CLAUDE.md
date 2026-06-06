@@ -15,4 +15,4 @@
 - Provider 只建立模块上下文；StoreUpdater 只同步外部 props/event/query cache；Content 只渲染并发出用户意图。
 - cache/hooks 负责 query key、single-flight、mutation payload、stale/delayed response、abort 和 event replay 防护。
 - dialogs/panels/components 只消费模块状态和发出意图，不直接拼 IPC transport。
-- 无 raw/internal 证据支撑的 maintenance 行为只能保留中文职责注释、边界类型、测试占位和待补证据位置。
+- 无 raw/internal 证据支撑的 maintenance 行为只能保留边界类型、测试占位和待补证据位置。

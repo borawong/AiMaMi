@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
- */
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

@@ -1,7 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
-// 中文职责说明：验证用户可见静态文案 key 已同步进入 zh/en locale，避免页面运行时显示裸 key。
 const repoRoot = process.cwd();
 const sourceRoot = join(repoRoot, "src");
 const zh = JSON.parse(readFileSync(join(sourceRoot, "locales", "zh.json"), "utf8"));

@@ -1,7 +1,3 @@
-/**
- * 中文职责说明：记录 accounts 模块由 dumped 证据确认的命令、来源文件和包装调用链。
- */
-
 export const DUMPED_ACCOUNTS_COMMANDS = [
   {
     "command": "begin_add_account_attach_monitor",

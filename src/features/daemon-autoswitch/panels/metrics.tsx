@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：daemon-autoswitch metrics 只渲染 hook 提供的运行状态指标。
- */
 import { Activity, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";

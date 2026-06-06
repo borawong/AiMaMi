@@ -8,7 +8,6 @@ use crate::repository::RepositoryBundle;
 
 const MODULE: &str = "custom_instructions";
 
-/// 中文职责说明：自定义指令预览、应用、清理和回滚事务 owner，真实模板写入后续在本边界补齐。
 pub(crate) struct CustomInstructionsUseCase<'a> {
     repositories: &'a RepositoryBundle,
 }

@@ -5,7 +5,6 @@ use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
-/// 中文职责说明：内存 fake FS，用于验证仓储契约，禁止触碰真实用户环境。
 #[derive(Default)]
 pub(crate) struct FakeFileSystem {
     files: Mutex<HashMap<PathBuf, String>>,

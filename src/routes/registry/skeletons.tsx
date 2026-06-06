@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：定义 route registry 拥有的页面骨架，不承载任何模块业务状态。
- */
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function RouteShellSkeleton() {

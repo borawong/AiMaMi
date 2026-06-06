@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings appearance 面板只消费 controller 状态并发出用户意图。
- */
 import { useTranslation } from "react-i18next";
 import { Globe, Image, Monitor, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";

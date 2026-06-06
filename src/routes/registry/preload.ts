@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：统一执行 route 预加载，预加载范围只来自 route registry。
- */
 import type { Route } from "@/types/navigation";
 import { resolveRouteDefinition, routeDefinitions } from "@/routes/registry/registry";
 

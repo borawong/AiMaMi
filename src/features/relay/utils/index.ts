@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：Relay 模块只在本模块内读取 dumped payload，避免把未知证据结构渲染成跨模块通用占位。
- */
 import type { RelayNetworkMode, WireApi } from "../types";
 
 export type RelayUnknownRecord = Record<string, unknown>;
@@ -59,7 +56,6 @@ export function readBoolean(
   return typeof current === "boolean" ? current : fallback;
 }
 
-// 中文职责说明：Relay UI 工具只做字段归一化和展示输入校验，不触碰 IPC/service/cache 合同。
 export function normalizeWireApi(value: string): WireApi {
   if (value === "openai-responses" || value === "anthropic") return value;
   return "openai-chat";

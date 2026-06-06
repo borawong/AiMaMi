@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：路由工具只封装 Router 实例创建和 chunk 错误边界，不承载模块业务状态。
- */
 import type { ReactElement } from "react";
 import {
   createHashRouter,

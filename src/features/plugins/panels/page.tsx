@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：plugins 页面面板只渲染列表、指标和用户意图，不持有配置弹窗状态机。
- */
 import type { ReactNode } from "react";
 import { Puzzle, Settings2 } from "lucide-react";
 import { useTranslation } from "react-i18next";

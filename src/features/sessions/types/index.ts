@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：sessions 模块只声明边界类型，未证实业务字段不在这里编造。
- */
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 
 export type SessionsModuleId = "sessions";
@@ -50,9 +47,6 @@ export interface SessionsPageController {
   confirmDeleteRequest: () => Promise<void>;
 }
 
-/**
- * 中文职责说明：delete request 只保存确认弹窗的本地化展示载荷和目标 id。
- */
 export interface SessionsDeleteRequest {
   ids: string[];
   title: string;

@@ -648,7 +648,6 @@ export function useRelayModule() {
   };
 }
 
-// 中文职责说明：Relay 页面控制器 owning 页面级状态、派生行数据和用户动作编排，页面文件只消费该门面。
 export function useRelayPageController() {
   const { t } = useTranslation();
   const module = useRelayModule();

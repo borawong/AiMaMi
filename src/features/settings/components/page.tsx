@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings route/module shell 只装配 controller、panels 和 dialogs。
- */
 import { SettingsApiProxyDialog, SettingsThresholdDialog } from "../dialogs";
 import { useSettingsPageController } from "../hooks";
 import {

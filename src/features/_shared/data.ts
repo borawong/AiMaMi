@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：只做前端未知 DTO 的安全读取，不推断未证实业务语义。
- */
 export type UnknownRecord = Record<string, unknown>;
 
 export function isRecord(value: unknown): value is UnknownRecord {

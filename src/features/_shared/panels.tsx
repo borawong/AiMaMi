@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：提供模块页面可复用的展示积木，不持有任何模块业务状态。
- */
 import type { ReactNode } from "react";
 import { RefreshCw, Play } from "lucide-react";
 import { useTranslation } from "react-i18next";

@@ -1,7 +1,3 @@
-/**
- * 中文职责说明：plugins 模块 hook 拥有 runtime-extensions dumped 命令的查询、配置读取、
- * mutation payload 写入和旧响应覆盖防护入口。
- */
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/controller";

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings status 面板只呈现加载/错误状态，不 owning 查询或重试策略。
- */
 import { useTranslation } from "react-i18next";
 import { AlertCircle, Loader2 } from "lucide-react";
 import type { SettingsPageController } from "../hooks";

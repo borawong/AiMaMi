@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：daemon-autoswitch header 只渲染模块标题和说明文案。
- */
 import { useTranslation } from "react-i18next";
 
 export function DaemonAutoswitchHeader() {

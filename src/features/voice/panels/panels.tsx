@@ -1,7 +1,3 @@
-/**
- * 中文职责说明：voice panels 只承载已由 raw/internal 证据确认的前端交互壳，
- * 不把缺失的后端命令编造成真实业务实现。
- */
 import type { ReactNode } from "react";
 import { useState } from "react";
 import {

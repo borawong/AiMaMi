@@ -5,9 +5,6 @@ import type {
   OverviewSkillRecord,
 } from "../types";
 
-/**
- * 中文职责说明：overview 只在本模块内安全读取未知数据对象，不把未证实字段提升为跨模块事实。
- */
 export type UnknownRecord = Record<string, unknown>;
 
 export function isRecord(value: unknown): value is UnknownRecord {

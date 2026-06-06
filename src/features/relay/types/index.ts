@@ -1,12 +1,8 @@
-/**
- * 中文职责说明：relay 模块只声明边界类型，未证实业务字段不在这里编造。
- */
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 
 export type RelayModuleId = "relay";
 export type RelayCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
 
-// 中文职责说明：Relay 前端类型只描述已被 UI/IPC 证据消费的字段形状，不在此补造后端业务语义。
 export type WireApi = "openai-responses" | "anthropic" | "openai-chat";
 export type RelayNetworkMode = "system" | "direct";
 

@@ -1,6 +1,5 @@
 use crate::application::ports::{PlatformInfoSnapshot, SystemInfoPort};
 
-/// 中文职责说明：当前运行平台信息 adapter，只返回结构化且不含用户路径的系统快照。
 pub(crate) struct CurrentSystem;
 
 impl SystemInfoPort for CurrentSystem {

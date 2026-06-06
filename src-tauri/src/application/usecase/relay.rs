@@ -6,7 +6,6 @@ use serde_json::Value;
 
 const MODULE: &str = "relay";
 
-/// 中文职责说明：Relay 用户动作事务 owner，真实代理配置、诊断和导入导出后续在本边界内补齐。
 pub(crate) struct RelayUseCase<'a> {
     repositories: &'a RepositoryBundle,
 }

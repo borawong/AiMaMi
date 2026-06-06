@@ -17,7 +17,6 @@ use serde_json::{json, Map, Value};
 
 const MODULE: &str = "system";
 
-/// 中文职责说明：系统设置、诊断、启动快照和平台端口调度事务 owner。
 pub(crate) struct SystemUseCase<'a> {
     repositories: &'a RepositoryBundle,
     single_flight: &'a SingleFlight,

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：清理确认弹窗只展示确认文案和 clear 意图，不直接调用 service。
- */
 import { useTranslation } from "react-i18next";
 
 import {

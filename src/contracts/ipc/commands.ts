@@ -1,4 +1,3 @@
-
 export const IPC_COMMAND_DOMAINS = [
   "accounts",
   "analytics",

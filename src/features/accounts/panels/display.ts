@@ -1,7 +1,3 @@
-/**
- * 中文职责说明：accounts 展示格式化只服务本模块 panel，不写入后端事实或 mutation 合同。
- */
-
 const PLAN_LABEL_KEYS: Record<string, string> = {
   free: "accounts.planLabels.free",
   plus: "accounts.planLabels.plus",

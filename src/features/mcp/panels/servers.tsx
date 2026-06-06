@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：mcp servers panel 只消费列表、分页和错误状态，不保存服务端事实或表单草稿。
- */
 import { useTranslation } from "react-i18next";
 import { Pencil, Server, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";

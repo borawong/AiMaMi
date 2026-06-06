@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：daemon-autoswitch panels owning 查询面板、刷新按钮和 payload 摘要渲染。
- */
 import { RefreshCw, ToggleLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { BentoCard } from "@/components/ui/bento";

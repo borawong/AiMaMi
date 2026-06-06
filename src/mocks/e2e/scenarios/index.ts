@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：集中导出 E2E 时序风险场景，happy path 不作为状态架构验收依据。
- */
 import { abortScenario } from "./abort";
 import { cancelScenario } from "./cancel";
 import { concurrencyScenario } from "./concurrency";

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：安装位置提示 hook 只拥有启动期安装可写性检查和打开应用目录动作。
- */
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 

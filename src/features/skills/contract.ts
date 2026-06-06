@@ -1,7 +1,3 @@
-/**
- * 中文职责说明：记录 skills 模块由 dumped 证据确认的命令、来源文件和包装调用链。
- */
-
 export const DUMPED_SKILLS_COMMANDS = [
   {
     "command": "delete_skill_backup",

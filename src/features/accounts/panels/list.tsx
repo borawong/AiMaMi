@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：账号列表 panel owning 列表展示、选择意图和列表内 summary，不读取 service/IPC。
- */
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";

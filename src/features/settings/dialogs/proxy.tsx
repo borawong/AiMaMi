@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings proxy 弹窗只消费 controller 草稿并发出检测、测试、保存意图。
- */
 import { useTranslation } from "react-i18next";
 import { AnimatedSegmentedControl } from "@/components/ui/segmented";
 import { Button } from "@/components/ui/button";

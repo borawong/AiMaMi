@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：custom-instructions 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
- */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";

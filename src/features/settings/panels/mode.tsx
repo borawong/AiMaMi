@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings mode-switch 面板只渲染切换、刷新频率和代理入口，不直接保存事实状态。
- */
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

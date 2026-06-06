@@ -1,7 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 
-// 中文职责说明：在缺少本机 Rust linker 时，先用静态规则固定后端六边形边界，不能替代 cargo check。
 const repoRoot = process.cwd();
 const backendRoot = join(repoRoot, "src-tauri", "src");
 const failures = [];

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：IPC 命令 fixture registry 只固化合同证据元信息，默认 handler 不伪造业务返回。
- */
 import {
   IPC_COMMAND_DEFINITIONS,
   type IpcArgs,

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：侧边栏只消费 route registry 派生的导航 meta，不再持有 route label 或可见性。
- */
 import { useTranslation } from "react-i18next";
 import { Moon, Sun } from "lucide-react";
 

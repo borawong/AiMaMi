@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：由 route registry 生成 React Router 路由对象，集中持有 route、layout、错误边界、meta、redirect、skeleton 和 fill-height。
- */
 import { Suspense } from "react";
 import {
   Navigate,

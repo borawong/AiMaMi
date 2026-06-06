@@ -2,7 +2,6 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 
-// 中文职责说明：验证公开发布边界，避免主仓库混入独立发布资产或未脱敏的 raw 前端发布文案。
 const repoRoot = process.cwd();
 const maxTrackedBytes = 5 * 1024 * 1024;
 const forbiddenTrackedExtensions = new Set([
@@ -70,7 +69,6 @@ function isBinaryLike(buffer) {
 }
 
 function listTrackedFiles() {
-  // 中文职责说明：使用 git 的 tracked 清单作为发布资产检查来源，不扫描未跟踪临时文件。
   const output = execFileSync("git", ["-c", "core.quotePath=false", "ls-files", "-z"], {
     cwd: repoRoot,
   });
@@ -81,7 +79,6 @@ function listTrackedFiles() {
 }
 
 function walkFiles(root) {
-  // 中文职责说明：只递归 raw 证据目录下的文件，跳过不存在的证据路径。
   if (!existsSync(root)) return [];
   const pending = [root];
   const files = [];
@@ -102,7 +99,6 @@ function walkFiles(root) {
 }
 
 function validateGitAttributes() {
-  // 中文职责说明：确保独立发布资产扩展名被标为不可 diff/merge，防止误当正文审查。
   const path = ".gitattributes";
   if (!existsSync(join(repoRoot, path))) {
     addCheck(".gitattributes 存在", false, "缺少 .gitattributes");
@@ -135,7 +131,6 @@ function validateGitAttributes() {
 }
 
 function validateReadmeFile(path) {
-  // 中文职责说明：README 只允许保留开源理由方向，不允许恢复重建 prompt 或流程章节。
   if (!existsSync(join(repoRoot, path))) {
     addCheck(`${path} 存在`, false, "文件不存在");
     return;
@@ -183,7 +178,6 @@ function validateReadmeFile(path) {
 }
 
 function validateTrackedAssets() {
-  // 中文职责说明：主仓库 tracked 文件不得包含 IDB、压缩包、安装包或超过门槛的大文件。
   const trackedFiles = listTrackedFiles();
   const forbiddenAssets = [];
   const largeFiles = [];
@@ -217,7 +211,6 @@ function validateTrackedAssets() {
 }
 
 function validateRawFrontendAssets() {
-  // 中文职责说明：raw 前端资产不得保留扫码、二维码、付款码等不适合公开发布的文案。
   const files = walkFiles(rawRoot).filter((file) => {
     const repoPath = toRepoPath(file).toLowerCase();
     return repoPath.includes("/frontend/") && rawTextExtensions.has(extname(repoPath));
@@ -247,7 +240,6 @@ function validateRawFrontendAssets() {
   );
 }
 
-// 中文职责说明：所有检查按固定顺序输出中文 PASS/FAIL，便于 CI 和人工审查同时读取。
 validateGitAttributes();
 validateReadmeFile("README.md");
 validateReadmeFile("README-cn.md");

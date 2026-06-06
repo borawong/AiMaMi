@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：mcp editor dialog 只渲染表单草稿，草稿 hydration、解析和保存请求由 controller owning。
- */
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";

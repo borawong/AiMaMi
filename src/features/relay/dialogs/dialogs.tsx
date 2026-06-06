@@ -20,7 +20,6 @@ import type {
   RelayProviderRow,
 } from "../types";
 
-// 中文职责说明：Relay dialogs 只负责弹窗展示和事件转发，弹窗开关与 draft 状态由 controller owning。
 export function RelayPageDialogs({
   controller,
 }: {

@@ -1,7 +1,3 @@
-/**
- * 中文职责说明：daemon-autoswitch 工具只在本模块 owner 内安全读取
- * bootstrap 与 pending payload，不把未证实字段升级为业务模型。
- */
 export type DaemonAutoswitchUnknownRecord = Record<string, unknown>;
 
 export function isRecord(value: unknown): value is DaemonAutoswitchUnknownRecord {

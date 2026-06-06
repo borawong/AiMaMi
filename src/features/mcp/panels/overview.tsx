@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：mcp overview panel 只渲染状态入口和统计信息，用户意图通过 controller 回调上抛。
- */
 import { useTranslation } from "react-i18next";
 import { Copy, Plus, RotateCw } from "lucide-react";
 import { BentoCard } from "@/components/ui/bento";

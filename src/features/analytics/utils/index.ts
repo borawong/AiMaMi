@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：analytics 模块只在本模块内读取统计 payload，不把未知 DTO 交给跨模块占位渲染。
- */
 export type AnalyticsUnknownRecord = Record<string, unknown>;
 
 export function isRecord(value: unknown): value is AnalyticsUnknownRecord {

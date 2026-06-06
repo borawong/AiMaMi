@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 
-// 中文职责说明：验证 E2E mock 已覆盖状态竞争场景，并且 IPC fixture 会保留场景步骤。
 const repoRoot = process.cwd();
 const scenariosRoot = path.join(repoRoot, "src", "mocks", "e2e", "scenarios");
 const requiredScenarios = [

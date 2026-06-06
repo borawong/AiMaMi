@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：集中承载全局提示、更新覆盖层和安装位置弹窗，避免 runtime 初始化层拥有 UI。
- */
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Toaster } from "@/components/ui/toaster";

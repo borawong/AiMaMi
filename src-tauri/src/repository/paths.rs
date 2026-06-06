@@ -3,7 +3,6 @@ use crate::repository::path_guard::ensure_relative_path;
 use std::path::{Component, Path, PathBuf};
 use std::sync::Arc;
 
-/// 中文职责说明：仓储路径上下文只保存可重建的相对根，不保存跨命令业务状态。
 #[derive(Clone, Debug)]
 pub(crate) struct RepositoryPathContext {
     root: Arc<PathBuf>,
@@ -18,7 +17,6 @@ impl Default for RepositoryPathContext {
 }
 
 impl RepositoryPathContext {
-    /// 中文职责说明：由平台层或测试层注入相对根，真实用户目录不得写入仓储合同。
     pub(crate) fn from_relative_root(root: impl Into<PathBuf>) -> Result<Self, CoreError> {
         let root = root.into();
         ensure_relative_path(&root)?;
@@ -40,7 +38,6 @@ impl RepositoryPathContext {
     }
 }
 
-/// 中文职责说明：后端仓储的文件和目录合同枚举；真实解析、迁移和业务规则由 core/usecase 后续补证。
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(crate) enum RepositoryPath {
     AccountsSource,

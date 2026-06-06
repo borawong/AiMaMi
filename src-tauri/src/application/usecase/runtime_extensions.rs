@@ -6,7 +6,6 @@ use serde_json::{json, Value};
 
 const MODULE: &str = "runtime_extensions";
 
-/// 中文职责说明：运行时扩展事务 owner，插件发现、启停和配置写入后续在本边界内补齐。
 pub(crate) struct RuntimeExtensionsUseCase<'a> {
     repositories: &'a RepositoryBundle,
 }

@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings threshold 弹窗只消费 controller 草稿并发出保存意图。
- */
 import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";

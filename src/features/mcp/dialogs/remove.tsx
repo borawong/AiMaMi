@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：mcp remove dialog 只渲染确认态，删除目标和请求状态由 controller owning。
- */
 import { useTranslation } from "react-i18next";
 import {
   AlertDialog,

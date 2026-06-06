@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：route registry 是 route、layout、错误边界、标题、图标、可见性、预加载、骨架和高 IO 反馈的唯一 owner。
- */
 import { lazy, type ComponentType, type ReactElement, type ReactNode } from "react";
 import {
   Activity,

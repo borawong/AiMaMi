@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings 模块只声明边界类型，未证实业务字段不在这里编造。
- */
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import type { AccentPreset, HeatmapPreset } from "@/hooks/accent";
 import type { RefreshInterval } from "@/hooks/refresh";

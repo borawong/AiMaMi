@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：模拟请求失败，验证失败路径不清空已有 TanStack cache 事实。
- */
 import type { E2eScenario } from "./types";
 
 export const failureScenario: E2eScenario = {

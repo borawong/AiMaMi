@@ -16,7 +16,6 @@ use serde_json::Value;
 use crate::contracts::CoreEnvelope;
 use crate::core::error::CoreError;
 
-/// 中文职责说明：后端服务组合根，只装配仓储、single-flight、平台端口和 usecase 入口。
 pub(crate) struct BackendServices {
     repositories: RepositoryBundle,
     single_flight: SingleFlight,
@@ -35,7 +34,6 @@ impl Default for BackendServices {
 }
 
 impl BackendServices {
-    /// 中文职责说明：由最外层 adapter 注入窗口端口，command 不负责构造平台对象。
     pub(crate) fn with_window(window: Box<dyn WindowPort>) -> Self {
         Self {
             repositories: RepositoryBundle::real(),

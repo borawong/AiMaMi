@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：plugins 配置弹窗只渲染 JSON 草稿和确认动作，状态由 controller 持有。
- */
 import { Save } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";

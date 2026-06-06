@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：当前状态面板只展示 managed block 状态和文件操作意图。
- */
 import { AlertTriangle, FileCode2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

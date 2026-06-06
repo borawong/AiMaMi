@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：settings 模块唯一公共入口，外部只能通过这里接入模块。
- */
 import { createElement } from "react";
 import { SettingsProvider } from "./Provider";
 import { SettingsContent, type SettingsContentProps } from "./Content";

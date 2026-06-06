@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：skills 确认弹窗只渲染 remove/delete backup 确认动作，状态由 controller 持有。
- */
 import { useTranslation } from "react-i18next";
 import {
   AlertDialog,

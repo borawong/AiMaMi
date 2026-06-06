@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：账号详情 panel owning 详情、quota 和操作按钮展示，用户意图只回传 dialog controls。
- */
 import { Copy, KeyRound, ShieldAlert, Trash2, UserCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";

@@ -2,7 +2,6 @@ use crate::application::ports::WindowPort;
 use crate::core::error::CoreError;
 use tauri::Manager;
 
-/// 中文职责说明：Tauri 窗口 adapter，只能位于 platform 层，command/usecase 不直接持有窗口对象。
 pub(crate) struct TauriWindow {
     app: tauri::AppHandle,
 }
@@ -19,7 +18,6 @@ impl WindowPort for TauriWindow {
     }
 }
 
-/// 中文职责说明：无窗口运行场景的窗口端口占位，只表达端口边界，不执行 UI 副作用。
 #[derive(Default)]
 pub(crate) struct NoopWindow;
 

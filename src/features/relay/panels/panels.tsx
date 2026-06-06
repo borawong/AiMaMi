@@ -67,7 +67,6 @@ import {
   readString,
 } from "../utils";
 
-// 中文职责说明：Relay panels 只渲染模块主视图并转发 controller 动作，不持有 provider/IO/network 业务状态。
 export function RelayPagePanels({
   controller,
 }: {

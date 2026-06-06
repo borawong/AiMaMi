@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：会话账号导入弹窗 owning 打开状态、草稿和提交流程，页面只触发显示意图。
- */
 import { useState } from "react";
 import { Copy, ExternalLink, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";

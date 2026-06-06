@@ -17,4 +17,4 @@
 - 页面文件只能作为 route/module shell，业务流程、数据请求、弹窗状态机和列表操作必须下沉到模块 owner。
 - TanStack cache 是后端事实唯一前端 SOT；组件 state 只保存选择、草稿、hover/focus、弹窗开关等短生命周期 UI 状态。
 - 用户可见文案必须进入 src/locales/zh.json 和 src/locales/en.json；测试断言也应通过 locale helper 或 locale JSON。
-- 无仓库内 raw/internal 证据支撑的业务逻辑不得伪造成完整实现，只能保留中文职责注释、边界类型、空导出、待补证据位置或未实现状态。
+- 无仓库内 raw/internal 证据支撑的业务逻辑不得伪造成完整实现，只能保留边界类型、空导出、待补证据位置或未实现状态。

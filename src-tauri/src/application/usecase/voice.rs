@@ -9,7 +9,6 @@ use serde_json::{json, Value};
 
 const MODULE: &str = "voice";
 
-/// 中文职责说明：语音生成 raw IPC 入参 DTO，只承接前端契约字段，不实现闭源提示词生成。
 #[derive(Debug, Clone, Default)]
 pub(crate) struct VoiceGenerateInput {
     pub template_id: Option<String>,
@@ -33,7 +32,6 @@ pub(crate) struct VoiceGenerateInput {
     pub asr_error_code: Option<String>,
 }
 
-/// 中文职责说明：语音触发键 raw IPC 入参 DTO，真实快捷键注册只能在平台 adapter 补齐。
 #[derive(Debug, Clone, Default)]
 pub(crate) struct VoiceTriggerKeyInput {
     pub key_code: Option<i64>,
@@ -43,7 +41,6 @@ pub(crate) struct VoiceTriggerKeyInput {
     pub style: Option<String>,
 }
 
-/// 中文职责说明：语音 hold/toggle 触发键 raw IPC 入参 DTO，仅表达契约字段。
 #[derive(Debug, Clone, Default)]
 pub(crate) struct VoiceTriggerBindingsInput {
     pub active_style: Option<String>,
@@ -57,7 +54,6 @@ pub(crate) struct VoiceTriggerBindingsInput {
     pub toggle_modifier_mask: Option<u64>,
 }
 
-/// 中文职责说明：语音运行态设置 raw IPC 入参 DTO，不保存跨命令运行时状态。
 #[derive(Debug, Clone, Default)]
 pub(crate) struct VoiceRuntimeSettingsInput {
     pub enabled: Option<bool>,
@@ -67,7 +63,6 @@ pub(crate) struct VoiceRuntimeSettingsInput {
     pub speech_model: Option<String>,
 }
 
-/// 中文职责说明：语音模式快捷键 raw IPC 入参 DTO，真实注册副作用不在 usecase 内实现。
 #[derive(Debug, Clone, Default)]
 pub(crate) struct VoiceModeShortcutInput {
     pub mode_id: Option<String>,
@@ -78,7 +73,6 @@ pub(crate) struct VoiceModeShortcutInput {
     pub style: Option<String>,
 }
 
-/// 中文职责说明：语音工作区、词汇、模型配置和运行态用户动作事务 owner。
 pub(crate) struct VoiceUseCase<'a> {
     repositories: &'a RepositoryBundle,
 }

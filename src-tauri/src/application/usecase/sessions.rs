@@ -5,7 +5,6 @@ use crate::repository::RepositoryBundle;
 
 const MODULE: &str = "sessions";
 
-/// 中文职责说明：会话列表与删除事务 owner，真实会话文件解析后续在本边界内补齐。
 pub(crate) struct SessionsUseCase<'a> {
     repositories: &'a RepositoryBundle,
 }

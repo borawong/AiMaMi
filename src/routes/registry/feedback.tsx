@@ -1,6 +1,3 @@
-/**
- * 中文职责说明：统一管理高 IO route 的轻量反馈，只消费查询状态和本地化文案。
- */
 import { useIsFetching } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { Route } from "@/types/navigation";
