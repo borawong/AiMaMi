@@ -47,8 +47,8 @@ impl<'a> McpUseCase<'a> {
         &self,
         mut input: McpUpsertInput,
     ) -> Result<CoreEnvelope<McpServerMutationPayload>, CoreError> {
-        input.name = required_text(input.name, "empty_mcp_name", "MCP 名称不能为空。")?;
         reject_null_config(input.config.as_ref())?;
+        input.name = normalize_mcp_name(input.name, input.config.as_ref(), input.args.as_ref());
         let plan = self.no_op_plan("upsert_mcp_server");
         Ok(CoreEnvelope::from_backend_plan(
             self.mutation_payload(&plan, server_from_input(input)),
@@ -159,6 +159,24 @@ fn reject_null_config(value: Option<&Value>) -> Result<(), CoreError> {
     } else {
         Ok(())
     }
+}
+
+fn normalize_mcp_name(name: String, config: Option<&Value>, args: Option<&Vec<String>>) -> String {
+    let trimmed = name.trim();
+    if !trimmed.is_empty() {
+        return trimmed.to_owned();
+    }
+
+    if let Some(config_name) = config_string(config, "name") {
+        let trimmed_config_name = config_name.trim();
+        if !trimmed_config_name.is_empty() {
+            return trimmed_config_name.to_owned();
+        }
+    }
+
+    args.and_then(|values| values.iter().find(|value| !value.trim().is_empty()))
+        .map(|value| value.trim().to_owned())
+        .unwrap_or_else(|| "pending-mcp-server".to_owned())
 }
 
 fn server_from_input(input: McpUpsertInput) -> McpServerSummary {

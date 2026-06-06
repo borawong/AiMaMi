@@ -15,29 +15,30 @@ pub(crate) fn load_custom_instruction_state(
 #[tauri::command]
 pub(crate) fn preview_custom_instruction_apply(
     state: State<'_, TauriAppState>,
-    template_id: Option<String>,
     content: Option<String>,
 ) -> Result<CoreEnvelope<CustomInstructionPreviewPayload>, String> {
     respond(
         state
             .services()
             .custom_instructions()
-            .preview_apply(template_id, content.unwrap_or_default()),
+            .preview_apply(content),
     )
 }
 
 #[tauri::command]
 pub(crate) fn apply_custom_instruction(
     state: State<'_, TauriAppState>,
-    template_id: Option<String>,
     content: Option<String>,
+    source: Option<String>,
+    template_code: Option<String>,
+    template_title: Option<String>,
 ) -> Result<CoreEnvelope<CustomInstructionStatePayload>, String> {
-    respond(
-        state
-            .services()
-            .custom_instructions()
-            .apply(template_id, content.unwrap_or_default()),
-    )
+    respond(state.services().custom_instructions().apply(
+        content,
+        source,
+        template_code,
+        template_title,
+    ))
 }
 
 #[tauri::command]

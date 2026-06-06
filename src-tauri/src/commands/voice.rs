@@ -1,4 +1,8 @@
 use crate::adapters::tauri::state::TauriAppState;
+use crate::application::usecase::voice::{
+    VoiceGenerateInput, VoiceModeShortcutInput, VoiceRuntimeSettingsInput,
+    VoiceTriggerBindingsInput, VoiceTriggerKeyInput,
+};
 use crate::commands::respond;
 use crate::contracts::{
     CoreEnvelope, VoiceAsrConfigPayload, VoiceGeneratePayload, VoiceLlmConfigPayload,
@@ -129,8 +133,52 @@ pub(crate) fn resolve_voice_vocabulary_app_info(
 #[tauri::command]
 pub(crate) fn generate_voice_prompt(
     state: State<'_, TauriAppState>,
+    template_id: Option<String>,
+    raw_text: Option<String>,
+    selected_text: Option<String>,
+    clipboard_text: Option<String>,
+    target_bundle_id: Option<String>,
+    target_app_name: Option<String>,
+    prompt_override: Option<String>,
+    template_title: Option<String>,
+    template_kind: Option<String>,
+    llm_provider: Option<String>,
+    llm_api_key: Option<String>,
+    llm_model: Option<String>,
+    llm_base_url: Option<String>,
+    asr_provider: Option<String>,
+    asr_model: Option<String>,
+    asr_language: Option<String>,
+    asr_emotion: Option<String>,
+    asr_duration_ms: Option<u64>,
+    asr_error_code: Option<String>,
 ) -> Result<CoreEnvelope<VoiceGeneratePayload>, String> {
-    respond(state.services().voice().generate_prompt())
+    respond(
+        state
+            .services()
+            .voice()
+            .generate_prompt(VoiceGenerateInput {
+                template_id,
+                raw_text,
+                selected_text,
+                clipboard_text,
+                target_bundle_id,
+                target_app_name,
+                prompt_override,
+                template_title,
+                template_kind,
+                llm_provider,
+                llm_api_key,
+                llm_model,
+                llm_base_url,
+                asr_provider,
+                asr_model,
+                asr_language,
+                asr_emotion,
+                asr_duration_ms,
+                asr_error_code,
+            }),
+    )
 }
 
 #[tauri::command]
@@ -281,22 +329,78 @@ pub(crate) fn set_voice_trigger_listener_suppressed(
 #[tauri::command]
 pub(crate) fn set_voice_trigger_key(
     state: State<'_, TauriAppState>,
+    key_code: Option<i64>,
+    key_kind: Option<String>,
+    key_label: Option<String>,
+    modifier_mask: Option<u64>,
+    style: Option<String>,
 ) -> Result<CoreEnvelope<Value>, String> {
-    respond(state.services().voice().set_trigger_key())
+    respond(
+        state
+            .services()
+            .voice()
+            .set_trigger_key(VoiceTriggerKeyInput {
+                key_code,
+                key_kind,
+                key_label,
+                modifier_mask,
+                style,
+            }),
+    )
 }
 
 #[tauri::command]
 pub(crate) fn set_voice_trigger_bindings(
     state: State<'_, TauriAppState>,
+    active_style: Option<String>,
+    hold_key_code: Option<i64>,
+    hold_key_kind: Option<String>,
+    hold_key_label: Option<String>,
+    hold_modifier_mask: Option<u64>,
+    toggle_key_code: Option<i64>,
+    toggle_key_kind: Option<String>,
+    toggle_key_label: Option<String>,
+    toggle_modifier_mask: Option<u64>,
 ) -> Result<CoreEnvelope<Value>, String> {
-    respond(state.services().voice().set_trigger_bindings())
+    respond(
+        state
+            .services()
+            .voice()
+            .set_trigger_bindings(VoiceTriggerBindingsInput {
+                active_style,
+                hold_key_code,
+                hold_key_kind,
+                hold_key_label,
+                hold_modifier_mask,
+                toggle_key_code,
+                toggle_key_kind,
+                toggle_key_label,
+                toggle_modifier_mask,
+            }),
+    )
 }
 
 #[tauri::command]
 pub(crate) fn update_voice_runtime_settings(
     state: State<'_, TauriAppState>,
+    enabled: Option<bool>,
+    processing_mode: Option<String>,
+    processing_mode_id: Option<String>,
+    shortcut: Option<String>,
+    speech_model: Option<String>,
 ) -> Result<CoreEnvelope<Value>, String> {
-    respond(state.services().voice().update_runtime_settings())
+    respond(
+        state
+            .services()
+            .voice()
+            .update_runtime_settings(VoiceRuntimeSettingsInput {
+                enabled,
+                processing_mode,
+                processing_mode_id,
+                shortcut,
+                speech_model,
+            }),
+    )
 }
 
 #[tauri::command]
@@ -353,8 +457,26 @@ pub(crate) fn show_voice_search_overlay(
 #[tauri::command]
 pub(crate) fn set_voice_mode_shortcut(
     state: State<'_, TauriAppState>,
+    mode_id: Option<String>,
+    key_code: Option<i64>,
+    key_kind: Option<String>,
+    key_label: Option<String>,
+    modifier_mask: Option<u64>,
+    style: Option<String>,
 ) -> Result<CoreEnvelope<Value>, String> {
-    respond(state.services().voice().set_mode_shortcut())
+    respond(
+        state
+            .services()
+            .voice()
+            .set_mode_shortcut(VoiceModeShortcutInput {
+                mode_id,
+                key_code,
+                key_kind,
+                key_label,
+                modifier_mask,
+                style,
+            }),
+    )
 }
 
 #[tauri::command]

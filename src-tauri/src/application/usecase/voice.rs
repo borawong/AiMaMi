@@ -1,6 +1,6 @@
 use crate::contracts::{
     BackendSkeletonStatus, CoreEnvelope, VoiceAsrConfigPayload, VoiceGeneratePayload,
-    VoiceLlmConfigPayload, VoiceRuntimeStatusPayload, VoiceWorkspacePayload,
+    VoiceHistoryEntry, VoiceLlmConfigPayload, VoiceRuntimeStatusPayload, VoiceWorkspacePayload,
 };
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
@@ -8,6 +8,75 @@ use crate::repository::RepositoryBundle;
 use serde_json::{json, Value};
 
 const MODULE: &str = "voice";
+
+/// 中文职责说明：语音生成 raw IPC 入参 DTO，只承接前端契约字段，不实现闭源提示词生成。
+#[derive(Debug, Clone, Default)]
+pub(crate) struct VoiceGenerateInput {
+    pub template_id: Option<String>,
+    pub raw_text: Option<String>,
+    pub selected_text: Option<String>,
+    pub clipboard_text: Option<String>,
+    pub target_bundle_id: Option<String>,
+    pub target_app_name: Option<String>,
+    pub prompt_override: Option<String>,
+    pub template_title: Option<String>,
+    pub template_kind: Option<String>,
+    pub llm_provider: Option<String>,
+    pub llm_api_key: Option<String>,
+    pub llm_model: Option<String>,
+    pub llm_base_url: Option<String>,
+    pub asr_provider: Option<String>,
+    pub asr_model: Option<String>,
+    pub asr_language: Option<String>,
+    pub asr_emotion: Option<String>,
+    pub asr_duration_ms: Option<u64>,
+    pub asr_error_code: Option<String>,
+}
+
+/// 中文职责说明：语音触发键 raw IPC 入参 DTO，真实快捷键注册只能在平台 adapter 补齐。
+#[derive(Debug, Clone, Default)]
+pub(crate) struct VoiceTriggerKeyInput {
+    pub key_code: Option<i64>,
+    pub key_kind: Option<String>,
+    pub key_label: Option<String>,
+    pub modifier_mask: Option<u64>,
+    pub style: Option<String>,
+}
+
+/// 中文职责说明：语音 hold/toggle 触发键 raw IPC 入参 DTO，仅表达契约字段。
+#[derive(Debug, Clone, Default)]
+pub(crate) struct VoiceTriggerBindingsInput {
+    pub active_style: Option<String>,
+    pub hold_key_code: Option<i64>,
+    pub hold_key_kind: Option<String>,
+    pub hold_key_label: Option<String>,
+    pub hold_modifier_mask: Option<u64>,
+    pub toggle_key_code: Option<i64>,
+    pub toggle_key_kind: Option<String>,
+    pub toggle_key_label: Option<String>,
+    pub toggle_modifier_mask: Option<u64>,
+}
+
+/// 中文职责说明：语音运行态设置 raw IPC 入参 DTO，不保存跨命令运行时状态。
+#[derive(Debug, Clone, Default)]
+pub(crate) struct VoiceRuntimeSettingsInput {
+    pub enabled: Option<bool>,
+    pub processing_mode: Option<String>,
+    pub processing_mode_id: Option<String>,
+    pub shortcut: Option<String>,
+    pub speech_model: Option<String>,
+}
+
+/// 中文职责说明：语音模式快捷键 raw IPC 入参 DTO，真实注册副作用不在 usecase 内实现。
+#[derive(Debug, Clone, Default)]
+pub(crate) struct VoiceModeShortcutInput {
+    pub mode_id: Option<String>,
+    pub key_code: Option<i64>,
+    pub key_kind: Option<String>,
+    pub key_label: Option<String>,
+    pub modifier_mask: Option<u64>,
+    pub style: Option<String>,
+}
 
 /// 中文职责说明：语音工作区、词汇、模型配置和运行态用户动作事务 owner。
 pub(crate) struct VoiceUseCase<'a> {
@@ -236,11 +305,44 @@ impl<'a> VoiceUseCase<'a> {
         ))
     }
 
-    pub(crate) fn generate_prompt(&self) -> Result<CoreEnvelope<VoiceGeneratePayload>, CoreError> {
+    pub(crate) fn generate_prompt(
+        &self,
+        input: VoiceGenerateInput,
+    ) -> Result<CoreEnvelope<VoiceGeneratePayload>, CoreError> {
         let plan = self.pending_plan("generate_voice_prompt");
+        let _provider_context = json!({
+            "llmProvider": trim_optional_text(input.llm_provider),
+            "llmConfigured": input.llm_api_key.as_ref().is_some_and(|value| !value.trim().is_empty()),
+            "llmModel": trim_optional_text(input.llm_model),
+            "llmBaseUrl": trim_optional_text(input.llm_base_url),
+            "templateKind": trim_optional_text(input.template_kind),
+            "promptOverridePresent": input.prompt_override.as_ref().is_some_and(|value| !value.trim().is_empty())
+        });
         Ok(CoreEnvelope::from_backend_plan(
             VoiceGeneratePayload {
                 status: BackendSkeletonStatus::from_plan(&plan),
+                history_entry: VoiceHistoryEntry {
+                    template_id: text_or_default(input.template_id),
+                    template_title: text_or_default(input.template_title),
+                    raw_text: text_or_default(input.raw_text),
+                    selected_text: text_or_default(input.selected_text),
+                    clipboard_text: text_or_default(input.clipboard_text),
+                    target_bundle_id: text_or_default(input.target_bundle_id),
+                    target_app_name: text_or_default(input.target_app_name),
+                    asr_provider: text_or_default(input.asr_provider),
+                    asr_model: text_or_default(input.asr_model),
+                    asr_language: text_or_default(input.asr_language),
+                    asr_emotion: text_or_default(input.asr_emotion),
+                    asr_duration_ms: input.asr_duration_ms,
+                    asr_error_code: trim_optional_text(input.asr_error_code),
+                    ..VoiceHistoryEntry::default()
+                },
+                workspace: VoiceWorkspacePayload {
+                    status: BackendSkeletonStatus::from_plan(&plan),
+                    source_path: self.repositories.config().voice_source_path(),
+                    ..VoiceWorkspacePayload::default()
+                },
+                processing_status: "pending".into(),
                 ..VoiceGeneratePayload::default()
             },
             &plan,
@@ -468,26 +570,66 @@ impl<'a> VoiceUseCase<'a> {
         ))
     }
 
-    pub(crate) fn set_trigger_key(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn set_trigger_key(
+        &self,
+        input: VoiceTriggerKeyInput,
+    ) -> Result<CoreEnvelope<Value>, CoreError> {
         let plan = self.no_op_plan("set_voice_trigger_key");
         Ok(CoreEnvelope::from_backend_plan(
-            json_with_status(json!({}), &plan),
+            json_with_status(
+                json!({
+                    "keyCode": input.key_code,
+                    "keyKind": trim_optional_text(input.key_kind),
+                    "keyLabel": trim_optional_text(input.key_label),
+                    "modifierMask": input.modifier_mask,
+                    "style": trim_optional_text(input.style)
+                }),
+                &plan,
+            ),
             &plan,
         ))
     }
 
-    pub(crate) fn set_trigger_bindings(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn set_trigger_bindings(
+        &self,
+        input: VoiceTriggerBindingsInput,
+    ) -> Result<CoreEnvelope<Value>, CoreError> {
         let plan = self.no_op_plan("set_voice_trigger_bindings");
         Ok(CoreEnvelope::from_backend_plan(
-            json_with_status(json!({}), &plan),
+            json_with_status(
+                json!({
+                    "activeStyle": trim_optional_text(input.active_style),
+                    "holdKeyCode": input.hold_key_code,
+                    "holdKeyKind": trim_optional_text(input.hold_key_kind),
+                    "holdKeyLabel": trim_optional_text(input.hold_key_label),
+                    "holdModifierMask": input.hold_modifier_mask,
+                    "toggleKeyCode": input.toggle_key_code,
+                    "toggleKeyKind": trim_optional_text(input.toggle_key_kind),
+                    "toggleKeyLabel": trim_optional_text(input.toggle_key_label),
+                    "toggleModifierMask": input.toggle_modifier_mask
+                }),
+                &plan,
+            ),
             &plan,
         ))
     }
 
-    pub(crate) fn update_runtime_settings(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn update_runtime_settings(
+        &self,
+        input: VoiceRuntimeSettingsInput,
+    ) -> Result<CoreEnvelope<Value>, CoreError> {
         let plan = self.no_op_plan("update_voice_runtime_settings");
         Ok(CoreEnvelope::from_backend_plan(
-            json_with_status(json!({}), &plan),
+            json_with_status(
+                json!({
+                    "enabled": input.enabled,
+                    "processingMode": trim_optional_text(input.processing_mode),
+                    "processingModeId": trim_optional_text(input.processing_mode_id),
+                    "shortcut": trim_optional_text(input.shortcut),
+                    "speechModel": trim_optional_text(input.speech_model)
+                }),
+                &plan,
+            ),
             &plan,
         ))
     }
@@ -572,10 +714,23 @@ impl<'a> VoiceUseCase<'a> {
         ))
     }
 
-    pub(crate) fn set_mode_shortcut(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn set_mode_shortcut(
+        &self,
+        input: VoiceModeShortcutInput,
+    ) -> Result<CoreEnvelope<Value>, CoreError> {
         let plan = self.no_op_plan("set_voice_mode_shortcut");
         Ok(CoreEnvelope::from_backend_plan(
-            json_with_status(json!({}), &plan),
+            json_with_status(
+                json!({
+                    "modeId": trim_optional_text(input.mode_id),
+                    "keyCode": input.key_code,
+                    "keyKind": trim_optional_text(input.key_kind),
+                    "keyLabel": trim_optional_text(input.key_label),
+                    "modifierMask": input.modifier_mask,
+                    "style": trim_optional_text(input.style)
+                }),
+                &plan,
+            ),
             &plan,
         ))
     }

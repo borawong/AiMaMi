@@ -11,11 +11,15 @@ import type {
   CustomInstructionPreviewPayload,
   CustomInstructionStatePayload,
 } from "@/types";
-import { CustomInstructionsCache } from "../cache";
+import {
+  CUSTOM_INSTRUCTION_STATE_QUERY_KEY,
+  CUSTOM_INSTRUCTION_TEMPLATES_QUERY_KEY,
+  CustomInstructionsCache,
+  invalidateCustomInstructionsContractQueries,
+} from "../cache";
 
-const customInstructionStateQueryKey = ["custom-instructions", "current"] as const;
-const customInstructionTemplatesQueryKey = ["custom-instructions", "templates"] as const;
 let customInstructionsCacheSequence = 0;
+let customInstructionsLatestAcceptedSequence = 0;
 
 function nextCustomInstructionsCacheSequence() {
   customInstructionsCacheSequence += 1;
@@ -28,25 +32,34 @@ function writeCustomInstructionsCachePayload<TPayload>(
   source: "full-refresh" | "mutation-payload",
   sequence: number,
 ) {
+  if (sequence < customInstructionsLatestAcceptedSequence) {
+    return false;
+  }
+
+  customInstructionsLatestAcceptedSequence = sequence;
   CustomInstructionsCache.writeAuthoritativePayload(queryClient, {
     payload,
     source,
     sequence,
     receivedAt: Date.now(),
   });
+  return true;
 }
 
 async function writeCustomInstructionsMutationPayload<TPayload>(
   queryClient: QueryClient,
   payload: TPayload,
 ) {
-  writeCustomInstructionsCachePayload(
+  const accepted = writeCustomInstructionsCachePayload(
     queryClient,
     payload,
     "mutation-payload",
     nextCustomInstructionsCacheSequence(),
   );
-  await CustomInstructionsCache.invalidateContractQueries(queryClient);
+  if (!accepted) return;
+
+  queryClient.setQueryData(CUSTOM_INSTRUCTION_STATE_QUERY_KEY, payload);
+  await invalidateCustomInstructionsContractQueries(queryClient);
 }
 
 export interface CustomInstructionApplyInput {
@@ -64,18 +77,23 @@ export function useCustomInstructionQueries() {
   const queryClient = useQueryClient();
 
   const stateQuery = useQuery({
-    queryKey: customInstructionStateQueryKey,
+    queryKey: CUSTOM_INSTRUCTION_STATE_QUERY_KEY,
     queryFn: async () => {
       const sequence = nextCustomInstructionsCacheSequence();
       const payload = await api.loadCustomInstructionState();
-      writeCustomInstructionsCachePayload(queryClient, payload, "full-refresh", sequence);
+      const accepted = writeCustomInstructionsCachePayload(queryClient, payload, "full-refresh", sequence);
+      if (!accepted) {
+        return queryClient.getQueryData<typeof payload>(CUSTOM_INSTRUCTION_STATE_QUERY_KEY) ?? payload;
+      }
       return payload;
     },
+    staleTime: Infinity,
   });
 
   const templatesQuery = useQuery({
-    queryKey: customInstructionTemplatesQueryKey,
+    queryKey: CUSTOM_INSTRUCTION_TEMPLATES_QUERY_KEY,
     queryFn: async () => mergeCustomInstructionTemplates([]),
+    staleTime: Infinity,
   });
 
   return {
@@ -99,7 +117,6 @@ export function useCustomInstructionMutations(options: {
   const previewMutation = useMutation({
     mutationFn: (content: string) => api.previewCustomInstructionApply(content),
     onSuccess: async (response) => {
-      await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onPreviewed(response.data);
     },
     onError: options.onPreviewError,
@@ -107,6 +124,8 @@ export function useCustomInstructionMutations(options: {
 
   const applyMutation = useMutation({
     mutationFn: (params: CustomInstructionApplyInput) => api.applyCustomInstruction(params),
+    onMutate: () =>
+      queryClient.cancelQueries({ queryKey: CUSTOM_INSTRUCTION_STATE_QUERY_KEY }),
     onSuccess: async (response) => {
       await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onApplied(response.data);
@@ -116,6 +135,8 @@ export function useCustomInstructionMutations(options: {
 
   const clearMutation = useMutation({
     mutationFn: () => api.clearCustomInstructionBlock(),
+    onMutate: () =>
+      queryClient.cancelQueries({ queryKey: CUSTOM_INSTRUCTION_STATE_QUERY_KEY }),
     onSuccess: async (response) => {
       await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onCleared(response.data);
@@ -125,6 +146,8 @@ export function useCustomInstructionMutations(options: {
 
   const rollbackMutation = useMutation({
     mutationFn: (historyId: string) => api.rollbackCustomInstruction(historyId),
+    onMutate: () =>
+      queryClient.cancelQueries({ queryKey: CUSTOM_INSTRUCTION_STATE_QUERY_KEY }),
     onSuccess: async (response) => {
       await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onRolledBack(response.data);

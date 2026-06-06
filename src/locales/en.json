@@ -655,7 +655,31 @@
     "actionRestartApplication": "Restart application",
     "actionSetBlockPassthrough": "Toggle passthrough block",
     "actionDiagnoseRouter": "Diagnose router",
-    "actionFixRouterIssue": "Fix router issue"
+    "actionFixRouterIssue": "Fix router issue",
+    "codexRouter": {
+      "blockPassthroughSaveFailed": "Failed to save passthrough blocking",
+      "codexRunningTitle": "App is still running",
+      "codexRunningDescription": "Close the related process before changing router settings.",
+      "migrationPendingHint": "A migration is pending. Complete it before retrying.",
+      "toggleFailed": "Failed to toggle router",
+      "toggleSucceeded": "Router setting updated",
+      "warnUserProfileExists": "An existing user profile was detected. Confirm it will not be overwritten before continuing.",
+      "warnUserProfileExistsTitle": "User profile exists"
+    },
+    "diagnostic": {
+      "dataFormatError": "Diagnostic data format error"
+    },
+    "form": {
+      "fetchModels": {
+        "empty": "No models were returned.",
+        "failed": "Failed to fetch models.",
+        "success": "Model list updated."
+      }
+    },
+    "io": {
+      "openDialogTitle": "Select relay config file",
+      "saveDialogTitle": "Save relay config file"
+    }
   },
   "plugins": {
     "description": "Restores the plugins module entry from runtime extension IPC contracts. Plugin list and config actions are owned by the module owner.",
@@ -772,5 +796,21 @@
     "removeTemplate": "Delete voice template",
     "removeVocabulary": "Delete voice vocabulary",
     "removeHistoryEntry": "Delete voice history"
+  },
+  "feedback": {
+    "errorTitle": "Feedback failed",
+    "errorDesc": "Feedback could not be sent. Try again later.",
+    "networkErrorTitle": "Network error",
+    "networkErrorDesc": "Cannot reach the feedback service. Check the network and retry.",
+    "noDevice": "No available device found.",
+    "successTitle": "Feedback sent",
+    "successDesc": "Thanks. The feedback record has been submitted."
+  },
+  "mysteryCode": {
+    "success": "Mystery code applied",
+    "successDesc": "The grant was written to local state.",
+    "successIdempotent": "Mystery code already processed",
+    "errorNetwork": "Network error. The mystery code cannot be verified.",
+    "toastErrorHint": "Try again later or check the input."
   }
 }

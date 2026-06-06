@@ -52,14 +52,14 @@ pub(crate) fn set_auto_switch(
 #[tauri::command]
 pub(crate) fn configure_auto_switch(
     state: State<'_, TauriAppState>,
-    threshold_5h_percent: Option<i32>,
+    threshold5h_percent: Option<i32>,
     threshold_weekly_percent: Option<i32>,
 ) -> Result<CoreEnvelope<AutoSwitchConfigPayload>, String> {
     respond(
         state
             .services()
             .system()
-            .configure_auto_switch(threshold_5h_percent, threshold_weekly_percent),
+            .configure_auto_switch(threshold5h_percent, threshold_weekly_percent),
     )
 }
 

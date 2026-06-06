@@ -4,7 +4,6 @@ use crate::commands::respond;
 use crate::contracts::{
     CoreEnvelope, McpServerListPayload, McpServerMutationPayload, McpServerRemovePayload,
 };
-use serde_json::Value;
 use std::collections::HashMap;
 use tauri::State;
 
@@ -18,26 +17,15 @@ pub(crate) fn load_mcp_servers(
 #[tauri::command]
 pub(crate) fn upsert_mcp_server(
     state: State<'_, TauriAppState>,
-    name: String,
-    config: Option<Value>,
-    transport: Option<String>,
-    enabled: Option<bool>,
-    command: Option<String>,
     args: Option<Vec<String>>,
-    url: Option<String>,
     headers: Option<HashMap<String, String>>,
     environment: Option<HashMap<String, String>>,
 ) -> Result<CoreEnvelope<McpServerMutationPayload>, String> {
     respond(state.services().mcp().upsert_server(McpUpsertInput {
-        name,
-        config,
-        transport,
-        enabled,
-        command,
         args,
-        url,
         headers,
         environment,
+        ..McpUpsertInput::default()
     }))
 }
 

@@ -23,55 +23,51 @@ pub(crate) fn load_skill_backups(
 #[tauri::command]
 pub(crate) fn import_skill(
     state: State<'_, TauriAppState>,
-    source_path: Option<String>,
     path: Option<String>,
 ) -> Result<CoreEnvelope<SkillImportPayload>, String> {
     respond(
         state
             .services()
             .skills()
-            .import_skill(source_path.or(path).unwrap_or_default()),
+            .import_skill(path.unwrap_or_default()),
     )
 }
 
 #[tauri::command]
 pub(crate) fn remove_skill(
     state: State<'_, TauriAppState>,
-    name: Option<String>,
     id: Option<String>,
 ) -> Result<CoreEnvelope<SkillRemovePayload>, String> {
     respond(
         state
             .services()
             .skills()
-            .remove_skill(name.or(id).unwrap_or_default()),
+            .remove_skill(id.unwrap_or_default()),
     )
 }
 
 #[tauri::command]
 pub(crate) fn restore_skill_backup(
     state: State<'_, TauriAppState>,
-    name: Option<String>,
     id: Option<String>,
 ) -> Result<CoreEnvelope<SkillRestorePayload>, String> {
     respond(
         state
             .services()
             .skills()
-            .restore_skill_backup(name.or(id).unwrap_or_default()),
+            .restore_skill_backup(id.unwrap_or_default()),
     )
 }
 
 #[tauri::command]
 pub(crate) fn delete_skill_backup(
     state: State<'_, TauriAppState>,
-    name: Option<String>,
     id: Option<String>,
 ) -> Result<CoreEnvelope<SkillDeleteBackupPayload>, String> {
     respond(
         state
             .services()
             .skills()
-            .delete_skill_backup(name.or(id).unwrap_or_default()),
+            .delete_skill_backup(id.unwrap_or_default()),
     )
 }
