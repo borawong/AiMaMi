@@ -1,17 +1,20 @@
 /**
- * 中文职责说明：plugins 页面渲染插件列表、启停和配置查看，不直接拼 IPC。
+ * 中文职责说明：插件页面渲染插件列表、启停和结构化配置编辑，不直接拼进程通信。
  */
 import { useState } from "react";
-import { Puzzle, Settings2 } from "lucide-react";
+import { Puzzle, Save, Settings2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import type { IpcJsonValue } from "@/contracts/ipc";
 import {
   envelopeData,
   readArray,
@@ -30,6 +33,10 @@ import { usePluginsModule } from "../hooks";
 export function PluginsPage() {
   const { t } = useTranslation();
   const [configPluginId, setConfigPluginId] = useState<string | null>(null);
+  const [configDraft, setConfigDraft] = useState("");
+  const [configParseErrorKey, setConfigParseErrorKey] = useState<string | null>(
+    null,
+  );
   const module = usePluginsModule();
   const payload = envelopeData(module.pluginsQuery.data);
   const plugins = readArray(payload, ["items", "plugins", "data.items"]);
@@ -39,7 +46,46 @@ export function PluginsPage() {
 
   const openConfig = async (id: string) => {
     setConfigPluginId(id);
-    await module.loadConfigMutation.mutateAsync(id);
+    setConfigDraft("");
+    setConfigParseErrorKey(null);
+    module.updatePluginConfigMutation.reset();
+
+    try {
+      const response = await module.loadConfigMutation.mutateAsync(id);
+      setConfigDraft(formatJsonDraft(envelopeData(response)));
+    } catch {
+      setConfigDraft("null");
+    }
+  };
+
+  const closeConfig = () => {
+    setConfigPluginId(null);
+    setConfigDraft("");
+    setConfigParseErrorKey(null);
+    module.loadConfigMutation.reset();
+    module.updatePluginConfigMutation.reset();
+  };
+
+  const saveConfig = async () => {
+    if (!configPluginId) return;
+
+    let settings: IpcJsonValue;
+    try {
+      settings = JSON.parse(configDraft) as IpcJsonValue;
+    } catch {
+      setConfigParseErrorKey("plugins.configJsonInvalid");
+      return;
+    }
+
+    setConfigParseErrorKey(null);
+    try {
+      await module.updatePluginConfigMutation.mutateAsync({
+        id: configPluginId,
+        settings,
+      });
+    } catch {
+      // 变更状态负责用户可见失败文案。
+    }
   };
 
   return (
@@ -78,7 +124,11 @@ export function PluginsPage() {
               <div className="flex min-w-0 items-center justify-between gap-3">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium text-foreground">
-                    {readString(plugin, ["title", "name", "id"], t("plugins.unknown"))}
+                    {readString(
+                      plugin,
+                      ["title", "name", "id"],
+                      t("plugins.unknown"),
+                    )}
                   </p>
                   <p className="mt-1 truncate text-xs text-muted-foreground">
                     {readString(plugin, ["description", "summary", "path"], "")}
@@ -109,14 +159,82 @@ export function PluginsPage() {
         />
       </QueryPanel>
 
-      <Dialog open={configPluginId !== null} onOpenChange={(open) => !open && setConfigPluginId(null)}>
-        <DialogContent>
+      <Dialog
+        open={configPluginId !== null}
+        onOpenChange={(open) => !open && closeConfig()}
+      >
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>{t("plugins.config")}</DialogTitle>
           </DialogHeader>
-          <RecordSummary value={envelopeData(module.loadConfigMutation.data)} />
+          <div className="space-y-4">
+            <RecordSummary value={envelopeData(module.loadConfigMutation.data)} />
+            <div className="space-y-2">
+              <label
+                htmlFor="plugin-config-json"
+                className="text-xs font-medium text-muted-foreground"
+              >
+                {t("plugins.configJson")}
+              </label>
+              <Textarea
+                id="plugin-config-json"
+                value={configDraft}
+                onChange={(event) => {
+                  setConfigDraft(event.target.value);
+                  if (configParseErrorKey) setConfigParseErrorKey(null);
+                }}
+                className="min-h-[240px] font-mono text-xs leading-5"
+                disabled={
+                  module.loadConfigMutation.isPending ||
+                  module.updatePluginConfigMutation.isPending
+                }
+                spellCheck={false}
+              />
+              {configParseErrorKey ? (
+                <p className="text-xs text-destructive" role="alert">
+                  {t(configParseErrorKey)}
+                </p>
+              ) : null}
+              {module.loadConfigMutation.isError ? (
+                <p className="text-xs text-destructive" role="alert">
+                  {t("plugins.configLoadFailed")}
+                </p>
+              ) : null}
+              {module.updatePluginConfigMutation.isError ? (
+                <p className="text-xs text-destructive" role="alert">
+                  {t("plugins.configSaveFailed")}
+                </p>
+              ) : null}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={closeConfig}>
+              {t("plugins.closeConfig")}
+            </Button>
+            <Button
+              type="button"
+              disabled={
+                !configPluginId ||
+                module.loadConfigMutation.isPending ||
+                module.loadConfigMutation.isError ||
+                module.updatePluginConfigMutation.isPending
+              }
+              onClick={() => void saveConfig()}
+            >
+              <Save className="h-3.5 w-3.5" />
+              {t("plugins.saveConfig")}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
   );
+}
+
+function formatJsonDraft(value: unknown) {
+  try {
+    return JSON.stringify(value ?? null, null, 2);
+  } catch {
+    return "null";
+  }
 }

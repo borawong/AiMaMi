@@ -1,10 +1,30 @@
 /**
  * 中文职责说明：maintenance 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
  */
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { maintenanceService } from "@/services/maintenance";
 import { MaintenanceCache } from "../cache";
+
+let maintenanceCacheSequence = 0;
+
+function nextMaintenanceCacheSequence() {
+  maintenanceCacheSequence += 1;
+  return maintenanceCacheSequence;
+}
+
+async function writeMaintenanceMutationPayload<TPayload>(
+  queryClient: QueryClient,
+  payload: TPayload,
+) {
+  MaintenanceCache.writeAuthoritativePayload(queryClient, {
+    payload,
+    source: "mutation-payload",
+    sequence: nextMaintenanceCacheSequence(),
+    receivedAt: Date.now(),
+  });
+  await MaintenanceCache.invalidateContractQueries(queryClient);
+}
 
 export function useMaintenanceCacheController() {
   return useModuleCacheController(MaintenanceCache);
@@ -24,14 +44,17 @@ export function useMaintenanceActionMutations(options: {
 
   const diagnoseMutation = useMutation({
     mutationFn: () => maintenanceService.diagnose(),
-    onSuccess: options.onDiagnosed,
+    onSuccess: async (result) => {
+      await writeMaintenanceMutationPayload(queryClient, result);
+      options.onDiagnosed(result);
+    },
     onError: options.onDiagnoseError,
   });
 
   const cleanMutation = useMutation({
     mutationFn: () => maintenanceService.clean(),
-    onSuccess: (result) => {
-      queryClient.invalidateQueries();
+    onSuccess: async (result) => {
+      await writeMaintenanceMutationPayload(queryClient, result);
       options.onCleaned(result);
     },
     onError: options.onCleanError,
@@ -39,8 +62,8 @@ export function useMaintenanceActionMutations(options: {
 
   const rebuildMutation = useMutation({
     mutationFn: () => maintenanceService.rebuildRegistry(),
-    onSuccess: (result) => {
-      queryClient.invalidateQueries();
+    onSuccess: async (result) => {
+      await writeMaintenanceMutationPayload(queryClient, result);
       options.onRebuilt(result);
     },
     onError: options.onRebuildError,
@@ -48,7 +71,10 @@ export function useMaintenanceActionMutations(options: {
 
   const restartMutation = useMutation({
     mutationFn: () => maintenanceService.restartCodex(),
-    onSuccess: options.onRestarted,
+    onSuccess: async (result) => {
+      await writeMaintenanceMutationPayload(queryClient, result);
+      options.onRestarted();
+    },
     onError: options.onRestartError,
   });
 

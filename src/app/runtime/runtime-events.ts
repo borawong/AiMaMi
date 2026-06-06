@@ -1,12 +1,25 @@
 /**
- * 中文职责说明：定义 runtime 事件总线和事件到 TanStack query/cache 的集中映射，不持有 UI 状态。
+ * 中文职责说明：定义运行时事件总线和事件到查询缓存的集中映射，不持有界面状态。
  */
-import type { QueryClient } from "@tanstack/react-query";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import type { IpcJsonValue } from "@/contracts/ipc";
+import { AccountsCache } from "@/features/accounts/cache";
+import { AnalyticsCache } from "@/features/analytics/cache";
+import { CustomInstructionsCache } from "@/features/custom-instructions/cache";
+import { DaemonAutoswitchCache } from "@/features/daemon-autoswitch/cache";
+import { MaintenanceCache } from "@/features/maintenance/cache";
+import { McpCache } from "@/features/mcp/cache";
+import { OverviewCache } from "@/features/overview/cache";
+import { PluginsCache } from "@/features/plugins/cache";
+import { RelayCache } from "@/features/relay/cache";
+import { SessionsCache } from "@/features/sessions/cache";
+import { SettingsCache } from "@/features/settings/cache";
+import { SkillsCache } from "@/features/skills/cache";
+import { TrayShellCache } from "@/features/tray-shell/cache";
+import { VoiceCache } from "@/features/voice/cache";
 import type { Route } from "@/types/navigation";
 
-export type RuntimeQueryKeyPart = string | number | boolean | null;
-export type RuntimeQueryKey = readonly [string, ...RuntimeQueryKeyPart[]];
+export type RuntimeQueryKey = QueryKey;
 
 export type RuntimeEvent =
   | {
@@ -45,7 +58,7 @@ export interface RuntimeEventCursor {
 }
 
 export interface RuntimeEventQueryTarget {
-  evidence: "raw-query-hits";
+  evidence: "module-cache-owner";
   mode: "active-only" | "full";
   queryKey: RuntimeQueryKey;
 }
@@ -63,29 +76,27 @@ export const RUNTIME_EVENT_CACHE_KEYS = {
     ] as const,
 };
 
+// 运行时只消费模块缓存持有者提供的查询键，避免复刻模块私有裸键。
+const runtimeModuleQueryKeys = (
+  ...queryKeys: RuntimeQueryKey[]
+): readonly RuntimeQueryKey[] => queryKeys;
+
 export const RUNTIME_QUERY_KEYS_BY_MODULE = {
-  overview: [["usage-analytics"], ["mcp-servers"], ["installed-skills"]],
-  accounts: [["quota-history"]],
-  sessions: [["sessions"], ["usage-analytics"]],
-  analytics: [
-    ["usage-analytics"],
-    ["session-analytics"],
-    ["token-analytics"],
-    ["tool-analytics"],
-    ["change-analytics"],
-    ["quota-history"],
-  ],
-  "custom-instructions": [],
-  mcp: [["mcp-servers"]],
-  skills: [["installed-skills"], ["skill-backups"]],
-  plugins: [],
-  relay: [["relay-state"]],
-  settings: [["has-notch"], ["hotspot-enabled"]],
-  maintenance: [["imageCompat"]],
-  "daemon-autoswitch": [],
-  "tray-shell": [["desktop-message"]],
-  voice: [],
-} as const satisfies Record<Route, readonly RuntimeQueryKey[]>;
+  overview: runtimeModuleQueryKeys(OverviewCache.queryKeys.root),
+  accounts: runtimeModuleQueryKeys(AccountsCache.queryKeys.root),
+  sessions: runtimeModuleQueryKeys(SessionsCache.queryKeys.root),
+  analytics: runtimeModuleQueryKeys(AnalyticsCache.queryKeys.root),
+  "custom-instructions": runtimeModuleQueryKeys(CustomInstructionsCache.queryKeys.root),
+  mcp: runtimeModuleQueryKeys(McpCache.queryKeys.root),
+  skills: runtimeModuleQueryKeys(SkillsCache.queryKeys.root),
+  plugins: runtimeModuleQueryKeys(PluginsCache.queryKeys.root),
+  relay: runtimeModuleQueryKeys(RelayCache.queryKeys.root),
+  settings: runtimeModuleQueryKeys(SettingsCache.queryKeys.root),
+  maintenance: runtimeModuleQueryKeys(MaintenanceCache.queryKeys.root),
+  "daemon-autoswitch": runtimeModuleQueryKeys(DaemonAutoswitchCache.queryKeys.root),
+  "tray-shell": runtimeModuleQueryKeys(TrayShellCache.queryKeys.root),
+  voice: runtimeModuleQueryKeys(VoiceCache.queryKeys.root),
+} satisfies Record<Route, readonly RuntimeQueryKey[]>;
 
 const listeners = new Set<RuntimeEventListener>();
 
@@ -109,7 +120,7 @@ export function getRuntimeEventQueryTargets(
 
   const mode = event.type === "module:reload" ? event.mode : "full";
   return RUNTIME_QUERY_KEYS_BY_MODULE[event.moduleId].map((queryKey) => ({
-    evidence: "raw-query-hits",
+    evidence: "module-cache-owner",
     mode,
     queryKey,
   }));

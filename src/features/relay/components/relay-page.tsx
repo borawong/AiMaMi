@@ -1,5 +1,5 @@
 /**
- * 中文职责说明：relay 页面只消费 hook 暴露的查询和动作边界，不直接拼 IPC、事件或服务端 DTO。
+ * 中文职责说明：转发页面只消费钩子暴露的查询和动作边界，不直接拼进程通信、事件或服务端传输结构。
  */
 import { useState } from "react";
 import {
@@ -221,21 +221,21 @@ export function RelayPage() {
             }}
           />
           <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
-            {/* upsert 与 network 的真实表单字段未由本轮证据补齐，先只暴露禁用边界。 */}
+            {/* 新增或更新与网络测试的真实表单字段未由本轮证据补齐，先只暴露禁用边界。 */}
             <Button type="button" size="icon-sm" variant="outline" disabled aria-label="upsert_relay_provider">
               <Save className="h-3.5 w-3.5" />
             </Button>
             <Button type="button" size="icon-sm" variant="outline" disabled aria-label="set_relay_provider_network">
               <Network className="h-3.5 w-3.5" />
             </Button>
-            {/* draft test/fetch models 只有 input JSON 边界，未还原草稿 DTO 前不直发。 */}
+            {/* 草稿测试和模型拉取只有输入结构边界，未还原草稿传输结构前不直发。 */}
             <Button type="button" size="icon-sm" variant="outline" disabled aria-label="test_relay_draft">
               <FileInput className="h-3.5 w-3.5" />
             </Button>
             <Button type="button" size="icon-sm" variant="outline" disabled aria-label="fetch_relay_models_draft">
               <Download className="h-3.5 w-3.5" />
             </Button>
-            {/* import/export 证据指向文件对话，当前写入范围内不新增系统文件选择器。 */}
+            {/* 导入导出证据指向文件对话，当前写入范围内不新增系统文件选择器。 */}
             <Button type="button" size="icon-sm" variant="outline" disabled aria-label="export_relay_config">
               <Upload className="h-3.5 w-3.5" />
             </Button>
@@ -329,7 +329,7 @@ export function RelayPage() {
             >
               <ShieldCheck className="h-3.5 w-3.5" />
             </Button>
-            {/* fix_codex_router_issue 需要诊断项 itemId，未还原诊断列表前只保留 hook 边界。 */}
+            {/* 路由修复动作需要诊断项标识，未还原诊断列表前只保留钩子边界。 */}
           </div>
         </QueryPanel>
 

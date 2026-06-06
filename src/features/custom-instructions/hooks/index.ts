@@ -1,8 +1,7 @@
 /**
  * 中文职责说明：custom-instructions 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
  */
-import { useCallback } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import {
   mergeCustomInstructionTemplates,
@@ -13,6 +12,42 @@ import type {
   CustomInstructionStatePayload,
 } from "@/types";
 import { CustomInstructionsCache } from "../cache";
+
+const customInstructionStateQueryKey = ["custom-instructions", "current"] as const;
+const customInstructionTemplatesQueryKey = ["custom-instructions", "templates"] as const;
+let customInstructionsCacheSequence = 0;
+
+function nextCustomInstructionsCacheSequence() {
+  customInstructionsCacheSequence += 1;
+  return customInstructionsCacheSequence;
+}
+
+function writeCustomInstructionsCachePayload<TPayload>(
+  queryClient: QueryClient,
+  payload: TPayload,
+  source: "full-refresh" | "mutation-payload",
+  sequence: number,
+) {
+  CustomInstructionsCache.writeAuthoritativePayload(queryClient, {
+    payload,
+    source,
+    sequence,
+    receivedAt: Date.now(),
+  });
+}
+
+async function writeCustomInstructionsMutationPayload<TPayload>(
+  queryClient: QueryClient,
+  payload: TPayload,
+) {
+  writeCustomInstructionsCachePayload(
+    queryClient,
+    payload,
+    "mutation-payload",
+    nextCustomInstructionsCacheSequence(),
+  );
+  await CustomInstructionsCache.invalidateContractQueries(queryClient);
+}
 
 export interface CustomInstructionApplyInput {
   content: string;
@@ -26,13 +61,20 @@ export function useCustomInstructionsCacheController() {
 }
 
 export function useCustomInstructionQueries() {
+  const queryClient = useQueryClient();
+
   const stateQuery = useQuery({
-    queryKey: ["custom-instructions", "state"],
-    queryFn: () => customInstructionsService.loadState(),
+    queryKey: customInstructionStateQueryKey,
+    queryFn: async () => {
+      const sequence = nextCustomInstructionsCacheSequence();
+      const payload = await customInstructionsService.loadState();
+      writeCustomInstructionsCachePayload(queryClient, payload, "full-refresh", sequence);
+      return payload;
+    },
   });
 
   const templatesQuery = useQuery({
-    queryKey: ["custom-instructions", "templates"],
+    queryKey: customInstructionTemplatesQueryKey,
     queryFn: async () => mergeCustomInstructionTemplates([]),
   });
 
@@ -54,30 +96,19 @@ export function useCustomInstructionMutations(options: {
 }) {
   const queryClient = useQueryClient();
 
-  const syncStateCache = useCallback(
-    (payload: CustomInstructionStatePayload) => {
-      queryClient.setQueryData(["custom-instructions", "state"], {
-        schemaVersion: 1,
-        success: true,
-        code: "ok",
-        message: "",
-        warnings: [],
-        data: payload,
-      });
-    },
-    [queryClient],
-  );
-
   const previewMutation = useMutation({
     mutationFn: (content: string) => customInstructionsService.previewApply(content),
-    onSuccess: (response) => options.onPreviewed(response.data),
+    onSuccess: async (response) => {
+      await writeCustomInstructionsMutationPayload(queryClient, response);
+      options.onPreviewed(response.data);
+    },
     onError: options.onPreviewError,
   });
 
   const applyMutation = useMutation({
     mutationFn: (params: CustomInstructionApplyInput) => customInstructionsService.apply(params),
-    onSuccess: (response) => {
-      syncStateCache(response.data);
+    onSuccess: async (response) => {
+      await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onApplied(response.data);
     },
     onError: options.onApplyError,
@@ -85,8 +116,8 @@ export function useCustomInstructionMutations(options: {
 
   const clearMutation = useMutation({
     mutationFn: () => customInstructionsService.clearBlock(),
-    onSuccess: (response) => {
-      syncStateCache(response.data);
+    onSuccess: async (response) => {
+      await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onCleared(response.data);
     },
     onError: options.onClearError,
@@ -94,8 +125,8 @@ export function useCustomInstructionMutations(options: {
 
   const rollbackMutation = useMutation({
     mutationFn: (historyId: string) => customInstructionsService.rollback(historyId),
-    onSuccess: (response) => {
-      syncStateCache(response.data);
+    onSuccess: async (response) => {
+      await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onRolledBack(response.data);
     },
     onError: options.onRollbackError,

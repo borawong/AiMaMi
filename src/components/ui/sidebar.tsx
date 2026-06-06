@@ -2,6 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeft } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -74,8 +75,8 @@ const SidebarProvider = React.forwardRef<
     const isMobile = useIsMobile()
     const [openMobile, setOpenMobile] = React.useState(false)
 
-    // 这是 sidebar 的内部状态。
-    // openProp 与 setOpenProp 用于从组件外部控制。
+    // 这是侧边栏的内部状态。
+    // 外部属性和回调用于从组件外部控制。
     const [_open, _setOpen] = React.useState(defaultOpen)
     const open = openProp ?? _open
     const setOpen = React.useCallback(
@@ -87,20 +88,20 @@ const SidebarProvider = React.forwardRef<
           _setOpen(openState)
         }
 
-        // 写入 cookie 以保留 sidebar 状态。
+        // 写入持久化标记以保留侧边栏状态。
         document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
       },
       [setOpenProp, open]
     )
 
-    // 切换 sidebar 的辅助函数。
+    // 切换侧边栏的辅助函数。
     const toggleSidebar = React.useCallback(() => {
       return isMobile
         ? setOpenMobile((open) => !open)
         : setOpen((open) => !open)
     }, [isMobile, setOpen, setOpenMobile])
 
-    // 添加用于切换 sidebar 的键盘快捷键。
+    // 添加用于切换侧边栏的键盘快捷键。
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
         if (
@@ -116,8 +117,8 @@ const SidebarProvider = React.forwardRef<
       return () => window.removeEventListener("keydown", handleKeyDown)
     }, [toggleSidebar])
 
-    // 添加 state，便于输出 data-state="expanded" 或 "collapsed"。
-    // 这样可以更方便地用 Tailwind 类设置 sidebar 样式。
+    // 派生展开状态，便于输出对应的数据属性。
+    // 这样可以更方便地用原子类设置侧边栏样式。
     const state = open ? "expanded" : "collapsed"
 
     const contextValue = React.useMemo<SidebarContextProps>(
@@ -180,6 +181,7 @@ const Sidebar = React.forwardRef<
     ref
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+    const { t } = useTranslation()
 
     if (collapsible === "none") {
       return (
@@ -211,8 +213,8 @@ const Sidebar = React.forwardRef<
             side={side}
           >
             <SheetHeader className="sr-only">
-              <SheetTitle>Sidebar</SheetTitle>
-              <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+              <SheetTitle>{t("ui.sidebar.title")}</SheetTitle>
+              <SheetDescription>{t("ui.sidebar.mobileDescription")}</SheetDescription>
             </SheetHeader>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
@@ -229,7 +231,7 @@ const Sidebar = React.forwardRef<
         data-variant={variant}
         data-side={side}
       >
-        {/* 负责桌面端 sidebar 占位间距 */}
+        {/* 负责桌面端侧边栏占位间距 */}
         <div
           className={cn(
             "relative w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear",
@@ -246,7 +248,7 @@ const Sidebar = React.forwardRef<
             side === "left"
               ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
               : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
-            // 调整 floating 与 inset 变体的 padding。
+            // 调整浮动与内嵌变体的内边距。
             variant === "floating" || variant === "inset"
               ? "p-2 group-data-[collapsible=icon]:w-[var(--sidebar-width-icon)] group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-2"
               : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
@@ -272,6 +274,7 @@ const SidebarTrigger = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
   const { toggleSidebar } = useSidebar()
+  const { t } = useTranslation()
 
   return (
     <Button
@@ -287,7 +290,7 @@ const SidebarTrigger = React.forwardRef<
       {...props}
     >
       <PanelLeft />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">{t("ui.sidebar.toggle")}</span>
     </Button>
   )
 })
@@ -296,17 +299,19 @@ SidebarTrigger.displayName = "SidebarTrigger"
 const SidebarRail = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<"button">
->(({ className, ...props }, ref) => {
+>(({ className, title, "aria-label": ariaLabel, ...props }, ref) => {
   const { toggleSidebar } = useSidebar()
+  const { t } = useTranslation()
+  const toggleLabel = t("ui.sidebar.toggle")
 
   return (
     <button
       ref={ref}
       data-sidebar="rail"
-      aria-label="Toggle Sidebar"
+      aria-label={ariaLabel ?? toggleLabel}
       tabIndex={-1}
       onClick={toggleSidebar}
-      title="Toggle Sidebar"
+      title={title ?? toggleLabel}
       className={cn(
         "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] hover:after:bg-sidebar-border group-data-[side=left]:-right-4 group-data-[side=right]:left-0 sm:flex",
         "[[data-side=left]_&]:cursor-w-resize [[data-side=right]_&]:cursor-e-resize",

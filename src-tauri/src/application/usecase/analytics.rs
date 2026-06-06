@@ -1,6 +1,9 @@
 use crate::contracts::{AnalyticsPayload, BackendSkeletonStatus, CoreEnvelope};
+use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::repository::RepositoryBundle;
+
+const MODULE: &str = "analytics";
 
 /// 中文职责说明：分析读取事务 owner，聚合算法后续只能在本边界内补齐。
 pub(crate) struct AnalyticsUseCase<'a> {
@@ -13,10 +16,10 @@ impl<'a> AnalyticsUseCase<'a> {
     }
 
     pub(crate) fn load_usage(&self) -> Result<CoreEnvelope<AnalyticsPayload>, CoreError> {
-        let _source_path = self.repositories.analytics().source_path();
-        Ok(CoreEnvelope::pending(
-            self.payload("load_usage_analytics", None, None),
-            "load_usage_analytics",
+        let plan = self.pending_plan("load_usage_analytics");
+        Ok(CoreEnvelope::from_backend_plan(
+            self.payload(&plan, None, None),
+            &plan,
         ))
     }
 
@@ -24,9 +27,10 @@ impl<'a> AnalyticsUseCase<'a> {
         &self,
         account_key: Option<String>,
     ) -> Result<CoreEnvelope<AnalyticsPayload>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            self.payload("load_quota_history", account_key, None),
-            "load_quota_history",
+        let plan = self.no_op_plan("load_quota_history");
+        Ok(CoreEnvelope::from_backend_plan(
+            self.payload(&plan, clean_optional_text(account_key), None),
+            &plan,
         ))
     }
 
@@ -35,23 +39,48 @@ impl<'a> AnalyticsUseCase<'a> {
         command: &'static str,
         range: Option<String>,
     ) -> Result<CoreEnvelope<AnalyticsPayload>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            self.payload(command, None, Some(range.unwrap_or_else(|| "today".into()))),
-            command,
+        let plan = self.no_op_plan(command);
+        let range = clean_optional_text(range).unwrap_or_else(|| "today".into());
+        Ok(CoreEnvelope::from_backend_plan(
+            self.payload(&plan, None, Some(range)),
+            &plan,
         ))
     }
 
     fn payload(
         &self,
-        command: &'static str,
+        plan: &BackendOperationPlan,
         account_key: Option<String>,
         range: Option<String>,
     ) -> AnalyticsPayload {
         AnalyticsPayload {
-            status: BackendSkeletonStatus::for_command("analytics", command),
+            status: BackendSkeletonStatus::from_plan(plan),
             account_key,
             range,
             ..Default::default()
         }
     }
+
+    fn pending_plan(&self, command: &'static str) -> BackendOperationPlan {
+        BackendOperationPlan::pending(MODULE, command, self.repository_boundary())
+    }
+
+    fn no_op_plan(&self, command: &'static str) -> BackendOperationPlan {
+        BackendOperationPlan::no_op(MODULE, command, self.repository_boundary())
+    }
+
+    fn repository_boundary(&self) -> BackendBoundaryProbe {
+        BackendBoundaryProbe::from_repository_source(self.repositories.analytics().source_path())
+    }
+}
+
+fn clean_optional_text(value: Option<String>) -> Option<String> {
+    value.and_then(|value| {
+        let value = value.trim().to_owned();
+        if value.is_empty() {
+            None
+        } else {
+            Some(value)
+        }
+    })
 }

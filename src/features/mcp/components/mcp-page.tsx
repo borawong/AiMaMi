@@ -68,7 +68,7 @@ export function McpPage() {
   const PAGE_SIZE = 15;
 
   const refreshAction = useBusyAction({ minVisibleMs: 800 });
-  const { data, refetch } = useMcpServers();
+  const { data, refresh } = useMcpServers();
   const { toggleMutation, removeMutation } = useMcpServerMutations({
     onRemoved: () => setRemoving(null),
   });
@@ -77,7 +77,7 @@ export function McpPage() {
 
   const handleRefresh = async () => {
     await refreshAction.run(async () => {
-      await refetch();
+      await refresh();
     });
   };
 
@@ -107,7 +107,7 @@ export function McpPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
+      {/* 页面头部 */}
       <div className="flex items-center justify-between">
         <p className="max-w-md text-sm text-muted-foreground">{t("mcp.description")}</p>
         <div className="flex items-center gap-2">
@@ -131,7 +131,7 @@ export function McpPage() {
         </div>
       </div>
 
-      {/* Stats row */}
+      {/* 统计行 */}
       <div className="grid grid-cols-3 gap-4">
         <BentoCard compact>
           <span className="text-xs text-muted-foreground">{t("mcp.serverCount")}</span>
@@ -161,7 +161,7 @@ export function McpPage() {
         </BentoCard>
       </div>
 
-      {/* Server list */}
+      {/* 服务列表 */}
       {servers.length === 0 ? (
         <BentoCard>
           <div className="flex h-48 flex-col items-center justify-center">
@@ -257,7 +257,7 @@ export function McpPage() {
         </>
       )}
 
-      {/* Remove confirm dialog */}
+      {/* 删除确认弹窗 */}
       <AlertDialog open={removing !== null} onOpenChange={(v) => !v && setRemoving(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>

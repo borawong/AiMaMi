@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { IpcJsonValue } from "@/contracts/ipc";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { runtimeExtensionsService } from "@/services/runtime-extensions";
 import { PluginsCache } from "../cache";
@@ -47,6 +48,20 @@ export function usePluginsModule() {
     mutationFn: (id: string) => runtimeExtensionsService.getPluginConfig(id),
   });
 
+  const updatePluginConfigMutation = useMutation({
+    mutationFn: ({ id, settings }: { id: string; settings: IpcJsonValue }) =>
+      runtimeExtensionsService.updatePluginConfig(id, settings),
+    onSuccess: (payload) => {
+      PluginsCache.writeAuthoritativePayload(queryClient, {
+        payload,
+        source: "mutation-payload",
+        sequence: Date.now(),
+        receivedAt: Date.now(),
+      });
+      void PluginsCache.invalidateContractQueries(queryClient);
+    },
+  });
+
   return {
     pluginsQuery,
     refreshAction: {
@@ -57,5 +72,6 @@ export function usePluginsModule() {
     },
     togglePluginMutation,
     loadConfigMutation,
+    updatePluginConfigMutation,
   };
 }

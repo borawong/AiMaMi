@@ -18,14 +18,14 @@ const TooltipContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        // 垂直 padding 不对称（pt 5 / pb 7）用于补偿字体 metrics 在 leading-none 时的视觉偏移：
-        // PingFang SC / SF Pro 在 11px + line-height:1 下，字符 ink 在 line-box 内**偏下**，
+        // 垂直内边距不对称（上 5 / 下 7）用于补偿字体度量在无额外行距时的视觉偏移：
+        // 系统中文字体在 11px、行高为 1 时，字形在行框内**偏下**，
         // 上下严格 6/6 时视觉上字会偏下、上方留白显得大；改成 5/7 把字"挤"向上 1px 视觉居中。
-        // 总高度不变（23px），只是上下 padding 的分配变了。
+        // 总高度不变（23px），只是上下内边距的分配变了。
         //
-        // z-index：tooltip 通过 Portal 挂到 body，必须高于 DialogContent 的栈（DIALOG_STACK_Z=200，
-        // 见 dialog.tsx），否则 dialog 内 hover 出来的 tooltip 会被 dialog 浮层完全压住看不见。
-        // 取 z-[300] 作为「顶层悬浮提示」常驻层，仍低于原生 toast / 系统级 overlay。
+        // 层级：悬浮提示通过传送门挂到页面根节点，必须高于弹窗内容的栈（当前为 200），
+        // 否则弹窗内悬停出来的提示会被弹窗浮层完全压住看不见。
+        // 取 300 作为「顶层悬浮提示」常驻层，仍低于原生即时反馈和系统级覆层。
         "relative z-[300] max-w-sm overflow-visible rounded-[6px] px-2 pt-[5px] pb-[7px] text-[11px] font-medium leading-none",
         "box-border text-center",
         "bg-[hsl(var(--tooltip))] text-[hsl(var(--tooltip-foreground))]",

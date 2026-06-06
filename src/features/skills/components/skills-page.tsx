@@ -61,7 +61,7 @@ export function SkillsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
+      {/* 页面头部 */}
       <div className="flex items-center justify-between">
         <p className="max-w-md text-sm text-muted-foreground">{t("skills.description")}</p>
         <div className="flex items-center gap-2">
@@ -80,7 +80,7 @@ export function SkillsPage() {
         </div>
       </div>
 
-      {/* Stats row */}
+      {/* 统计行 */}
       <div className="grid grid-cols-4 gap-4">
         <BentoCard compact>
           <span className="text-xs text-muted-foreground">{t("skills.skillCount")}</span>
@@ -114,7 +114,7 @@ export function SkillsPage() {
         </BentoCard>
       </div>
 
-      {/* List content */}
+      {/* 列表内容 */}
       {tab === "installed" ? (
         skills.length === 0 ? (
           <BentoCard>
@@ -193,7 +193,7 @@ export function SkillsPage() {
         </BentoCard>
       )}
 
-      {/* Remove skill confirm dialog */}
+      {/* 移除技能确认弹窗 */}
       <AlertDialog open={removing !== null} onOpenChange={(v) => !v && setRemoving(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -212,7 +212,7 @@ export function SkillsPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Delete backup confirm dialog */}
+      {/* 删除备份确认弹窗 */}
       <AlertDialog open={deletingBackup !== null} onOpenChange={(v) => !v && setDeletingBackup(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { formatMonthShort, formatHeatmapDate, formatDuration } from "@/lib/format-time";
 import { useTranslation } from "react-i18next";
-import { ChartTooltip } from "@/components/ui/chart-tooltip";
+import { ChartTooltip } from "./chart-tooltip";
 
 export interface HeatmapDay {
   date: string;
@@ -122,17 +122,17 @@ export function Heatmap({ data, colorVar = "var(--heatmap-color, #3FE6A1)" }: He
         <ChartTooltip x={tooltip.x} y={tooltip.y}>
           <div className="font-semibold text-foreground">{formatHeatmapDate(tooltip.day.date)}</div>
           <div className="text-muted-foreground">
-            {tooltip.day.count} {t("analytics.tabSessions", { defaultValue: "sessions" })}
+            {tooltip.day.count} {t("analytics.heatmap.sessions")}
           </div>
           {tooltip.day.activeMinutes != null && tooltip.day.activeMinutes > 0 && (
             <div className="text-muted-foreground">
-              {t("analytics.todayActive", { defaultValue: "Active" })}{" "}
+              {t("analytics.heatmap.active")}{" "}
               {formatDuration(tooltip.day.activeMinutes)}
             </div>
           )}
           {tooltip.day.tokens != null && tooltip.day.tokens > 0 && (
             <div className="text-muted-foreground">
-              Token {tooltip.day.tokens >= 1_000_000 ? `${(tooltip.day.tokens / 1_000_000).toFixed(1)}M` : tooltip.day.tokens >= 1_000 ? `${(tooltip.day.tokens / 1_000).toFixed(1)}K` : tooltip.day.tokens}
+              {t("analytics.heatmap.tokens")} {formatHeatmapTokenCount(tooltip.day.tokens)}
             </div>
           )}
         </ChartTooltip>
@@ -147,10 +147,18 @@ function levelColor(level: number, base: string): string {
   return `color-mix(in srgb, ${base} ${Math.round(opacity * 100)}%, transparent)`;
 }
 
+function formatHeatmapTokenCount(tokens: number): string {
+  if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(1)}M`;
+  if (tokens >= 1_000) return `${(tokens / 1_000).toFixed(1)}K`;
+  return String(tokens);
+}
+
 export function HeatmapLegend({ colorVar = "var(--heatmap-color, #3FE6A1)" }: { colorVar?: string }) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-      <span>Less</span>
+      <span>{t("analytics.heatmap.less")}</span>
       {[0, 1, 2, 3, 4].map((l) => (
         <span
           key={l}
@@ -158,7 +166,7 @@ export function HeatmapLegend({ colorVar = "var(--heatmap-color, #3FE6A1)" }: { 
           style={{ backgroundColor: levelColor(l, colorVar) }}
         />
       ))}
-      <span>More</span>
+      <span>{t("analytics.heatmap.more")}</span>
     </div>
   );
 }

@@ -301,6 +301,24 @@
     "retry": "重试",
     "rootErrorDescription": "应用根组件渲染失败，请重试或重新打开窗口。"
   },
+  "ui": {
+    "pagination": {
+      "navigation": "分页",
+      "previousPage": "转到上一页",
+      "previous": "上一页",
+      "nextPage": "转到下一页",
+      "next": "下一页",
+      "morePages": "更多页面"
+    },
+    "sidebar": {
+      "title": "侧栏",
+      "mobileDescription": "显示移动端侧栏。",
+      "toggle": "切换侧栏"
+    },
+    "breadcrumb": {
+      "more": "更多层级"
+    }
+  },
   "update": {
     "title": "发现新版本",
     "checkTitle": "检查更新",
@@ -400,6 +418,13 @@
       "week": "本周",
       "month": "本月"
     },
+    "heatmap": {
+      "sessions": "会话",
+      "active": "活跃",
+      "tokens": "Token",
+      "less": "少",
+      "more": "多"
+    },
     "todaySessions": "今日会话",
     "activeDays": "活跃天数",
     "totalTokens": "Token 总量",
@@ -442,7 +467,13 @@
     "disabledCount": "已禁用",
     "empty": "当前证据 payload 中没有插件",
     "unknown": "未知插件",
-    "config": "插件配置"
+    "config": "插件配置",
+    "configJson": "配置 JSON",
+    "configJsonInvalid": "配置必须是有效 JSON。",
+    "configLoadFailed": "插件配置加载失败。",
+    "configSaveFailed": "插件配置保存失败。",
+    "closeConfig": "关闭",
+    "saveConfig": "保存配置"
   },
   "daemonAutoswitch": {
     "description": "基于 bootstrap、pending auto-switch 和 daemon runner IPC 契约恢复后台自动切换模块入口。",
@@ -475,6 +506,59 @@
     "unknownTemplate": "未知模板",
     "captureState": "捕获状态",
     "shortcut": "全局快捷键",
-    "processingMode": "处理模式"
+    "processingMode": "处理模式",
+    "requestAccessibilityPermission": "请求辅助功能权限",
+    "vocabulary": "语音词汇",
+    "history": "语音历史",
+    "config": "语音配置",
+    "injectOverlay": "注入与浮层",
+    "emptyVocabulary": "当前证据 payload 中没有语音词汇",
+    "emptyHistory": "当前证据 payload 中没有语音历史",
+    "unknownVocabulary": "未知词汇",
+    "unknownHistory": "未知历史",
+    "upsertTemplateBoundary": "模板写入边界",
+    "upsertVocabularyBoundary": "词汇写入边界",
+    "replaceVocabularyBoundary": "词汇替换边界",
+    "vocabularyAppBoundary": "应用词汇边界",
+    "generatePromptBoundary": "生成提示边界",
+    "triggerStyle": "触发方式",
+    "triggerKey": "触发键",
+    "processingModeId": "处理模式 ID",
+    "startCapture": "开始捕获",
+    "stopCapture": "停止捕获",
+    "captureHoldTrigger": "捕获按住触发键",
+    "captureToggleTrigger": "捕获切换触发键",
+    "cancelTriggerCapture": "取消触发键捕获",
+    "allowTriggerListener": "恢复触发监听",
+    "suppressTriggerListener": "暂停触发监听",
+    "shortcutDraft": "快捷键草稿",
+    "shortcutPlaceholder": "输入快捷键字符串",
+    "setShortcut": "保存快捷键",
+    "enableRuntime": "启用运行时",
+    "disableRuntime": "停用运行时",
+    "setTriggerKeyBoundary": "触发键写入边界",
+    "setTriggerBindingsBoundary": "触发绑定边界",
+    "setProcessingModeBoundary": "处理模式边界",
+    "modeShortcutBoundary": "模式快捷键边界",
+    "injectDraft": "待注入文本",
+    "injectPlaceholder": "输入要注入到前台目标的文本",
+    "capturedApp": "捕获目标应用",
+    "capturedBundle": "捕获目标 Bundle",
+    "injectText": "注入文本",
+    "overlayQuery": "浮层查询",
+    "overlayQueryPlaceholder": "输入浮层查询",
+    "overlayOutput": "浮层输出",
+    "overlayOutputPlaceholder": "输入浮层输出",
+    "showOverlay": "显示搜索浮层",
+    "speechModel": "语音模型",
+    "activeAsrProvider": "当前 ASR Provider",
+    "activeAsrModel": "当前 ASR 模型",
+    "llmProvider": "LLM Provider",
+    "asrProvider": "ASR Provider",
+    "providerPlaceholder": "输入 provider",
+    "loadLlmConfig": "加载 LLM 配置",
+    "loadAsrConfig": "加载 ASR 配置",
+    "saveLlmConfigBoundary": "保存 LLM 配置边界",
+    "saveAsrConfigBoundary": "保存 ASR 配置边界"
   }
 }

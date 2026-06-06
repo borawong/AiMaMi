@@ -282,6 +282,7 @@ export interface McpServerSummary {
 }
 
 export interface McpServerListPayload {
+  status: BackendSkeletonStatus;
   items: McpServerSummary[];
   total: number;
   sourcePath: string;
@@ -289,12 +290,14 @@ export interface McpServerListPayload {
 }
 
 export interface McpServerMutationPayload {
+  status: BackendSkeletonStatus;
   server: McpServerSummary;
   total: number;
   sourcePath: string;
 }
 
 export interface McpServerRemovePayload {
+  status: BackendSkeletonStatus;
   removedName: string;
   total: number;
   sourcePath: string;

@@ -1,3 +1,4 @@
+use crate::contracts::BackendSkeletonStatus;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -28,6 +29,7 @@ pub(crate) struct McpServerSummary {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct McpServerListPayload {
+    pub status: BackendSkeletonStatus,
     pub items: Vec<McpServerSummary>,
     pub total: i32,
     pub source_path: String,
@@ -37,6 +39,7 @@ pub(crate) struct McpServerListPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct McpServerMutationPayload {
+    pub status: BackendSkeletonStatus,
     pub server: McpServerSummary,
     pub total: i32,
     pub source_path: String,
@@ -45,6 +48,7 @@ pub(crate) struct McpServerMutationPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct McpServerRemovePayload {
+    pub status: BackendSkeletonStatus,
     pub removed_name: String,
     pub total: i32,
     pub source_path: String,

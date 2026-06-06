@@ -301,6 +301,24 @@
     "retry": "Retry",
     "rootErrorDescription": "The application root failed to render. Retry or reopen the window."
   },
+  "ui": {
+    "pagination": {
+      "navigation": "Pagination",
+      "previousPage": "Go to previous page",
+      "previous": "Previous",
+      "nextPage": "Go to next page",
+      "next": "Next",
+      "morePages": "More pages"
+    },
+    "sidebar": {
+      "title": "Sidebar",
+      "mobileDescription": "Displays the mobile sidebar.",
+      "toggle": "Toggle Sidebar"
+    },
+    "breadcrumb": {
+      "more": "More levels"
+    }
+  },
   "update": {
     "title": "Update Available",
     "checkTitle": "Check for Updates",
@@ -400,6 +418,13 @@
       "week": "Week",
       "month": "Month"
     },
+    "heatmap": {
+      "sessions": "sessions",
+      "active": "Active",
+      "tokens": "Token",
+      "less": "Less",
+      "more": "More"
+    },
     "todaySessions": "Today sessions",
     "activeDays": "Active days",
     "totalTokens": "Total tokens",
@@ -442,7 +467,13 @@
     "disabledCount": "Disabled",
     "empty": "No plugins were found in the current evidence payload",
     "unknown": "Unknown plugin",
-    "config": "Plugin config"
+    "config": "Plugin config",
+    "configJson": "Config JSON",
+    "configJsonInvalid": "Config must be valid JSON.",
+    "configLoadFailed": "Failed to load plugin config.",
+    "configSaveFailed": "Failed to save plugin config.",
+    "closeConfig": "Close",
+    "saveConfig": "Save config"
   },
   "daemonAutoswitch": {
     "description": "Restores the daemon autoswitch module entry from bootstrap, pending auto-switch, and daemon runner IPC contracts.",
@@ -475,6 +506,59 @@
     "unknownTemplate": "Unknown template",
     "captureState": "Capture state",
     "shortcut": "Global shortcut",
-    "processingMode": "Processing mode"
+    "processingMode": "Processing mode",
+    "requestAccessibilityPermission": "Request Accessibility Permission",
+    "vocabulary": "Voice Vocabulary",
+    "history": "Voice History",
+    "config": "Voice Config",
+    "injectOverlay": "Inject and Overlay",
+    "emptyVocabulary": "No voice vocabulary was found in the current evidence payload",
+    "emptyHistory": "No voice history was found in the current evidence payload",
+    "unknownVocabulary": "Unknown vocabulary",
+    "unknownHistory": "Unknown history",
+    "upsertTemplateBoundary": "Template write boundary",
+    "upsertVocabularyBoundary": "Vocabulary write boundary",
+    "replaceVocabularyBoundary": "Vocabulary replace boundary",
+    "vocabularyAppBoundary": "App vocabulary boundary",
+    "generatePromptBoundary": "Generate prompt boundary",
+    "triggerStyle": "Trigger style",
+    "triggerKey": "Trigger key",
+    "processingModeId": "Processing mode ID",
+    "startCapture": "Start capture",
+    "stopCapture": "Stop capture",
+    "captureHoldTrigger": "Capture hold trigger key",
+    "captureToggleTrigger": "Capture toggle trigger key",
+    "cancelTriggerCapture": "Cancel trigger capture",
+    "allowTriggerListener": "Resume trigger listener",
+    "suppressTriggerListener": "Pause trigger listener",
+    "shortcutDraft": "Shortcut draft",
+    "shortcutPlaceholder": "Enter shortcut string",
+    "setShortcut": "Save shortcut",
+    "enableRuntime": "Enable runtime",
+    "disableRuntime": "Disable runtime",
+    "setTriggerKeyBoundary": "Trigger key write boundary",
+    "setTriggerBindingsBoundary": "Trigger bindings boundary",
+    "setProcessingModeBoundary": "Processing mode boundary",
+    "modeShortcutBoundary": "Mode shortcut boundary",
+    "injectDraft": "Text to inject",
+    "injectPlaceholder": "Enter text to inject into the foreground target",
+    "capturedApp": "Captured target app",
+    "capturedBundle": "Captured target bundle",
+    "injectText": "Inject text",
+    "overlayQuery": "Overlay query",
+    "overlayQueryPlaceholder": "Enter overlay query",
+    "overlayOutput": "Overlay output",
+    "overlayOutputPlaceholder": "Enter overlay output",
+    "showOverlay": "Show search overlay",
+    "speechModel": "Speech model",
+    "activeAsrProvider": "Active ASR Provider",
+    "activeAsrModel": "Active ASR model",
+    "llmProvider": "LLM Provider",
+    "asrProvider": "ASR Provider",
+    "providerPlaceholder": "Enter provider",
+    "loadLlmConfig": "Load LLM config",
+    "loadAsrConfig": "Load ASR config",
+    "saveLlmConfigBoundary": "Save LLM config boundary",
+    "saveAsrConfigBoundary": "Save ASR config boundary"
   }
 }

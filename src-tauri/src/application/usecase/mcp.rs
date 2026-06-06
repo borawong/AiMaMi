@@ -1,12 +1,15 @@
 use crate::contracts::{
-    CoreEnvelope, McpServerListPayload, McpServerMutationPayload, McpServerRemovePayload,
-    McpServerSummary, McpTransport,
+    BackendSkeletonStatus, CoreEnvelope, McpServerListPayload, McpServerMutationPayload,
+    McpServerRemovePayload, McpServerSummary, McpTransport,
 };
+use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::core::parser;
 use crate::repository::RepositoryBundle;
 use serde_json::Value;
 use std::collections::HashMap;
+
+const MODULE: &str = "mcp";
 
 /// 中文职责说明：MCP upsert 输入 DTO，由 command 反序列化后交给 MCP 事务 owner 解释。
 #[derive(Debug, Clone, Default)]
@@ -33,29 +36,23 @@ impl<'a> McpUseCase<'a> {
     }
 
     pub(crate) fn load_servers(&self) -> Result<CoreEnvelope<McpServerListPayload>, CoreError> {
-        Ok(CoreEnvelope::pending(
-            McpServerListPayload {
-                source_path: self.repositories.config().source_path(),
-                ..McpServerListPayload::default()
-            },
-            "mcp_servers",
+        let plan = self.pending_plan("mcp_servers");
+        Ok(CoreEnvelope::from_backend_plan(
+            self.list_payload(&plan),
+            &plan,
         ))
     }
 
     pub(crate) fn upsert_server(
         &self,
-        input: McpUpsertInput,
+        mut input: McpUpsertInput,
     ) -> Result<CoreEnvelope<McpServerMutationPayload>, CoreError> {
-        if input.name.trim().is_empty() {
-            return Err(CoreError::domain("empty_mcp_name", "MCP 名称不能为空。"));
-        }
-        Ok(CoreEnvelope::no_op(
-            McpServerMutationPayload {
-                server: server_from_input(input),
-                total: 0,
-                source_path: self.repositories.config().source_path(),
-            },
-            "upsert_mcp_server",
+        input.name = required_text(input.name, "empty_mcp_name", "MCP 名称不能为空。")?;
+        reject_null_config(input.config.as_ref())?;
+        let plan = self.no_op_plan("upsert_mcp_server");
+        Ok(CoreEnvelope::from_backend_plan(
+            self.mutation_payload(&plan, server_from_input(input)),
+            &plan,
         ))
     }
 
@@ -64,20 +61,19 @@ impl<'a> McpUseCase<'a> {
         name: String,
         enabled: bool,
     ) -> Result<CoreEnvelope<McpServerMutationPayload>, CoreError> {
-        if name.trim().is_empty() {
-            return Err(CoreError::domain("empty_mcp_name", "MCP 名称不能为空。"));
-        }
-        Ok(CoreEnvelope::no_op(
-            McpServerMutationPayload {
-                server: McpServerSummary {
+        let name = required_text(name, "empty_mcp_name", "MCP 名称不能为空。")?;
+        let plan = self.no_op_plan("set_mcp_server_enabled");
+        Ok(CoreEnvelope::from_backend_plan(
+            self.mutation_payload(
+                &plan,
+                McpServerSummary {
                     name,
                     enabled,
+                    source_path: self.repositories.config().source_path(),
                     ..McpServerSummary::default()
                 },
-                total: 0,
-                source_path: self.repositories.config().source_path(),
-            },
-            "set_mcp_server_enabled",
+            ),
+            &plan,
         ))
     }
 
@@ -85,17 +81,83 @@ impl<'a> McpUseCase<'a> {
         &self,
         name: String,
     ) -> Result<CoreEnvelope<McpServerRemovePayload>, CoreError> {
-        if name.trim().is_empty() {
-            return Err(CoreError::domain("empty_mcp_name", "MCP 名称不能为空。"));
-        }
-        Ok(CoreEnvelope::no_op(
-            McpServerRemovePayload {
-                removed_name: name,
-                total: 0,
-                source_path: self.repositories.config().source_path(),
-            },
-            "remove_mcp_server",
+        let name = required_text(name, "empty_mcp_name", "MCP 名称不能为空。")?;
+        let plan = self.no_op_plan("remove_mcp_server");
+        Ok(CoreEnvelope::from_backend_plan(
+            self.remove_payload(&plan, name),
+            &plan,
         ))
+    }
+
+    fn pending_plan(&self, command: &'static str) -> BackendOperationPlan {
+        BackendOperationPlan::pending(MODULE, command, self.repository_boundary())
+    }
+
+    fn no_op_plan(&self, command: &'static str) -> BackendOperationPlan {
+        BackendOperationPlan::no_op(MODULE, command, self.repository_boundary())
+    }
+
+    fn repository_boundary(&self) -> BackendBoundaryProbe {
+        BackendBoundaryProbe::from_repository_source(self.repositories.config().source_path())
+    }
+
+    fn list_payload(&self, plan: &BackendOperationPlan) -> McpServerListPayload {
+        McpServerListPayload {
+            status: BackendSkeletonStatus::from_plan(plan),
+            source_path: self.repositories.config().source_path(),
+            ..McpServerListPayload::default()
+        }
+    }
+
+    fn mutation_payload(
+        &self,
+        plan: &BackendOperationPlan,
+        mut server: McpServerSummary,
+    ) -> McpServerMutationPayload {
+        let source_path = self.repositories.config().source_path();
+        if server.source_path.trim().is_empty() {
+            server.source_path = source_path.clone();
+        }
+        McpServerMutationPayload {
+            status: BackendSkeletonStatus::from_plan(plan),
+            server,
+            total: 0,
+            source_path,
+        }
+    }
+
+    fn remove_payload(
+        &self,
+        plan: &BackendOperationPlan,
+        removed_name: String,
+    ) -> McpServerRemovePayload {
+        McpServerRemovePayload {
+            status: BackendSkeletonStatus::from_plan(plan),
+            removed_name,
+            total: 0,
+            source_path: self.repositories.config().source_path(),
+        }
+    }
+}
+
+fn required_text(
+    value: String,
+    code: &'static str,
+    public_message: &'static str,
+) -> Result<String, CoreError> {
+    let value = value.trim().to_owned();
+    if value.is_empty() {
+        Err(CoreError::domain(code, public_message))
+    } else {
+        Ok(value)
+    }
+}
+
+fn reject_null_config(value: Option<&Value>) -> Result<(), CoreError> {
+    if value.is_some_and(Value::is_null) {
+        Err(CoreError::domain("empty_mcp_config", "MCP 配置不能为空。"))
+    } else {
+        Ok(())
     }
 }
 
