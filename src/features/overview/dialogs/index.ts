@@ -1,4 +1,6 @@
 /**
- * 中文职责说明：overview 模块弹窗边界；无证据前保持空导出。
+ * 中文职责说明：overview 弹窗边界只装配已证实的模块弹窗，当前无真实弹窗合同。
  */
-export {};
+export function OverviewDialogsHost() {
+  return null;
+}

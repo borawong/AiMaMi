@@ -46,6 +46,7 @@ const strictFeaturePageShells = [
   "custom-instructions",
   "maintenance",
   "mcp",
+  "overview",
   "plugins",
   "relay",
   "sessions",

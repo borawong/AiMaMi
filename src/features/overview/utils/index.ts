@@ -1,3 +1,10 @@
+import type {
+  OverviewActiveAccountModel,
+  OverviewHealthModel,
+  OverviewQuotaWindow,
+  OverviewSkillRecord,
+} from "../types";
+
 /**
  * 中文职责说明：overview 只在本模块内安全读取未知数据对象，不把未证实字段提升为跨模块事实。
  */
@@ -65,4 +72,217 @@ export function previewText(value: unknown): string {
   } catch {
     return String(value);
   }
+}
+
+export function readOverviewHealth(
+  snapshot: unknown,
+  loading: boolean,
+): OverviewHealthModel {
+  const codexHome = readString(snapshot, ["status.paths.codexHome", "paths.codexHome"]);
+  const authExists = readBoolean(snapshot, [
+    "status.paths.authExists",
+    "paths.authExists",
+  ]);
+  const registryExists = readBoolean(snapshot, [
+    "status.paths.registryExists",
+    "paths.registryExists",
+  ]);
+  const items = [
+    {
+      id: "codex-home" as const,
+      labelKey: "overview.healthCodexHome",
+      ok: Boolean(codexHome),
+    },
+    {
+      id: "auth" as const,
+      labelKey: "overview.healthAuth",
+      ok: authExists,
+    },
+    {
+      id: "registry" as const,
+      labelKey: "overview.healthRegistry",
+      ok: registryExists,
+    },
+  ];
+
+  return {
+    codexHome,
+    authExists,
+    registryExists,
+    healthy: items.every((item) => item.ok),
+    loading,
+    items,
+  };
+}
+
+export function readOverviewActiveAccount(
+  snapshot: unknown,
+  loading: boolean,
+): OverviewActiveAccountModel {
+  const account = findOverviewActiveAccount(snapshot);
+  const hasAccount = isRecord(account);
+
+  return {
+    hasAccount,
+    accountLabel: hasAccount ? readOverviewAccountEmail(account) : "",
+    accountKeyLabel: hasAccount ? readOverviewAccountKey(account) : "",
+    plan: hasAccount ? readOverviewAccountPlan(account) : "",
+    apiReachable: readBoolean(
+      snapshot,
+      [
+        "apiReachable",
+        "status.apiReachable",
+        "usageStatus.apiReachable",
+        "status.usageStatus.apiReachable",
+      ],
+      true,
+    ),
+    loading,
+    primaryWindow: hasAccount ? readOverviewQuotaWindow(account, "primary") : null,
+    secondaryWindow: hasAccount ? readOverviewQuotaWindow(account, "secondary") : null,
+  };
+}
+
+export function readOverviewSkillRecords(items: unknown[]): OverviewSkillRecord[] {
+  return items.map((item, index) => ({
+    id: readString(item, ["id", "name", "title"], String(index)),
+    title: readString(item, ["title", "name", "id"], ""),
+    updatedAtLabel: formatOverviewOptionalEpoch(readNumber(item, ["updatedAt"])),
+  }));
+}
+
+export function formatOverviewOptionalEpoch(value: number): string {
+  return value ? formatOverviewEpoch(value) : "";
+}
+
+export function formatOverviewEpoch(value: number): string {
+  const millis = value > 10_000_000_000 ? value : value * 1000;
+  const date = new Date(millis);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString(undefined, {
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function findOverviewActiveAccount(snapshot: unknown): unknown | null {
+  const direct = firstPath(snapshot, [
+    "activeAccount",
+    "currentAccount",
+    "status.activeAccount",
+    "status.currentAccount",
+  ]);
+  if (isRecord(direct)) return direct;
+
+  const activeKey = readString(snapshot, [
+    "activeAccountKey",
+    "currentAccountKey",
+    "status.activeAccountKey",
+    "status.currentAccountKey",
+  ]);
+  const accounts = readArray(snapshot, [
+    "accounts",
+    "items",
+    "status.accounts",
+    "status.accounts.items",
+    "registry.accounts",
+    "registry.items",
+  ]);
+
+  return (
+    accounts.find((account) => {
+      if (!isRecord(account)) return false;
+      return (
+        readBoolean(account, ["active", "isActive", "current"]) ||
+        (activeKey.length > 0 && readOverviewAccountKey(account) === activeKey)
+      );
+    }) ?? null
+  );
+}
+
+function readOverviewAccountKey(account: unknown): string {
+  return readString(account, ["accountKey", "key", "id", "email"], "");
+}
+
+function readOverviewAccountEmail(account: unknown): string {
+  return readString(account, ["email", "profile.email", "account.email"], "");
+}
+
+function readOverviewAccountPlan(account: unknown): string {
+  return readString(account, ["plan", "subscription.plan", "account.plan"], "");
+}
+
+function readOverviewQuotaWindow(
+  account: unknown,
+  kind: "primary" | "secondary",
+): OverviewQuotaWindow | null {
+  const prefix = kind === "primary" ? "primaryWindow" : "secondaryWindow";
+  const aliases =
+    kind === "primary"
+      ? [
+          "primaryWindow",
+          "fiveHourWindow",
+          "quota.primaryWindow",
+          "quota.fiveHourWindow",
+        ]
+      : [
+          "secondaryWindow",
+          "weeklyWindow",
+          "quota.secondaryWindow",
+          "quota.weeklyWindow",
+        ];
+  const window = aliases
+    .map((path) => firstPath(account, [path]))
+    .find((value) => isRecord(value));
+  const remainingPercent = readNumber(
+    window,
+    ["remainingPercent", "remaining", "percent"],
+    Number.NaN,
+  );
+  const resetsAt = readNumber(window, ["resetsAt", "resetAt", "resetAtMs"], Number.NaN);
+
+  if (Number.isFinite(remainingPercent) || Number.isFinite(resetsAt)) {
+    return buildQuotaWindow(remainingPercent, resetsAt);
+  }
+
+  const flattenedRemaining = readNumber(
+    account,
+    [
+      `${prefix}.remainingPercent`,
+      `${prefix}.remaining`,
+      kind === "primary" ? "fiveHourRemainingPercent" : "weeklyRemainingPercent",
+    ],
+    Number.NaN,
+  );
+  const flattenedReset = readNumber(
+    account,
+    [
+      `${prefix}.resetsAt`,
+      `${prefix}.resetAt`,
+      kind === "primary" ? "fiveHourResetAt" : "weeklyResetAt",
+    ],
+    Number.NaN,
+  );
+
+  if (!Number.isFinite(flattenedRemaining) && !Number.isFinite(flattenedReset)) {
+    return null;
+  }
+
+  return buildQuotaWindow(flattenedRemaining, flattenedReset);
+}
+
+function buildQuotaWindow(
+  remainingPercent: number,
+  resetsAt: number,
+): OverviewQuotaWindow {
+  const safeRemaining = Number.isFinite(remainingPercent) ? remainingPercent : null;
+  const safeReset = Number.isFinite(resetsAt) ? resetsAt : null;
+
+  return {
+    remainingPercent: safeRemaining,
+    resetsAt: safeReset,
+    resetLabel: safeReset == null ? "" : formatOverviewEpoch(safeReset),
+  };
 }
