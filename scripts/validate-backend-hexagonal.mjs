@@ -325,6 +325,91 @@ function validateSystemEnvelopeServiceTypes() {
 
 validateSystemEnvelopeServiceTypes();
 
+function validateAccountsTypedPayloadContracts() {
+  const commandPath = join(backendRoot, "commands", "accounts.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "accounts.rs");
+  const contractPath = join(backendRoot, "contracts", "accounts.rs");
+  const servicePath = join(frontendRoot, "services", "accounts", "index.ts");
+  const featureTypesPath = join(frontendRoot, "features", "accounts", "types", "index.ts");
+  const commandText = readUtf8(commandPath);
+  const usecaseText = readUtf8(usecasePath);
+  const contractText = readUtf8(contractPath);
+  const serviceText = readUtf8(servicePath);
+  const featureTypesText = readUtf8(featureTypesPath);
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) struct AccountMonitorPayload",
+    "pub(crate) struct SwitchPayload",
+    "pub(crate) struct LogoutPayload",
+    "pub(crate) struct RemovePayload",
+    "pub(crate) struct AccountImportPayload",
+    "pub(crate) struct AccountSessionImportPayload",
+    "pub(crate) struct AccountExportPayload",
+    "pub(crate) struct AccountImportPreviewPayload",
+    "pub backend_status: BackendSkeletonStatus",
+  ], "accounts 后端 typed DTO");
+
+  assertContains(commandPath, commandText, [
+    "Result<CoreEnvelope<AccountMonitorPayload>, String>",
+    "Result<CoreEnvelope<SwitchPayload>, String>",
+    "Result<CoreEnvelope<RemovePayload>, String>",
+    "Result<CoreEnvelope<LogoutPayload>, String>",
+    "Result<CoreEnvelope<AccountImportPayload>, String>",
+    "Result<CoreEnvelope<AccountSessionImportPayload>, String>",
+    "Result<CoreEnvelope<AccountExportPayload>, String>",
+    "Result<CoreEnvelope<AccountImportPreviewPayload>, String>",
+  ], "accounts command 强类型 envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<AccountMonitorPayload>, CoreError>",
+    "Result<CoreEnvelope<SwitchPayload>, CoreError>",
+    "Result<CoreEnvelope<RemovePayload>, CoreError>",
+    "Result<CoreEnvelope<LogoutPayload>, CoreError>",
+    "Result<CoreEnvelope<AccountImportPayload>, CoreError>",
+    "Result<CoreEnvelope<AccountSessionImportPayload>, CoreError>",
+    "Result<CoreEnvelope<AccountExportPayload>, CoreError>",
+    "Result<CoreEnvelope<AccountImportPreviewPayload>, CoreError>",
+    "BackendOperationPlan::pending",
+    "BackendOperationPlan::no_op",
+    "BackendBoundaryProbe::from_repository_source",
+  ], "accounts usecase 六边形 typed payload");
+
+  assertContains(servicePath, serviceText, [
+    "CoreEnvelope<AccountMonitorPayload>",
+    "CoreEnvelope<SwitchPayload>",
+    "CoreEnvelope<RemovePayload>",
+    "CoreEnvelope<LogoutPayload>",
+    "CoreEnvelope<AccountImportPayload>",
+    "CoreEnvelope<AccountSessionImportPayload>",
+    "CoreEnvelope<AccountExportPayload>",
+    "CoreEnvelope<AccountImportPreviewPayload>",
+  ], "accounts service 强类型 envelope");
+
+  assertContains(featureTypesPath, featureTypesText, [
+    "export type AccountsMutationPayload",
+    "export type AccountsMutationEnvelope",
+    "export type AccountsSnapshotEnvelope",
+    "export type AccountsCachePayload",
+  ], "accounts 前端模块 typed cache payload");
+
+  assertNotContainsSnippet(contractPath, contractText, [
+    "AccountActionPayload",
+    "serde_json::Value",
+  ], "accounts 后端合同不得退回单一泛型动作 payload");
+
+  assertNotContainsSnippet(commandPath, commandText, [
+    "AccountActionPayload",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "accounts command 不得退回泛型 payload");
+
+  assertNotContainsSnippet(servicePath, serviceText, [
+    "IpcEvidencePayload",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "accounts service 不得退回 generic evidence payload");
+}
+
+validateAccountsTypedPayloadContracts();
+
 function validateRelayTypedPayloadContracts() {
   const commandPath = join(backendRoot, "commands", "relay.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "relay.rs");

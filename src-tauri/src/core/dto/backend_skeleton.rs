@@ -150,7 +150,7 @@ impl BackendOperationPlan {
             BackendOperationEffect::Platform => {
                 "当前命令只执行平台适配层能力，未恢复闭源业务状态机"
             }
-            BackendOperationEffect::Unsupported => "当前命令缺少仓库内证据，保留契约并拒绝伪实现",
+            BackendOperationEffect::Unsupported => "当前命令不在后端还原范围，保留契约并拒绝伪实现",
         }
     }
 

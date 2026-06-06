@@ -1,8 +1,37 @@
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
+import type {
+  AccountExportPayload,
+  AccountImportPayload,
+  AccountImportPreviewPayload,
+  AccountMonitorPayload,
+  AccountSessionImportPayload,
+  AccountSummaryPayload,
+  CoreEnvelope,
+  CoreSnapshotPayload,
+  LogoutPayload,
+  RemovePayload,
+  SwitchPayload,
+} from "@/types";
 
 export type AccountsModuleId = "accounts";
-export type AccountsCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
-export type AccountRecord = unknown;
+export type AccountsMutationPayload =
+  | AccountMonitorPayload
+  | SwitchPayload
+  | RemovePayload
+  | LogoutPayload
+  | AccountImportPayload
+  | AccountSessionImportPayload
+  | AccountExportPayload
+  | AccountImportPreviewPayload;
+export type AccountsMutationEnvelope = CoreEnvelope<AccountsMutationPayload>;
+export type AccountsSnapshotEnvelope = CoreEnvelope<CoreSnapshotPayload>;
+export type AccountsCachePayload =
+  | AccountsSnapshotEnvelope
+  | AccountsMutationEnvelope
+  | null;
+export type AccountsCacheEnvelope<TPayload = AccountsCachePayload> =
+  ModuleCacheEnvelope<TPayload>;
+export type AccountRecord = AccountSummaryPayload | Record<string, unknown>;
 export type AccountQuotaWindowSlot = "primaryWindow" | "secondaryWindow";
 
 export const ACCOUNT_PLAN_FILTERS = [

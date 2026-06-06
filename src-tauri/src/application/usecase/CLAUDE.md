@@ -1,17 +1,11 @@
 # Rust usecase Claude 执行规则
 
-## 渐进式覆盖
-
-- 本文件是 Claude 在当前目录工作的独立执行合同；执行时以本文件文字为直接约束，不把 AGENTS.md 当作替代规则。
-- 更深层 CLAUDE.md 可以收紧本目录规则，不能放宽证据门、匿名化、中文文档、前端 owner 边界和后端六边形边界。
-- 本目录写入前必须确认两类硬门禁已经满足：前端 owner 只在入口、全局 Provider、路由表、route meta、runtime initializer、页面 shell、复杂模块、服务门面、TanStack cache、E2E mock 和 locale 指定层处理；后端 owner 只在 commands、application/usecase/service、core、platform、repository/adapter 和 contracts 指定层处理。
-- 发生冲突时按“用户原始要求不可改写、raw/internal 证据优先于推测、同一主题最深层目录规则优先、更严格规则优先”的顺序处理。
-- 本目录和下级目录禁止写入共享盘地址、本机用户名、机器名、内部历史标识和外部参考仓库名称。
-
-
 ## usecase 边界
 
-- 每个文件或结构体 owning 一类用户动作事务，命名描述业务动作而不是 UI 按钮。
-- usecase 负责校验输入、组织 repository/platform/core、提交结果，不直接承载 Tauri 参数和 UI 文案。
-- 导入/删除账号、relay 启停、初始化助手、daemon runner、项目配置写入等跨文件动作必须在本层表达事务边界。
-- 未纳入当前还原范围的实现只能返回 pending/no-op envelope 或职责注释，不得写成真实业务。
+- 本文件是 Claude 在 Rust usecase 目录工作的独立执行规则，不引用 AGENTS.md 作为替代。
+- 本目录 owning 用户动作级事务：校验输入、组织 repository/platform/core、提交结果并返回 DTO。
+- usecase 不直接承载 Tauri 参数反序列化，不读取 UI 文案，不直接调用窗口、托盘、shell、外部进程或真实系统副作用。
+- 跨文件动作必须在本层表达事务边界，并通过 repository/platform/core 的窄接口完成。
+- 未纳入当前还原范围的后端业务只能返回 typed pending/no-op/unsupported envelope，不得写成伪真实业务。
+- 改 command 或 DTO 时必须同步 Rust DTO/command、TypeScript 类型、API wrapper、E2E mock 和 validator。
+- 所有新增注释和文档必须使用中文；禁止写入共享盘地址、本机用户名、机器名、内部历史标识和外部参考仓库名称。

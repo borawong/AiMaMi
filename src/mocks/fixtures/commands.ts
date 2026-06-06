@@ -5,6 +5,11 @@ import {
 } from "@/contracts/ipc";
 import type { CoreEnvelope } from "@/types";
 import type {
+  AccountExportPayload,
+  AccountImportPayload,
+  AccountImportPreviewPayload,
+  AccountMonitorPayload,
+  AccountSessionImportPayload,
   RelayActivePayload,
   RelayDiagnosticIssuePayload,
   RelayDiagnosticPayload,
@@ -17,6 +22,9 @@ import type {
   RelayRouterTogglePayload,
   RelayStatePayload,
   RelayTestPayload,
+  LogoutPayload,
+  RemovePayload,
+  SwitchPayload,
 } from "@/types";
 import type { IpcMockStepResult } from "@/mocks/ipc";
 import {
@@ -36,6 +44,13 @@ export interface IpcCommandFixture {
 
 export type IpcCommandMockData =
   | EvidenceBackedIpcFixture
+  | AccountExportPayload
+  | AccountImportPayload
+  | AccountImportPreviewPayload
+  | AccountMonitorPayload
+  | AccountSessionImportPayload
+  | LogoutPayload
+  | RemovePayload
   | RelayActivePayload
   | RelayDiagnosticPayload
   | RelayExportPayload
@@ -46,6 +61,7 @@ export type IpcCommandMockData =
   | RelayRouterTogglePayload
   | RelayStatePayload
   | RelayTestPayload
+  | SwitchPayload
   | null
   | unknown[]
   | boolean
@@ -141,9 +157,159 @@ const evidenceObjectHandler: IpcCommandHandler = (context) => {
   };
 };
 
+const accountMonitorHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: AccountMonitorPayload = {
+    backendStatus: envelope.data.status,
+  };
+  return { ...envelope, data };
+};
+
+const accountSwitchHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: SwitchPayload = {
+    backendStatus: envelope.data.status,
+    previousAccountKey: null,
+    activeAccountKey: readArgOptionalString(context.args, "accountKey"),
+    activeAccount: null,
+    authUpdated: false,
+    registryUpdated: false,
+  };
+  return { ...envelope, data };
+};
+
+const accountLogoutHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: LogoutPayload = {
+    backendStatus: envelope.data.status,
+    authRemoved: false,
+    authBackedUp: false,
+  };
+  return { ...envelope, data };
+};
+
+const accountRemoveHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const removedAccountKeys = readArgStringArray(context.args, "accountKeys");
+  const data: RemovePayload = {
+    backendStatus: envelope.data.status,
+    removedAccountKeys,
+    removedCount: removedAccountKeys.length,
+    previousAccountKey: null,
+  };
+  return { ...envelope, data };
+};
+
+function emptyAccountImportPayload(
+  backendStatus: AccountImportPayload["backendStatus"],
+): AccountImportPayload {
+  return {
+    backendStatus,
+    importedCount: 0,
+    importedAccountKeys: [],
+    skipped: [],
+    registryAccountCount: 0,
+    activeAccountKey: null,
+  };
+}
+
+const accountImportHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return { ...envelope, data: emptyAccountImportPayload(envelope.data.status) };
+};
+
+const accountSessionImportHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: AccountSessionImportPayload = {
+    backendStatus: envelope.data.status,
+    imported: false,
+    accountKey: null,
+    email: null,
+    plan: null,
+    snapshotPath: null,
+    registryAccountCount: 0,
+    activeAccountKey: null,
+    refreshTokenPlaceholder: false,
+  };
+  return { ...envelope, data };
+};
+
+const accountExportHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: AccountExportPayload = {
+    backendStatus: envelope.data.status,
+    targetPath: readArgString(context.args, "targetPath", ""),
+    accountCount: 0,
+    exportedAt: null,
+    skipped: [],
+  };
+  return { ...envelope, data };
+};
+
+const accountPreviewImportHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: AccountImportPreviewPayload = {
+    backendStatus: envelope.data.status,
+    filePath: readArgString(context.args, "filePath", ""),
+    schemaVersion: 1,
+    kind: "account-export",
+    appVersion: null,
+    exportedAt: null,
+    exportedHostname: null,
+    entries: [],
+    accountCount: 0,
+    conflictCount: 0,
+  };
+  return { ...envelope, data };
+};
+
 function readArgString(args: IpcArgs | undefined, key: string, fallback: string) {
   const value = args?.[key];
   return typeof value === "string" && value.trim() ? value : fallback;
+}
+
+function readArgOptionalString(args: IpcArgs | undefined, key: string) {
+  const value = args?.[key];
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function readArgStringArray(args: IpcArgs | undefined, key: string) {
+  const value = args?.[key];
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+    : [];
 }
 
 function skillSummaryFromId(id: string) {
@@ -665,6 +831,18 @@ const systemCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> 
   set_usage_refresh_interval: writeIntervalArgHandler,
 };
 
+const accountsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  begin_add_account_attach_monitor: accountMonitorHandler,
+  export_accounts_to_file: accountExportHandler,
+  import_accounts_from_file: accountImportHandler,
+  import_chatgpt_session_account: accountSessionImportHandler,
+  logout: accountLogoutHandler,
+  preview_account_import: accountPreviewImportHandler,
+  remove_accounts: accountRemoveHandler,
+  switch_account: accountSwitchHandler,
+  switch_account_and_restart_codex: accountSwitchHandler,
+};
+
 const skillsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
   delete_skill_backup: deleteSkillBackupHandler,
   import_skill: importSkillHandler,
@@ -703,6 +881,7 @@ export const ipcCommandFixtures = IPC_COMMAND_DEFINITIONS.reduce(
       command: definition.command,
       domain: definition.domain,
       handler:
+        accountsCommandHandlers[definition.command] ??
         relayCommandHandlers[definition.command] ??
         skillsCommandHandlers[definition.command] ??
         systemCommandHandlers[definition.command] ??

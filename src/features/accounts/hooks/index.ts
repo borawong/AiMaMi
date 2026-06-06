@@ -16,10 +16,13 @@ import type {
   AccountImportFileInput,
   AccountImportSessionInput,
   AccountKeysInput,
+  AccountsCachePayload,
+  AccountsMutationEnvelope,
   AccountPlanFilter,
   AccountOpenPathInput,
   AccountPreviewImportInput,
   AccountRecord,
+  AccountsSnapshotEnvelope,
   AccountSwitchInput,
 } from "../types";
 import { ACCOUNT_PLAN_FILTERS } from "../types";
@@ -43,7 +46,7 @@ export function useAccountsModule() {
   const refreshPromiseRef = useRef<Promise<void> | null>(null);
   const nextSequence = () => ++sequenceRef.current;
   const writeSnapshotPayload = (
-    payload: unknown,
+    payload: AccountsSnapshotEnvelope,
     source: "full-refresh" | "active-only-refresh",
   ) => {
     writeAccountsSnapshotPayload(queryClient, {
@@ -54,7 +57,7 @@ export function useAccountsModule() {
     });
   };
   const writeMutationPayload = (
-    payload: unknown,
+    payload: AccountsMutationEnvelope,
     options: { invalidateDumpedQueries?: boolean } = {},
   ) => {
     writeAccountsMutationPayload(queryClient, {
@@ -68,10 +71,10 @@ export function useAccountsModule() {
     }
   };
 
-  const snapshotEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+  const snapshotEnvelopeQuery = useQuery<ModuleCacheEnvelope<AccountsCachePayload> | null>({
     queryKey: AccountsAuthoritativeQueryKeys.snapshot,
     queryFn: async () =>
-      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(
+      queryClient.getQueryData<ModuleCacheEnvelope<AccountsCachePayload>>(
         AccountsAuthoritativeQueryKeys.snapshot,
       ) ?? null,
     enabled: false,

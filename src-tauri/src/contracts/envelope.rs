@@ -138,6 +138,6 @@ pub(crate) fn platform_warning(action: &str) -> CoreWarning {
 pub(crate) fn unsupported_warning(action: &str) -> CoreWarning {
     CoreWarning {
         code: "unsupported".into(),
-        message: format!("{action} 缺少仓库内证据，当前仅保留后端命令契约。"),
+        message: format!("{action} 不在当前后端还原范围，当前仅保留后端命令契约。"),
     }
 }

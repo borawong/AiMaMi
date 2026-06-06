@@ -1,12 +1,15 @@
 use crate::adapters::tauri::state::TauriAppState;
 use crate::commands::respond;
-use crate::contracts::{AccountActionPayload, CoreEnvelope};
+use crate::contracts::{
+    AccountExportPayload, AccountImportPayload, AccountImportPreviewPayload, AccountMonitorPayload,
+    AccountSessionImportPayload, CoreEnvelope, LogoutPayload, RemovePayload, SwitchPayload,
+};
 use tauri::State;
 
 #[tauri::command]
 pub(crate) fn begin_add_account_attach_monitor(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<AccountActionPayload>, String> {
+) -> Result<CoreEnvelope<AccountMonitorPayload>, String> {
     respond(state.services().accounts().begin_attach_monitor())
 }
 
@@ -14,7 +17,7 @@ pub(crate) fn begin_add_account_attach_monitor(
 pub(crate) fn switch_account(
     state: State<'_, TauriAppState>,
     account_key: String,
-) -> Result<CoreEnvelope<AccountActionPayload>, String> {
+) -> Result<CoreEnvelope<SwitchPayload>, String> {
     respond(
         state
             .services()
@@ -27,7 +30,7 @@ pub(crate) fn switch_account(
 pub(crate) fn switch_account_and_restart_codex(
     state: State<'_, TauriAppState>,
     account_key: String,
-) -> Result<CoreEnvelope<AccountActionPayload>, String> {
+) -> Result<CoreEnvelope<SwitchPayload>, String> {
     respond(
         state
             .services()
@@ -40,14 +43,14 @@ pub(crate) fn switch_account_and_restart_codex(
 pub(crate) fn remove_accounts(
     state: State<'_, TauriAppState>,
     account_keys: Vec<String>,
-) -> Result<CoreEnvelope<AccountActionPayload>, String> {
+) -> Result<CoreEnvelope<RemovePayload>, String> {
     respond(state.services().accounts().remove_accounts(account_keys))
 }
 
 #[tauri::command]
 pub(crate) fn logout(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<AccountActionPayload>, String> {
+) -> Result<CoreEnvelope<LogoutPayload>, String> {
     respond(state.services().accounts().logout())
 }
 
@@ -56,7 +59,7 @@ pub(crate) fn import_chatgpt_session_account(
     state: State<'_, TauriAppState>,
     session_json: Option<String>,
     overwrite_existing: Option<bool>,
-) -> Result<CoreEnvelope<AccountActionPayload>, String> {
+) -> Result<CoreEnvelope<AccountSessionImportPayload>, String> {
     respond(
         state
             .services()
@@ -70,7 +73,7 @@ pub(crate) fn export_accounts_to_file(
     state: State<'_, TauriAppState>,
     account_keys: Option<Vec<String>>,
     target_path: String,
-) -> Result<CoreEnvelope<AccountActionPayload>, String> {
+) -> Result<CoreEnvelope<AccountExportPayload>, String> {
     respond(
         state
             .services()
@@ -83,7 +86,7 @@ pub(crate) fn export_accounts_to_file(
 pub(crate) fn preview_account_import(
     state: State<'_, TauriAppState>,
     file_path: String,
-) -> Result<CoreEnvelope<AccountActionPayload>, String> {
+) -> Result<CoreEnvelope<AccountImportPreviewPayload>, String> {
     respond(
         state
             .services()
@@ -98,7 +101,7 @@ pub(crate) fn import_accounts_from_file(
     file_path: String,
     overwrite_existing: Option<bool>,
     selected_keys: Option<Vec<String>>,
-) -> Result<CoreEnvelope<AccountActionPayload>, String> {
+) -> Result<CoreEnvelope<AccountImportPayload>, String> {
     respond(state.services().accounts().import_accounts_from_file(
         file_path,
         overwrite_existing,
