@@ -53,6 +53,7 @@ const strictFeaturePageShells = [
   "settings",
   "skills",
   "tray-shell",
+  "voice",
 ];
 
 const requiredFeatureFiles = [

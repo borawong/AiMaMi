@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/controller";
 import { voiceService } from "@/services/voice";
+import type {
+  VoiceHeaderModel,
+  VoiceMetricModel,
+} from "../types";
 import {
   invalidateVoiceContractQueries,
   nextVoiceCacheSequence,
@@ -406,5 +410,57 @@ export function useVoiceModule() {
       },
     },
     isAnyMutationPending,
+  };
+}
+
+export type VoiceModuleView = ReturnType<typeof useVoiceModule>;
+
+export interface VoicePageController {
+  header: VoiceHeaderModel;
+  metrics: VoiceMetricModel[];
+  module: VoiceModuleView;
+}
+
+export function useVoicePageController(): VoicePageController {
+  const module = useVoiceModule();
+  const { workspaceFacts, runtimeFacts } = module;
+
+  return {
+    header: {
+      titleKey: "nav.voice",
+      descriptionKey: "voice.description",
+    },
+    metrics: [
+      {
+        id: "templates",
+        labelKey: "voice.templateCount",
+        kind: "count",
+        icon: "templates",
+        value: workspaceFacts.templates.length,
+      },
+      {
+        id: "vocabulary",
+        labelKey: "voice.vocabularyCount",
+        kind: "count",
+        icon: "vocabulary",
+        value: workspaceFacts.vocabulary.length,
+      },
+      {
+        id: "history",
+        labelKey: "voice.historyCount",
+        kind: "count",
+        icon: "history",
+        value: workspaceFacts.history.length,
+      },
+      {
+        id: "runtime",
+        labelKey: "voice.runtimeEnabled",
+        kind: "runtime",
+        supported: runtimeFacts.supported,
+        enabled: runtimeFacts.enabled,
+        captureState: runtimeFacts.captureState,
+      },
+    ],
+    module,
   };
 }
