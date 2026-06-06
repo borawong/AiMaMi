@@ -14,6 +14,18 @@ import {
   DaemonAutoswitchCache,
   invalidateDaemonAutoswitchContractQueries,
 } from "../cache";
+import type {
+  DaemonAutoswitchMetricModel,
+  DaemonAutoswitchPageController,
+  DaemonAutoswitchPanelModel,
+} from "../types";
+import {
+  envelopeData,
+  readBoolean,
+  readNumber,
+  readRecordField,
+  readString,
+} from "../utils";
 
 let daemonAutoswitchCacheSequence = 0;
 let daemonAutoswitchLatestAcceptedSequence = 0;
@@ -216,5 +228,67 @@ export function useDaemonAutoswitchModule() {
       run: (enabled: boolean) => setAutoSwitchMutation.mutateAsync(enabled),
       isPending: setAutoSwitchMutation.isPending,
     },
+  };
+}
+
+export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageController {
+  const module = useDaemonAutoswitchModule();
+  const bootstrap = envelopeData(module.bootstrapQuery.data);
+  const pending = envelopeData(module.pendingQuery.data);
+  const autoSwitch = envelopeData(readRecordField(bootstrap, "autoSwitch"));
+  const enabled = readBoolean(autoSwitch, ["enabled"]);
+  const serviceState = readString(autoSwitch, ["serviceState"], "");
+  const writtenAt = readNumber(bootstrap, ["writtenAt"]);
+
+  const metrics: DaemonAutoswitchMetricModel[] = [
+    {
+      id: "enabled",
+      labelKey: "daemonAutoswitch.enabled",
+      value: {
+        kind: "badge",
+        value: enabled,
+        trueKey: "overview.enabled",
+        falseKey: "overview.disabled",
+      },
+    },
+    {
+      id: "service-state",
+      labelKey: "daemonAutoswitch.serviceState",
+      value: {
+        kind: "text",
+        icon: "activity",
+        value: serviceState || "-",
+      },
+    },
+    {
+      id: "written-at",
+      labelKey: "daemonAutoswitch.writtenAt",
+      value: {
+        kind: "time",
+        icon: "clock",
+        value: writtenAt,
+      },
+    },
+  ];
+
+  const panels: DaemonAutoswitchPanelModel[] = [
+    {
+      id: "bootstrap",
+      titleKey: "daemonAutoswitch.bootstrap",
+      state: module.bootstrapQuery,
+      payload: autoSwitch,
+      icon: "toggle",
+    },
+    {
+      id: "pending",
+      titleKey: "daemonAutoswitch.pending",
+      state: module.pendingQuery,
+      payload: pending,
+    },
+  ];
+
+  return {
+    metrics,
+    panels,
   };
 }
