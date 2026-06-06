@@ -434,6 +434,10 @@ function validateRoutesAndLocales(controlFlowRows) {
 }
 
 function validateKnownInternalFrontendGates() {
+  const accountsHooksPath = join(repoRoot, "src", "features", "accounts", "hooks", "index.ts");
+  const accountsCachePath = join(repoRoot, "src", "features", "accounts", "cache", "index.ts");
+  const accountsTypesPath = join(repoRoot, "src", "features", "accounts", "types", "index.ts");
+  const accountsServicePath = join(repoRoot, "src", "services", "accounts", "index.ts");
   const relayHooksPath = join(repoRoot, "src", "features", "relay", "hooks", "index.ts");
   const relayCachePath = join(repoRoot, "src", "features", "relay", "cache", "index.ts");
   const relayPagePath = join(repoRoot, "src", "features", "relay", "components", "page.tsx");
@@ -468,6 +472,10 @@ function validateKnownInternalFrontendGates() {
   const skillsHooksPath = join(repoRoot, "src", "features", "skills", "hooks", "index.ts");
   const skillsPanelPath = join(repoRoot, "src", "features", "skills", "panels", "page.tsx");
 
+  const accountsHooks = readRequired(accountsHooksPath);
+  const accountsCache = readRequired(accountsCachePath);
+  const accountsTypes = readRequired(accountsTypesPath);
+  const accountsService = readRequired(accountsServicePath);
   const relayHooks = readRequired(relayHooksPath);
   const relayCache = readRequired(relayCachePath);
   const relayPage = readRequired(relayPagePath);
@@ -480,6 +488,31 @@ function validateKnownInternalFrontendGates() {
   const skillsContent = readRequired(skillsContentPath);
   const skillsHooks = readRequired(skillsHooksPath);
   const skillsPanel = readRequired(skillsPanelPath);
+
+  const accountsTypedPayloadOk =
+    accountsService.includes("CoreEnvelope<AccountMonitorPayload>") &&
+    accountsService.includes("CoreEnvelope<SwitchPayload>") &&
+    accountsService.includes("CoreEnvelope<RemovePayload>") &&
+    accountsService.includes("CoreEnvelope<LogoutPayload>") &&
+    accountsService.includes("CoreEnvelope<AccountImportPayload>") &&
+    accountsService.includes("CoreEnvelope<AccountSessionImportPayload>") &&
+    accountsService.includes("CoreEnvelope<AccountExportPayload>") &&
+    accountsService.includes("CoreEnvelope<AccountImportPreviewPayload>") &&
+    !accountsService.includes("IpcEvidencePayload") &&
+    accountsTypes.includes("export type AccountsMutationPayload") &&
+    accountsTypes.includes("export type AccountsMutationEnvelope") &&
+    accountsTypes.includes("export type AccountsSnapshotEnvelope") &&
+    accountsTypes.includes("export type AccountsCachePayload") &&
+    accountsHooks.includes("AccountsMutationEnvelope") &&
+    accountsHooks.includes("AccountsSnapshotEnvelope") &&
+    !accountsHooks.includes("writeMutationPayload = (\n    payload: unknown") &&
+    !accountsHooks.includes("writeSnapshotPayload = (\n    payload: unknown") &&
+    !accountsCache.includes("ModuleCacheEnvelope<unknown>");
+  if (!accountsTypedPayloadOk) {
+    failures.push("accounts IPC payload owner 未收口到 typed envelope、模块 types 和 cache helper");
+  } else {
+    console.log("PASS accounts typed IPC payload owner：service/hook/cache");
+  }
 
   const relayEventOk =
     relayService.includes("codex-router-toggle-progress") &&

@@ -467,6 +467,102 @@ export interface BackendSkeletonStatus {
   boundary: BackendSkeletonBoundaryStatus;
 }
 
+export interface AccountSummaryPayload {
+  accountKey: string;
+  email?: string | null;
+  alias?: string | null;
+  accountName?: string | null;
+  workspaceName?: string | null;
+  profileName?: string | null;
+  plan?: string | null;
+  active: boolean;
+}
+
+export interface AccountSkippedPayload {
+  accountKey: string | null;
+  reason: string;
+  message: string | null;
+}
+
+export interface AccountMonitorPayload {
+  backendStatus: BackendSkeletonStatus;
+}
+
+export interface SwitchPayload {
+  backendStatus: BackendSkeletonStatus;
+  previousAccountKey: string | null;
+  activeAccountKey: string | null;
+  activeAccount: AccountSummaryPayload | null;
+  authUpdated: boolean;
+  registryUpdated: boolean;
+}
+
+export interface LogoutPayload {
+  backendStatus: BackendSkeletonStatus;
+  authRemoved: boolean;
+  authBackedUp: boolean;
+}
+
+export interface RemovePayload {
+  backendStatus: BackendSkeletonStatus;
+  removedAccountKeys: string[];
+  removedCount: number;
+  previousAccountKey: string | null;
+}
+
+export interface AccountImportPayload {
+  backendStatus: BackendSkeletonStatus;
+  importedCount: number;
+  importedAccountKeys: string[];
+  skipped: AccountSkippedPayload[];
+  registryAccountCount: number;
+  activeAccountKey: string | null;
+}
+
+export interface AccountSessionImportPayload {
+  backendStatus: BackendSkeletonStatus;
+  imported: boolean;
+  accountKey: string | null;
+  email: string | null;
+  plan: string | null;
+  snapshotPath: string | null;
+  registryAccountCount: number;
+  activeAccountKey: string | null;
+  refreshTokenPlaceholder: boolean;
+}
+
+export interface AccountExportPayload {
+  backendStatus: BackendSkeletonStatus;
+  targetPath: string;
+  accountCount: number;
+  exportedAt: string | null;
+  skipped: AccountSkippedPayload[];
+}
+
+export interface AccountImportPreviewEntry {
+  accountKey: string;
+  email?: string | null;
+  plan?: string | null;
+  authMode?: string | null;
+  workspaceName?: string | null;
+  profileName?: string | null;
+  conflict: boolean;
+  isActiveLocally: boolean;
+}
+
+export interface AccountImportPreviewPayload {
+  backendStatus: BackendSkeletonStatus;
+  filePath: string;
+  schemaVersion: number;
+  kind: string;
+  appVersion: string | null;
+  exportedAt: string | null;
+  exportedHostname: string | null;
+  entries: AccountImportPreviewEntry[];
+  accountCount: number;
+  conflictCount: number;
+}
+
 export interface BootstrapStatePayload {
   backendStatus: BackendSkeletonStatus;
   executedAt: string | null;

@@ -1,6 +1,7 @@
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
 import { createModuleCacheOwner } from "@/features/_shared/cache";
 import type { ModuleCacheEnvelope, ModuleCacheSource } from "@/features/_shared/cache";
+import type { AccountsCachePayload } from "../types";
 
 export const AccountsCache = createModuleCacheOwner("accounts");
 export const AccountsQueryKeys = AccountsCache.queryKeys;
@@ -24,14 +25,14 @@ export interface AccountsCacheWrite<TPayload> {
   receivedAt: number;
 }
 
-export function writeAccountsSnapshotPayload<TPayload>(
+export function writeAccountsSnapshotPayload<TPayload extends AccountsCachePayload>(
   queryClient: QueryClient,
   write: AccountsCacheWrite<TPayload>,
 ) {
   return writeAuthoritativeEnvelope(queryClient, AccountsAuthoritativeQueryKeys.snapshot, write);
 }
 
-export function writeAccountsMutationPayload<TPayload>(
+export function writeAccountsMutationPayload<TPayload extends AccountsCachePayload>(
   queryClient: QueryClient,
   write: AccountsCacheWrite<TPayload>,
 ) {
@@ -49,7 +50,7 @@ export async function invalidateAccountsDumpedQueries(queryClient: QueryClient) 
   ]);
 }
 
-function writeAuthoritativeEnvelope<TPayload>(
+function writeAuthoritativeEnvelope<TPayload extends AccountsCachePayload>(
   queryClient: QueryClient,
   queryKey: QueryKey,
   write: AccountsCacheWrite<TPayload>,
@@ -60,7 +61,7 @@ function writeAuthoritativeEnvelope<TPayload>(
     mutationFenceAt: write.source === "mutation-payload" ? write.receivedAt : undefined,
   };
 
-  queryClient.setQueryData<ModuleCacheEnvelope<unknown>>(queryKey, (current) => {
+  queryClient.setQueryData<ModuleCacheEnvelope<AccountsCachePayload>>(queryKey, (current) => {
     if (isStaleEnvelope(current, next)) return current;
     return {
       ...next,
@@ -74,9 +75,9 @@ function writeAuthoritativeEnvelope<TPayload>(
 function fenceAuthoritativeEnvelope(
   queryClient: QueryClient,
   queryKey: QueryKey,
-  mutationEnvelope: ModuleCacheEnvelope<unknown>,
+  mutationEnvelope: ModuleCacheEnvelope<AccountsCachePayload>,
 ) {
-  queryClient.setQueryData<ModuleCacheEnvelope<unknown>>(queryKey, (current) => {
+  queryClient.setQueryData<ModuleCacheEnvelope<AccountsCachePayload>>(queryKey, (current) => {
     if (!current) {
       return {
         ...mutationEnvelope,
@@ -92,8 +93,8 @@ function fenceAuthoritativeEnvelope(
 }
 
 function isStaleEnvelope(
-  current: ModuleCacheEnvelope<unknown> | undefined,
-  next: ModuleCacheEnvelope<unknown>,
+  current: ModuleCacheEnvelope<AccountsCachePayload> | undefined,
+  next: ModuleCacheEnvelope<AccountsCachePayload>,
 ) {
   if (!current) return false;
   if (next.sequence < current.sequence) return true;

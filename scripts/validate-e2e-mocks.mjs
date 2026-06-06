@@ -314,9 +314,49 @@ function validateRelayMockPayloadHandlers() {
   }
 }
 
+function validateAccountsMockPayloadHandlers() {
+  const commandFixturePath = path.join(
+    repoRoot,
+    "src",
+    "mocks",
+    "fixtures",
+    "commands.ts",
+  );
+  const ipcCommandsPath = path.join(repoRoot, "src", "contracts", "ipc", "commands.ts");
+  const commandFixtureText = readRequired(commandFixturePath);
+  const ipcCommandsText = readRequired(ipcCommandsPath);
+  const accountsCommands = [
+    ...ipcCommandsText.matchAll(
+      /\{\s*"domain":\s*"accounts"[\s\S]*?"command":\s*"([^"]+)"/g,
+    ),
+  ].map((match) => match[1]);
+
+  if (accountsCommands.length === 0) {
+    failures.push("src/contracts/ipc/commands.ts 没有可验证的 accounts command");
+    return;
+  }
+
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+    "const accountsCommandHandlers",
+    "accountsCommandHandlers[definition.command] ??",
+    "accountMonitorHandler",
+    "accountSwitchHandler",
+    "accountSessionImportHandler",
+    "accountPreviewImportHandler",
+    "emptyAccountImportPayload",
+  ]);
+
+  for (const command of accountsCommands) {
+    if (!commandFixtureText.includes(`${command}:`)) {
+      failures.push(`src/mocks/fixtures/commands.ts 缺少 accounts 专用 handler：${command}`);
+    }
+  }
+}
+
 validateScenarioRegistry();
 validateSkillsCommandMirror();
 validateScenarioFiles();
+validateAccountsMockPayloadHandlers();
 validateRelayMockPayloadHandlers();
 validateIpcMockBridge();
 
