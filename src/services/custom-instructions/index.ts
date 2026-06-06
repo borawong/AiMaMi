@@ -46,5 +46,7 @@ export const customInstructionsService = {
       { historyId },
     ),
 
-  openPath: (path: string) => invokeIpc<void>("open_path", { path }),
+  openPath: async (path: string) => {
+    await invokeIpc<CoreEnvelope<unknown>>("open_path", { path });
+  },
 };

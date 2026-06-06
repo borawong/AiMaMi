@@ -1,7 +1,4 @@
 use crate::application::service::BackendServices;
-use crate::contracts::CoreEnvelope;
-use crate::core::error::CoreError;
-use serde_json::Value;
 
 pub(crate) struct TauriAppState {
     services: BackendServices,
@@ -20,8 +17,7 @@ impl TauriAppState {
         &self.services
     }
 
-    pub(crate) fn focus_main_window(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        let window = crate::platform::window::TauriWindow::new(&self.app);
-        self.services.system().focus_main_window(&window)
+    pub(crate) fn app_handle(&self) -> &tauri::AppHandle {
+        &self.app
     }
 }

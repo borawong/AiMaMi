@@ -3,6 +3,7 @@
 pub(crate) enum BackendOperationEffect {
     Pending,
     NoOp,
+    Platform,
     Unsupported,
 }
 
@@ -11,6 +12,7 @@ impl BackendOperationEffect {
         match self {
             Self::Pending => "pending",
             Self::NoOp => "no_op",
+            Self::Platform => "platform",
             Self::Unsupported => "unsupported",
         }
     }
@@ -44,6 +46,15 @@ impl BackendBoundaryProbe {
             repository_checked: true,
             repository_path_known: !source_path.trim().is_empty(),
             platform_checked: false,
+            core_checked: false,
+        }
+    }
+
+    pub(crate) fn from_platform() -> Self {
+        Self {
+            repository_checked: false,
+            repository_path_known: false,
+            platform_checked: true,
             core_checked: false,
         }
     }
@@ -96,6 +107,14 @@ impl BackendOperationPlan {
         Self::new(module, command, BackendOperationEffect::NoOp, boundary)
     }
 
+    pub(crate) fn platform(
+        module: &'static str,
+        command: &'static str,
+        boundary: BackendBoundaryProbe,
+    ) -> Self {
+        Self::new(module, command, BackendOperationEffect::Platform, boundary)
+    }
+
     pub(crate) fn unsupported(
         module: &'static str,
         command: &'static str,
@@ -130,6 +149,9 @@ impl BackendOperationPlan {
             BackendOperationEffect::Pending => "后端业务实现由后续 PR 在当前边界内补齐",
             BackendOperationEffect::NoOp => {
                 "当前命令只完成输入校验和边界编排，未执行文件、进程或系统副作用"
+            }
+            BackendOperationEffect::Platform => {
+                "当前命令只执行平台适配层能力，未恢复闭源业务状态机"
             }
             BackendOperationEffect::Unsupported => "当前命令缺少仓库内证据，保留契约并拒绝伪实现",
         }

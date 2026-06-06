@@ -4,7 +4,16 @@ import type {
   CoreEnvelope,
   DiagnosePayload,
   RebuildRegistryPayload,
+  SystemInfoPayload,
 } from "@/types";
+
+async function ignoreEnvelope(promise: Promise<CoreEnvelope<unknown>>): Promise<void> {
+  await promise;
+}
+
+async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T> {
+  return (await promise).data;
+}
 
 export const maintenanceService = {
   clean: () => invokeIpc<CoreEnvelope<CleanPayload>>("clean"),
@@ -14,16 +23,18 @@ export const maintenanceService = {
 
   diagnose: () => invokeIpc<CoreEnvelope<DiagnosePayload>>("diagnose"),
 
-  restartCodex: () => invokeIpc<void>("restart_codex"),
+  restartCodex: () =>
+    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("restart_codex")),
 
-  forceKillCodex: () => invokeIpc<void>("force_kill_codex"),
+  forceKillCodex: () =>
+    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("force_kill_codex")),
 
-  resetCodexConfig: () => invokeIpc<void>("reset_codex_config"),
+  resetCodexConfig: () =>
+    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("reset_codex_config")),
 
-  openPath: (path: string) => invokeIpc<void>("open_path", { path }),
+  openPath: (path: string) =>
+    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("open_path", { path })),
 
   getSystemInfo: () =>
-    invokeIpc<{ os: string; osVersion: string; arch: string; hostname: string }>(
-      "get_system_info",
-    ),
+    readEnvelopeData(invokeIpc<CoreEnvelope<SystemInfoPayload>>("get_system_info")),
 };

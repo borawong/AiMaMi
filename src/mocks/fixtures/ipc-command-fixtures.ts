@@ -23,11 +23,17 @@ export interface IpcCommandFixture {
   wrapperNames: readonly string[];
 }
 
+export type IpcCommandMockData =
+  | EvidenceBackedIpcFixture
+  | boolean
+  | string
+  | Record<string, unknown>;
+
 export type IpcCommandHandler = (context: {
   args?: IpcArgs;
   command: IpcCommandName;
   steps: IpcMockStepResult[];
-}) => CoreEnvelope<EvidenceBackedIpcFixture>;
+}) => CoreEnvelope<IpcCommandMockData>;
 
 export function createDefaultIpcCommandHandler(): IpcCommandHandler {
   return ({ args, command, steps }) =>
@@ -36,13 +42,83 @@ export function createDefaultIpcCommandHandler(): IpcCommandHandler {
 
 const defaultHandler = createDefaultIpcCommandHandler();
 
+function withMockData<T extends IpcCommandMockData>(
+  context: Parameters<IpcCommandHandler>[0],
+  data: T,
+): CoreEnvelope<T> {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return { ...envelope, data };
+}
+
+const readFalseHandler: IpcCommandHandler = (context) => withMockData(context, false);
+
+const readManualIntervalHandler: IpcCommandHandler = (context) =>
+  withMockData(context, "manual");
+
+const writeBooleanArgHandler: IpcCommandHandler = (context) =>
+  withMockData(context, context.args?.enabled === true);
+
+const writeIntervalArgHandler: IpcCommandHandler = (context) => {
+  const interval = context.args?.interval;
+  return withMockData(context, typeof interval === "string" ? interval : "manual");
+};
+
+const evidenceObjectHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: {
+      backendStatus: envelope.data.status,
+    },
+  };
+};
+
+const systemInfoHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: {
+      backendStatus: envelope.data.status,
+      os: "unknown",
+      osVersion: "unknown",
+      arch: "unknown",
+      hostname: "",
+    },
+  };
+};
+
+const systemCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  focus_main_window: evidenceObjectHandler,
+  get_hotspot_enabled: readFalseHandler,
+  get_image_compat: readFalseHandler,
+  get_system_info: systemInfoHandler,
+  get_usage_refresh_interval: readManualIntervalHandler,
+  has_notch: readFalseHandler,
+  hotspot_ready: evidenceObjectHandler,
+  set_hotspot_enabled: writeBooleanArgHandler,
+  set_image_compat: writeBooleanArgHandler,
+  set_usage_refresh_interval: writeIntervalArgHandler,
+};
+
 export const ipcCommandFixtures = IPC_COMMAND_DEFINITIONS.reduce(
   (fixtures, definition) => {
     fixtures[definition.command] = {
       argKeys: definition.argKeys,
       command: definition.command,
       domain: definition.domain,
-      handler: defaultHandler,
+      handler: systemCommandHandlers[definition.command] ?? defaultHandler,
       source: definition.source,
       tier: definition.tier,
       wrapperNames: definition.wrapperNames,

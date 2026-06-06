@@ -5,6 +5,14 @@ import {
 } from "@/contracts/ipc";
 import type { CoreEnvelope, CoreSnapshotPayload } from "@/types";
 
+async function ignoreEnvelope(promise: Promise<CoreEnvelope<unknown>>): Promise<void> {
+  await promise;
+}
+
+async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T> {
+  return (await promise).data;
+}
+
 export const systemService = {
   loadSnapshot: (localOnly = false) =>
     invokeIpc<CoreEnvelope<CoreSnapshotPayload>>("load_snapshot", { localOnly }),
@@ -12,9 +20,11 @@ export const systemService = {
   refreshUsageSnapshot: () =>
     invokeIpc<CoreEnvelope<CoreSnapshotPayload>>("refresh_usage_snapshot"),
 
-  focusMainWindow: () => invokeIpc<void>("focus_main_window"),
+  focusMainWindow: () =>
+    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("focus_main_window")),
 
-  getDeviceId: () => invokeIpc<string>("get_device_id"),
+  getDeviceId: () =>
+    readEnvelopeData(invokeIpc<CoreEnvelope<string>>("get_device_id")),
 
   getNotificationClientState: () =>
     invokeIpc<IpcEvidencePayload>("get_notification_client_state"),

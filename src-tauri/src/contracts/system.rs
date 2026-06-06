@@ -263,6 +263,8 @@ pub(crate) struct DiagnosePayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct SystemInfo {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub os: String,
     pub os_version: String,
     pub arch: String,

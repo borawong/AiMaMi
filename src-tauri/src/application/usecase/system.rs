@@ -182,7 +182,8 @@ impl<'a> SystemUseCase<'a> {
     }
 
     pub(crate) fn get_usage_refresh_interval(&self) -> Result<CoreEnvelope<String>, CoreError> {
-        Ok(CoreEnvelope::ok("manual".into()))
+        let plan = self.no_op_plan("get_usage_refresh_interval");
+        Ok(CoreEnvelope::from_backend_plan("manual".into(), &plan))
     }
 
     pub(crate) fn set_usage_refresh_interval(
@@ -276,13 +277,18 @@ impl<'a> SystemUseCase<'a> {
     }
 
     pub(crate) fn get_system_info(&self) -> Result<CoreEnvelope<SystemInfo>, CoreError> {
+        let plan = self.platform_plan("get_system_info");
         let platform = self.system_info.system_info();
-        Ok(CoreEnvelope::ok(SystemInfo {
-            os: platform.os,
-            os_version: platform.os_version,
-            arch: platform.arch,
-            hostname: platform.hostname,
-        }))
+        Ok(CoreEnvelope::from_backend_plan(
+            SystemInfo {
+                backend_status: BackendSkeletonStatus::from_plan(&plan),
+                os: platform.os,
+                os_version: platform.os_version,
+                arch: platform.arch,
+                hostname: platform.hostname,
+            },
+            &plan,
+        ))
     }
 
     pub(crate) fn restart_application(
@@ -343,8 +349,12 @@ impl<'a> SystemUseCase<'a> {
         &self,
         window: &dyn WindowPort,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
+        let plan = self.platform_plan("focus_main_window");
         window.focus_main_window()?;
-        Ok(CoreEnvelope::ok(json!({})))
+        Ok(CoreEnvelope::from_backend_plan(
+            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            &plan,
+        ))
     }
 
     pub(crate) fn get_device_id(&self) -> Result<CoreEnvelope<String>, CoreError> {
@@ -418,7 +428,8 @@ impl<'a> SystemUseCase<'a> {
     }
 
     pub(crate) fn get_image_compat(&self) -> Result<CoreEnvelope<bool>, CoreError> {
-        Ok(CoreEnvelope::ok(false))
+        let plan = self.no_op_plan("get_image_compat");
+        Ok(CoreEnvelope::from_backend_plan(false, &plan))
     }
 
     pub(crate) fn set_image_compat(&self, enabled: bool) -> Result<CoreEnvelope<bool>, CoreError> {
@@ -432,7 +443,8 @@ impl<'a> SystemUseCase<'a> {
     }
 
     pub(crate) fn get_hotspot_enabled(&self) -> Result<CoreEnvelope<bool>, CoreError> {
-        Ok(CoreEnvelope::ok(false))
+        let plan = self.no_op_plan("get_hotspot_enabled");
+        Ok(CoreEnvelope::from_backend_plan(false, &plan))
     }
 
     pub(crate) fn set_hotspot_enabled(
@@ -444,7 +456,11 @@ impl<'a> SystemUseCase<'a> {
     }
 
     pub(crate) fn hotspot_ready(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::ok(json!({})))
+        let plan = self.no_op_plan("hotspot_ready");
+        Ok(CoreEnvelope::from_backend_plan(
+            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            &plan,
+        ))
     }
 
     fn pending_plan(&self, command: &'static str) -> BackendOperationPlan {
@@ -469,6 +485,10 @@ impl<'a> SystemUseCase<'a> {
         source_path: String,
     ) -> BackendOperationPlan {
         BackendOperationPlan::no_op(MODULE, command, self.repository_boundary(source_path))
+    }
+
+    fn platform_plan(&self, command: &'static str) -> BackendOperationPlan {
+        BackendOperationPlan::platform(MODULE, command, BackendBoundaryProbe::from_platform())
     }
 
     fn repository_boundary(&self, source_path: String) -> BackendBoundaryProbe {

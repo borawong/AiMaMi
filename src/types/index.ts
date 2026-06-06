@@ -55,6 +55,7 @@ export interface ApiConnectivityPayload {
 }
 
 export interface UpdateInstallabilityPayload {
+  backendStatus: BackendSkeletonStatus;
   canInstall: boolean;
   code: string;
   executablePath: string | null;
@@ -63,6 +64,13 @@ export interface UpdateInstallabilityPayload {
   quarantined: boolean;
 }
 
+export interface SystemInfoPayload {
+  backendStatus: BackendSkeletonStatus;
+  os: string;
+  osVersion: string;
+  arch: string;
+  hostname: string;
+}
 
 export interface AppStatusPayload {
   paths: AppPathState;
@@ -74,6 +82,7 @@ export interface AppStatusPayload {
 }
 
 export interface CoreSnapshotPayload {
+  backendStatus: BackendSkeletonStatus;
   status: AppStatusPayload;
 }
 

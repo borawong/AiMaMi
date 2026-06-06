@@ -83,7 +83,19 @@ impl<T: Serialize> CoreEnvelope<T> {
         match plan.effect() {
             BackendOperationEffect::Pending => Self::pending(data, plan.command()),
             BackendOperationEffect::NoOp => Self::no_op(data, plan.command()),
+            BackendOperationEffect::Platform => Self::platform(data, plan.command()),
             BackendOperationEffect::Unsupported => Self::unsupported(data, plan.command()),
+        }
+    }
+
+    pub(crate) fn platform(data: T, action: &str) -> Self {
+        Self {
+            schema_version: migration::current_schema_version().0,
+            success: true,
+            code: "platform_only".into(),
+            message: "命令已通过平台适配层执行，不代表闭源业务状态机已经恢复。".into(),
+            warnings: vec![platform_warning(action)],
+            data,
         }
     }
 
@@ -115,6 +127,13 @@ pub(crate) fn no_op_warning(action: &str) -> CoreWarning {
     CoreWarning {
         code: "no_op".into(),
         message: format!("{action} 已返回结构化结果，当前没有执行文件、进程或系统副作用。"),
+    }
+}
+
+pub(crate) fn platform_warning(action: &str) -> CoreWarning {
+    CoreWarning {
+        code: "platform_only".into(),
+        message: format!("{action} 已通过平台适配器执行；闭源业务状态机仍保持骨架契约。"),
     }
 }
 

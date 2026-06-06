@@ -28,6 +28,10 @@ export interface RuntimeDownloadProgress {
 
 let pendingRuntimeUpdate: DesktopRuntimeUpdate | null = null;
 
+async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T> {
+  return (await promise).data;
+}
+
 export const settingsService = {
   loadSnapshot: (localOnly = false) =>
     invokeIpc<CoreEnvelope<CoreSnapshotPayload>>("load_snapshot", { localOnly }),
@@ -62,10 +66,12 @@ export const settingsService = {
     invokeIpc<CoreEnvelope<ApiProxyDetectPayload>>("detect_api_proxy_config"),
 
   getUsageRefreshInterval: () =>
-    invokeIpc<string>("get_usage_refresh_interval"),
+    readEnvelopeData(invokeIpc<CoreEnvelope<string>>("get_usage_refresh_interval")),
 
   setUsageRefreshInterval: (interval: string) =>
-    invokeIpc<string>("set_usage_refresh_interval", { interval }),
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<string>>("set_usage_refresh_interval", { interval }),
+    ),
 
   checkUpdateInstallability: async () => {
     const envelope = await invokeIpc<CoreEnvelope<UpdateInstallabilityPayload>>(
@@ -108,17 +114,26 @@ export const settingsService = {
 
   getAppVersion: getDesktopAppVersion,
 
-  hasNotch: () => invokeIpc<boolean>("has_notch").catch(() => false),
+  hasNotch: () =>
+    readEnvelopeData(invokeIpc<CoreEnvelope<boolean>>("has_notch")).catch(() => false),
 
-  getHotspotEnabled: () => invokeIpc<boolean>("get_hotspot_enabled"),
+  getHotspotEnabled: () =>
+    readEnvelopeData(invokeIpc<CoreEnvelope<boolean>>("get_hotspot_enabled")),
 
   setHotspotEnabled: (enabled: boolean) =>
-    invokeIpc<boolean>("set_hotspot_enabled", { enabled }),
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<boolean>>("set_hotspot_enabled", { enabled }),
+    ),
 
-  hotspotReady: () => invokeIpc<void>("hotspot_ready"),
+  hotspotReady: async () => {
+    await invokeIpc<CoreEnvelope<unknown>>("hotspot_ready");
+  },
 
-  getImageCompat: () => invokeIpc<boolean>("get_image_compat"),
+  getImageCompat: () =>
+    readEnvelopeData(invokeIpc<CoreEnvelope<boolean>>("get_image_compat")),
 
   setImageCompat: (enabled: boolean) =>
-    invokeIpc<boolean>("set_image_compat", { enabled }),
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<boolean>>("set_image_compat", { enabled }),
+    ),
 };
