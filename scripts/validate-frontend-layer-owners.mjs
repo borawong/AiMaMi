@@ -44,6 +44,7 @@ const strictFeaturePageShells = [
   "accounts",
   "analytics",
   "custom-instructions",
+  "daemon-autoswitch",
   "maintenance",
   "mcp",
   "overview",
