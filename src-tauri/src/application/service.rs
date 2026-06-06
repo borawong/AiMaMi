@@ -11,9 +11,8 @@ use crate::platform::{
     shell::NoopShell, system::CurrentSystem, window::NoopWindow,
 };
 use crate::repository::RepositoryBundle;
-use serde_json::Value;
 
-use crate::contracts::CoreEnvelope;
+use crate::contracts::{CoreEnvelope, SystemActionPayload};
 use crate::core::error::CoreError;
 
 pub(crate) struct BackendServices {
@@ -91,23 +90,33 @@ impl BackendServices {
         VoiceUseCase::new(&self.repositories)
     }
 
-    pub(crate) fn restart_application(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn restart_application(
+        &self,
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         self.system().restart_application(&self.process)
     }
 
-    pub(crate) fn graceful_restart_for_update(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn graceful_restart_for_update(
+        &self,
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         self.system().graceful_restart_for_update(&self.process)
     }
 
-    pub(crate) fn open_path(&self, path: String) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn open_path(
+        &self,
+        path: String,
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         self.system().open_path(&self.shell, path)
     }
 
-    pub(crate) fn open_privacy_pane(&self, pane: String) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn open_privacy_pane(
+        &self,
+        pane: String,
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         self.system().open_privacy_pane(&self.permissions, pane)
     }
 
-    pub(crate) fn focus_main_window(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn focus_main_window(&self) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         self.system().focus_main_window(self.window.as_ref())
     }
 

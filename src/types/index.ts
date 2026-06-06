@@ -72,6 +72,10 @@ export interface SystemInfoPayload {
   hostname: string;
 }
 
+export interface SystemActionPayload {
+  backendStatus: BackendSkeletonStatus;
+}
+
 export interface NotificationClientStatePayload {
   backendStatus: BackendSkeletonStatus;
   deviceId: string;

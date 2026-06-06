@@ -475,6 +475,43 @@ function validateMcpMockPayloadHandlers() {
   }
 }
 
+function validateSystemActionMockPayloadHandlers() {
+  const commandFixturePath = path.join(
+    repoRoot,
+    "src",
+    "mocks",
+    "fixtures",
+    "commands.ts",
+  );
+  const commandFixtureText = readRequired(commandFixturePath);
+  const actionCommands = [
+    "focus_main_window",
+    "force_kill_codex",
+    "graceful_restart_for_update",
+    "open_path",
+    "reset_codex_config",
+    "restart_codex",
+  ];
+
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+    "SystemActionPayload",
+    "const systemActionHandler",
+    "const systemCommandHandlers",
+    "systemCommandHandlers[definition.command] ??",
+    "hotspot_ready: readFalseHandler",
+  ]);
+
+  for (const command of actionCommands) {
+    if (!commandFixtureText.includes(`${command}: systemActionHandler`)) {
+      failures.push(`src/mocks/fixtures/commands.ts 缺少 system action 专用 handler：${command}`);
+    }
+  }
+
+  if (commandFixtureText.includes("const evidenceObjectHandler")) {
+    failures.push("src/mocks/fixtures/commands.ts 不得保留 system generic evidence object handler");
+  }
+}
+
 function validateSessionsMockPayloadHandlers() {
   const commandFixturePath = path.join(
     repoRoot,
@@ -524,6 +561,7 @@ validateMcpMockPayloadHandlers();
 validatePluginsMockPayloadHandlers();
 validateSessionsMockPayloadHandlers();
 validateRelayMockPayloadHandlers();
+validateSystemActionMockPayloadHandlers();
 validateIpcMockBridge();
 
 if (failures.length > 0) {

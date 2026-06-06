@@ -863,6 +863,38 @@ function validatePluginsTypedPayloadGate() {
   }
 }
 
+function validateSystemTypedPayloadGate() {
+  const systemServicePath = join(repoRoot, "src", "services", "system", "index.ts");
+  const customInstructionsServicePath = join(
+    repoRoot,
+    "src",
+    "services",
+    "custom-instructions",
+    "index.ts",
+  );
+  const systemService = readRequired(systemServicePath);
+  const customInstructionsService = readRequired(customInstructionsServicePath);
+
+  const typedPayloadOk =
+    systemService.includes("SystemActionPayload") &&
+    systemService.includes("CoreEnvelope<SystemActionPayload>") &&
+    systemService.includes("CoreEnvelope<boolean>>(\"hotspot_ready\")") &&
+    systemService.includes("CoreEnvelope<MysteryRouteGrant[]>") &&
+    systemService.includes("toMysteryRouteGrantArgs(grants)") &&
+    customInstructionsService.includes("systemService.openPath") &&
+    !systemService.includes("CoreEnvelope<unknown>") &&
+    !systemService.includes("IpcEvidencePayload") &&
+    !systemService.includes("IpcJsonObject") &&
+    !customInstructionsService.includes("CoreEnvelope<unknown>") &&
+    !customInstructionsService.includes("\"open_path\"");
+
+  if (!typedPayloadOk) {
+    failures.push("system IPC payload owner 必须收口到 typed action payload 和 system service facade");
+  } else {
+    console.log("PASS system typed IPC payload owner：service/action facade");
+  }
+}
+
 function validateNoForbiddenReferenceNames() {
   const textFiles = [
     ...walkFiles(join(repoRoot, "src"), (file) => /\.(cjs|css|html|js|json|jsx|md|mjs|ts|tsx|txt|yml|yaml)$/i.test(file)),
@@ -900,6 +932,7 @@ validateKnownInternalFrontendGates();
 validateMcpTypedPayloadGate();
 validatePluginsFrontendNoPromotionGate();
 validatePluginsTypedPayloadGate();
+validateSystemTypedPayloadGate();
 validateNoForbiddenReferenceNames();
 
 for (const note of notes) {

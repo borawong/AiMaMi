@@ -1,7 +1,4 @@
-import {
-  invokeIpc,
-  type IpcJsonObject,
-} from "@/contracts/ipc";
+import { invokeIpc } from "@/contracts/ipc";
 import type {
   ApiModePayload,
   ApiProxyDetectPayload,
@@ -18,11 +15,12 @@ import type {
   NotificationClientStatePayload,
   PendingAutoSwitchStatePayload,
   RebuildRegistryPayload,
+  SystemActionPayload,
   SystemInfoPayload,
   UpdateInstallabilityPayload,
 } from "@/types";
 
-async function ignoreEnvelope(promise: Promise<CoreEnvelope<unknown>>): Promise<void> {
+async function ignoreEnvelope<T>(promise: Promise<CoreEnvelope<T>>): Promise<void> {
   await promise;
 }
 
@@ -30,9 +28,7 @@ async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T
   return (await promise).data;
 }
 
-function toMysteryRouteGrantArgs(
-  grants: MysteryRouteGrant[],
-): IpcJsonObject[] {
+function toMysteryRouteGrantArgs(grants: MysteryRouteGrant[]) {
   return grants.map((grant) => ({
     route: grant.route,
     epochMs: grant.epochMs,
@@ -123,26 +119,26 @@ export const systemService = {
 
   gracefulRestartForUpdate: () =>
     ignoreEnvelope(
-      invokeIpc<CoreEnvelope<unknown>>("graceful_restart_for_update"),
+      invokeIpc<CoreEnvelope<SystemActionPayload>>("graceful_restart_for_update"),
     ),
 
   restartCodex: () =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("restart_codex")),
+    ignoreEnvelope(invokeIpc<CoreEnvelope<SystemActionPayload>>("restart_codex")),
 
   forceKillCodex: () =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("force_kill_codex")),
+    ignoreEnvelope(invokeIpc<CoreEnvelope<SystemActionPayload>>("force_kill_codex")),
 
   resetCodexConfig: () =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("reset_codex_config")),
+    ignoreEnvelope(invokeIpc<CoreEnvelope<SystemActionPayload>>("reset_codex_config")),
 
   openPath: (path: string) =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("open_path", { path })),
+    ignoreEnvelope(invokeIpc<CoreEnvelope<SystemActionPayload>>("open_path", { path })),
 
   getSystemInfo: () =>
     readEnvelopeData(invokeIpc<CoreEnvelope<SystemInfoPayload>>("get_system_info")),
 
   focusMainWindow: () =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("focus_main_window")),
+    ignoreEnvelope(invokeIpc<CoreEnvelope<SystemActionPayload>>("focus_main_window")),
 
   getDeviceId: () =>
     readEnvelopeData(invokeIpc<CoreEnvelope<string>>("get_device_id")),
@@ -184,7 +180,7 @@ export const systemService = {
     ),
 
   hotspotReady: () =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("hotspot_ready")),
+    ignoreEnvelope(invokeIpc<CoreEnvelope<boolean>>("hotspot_ready")),
 
   getImageCompat: () =>
     readEnvelopeData(invokeIpc<CoreEnvelope<boolean>>("get_image_compat")),

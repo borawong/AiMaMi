@@ -5,9 +5,8 @@ use crate::contracts::{
     AutoSwitchConfigPayload, BootstrapStatePayload, CleanPayload, CoreEnvelope,
     CoreSnapshotPayload, DaemonRunPayload, DiagnosePayload, MysteryRouteGrant,
     NotificationClientStatePayload, PendingAutoSwitchStatePayload, RebuildRegistryPayload,
-    SystemInfo, UpdateInstallabilityPayload,
+    SystemActionPayload, SystemInfo, UpdateInstallabilityPayload,
 };
-use serde_json::Value;
 use tauri::State;
 
 #[tauri::command]
@@ -159,28 +158,28 @@ pub(crate) fn diagnose(
 #[tauri::command]
 pub(crate) fn restart_codex(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<SystemActionPayload>, String> {
     respond(state.services().restart_application())
 }
 
 #[tauri::command]
 pub(crate) fn force_kill_codex(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<SystemActionPayload>, String> {
     respond(state.services().system().force_kill_application())
 }
 
 #[tauri::command]
 pub(crate) fn reset_codex_config(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<SystemActionPayload>, String> {
     respond(state.services().system().reset_application_config())
 }
 
 #[tauri::command]
 pub(crate) fn graceful_restart_for_update(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<SystemActionPayload>, String> {
     respond(state.services().graceful_restart_for_update())
 }
 
@@ -202,7 +201,7 @@ pub(crate) fn load_bootstrap_state(
 pub(crate) fn open_path(
     state: State<'_, TauriAppState>,
     path: String,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<SystemActionPayload>, String> {
     respond(state.services().open_path(path))
 }
 
@@ -262,7 +261,7 @@ pub(crate) fn get_mystery_unlock_grants(
 #[tauri::command]
 pub(crate) fn merge_mystery_unlock_grants(
     state: State<'_, TauriAppState>,
-    grants: Option<Value>,
+    grants: Option<Vec<MysteryRouteGrant>>,
 ) -> Result<CoreEnvelope<Vec<MysteryRouteGrant>>, String> {
     respond(
         state

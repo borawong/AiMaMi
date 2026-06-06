@@ -368,10 +368,14 @@ validateMcpTypedPayloadContracts();
 function validateSystemEnvelopeServiceTypes() {
   const systemServicePath = join(frontendRoot, "services", "system", "index.ts");
   const commandPath = join(backendRoot, "commands", "system.rs");
+  const hotspotCommandPath = join(backendRoot, "commands", "hotspot.rs");
+  const applicationServicePath = join(backendRoot, "application", "service.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "system.rs");
   const contractPath = join(backendRoot, "contracts", "system.rs");
   const systemServiceText = readUtf8(systemServicePath);
   const commandText = readUtf8(commandPath);
+  const hotspotCommandText = readUtf8(hotspotCommandPath);
+  const applicationServiceText = readUtf8(applicationServicePath);
   const usecaseText = readUtf8(usecasePath);
   const contractText = readUtf8(contractPath);
 
@@ -380,6 +384,7 @@ function validateSystemEnvelopeServiceTypes() {
     "pub(crate) struct NotificationClientStatePayload",
     "pub(crate) struct MysteryRouteGrant",
     "pub(crate) struct PendingAutoSwitchStatePayload",
+    "pub(crate) struct SystemActionPayload",
     "pub executed_at: Option<String>",
     "pub pending_switch_account_key: Option<String>",
   ], "system DTO 合同");
@@ -391,7 +396,14 @@ function validateSystemEnvelopeServiceTypes() {
     "Result<CoreEnvelope<NotificationClientStatePayload>, String>",
     "Result<CoreEnvelope<PendingAutoSwitchStatePayload>, String>",
     "Result<CoreEnvelope<Vec<MysteryRouteGrant>>, String>",
+    "Result<CoreEnvelope<SystemActionPayload>, String>",
+    "grants: Option<Vec<MysteryRouteGrant>>",
   ], "system command 强类型 envelope");
+
+  assertContains(hotspotCommandPath, hotspotCommandText, [
+    "Result<CoreEnvelope<SystemActionPayload>, String>",
+    "Result<CoreEnvelope<bool>, String>",
+  ], "hotspot command 强类型 envelope");
 
   assertContains(usecasePath, usecaseText, [
     "Result<CoreEnvelope<String>, CoreError>",
@@ -400,15 +412,19 @@ function validateSystemEnvelopeServiceTypes() {
     "Result<CoreEnvelope<NotificationClientStatePayload>, CoreError>",
     "Result<CoreEnvelope<PendingAutoSwitchStatePayload>, CoreError>",
     "Result<CoreEnvelope<Vec<MysteryRouteGrant>>, CoreError>",
+    "Result<CoreEnvelope<SystemActionPayload>, CoreError>",
     "NotificationClientStatePayload {",
     "PendingAutoSwitchStatePayload {",
-    "parse_mystery_route_grants(",
+    "clean_mystery_route_grants(",
+    "system_action_payload(",
   ], "system usecase 强类型 payload 组装");
 
   assertContains(systemServicePath, systemServiceText, [
     "CoreEnvelope<BootstrapStatePayload>",
     "CoreEnvelope<NotificationClientStatePayload>",
     "CoreEnvelope<PendingAutoSwitchStatePayload>",
+    "CoreEnvelope<SystemActionPayload>",
+    "CoreEnvelope<boolean>>(\"hotspot_ready\")",
     "CoreEnvelope<MysteryRouteGrant[]>",
     "CoreEnvelope<string>>(\"get_or_create_remote_device_secret\")",
     "CoreEnvelope<null>>(\"import_remote_device_secret_if_empty\"",
@@ -420,7 +436,31 @@ function validateSystemEnvelopeServiceTypes() {
     "CoreEnvelope<IpcEvidencePayload>>(\"get_notification_client_state\"",
     "CoreEnvelope<IpcEvidencePayload>>(\"get_mystery_unlock_grants\"",
     "CoreEnvelope<IpcEvidencePayload>>(\"merge_mystery_unlock_grants\"",
+    "CoreEnvelope<unknown>",
+    "IpcJsonObject",
   ], "system service 不得退回 generic evidence payload");
+
+  assertNotContainsSnippet(commandPath, commandText, [
+    "serde_json::Value",
+    "CoreEnvelope<Value>",
+  ], "system command 不得回退 serde_json::Value");
+
+  assertNotContainsSnippet(hotspotCommandPath, hotspotCommandText, [
+    "serde_json::Value",
+    "CoreEnvelope<Value>",
+  ], "hotspot command 不得回退 serde_json::Value");
+
+  assertNotContainsSnippet(applicationServicePath, applicationServiceText, [
+    "serde_json::Value",
+    "CoreEnvelope<Value>",
+  ], "application service 不得回退 system action generic payload");
+
+  assertNotContainsSnippet(usecasePath, usecaseText, [
+    "serde_json::Value",
+    "json!",
+    "parse_mystery_route_grants(",
+    "clean_json_value(",
+  ], "system usecase 不得回退泛型 JSON payload");
 }
 
 validateSystemEnvelopeServiceTypes();

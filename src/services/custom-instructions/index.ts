@@ -1,4 +1,5 @@
 import { invokeIpc } from "@/contracts/ipc";
+import { systemService } from "@/services/system";
 import type {
   CoreEnvelope,
   CustomInstructionPreviewPayload,
@@ -46,7 +47,5 @@ export const customInstructionsService = {
       { historyId },
     ),
 
-  openPath: async (path: string) => {
-    await invokeIpc<CoreEnvelope<unknown>>("open_path", { path });
-  },
+  openPath: systemService.openPath,
 };

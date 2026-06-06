@@ -7,13 +7,13 @@ use crate::contracts::{
     ApiProxyTestPayload, AutoSwitchConfigPayload, AutoSwitchStatusPayload, BackendSkeletonStatus,
     BootstrapStatePayload, CleanPayload, CoreEnvelope, CoreSnapshotPayload, DaemonRunPayload,
     DiagnosePayload, DiagnosePlatform, MysteryRouteGrant, NotificationClientStatePayload,
-    PendingAutoSwitchStatePayload, RebuildRegistryPayload, SystemInfo, UpdateInstallabilityPayload,
+    PendingAutoSwitchStatePayload, RebuildRegistryPayload, SystemActionPayload, SystemInfo,
+    UpdateInstallabilityPayload,
 };
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::core::single_flight::SingleFlight;
 use crate::repository::RepositoryBundle;
-use serde_json::{json, Map, Value};
 
 const MODULE: &str = "system";
 
@@ -293,27 +293,31 @@ impl<'a> SystemUseCase<'a> {
     pub(crate) fn restart_application(
         &self,
         process: &dyn ProcessPort,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         process.restart_application()?;
         let plan = self.platform_plan("restart_codex");
         Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            system_action_payload(&plan),
             &plan,
         ))
     }
 
-    pub(crate) fn force_kill_application(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn force_kill_application(
+        &self,
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         let plan = self.no_op_plan("force_kill_codex");
         Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            system_action_payload(&plan),
             &plan,
         ))
     }
 
-    pub(crate) fn reset_application_config(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn reset_application_config(
+        &self,
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         let plan = self.no_op_plan("reset_codex_config");
         Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            system_action_payload(&plan),
             &plan,
         ))
     }
@@ -321,11 +325,11 @@ impl<'a> SystemUseCase<'a> {
     pub(crate) fn graceful_restart_for_update(
         &self,
         process: &dyn ProcessPort,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         process.graceful_restart_for_update()?;
         let plan = self.platform_plan("graceful_restart_for_update");
         Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            system_action_payload(&plan),
             &plan,
         ))
     }
@@ -334,12 +338,12 @@ impl<'a> SystemUseCase<'a> {
         &self,
         shell: &dyn ShellPort,
         path: String,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         let path = required_text(path, "empty_open_path", "打开路径不能为空。")?;
         shell.open_path(&path)?;
         let plan = self.platform_plan("open_path");
         Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            system_action_payload(&plan),
             &plan,
         ))
     }
@@ -347,11 +351,11 @@ impl<'a> SystemUseCase<'a> {
     pub(crate) fn focus_main_window(
         &self,
         window: &dyn WindowPort,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         let plan = self.platform_plan("focus_main_window");
         window.focus_main_window()?;
         Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            system_action_payload(&plan),
             &plan,
         ))
     }
@@ -400,9 +404,9 @@ impl<'a> SystemUseCase<'a> {
 
     pub(crate) fn merge_mystery_unlock_grants(
         &self,
-        grants: Option<Value>,
+        grants: Option<Vec<MysteryRouteGrant>>,
     ) -> Result<CoreEnvelope<Vec<MysteryRouteGrant>>, CoreError> {
-        let grants = parse_mystery_route_grants(grants)?;
+        let grants = clean_mystery_route_grants(grants);
         let plan = self.no_op_plan("merge_mystery_unlock_grants");
         Ok(CoreEnvelope::from_backend_plan(grants, &plan))
     }
@@ -411,12 +415,12 @@ impl<'a> SystemUseCase<'a> {
         &self,
         permissions: &dyn PermissionsPort,
         pane: String,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
         let pane = required_text(pane, "empty_privacy_pane", "权限面板标识不能为空。")?;
         permissions.open_privacy_pane(&pane)?;
         let plan = self.platform_plan("open_privacy_pane");
         Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            system_action_payload(&plan),
             &plan,
         ))
     }
@@ -530,101 +534,26 @@ fn clean_optional_text(value: Option<String>) -> Option<String> {
     })
 }
 
-fn clean_optional_json(
-    value: Option<Value>,
-    code: &'static str,
-    public_message: &'static str,
-) -> Result<Option<Value>, CoreError> {
+fn clean_mystery_route_grants(value: Option<Vec<MysteryRouteGrant>>) -> Vec<MysteryRouteGrant> {
     value
-        .map(|value| clean_json_value(value, code, public_message))
-        .transpose()
-}
-
-fn parse_mystery_route_grants(value: Option<Value>) -> Result<Vec<MysteryRouteGrant>, CoreError> {
-    let items = match value {
-        None => return Ok(Vec::new()),
-        Some(Value::Array(items)) => items,
-        Some(Value::Null) => {
-            return Err(CoreError::domain(
-                "empty_mystery_unlock_grants",
-                "授权列表不能为空。",
-            ))
-        }
-        Some(_) => {
-            return Err(CoreError::domain(
-                "invalid_mystery_unlock_grants",
-                "授权列表必须是数组。",
-            ))
-        }
-    };
-
-    Ok(items
+        .unwrap_or_default()
         .into_iter()
-        .filter_map(|item| {
-            let Value::Object(object) = item else {
-                return None;
-            };
-            let route = object
-                .get("route")
-                .and_then(Value::as_str)
-                .map(str::trim)
-                .unwrap_or_default();
+        .filter_map(|grant| {
+            let route = grant.route.trim().to_owned();
             if route.is_empty() {
-                return None;
+                None
+            } else {
+                Some(MysteryRouteGrant {
+                    route,
+                    epoch_ms: grant.epoch_ms,
+                })
             }
-            let epoch_ms = object
-                .get("epochMs")
-                .or_else(|| object.get("epoch_ms"))
-                .and_then(Value::as_u64)
-                .unwrap_or_default();
-            Some(MysteryRouteGrant {
-                route: route.to_owned(),
-                epoch_ms,
-            })
         })
-        .collect())
+        .collect()
 }
 
-fn clean_json_value(
-    value: Value,
-    code: &'static str,
-    public_message: &'static str,
-) -> Result<Value, CoreError> {
-    match value {
-        Value::Null => Err(CoreError::domain(code, public_message)),
-        Value::String(value) => {
-            let value = value.trim().to_owned();
-            if value.is_empty() {
-                Err(CoreError::domain(code, public_message))
-            } else {
-                Ok(Value::String(value))
-            }
-        }
-        Value::Array(values) => {
-            let values = values
-                .into_iter()
-                .map(|value| clean_json_value(value, code, public_message))
-                .collect::<Result<Vec<_>, _>>()?;
-            if values.is_empty() {
-                Err(CoreError::domain(code, public_message))
-            } else {
-                Ok(Value::Array(values))
-            }
-        }
-        Value::Object(values) => {
-            let mut cleaned = Map::new();
-            for (key, value) in values {
-                let key = key.trim().to_owned();
-                if !key.is_empty() {
-                    cleaned.insert(key, clean_json_value(value, code, public_message)?);
-                }
-            }
-            if cleaned.is_empty() {
-                Err(CoreError::domain(code, public_message))
-            } else {
-                Ok(Value::Object(cleaned))
-            }
-        }
-        value => Ok(value),
+fn system_action_payload(plan: &BackendOperationPlan) -> SystemActionPayload {
+    SystemActionPayload {
+        backend_status: BackendSkeletonStatus::from_plan(plan),
     }
 }
