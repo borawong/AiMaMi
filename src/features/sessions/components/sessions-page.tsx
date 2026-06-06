@@ -65,14 +65,20 @@ export function SessionsPage() {
   const [focusedId, setFocusedId] = useState<string | null>(null);
   const [deleteRequest, setDeleteRequest] = useState<DeleteRequest | null>(null);
 
-  const payload = envelopeData(module.sessionsQuery.data);
-  const usage = envelopeData(module.usageQuery.data);
+  const sessionsPayload =
+    module.sessionsEnvelope?.payload ??
+    (module.sessionsEnvelope ? null : module.sessionsQuery.data);
+  const usagePayload =
+    module.usageEnvelope?.payload ??
+    (module.usageEnvelope ? null : module.usageQuery.data);
+  const payload = envelopeData(sessionsPayload);
+  const usage = envelopeData(usagePayload);
   const sessions = readArray(payload, ["items", "sessions", "data.items"]);
   const groups = useMemo(() => buildSessionGroups(sessions), [sessions]);
   const allIds = useMemo(() => flattenGroups(groups), [groups]);
   const allIdSet = useMemo(() => new Set(allIds), [allIds]);
   const orphanCount = useMemo(() => countOrphans(groups), [groups]);
-  const loading = !module.sessionsQuery.data && (module.sessionsQuery.isLoading || module.sessionsQuery.isFetching);
+  const loading = !sessionsPayload && (module.sessionsQuery.isLoading || module.sessionsQuery.isFetching);
 
   useEffect(() => {
     if (initialExpanded.current || groups.length === 0) return;
@@ -107,12 +113,12 @@ export function SessionsPage() {
   }, [allIds, allIdSet, focusedId]);
 
   const refresh = async () => {
-    await Promise.all([module.sessionsQuery.refetch(), module.usageQuery.refetch()]);
+    await module.refreshAction.run();
   };
 
   const deleteSessions = async () => {
     if (!deleteRequest) return;
-    await module.deleteSessionsMutation.mutateAsync(deleteRequest.ids);
+    await module.deleteSessions.run(deleteRequest.ids);
     setSelected((current) => {
       const next = new Set(current);
       for (const id of deleteRequest.ids) next.delete(id);
@@ -172,7 +178,7 @@ export function SessionsPage() {
               type="button"
               variant="destructive"
               size="sm"
-              disabled={module.deleteSessionsMutation.isPending}
+              disabled={module.deleteSessions.isPending}
               onClick={() =>
                 setDeleteRequest({
                   ids: [...selected],
@@ -190,15 +196,14 @@ export function SessionsPage() {
             type="button"
             variant="outline"
             size="icon-sm"
-            disabled={module.sessionsQuery.isFetching || module.usageQuery.isFetching}
+            disabled={module.refreshAction.isPending}
             aria-label={t("common.refresh")}
             onClick={() => void refresh()}
           >
             <RefreshCw
               className={cn(
                 "h-3.5 w-3.5",
-                (module.sessionsQuery.isFetching || module.usageQuery.isFetching) &&
-                  "animate-spin",
+                module.refreshAction.isPending && "animate-spin",
               )}
             />
           </Button>
@@ -266,18 +271,18 @@ export function SessionsPage() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={module.deleteSessionsMutation.isPending}>
+            <AlertDialogCancel disabled={module.deleteSessions.isPending}>
               {t("common.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
-              disabled={module.deleteSessionsMutation.isPending}
+              disabled={module.deleteSessions.isPending}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={(event) => {
                 event.preventDefault();
                 void deleteSessions();
               }}
             >
-              {module.deleteSessionsMutation.isPending
+              {module.deleteSessions.isPending
                 ? t("common.loading")
                 : deleteRequest?.actionLabel}
             </AlertDialogAction>

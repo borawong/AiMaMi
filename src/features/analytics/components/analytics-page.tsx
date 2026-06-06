@@ -48,6 +48,24 @@ export function AnalyticsPage() {
     activePanel,
     quotaAccountKey,
   });
+  const usagePayload =
+    module.usageEnvelope?.payload ??
+    (module.usageEnvelope ? null : module.usageQuery.data);
+  const sessionPayload =
+    module.sessionEnvelope?.payload ??
+    (module.sessionEnvelope ? null : module.sessionQuery.data);
+  const tokenPayload =
+    module.tokenEnvelope?.payload ??
+    (module.tokenEnvelope ? null : module.tokenQuery.data);
+  const toolPayload =
+    module.toolEnvelope?.payload ??
+    (module.toolEnvelope ? null : module.toolQuery.data);
+  const changePayload =
+    module.changeEnvelope?.payload ??
+    (module.changeEnvelope ? null : module.changeQuery.data);
+  const quotaPayload =
+    module.quotaEnvelope?.payload ??
+    (module.quotaEnvelope ? null : module.quotaQuery.data);
 
   return (
     <div className="space-y-5">
@@ -98,43 +116,43 @@ export function AnalyticsPage() {
         <div className="mt-5">
           {activePanel === "activity" ? (
             <ActivityPanel
-              payload={envelopeData(module.usageQuery.data)}
-              loading={!module.usageQuery.data && (module.usageQuery.isPending || module.usageQuery.isFetching)}
+              payload={envelopeData(usagePayload)}
+              loading={!usagePayload && (module.usageQuery.isPending || module.usageQuery.isFetching)}
               range={activityRange}
             />
           ) : null}
           {activePanel === "sessions" ? (
             <SessionsPanel
-              payload={envelopeData(module.sessionQuery.data)}
-              loading={!module.sessionQuery.data && (module.sessionQuery.isPending || module.sessionQuery.isFetching)}
+              payload={envelopeData(sessionPayload)}
+              loading={!sessionPayload && (module.sessionQuery.isPending || module.sessionQuery.isFetching)}
               range={range}
             />
           ) : null}
           {activePanel === "token" ? (
             <TokenPanel
-              payload={envelopeData(module.tokenQuery.data)}
-              loading={!module.tokenQuery.data && (module.tokenQuery.isPending || module.tokenQuery.isFetching)}
+              payload={envelopeData(tokenPayload)}
+              loading={!tokenPayload && (module.tokenQuery.isPending || module.tokenQuery.isFetching)}
               range={range}
             />
           ) : null}
           {activePanel === "tools" ? (
             <ToolsPanel
-              payload={envelopeData(module.toolQuery.data)}
-              loading={!module.toolQuery.data && (module.toolQuery.isPending || module.toolQuery.isFetching)}
+              payload={envelopeData(toolPayload)}
+              loading={!toolPayload && (module.toolQuery.isPending || module.toolQuery.isFetching)}
             />
           ) : null}
           {activePanel === "changes" ? (
             <ChangesPanel
-              payload={envelopeData(module.changeQuery.data)}
-              loading={!module.changeQuery.data && (module.changeQuery.isPending || module.changeQuery.isFetching)}
+              payload={envelopeData(changePayload)}
+              loading={!changePayload && (module.changeQuery.isPending || module.changeQuery.isFetching)}
               range={range}
             />
           ) : null}
           {activePanel === "quota" ? (
             <QuotaPanel
               accountKey={quotaAccountKey.trim()}
-              payload={envelopeData(module.quotaQuery.data)}
-              loading={!module.quotaQuery.data && (module.quotaQuery.isPending || module.quotaQuery.isFetching)}
+              payload={envelopeData(quotaPayload)}
+              loading={!quotaPayload && (module.quotaQuery.isPending || module.quotaQuery.isFetching)}
             />
           ) : null}
         </div>

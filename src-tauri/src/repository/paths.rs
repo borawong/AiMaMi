@@ -46,6 +46,7 @@ pub(crate) enum RepositoryPath {
     AccountsSource,
     AnalyticsSource,
     ConfigSource,
+    McpSource,
     VoiceSource,
     CustomInstructionsSource,
     RegistrySource,
@@ -63,6 +64,7 @@ impl RepositoryPath {
             Self::AccountsSource => &["accounts", "accounts.json"],
             Self::AnalyticsSource => &["analytics", "usage.json"],
             Self::ConfigSource => &["config", "config.json"],
+            Self::McpSource => &["config", "mcp.json"],
             Self::VoiceSource => &["config", "voice.json"],
             Self::CustomInstructionsSource => &["custom-instructions", "templates.json"],
             Self::RegistrySource => &["registry", "registry.json"],
@@ -102,6 +104,14 @@ mod tests {
         assert_eq!(
             context.contract_string(RepositoryPath::SkillBackupsRoot),
             "state/skills/backups"
+        );
+        assert_eq!(
+            context.contract_string(RepositoryPath::McpSource),
+            "state/config/mcp.json"
+        );
+        assert_eq!(
+            context.contract_string(RepositoryPath::VoiceSource),
+            "state/config/voice.json"
         );
     }
 

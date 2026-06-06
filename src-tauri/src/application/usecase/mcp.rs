@@ -69,7 +69,7 @@ impl<'a> McpUseCase<'a> {
                 McpServerSummary {
                     name,
                     enabled,
-                    source_path: self.repositories.config().source_path(),
+                    source_path: self.repositories.mcp().source_path(),
                     ..McpServerSummary::default()
                 },
             ),
@@ -98,13 +98,13 @@ impl<'a> McpUseCase<'a> {
     }
 
     fn repository_boundary(&self) -> BackendBoundaryProbe {
-        BackendBoundaryProbe::from_repository_source(self.repositories.config().source_path())
+        BackendBoundaryProbe::from_repository_source(self.repositories.mcp().source_path())
     }
 
     fn list_payload(&self, plan: &BackendOperationPlan) -> McpServerListPayload {
         McpServerListPayload {
             status: BackendSkeletonStatus::from_plan(plan),
-            source_path: self.repositories.config().source_path(),
+            source_path: self.repositories.mcp().source_path(),
             ..McpServerListPayload::default()
         }
     }
@@ -114,7 +114,7 @@ impl<'a> McpUseCase<'a> {
         plan: &BackendOperationPlan,
         mut server: McpServerSummary,
     ) -> McpServerMutationPayload {
-        let source_path = self.repositories.config().source_path();
+        let source_path = self.repositories.mcp().source_path();
         if server.source_path.trim().is_empty() {
             server.source_path = source_path.clone();
         }
@@ -135,7 +135,7 @@ impl<'a> McpUseCase<'a> {
             status: BackendSkeletonStatus::from_plan(plan),
             removed_name,
             total: 0,
-            source_path: self.repositories.config().source_path(),
+            source_path: self.repositories.mcp().source_path(),
         }
     }
 }

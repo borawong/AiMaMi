@@ -1,9 +1,12 @@
 import { invokeIpc, type IpcEvidencePayload } from "@/contracts/ipc";
 import type { CoreEnvelope } from "@/types";
+import { maintenanceService } from "../maintenance";
+import { systemService } from "../system";
 
 export const accountsService = {
-  refreshUsageSnapshot: () =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("refresh_usage_snapshot"),
+  loadSnapshot: (localOnly = true) => systemService.loadSnapshot(localOnly),
+
+  refreshUsageSnapshot: () => systemService.refreshUsageSnapshot(),
 
   beginAddAccountAttachMonitor: () =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("begin_add_account_attach_monitor"),
@@ -50,6 +53,5 @@ export const accountsService = {
       selectedKeys: selectedKeys ?? null,
     }),
 
-  openPath: (path: string) =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("open_path", { path }),
+  openPath: (path: string) => maintenanceService.openPath(path),
 };

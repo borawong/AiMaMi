@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import type { IpcJsonValue } from "@/contracts/ipc";
 import {
   envelopeData,
   readArray,
@@ -29,6 +28,7 @@ import {
   RecordSummary,
 } from "@/features/_shared/evidence-panels";
 import { usePluginsModule } from "../hooks";
+import type { PluginSettingsDraft } from "../types";
 
 export function PluginsPage() {
   const { t } = useTranslation();
@@ -69,9 +69,9 @@ export function PluginsPage() {
   const saveConfig = async () => {
     if (!configPluginId) return;
 
-    let settings: IpcJsonValue;
+    let settings: PluginSettingsDraft;
     try {
-      settings = JSON.parse(configDraft) as IpcJsonValue;
+      settings = JSON.parse(configDraft) as PluginSettingsDraft;
     } catch {
       setConfigParseErrorKey("plugins.configJsonInvalid");
       return;

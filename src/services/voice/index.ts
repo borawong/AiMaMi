@@ -121,21 +121,15 @@ export const voiceService = {
 
   replaceVocabularyKind: (input: {
     kind: string;
-    source: string;
-    replacement: string;
     entries: IpcJsonObject[];
     appBundleId?: string | null;
     appName?: string | null;
-    notes?: string | null;
   }) =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("replace_voice_vocabulary_kind", {
       kind: input.kind,
-      source: input.source,
-      replacement: input.replacement,
       entries: input.entries,
       appBundleId: input.appBundleId ?? null,
       appName: input.appName ?? null,
-      notes: input.notes ?? null,
     }),
 
   removeVocabularyAppScope: (appBundleId: string) =>

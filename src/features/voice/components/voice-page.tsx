@@ -19,12 +19,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
-  envelopeData,
-  readArray,
-  readBoolean,
-  readString,
-} from "@/features/_shared/evidence-data";
-import {
   BoolBadge,
   EvidencePageHeader,
   MetricCard,
@@ -32,6 +26,7 @@ import {
   RecordList,
   RecordSummary,
 } from "@/features/_shared/evidence-panels";
+import type { VoiceRecordPreview } from "../cache";
 import { useVoiceModule } from "../hooks";
 
 export function VoicePage() {
@@ -43,24 +38,25 @@ export function VoicePage() {
   const [overlayOutputDraft, setOverlayOutputDraft] = useState("");
   const [llmProviderDraft, setLlmProviderDraft] = useState("");
   const [asrProviderDraft, setAsrProviderDraft] = useState("");
-  const workspace = envelopeData(module.workspaceQuery.data);
-  const runtime = envelopeData(module.runtimeQuery.data);
-  const templates = readArray(workspace, ["templates"]);
-  const vocabulary = readArray(workspace, ["vocabulary"]);
-  const history = readArray(workspace, ["history"]);
-  const supported = readBoolean(runtime, ["supported"]);
-  const enabled = readBoolean(runtime, ["enabled"]);
-  const captureState = readString(runtime, ["captureState"], "");
-  const globalShortcut = readString(runtime, ["globalShortcut"], "");
-  const processingMode = readString(runtime, ["processingMode"], "");
-  const processingModeId = readString(runtime, ["processingModeId"], "");
-  const speechModel = readString(runtime, ["speechModel"], "");
-  const triggerStyle = readString(runtime, ["triggerStyle"], "");
-  const triggerKeyLabel = readString(runtime, ["triggerKeyLabel"], "");
-  const activeAsrProvider = readString(runtime, ["activeAsrProvider"], "");
-  const activeAsrModel = readString(runtime, ["activeAsrModel"], "");
-  const capturedBundleId = readString(runtime, ["capturedTargetBundleId"], "");
-  const capturedAppName = readString(runtime, ["capturedTargetAppName"], "");
+  const { workspaceFacts, runtimeFacts } = module;
+  const templates = workspaceFacts.templates;
+  const vocabulary = workspaceFacts.vocabulary;
+  const history = workspaceFacts.history;
+  const {
+    supported,
+    enabled,
+    captureState,
+    globalShortcut,
+    processingMode,
+    processingModeId,
+    speechModel,
+    triggerStyle,
+    triggerKeyLabel,
+    activeAsrProvider,
+    activeAsrModel,
+    capturedBundleId,
+    capturedAppName,
+  } = runtimeFacts;
   const isBusy = module.isAnyMutationPending;
 
   return (
@@ -108,33 +104,34 @@ export function VoicePage() {
           <RecordList
             items={templates}
             emptyKey="voice.emptyTemplates"
-            renderItem={(template) => (
-              <div className="flex min-w-0 items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-foreground">
-                    {readString(template, ["title", "name", "id"], t("voice.unknownTemplate"))}
-                  </p>
-                  <p className="mt-1 truncate text-xs text-muted-foreground">
-                    {readString(template, ["description", "kind"], "")}
-                  </p>
+            renderItem={(template) => {
+              const item = template as VoiceRecordPreview;
+              return (
+                <div className="flex min-w-0 items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-foreground">
+                      {item.primary || t("voice.unknownTemplate")}
+                    </p>
+                    <p className="mt-1 truncate text-xs text-muted-foreground">
+                      {item.secondary}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    size="icon-sm"
+                    variant="ghost"
+                    className="shrink-0 text-destructive hover:text-destructive"
+                    aria-label={t("voice.removeTemplate")}
+                    disabled={!item.id || isBusy}
+                    onClick={() =>
+                      void module.workspaceActions.removeTemplate.run(item.id)
+                    }
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
-                <Button
-                  type="button"
-                  size="icon-sm"
-                  variant="ghost"
-                  className="shrink-0 text-destructive hover:text-destructive"
-                  aria-label={t("voice.removeTemplate")}
-                  disabled={!readString(template, ["id"], "") || isBusy}
-                  onClick={() =>
-                    void module.workspaceActions.removeTemplate.run(
-                      readString(template, ["id"], ""),
-                    )
-                  }
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            )}
+              );
+            }}
           />
           <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
             {/* 新增或更新模板需要完整编辑器与字段校验，本轮只保留已证实通信边界。 */}
@@ -149,33 +146,34 @@ export function VoicePage() {
           <RecordList
             items={vocabulary}
             emptyKey="voice.emptyVocabulary"
-            renderItem={(entry) => (
-              <div className="flex min-w-0 items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-foreground">
-                    {readString(entry, ["source", "id"], t("voice.unknownVocabulary"))}
-                  </p>
-                  <p className="mt-1 truncate text-xs text-muted-foreground">
-                    {readString(entry, ["replacement", "kind"], "")}
-                  </p>
+            renderItem={(entry) => {
+              const item = entry as VoiceRecordPreview;
+              return (
+                <div className="flex min-w-0 items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-foreground">
+                      {item.primary || t("voice.unknownVocabulary")}
+                    </p>
+                    <p className="mt-1 truncate text-xs text-muted-foreground">
+                      {item.secondary}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    size="icon-sm"
+                    variant="ghost"
+                    className="shrink-0 text-destructive hover:text-destructive"
+                    aria-label={t("voice.removeVocabulary")}
+                    disabled={!item.id || isBusy}
+                    onClick={() =>
+                      void module.workspaceActions.removeVocabulary.run(item.id)
+                    }
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
-                <Button
-                  type="button"
-                  size="icon-sm"
-                  variant="ghost"
-                  className="shrink-0 text-destructive hover:text-destructive"
-                  aria-label={t("voice.removeVocabulary")}
-                  disabled={!readString(entry, ["id"], "") || isBusy}
-                  onClick={() =>
-                    void module.workspaceActions.removeVocabulary.run(
-                      readString(entry, ["id"], ""),
-                    )
-                  }
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            )}
+              );
+            }}
           />
           <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
             {/* 词表写入、批量替换和应用范围需要完整传输结构，还原前不编造表单。 */}
@@ -210,7 +208,7 @@ export function VoicePage() {
             <RuntimeRow label={t("voice.triggerKey")} value={triggerKeyLabel || "-"} />
             <RuntimeRow label={t("voice.processingMode")} value={processingMode || "-"} />
             <RuntimeRow label={t("voice.processingModeId")} value={processingModeId || "-"} />
-            <RecordSummary value={readRuntimePermissions(runtime)} />
+            <RecordSummary value={runtimeFacts.permissions} />
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3">
             <ActionButton
@@ -336,33 +334,34 @@ export function VoicePage() {
           <RecordList
             items={history}
             emptyKey="voice.emptyHistory"
-            renderItem={(entry) => (
-              <div className="flex min-w-0 items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-foreground">
-                    {readString(entry, ["templateTitle", "id"], t("voice.unknownHistory"))}
-                  </p>
-                  <p className="mt-1 truncate text-xs text-muted-foreground">
-                    {readString(entry, ["renderedText", "rawText"], "")}
-                  </p>
+            renderItem={(entry) => {
+              const item = entry as VoiceRecordPreview;
+              return (
+                <div className="flex min-w-0 items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-foreground">
+                      {item.primary || t("voice.unknownHistory")}
+                    </p>
+                    <p className="mt-1 truncate text-xs text-muted-foreground">
+                      {item.secondary}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    size="icon-sm"
+                    variant="ghost"
+                    className="shrink-0 text-destructive hover:text-destructive"
+                    aria-label={t("voice.removeHistoryEntry")}
+                    disabled={!item.id || isBusy}
+                    onClick={() =>
+                      void module.workspaceActions.removeHistoryEntry.run(item.id)
+                    }
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
-                <Button
-                  type="button"
-                  size="icon-sm"
-                  variant="ghost"
-                  className="shrink-0 text-destructive hover:text-destructive"
-              aria-label={t("voice.removeHistoryEntry")}
-                  disabled={!readString(entry, ["id"], "") || isBusy}
-                  onClick={() =>
-                    void module.workspaceActions.removeHistoryEntry.run(
-                      readString(entry, ["id"], ""),
-                    )
-                  }
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            )}
+              );
+            }}
           />
           <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
             {/* 提示词生成需要原始文本、模板和上下文输入，本轮仅保留动作边界。 */}
@@ -530,11 +529,6 @@ function RuntimeRow({ label, value }: { label: string; value: string }) {
       <span className="min-w-0 truncate text-foreground">{value}</span>
     </div>
   );
-}
-
-function readRuntimePermissions(value: unknown) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
-  return (value as Record<string, unknown>).permissions ?? null;
 }
 
 function ActionButton({

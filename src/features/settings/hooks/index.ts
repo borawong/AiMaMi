@@ -4,22 +4,33 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
+import { settingsService } from "@/services/settings";
 import type { ApiProxyDetectPayload, ApiProxyMode, ApiProxyTestPayload } from "@/types";
-import { SettingsCache } from "../cache";
+import {
+  beginSettingsMutation,
+  runSettingsQuery,
+  SettingsCache,
+  SETTINGS_HAS_NOTCH_QUERY_KEY,
+  SETTINGS_HOTSPOT_ENABLED_QUERY_KEY,
+  SETTINGS_IMAGE_COMPAT_QUERY_KEY,
+  SETTINGS_RUNTIME_STATE_DISPLAY_QUERY_KEY,
+  SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY,
+  writeSettingsMutationPayload,
+} from "../cache";
 
-export const RUNTIME_STATE_DISPLAY_QUERY_KEY = ["runtime-state", "display"] as const;
+export const RUNTIME_STATE_DISPLAY_QUERY_KEY = SETTINGS_RUNTIME_STATE_DISPLAY_QUERY_KEY;
 
-type SnapshotEnvelope = Awaited<ReturnType<typeof api.loadSettingsSnapshot>>;
+type SnapshotEnvelope = Awaited<ReturnType<typeof settingsService.loadSnapshot>>;
 
 export function useSettingsCacheController() {
   return useModuleCacheController(SettingsCache);
 }
 
 export function useSettingsRuntimeState(supportsHotspot: boolean) {
+  const queryClient = useQueryClient();
   const statusQuery = useQuery({
     queryKey: RUNTIME_STATE_DISPLAY_QUERY_KEY,
-    queryFn: () => api.loadSettingsSnapshot(false),
+    queryFn: () => settingsService.loadSnapshot(false),
     staleTime: Infinity,
     refetchOnMount: false,
   });
@@ -28,8 +39,11 @@ export function useSettingsRuntimeState(supportsHotspot: boolean) {
   const currentProxy = status?.api?.proxy ?? { mode: "direct" as ApiProxyMode, url: null };
 
   const notchQuery = useQuery({
-    queryKey: ["has-notch"],
-    queryFn: () => api.hasNotch(),
+    queryKey: SETTINGS_HAS_NOTCH_QUERY_KEY,
+    queryFn: () =>
+      runSettingsQuery(queryClient, SETTINGS_HAS_NOTCH_QUERY_KEY, () =>
+        settingsService.hasNotch(),
+      ),
     staleTime: Infinity,
     enabled: supportsHotspot,
   });
@@ -37,8 +51,11 @@ export function useSettingsRuntimeState(supportsHotspot: boolean) {
   const hasNotch = notchQuery.data ?? false;
 
   const hotspotQuery = useQuery({
-    queryKey: ["hotspot-enabled"],
-    queryFn: () => api.getHotspotEnabled(),
+    queryKey: SETTINGS_HOTSPOT_ENABLED_QUERY_KEY,
+    queryFn: () =>
+      runSettingsQuery(queryClient, SETTINGS_HOTSPOT_ENABLED_QUERY_KEY, () =>
+        settingsService.getHotspotEnabled(),
+      ),
     enabled: supportsHotspot && hasNotch,
   });
 
@@ -59,7 +76,7 @@ export function useSettingsAutoSwitchMutations(options?: {
   const queryClient = useQueryClient();
 
   const disableAutoSwitchMutation = useMutation({
-    mutationFn: () => api.setAutoSwitch(false),
+    mutationFn: () => settingsService.setAutoSwitch(false),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: RUNTIME_STATE_DISPLAY_QUERY_KEY });
       const previous = queryClient.getQueryData<SnapshotEnvelope>(RUNTIME_STATE_DISPLAY_QUERY_KEY);
@@ -91,8 +108,8 @@ export function useSettingsAutoSwitchMutations(options?: {
 
   const saveThresholdsMutation = useMutation({
     mutationFn: async (params: { enable: boolean; t5h: number; tWeekly: number }) => {
-      if (params.enable) await api.setAutoSwitch(true);
-      return api.configureAutoSwitch(params.t5h, params.tWeekly);
+      if (params.enable) await settingsService.setAutoSwitch(true);
+      return settingsService.configureAutoSwitch(params.t5h, params.tWeekly);
     },
     onSuccess: (_data, params) => {
       queryClient.setQueryData<SnapshotEnvelope>(RUNTIME_STATE_DISPLAY_QUERY_KEY, (old) => {
@@ -128,9 +145,21 @@ export function useSettingsHotspotMutation(options?: { onChanged?: (enabled: boo
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (enabled: boolean) => api.setHotspotEnabled(enabled),
-    onSuccess: (_data, enabled) => {
-      queryClient.invalidateQueries({ queryKey: ["hotspot-enabled"] });
+    mutationFn: (enabled: boolean) => settingsService.setHotspotEnabled(enabled),
+    onMutate: async () => {
+      const sequence = beginSettingsMutation(SETTINGS_HOTSPOT_ENABLED_QUERY_KEY);
+      await queryClient.cancelQueries({
+        queryKey: SETTINGS_HOTSPOT_ENABLED_QUERY_KEY,
+      });
+      return { sequence };
+    },
+    onSuccess: async (result, enabled, context) => {
+      await writeSettingsMutationPayload(
+        queryClient,
+        SETTINGS_HOTSPOT_ENABLED_QUERY_KEY,
+        result,
+        context?.sequence,
+      );
       options?.onChanged?.(enabled);
     },
   });
@@ -138,24 +167,38 @@ export function useSettingsHotspotMutation(options?: { onChanged?: (enabled: boo
 
 export function useSettingsHotspotReadyMutation() {
   return useMutation({
-    mutationFn: () => api.hotspotReady(),
+    mutationFn: () => settingsService.hotspotReady(),
   });
 }
 
 export function useSettingsImageCompat() {
   const queryClient = useQueryClient();
-  const imageCompatQueryKey = ["image-compat"] as const;
 
   const imageCompatQuery = useQuery({
-    queryKey: imageCompatQueryKey,
-    queryFn: () => api.getImageCompat(),
+    queryKey: SETTINGS_IMAGE_COMPAT_QUERY_KEY,
+    queryFn: () =>
+      runSettingsQuery(queryClient, SETTINGS_IMAGE_COMPAT_QUERY_KEY, () =>
+        settingsService.getImageCompat(),
+      ),
     staleTime: Infinity,
   });
 
   const setImageCompatMutation = useMutation({
-    mutationFn: (enabled: boolean) => api.setImageCompat(enabled),
-    onSuccess: (enabled) => {
-      queryClient.setQueryData(imageCompatQueryKey, enabled);
+    mutationFn: (enabled: boolean) => settingsService.setImageCompat(enabled),
+    onMutate: async () => {
+      const sequence = beginSettingsMutation(SETTINGS_IMAGE_COMPAT_QUERY_KEY);
+      await queryClient.cancelQueries({
+        queryKey: SETTINGS_IMAGE_COMPAT_QUERY_KEY,
+      });
+      return { sequence };
+    },
+    onSuccess: async (enabled, _variables, context) => {
+      await writeSettingsMutationPayload(
+        queryClient,
+        SETTINGS_IMAGE_COMPAT_QUERY_KEY,
+        enabled,
+        context?.sequence,
+      );
     },
   });
 
@@ -167,24 +210,38 @@ export function useSettingsImageCompat() {
 
 export function useSettingsUpdateInstallabilityMutation() {
   return useMutation({
-    mutationFn: () => api.checkUpdateInstallability(),
+    mutationFn: () => settingsService.checkUpdateInstallability(),
   });
 }
 
 export function useSettingsRefreshInterval() {
   const queryClient = useQueryClient();
-  const refreshIntervalQueryKey = ["usage-refresh-interval"] as const;
 
   const refreshIntervalQuery = useQuery({
-    queryKey: refreshIntervalQueryKey,
-    queryFn: () => api.getUsageRefreshInterval(),
+    queryKey: SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY,
+    queryFn: () =>
+      runSettingsQuery(queryClient, SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY, () =>
+        settingsService.getUsageRefreshInterval(),
+      ),
     staleTime: Infinity,
   });
 
   const saveRefreshIntervalMutation = useMutation({
-    mutationFn: (interval: string) => api.setUsageRefreshInterval(interval),
-    onSuccess: (interval) => {
-      queryClient.setQueryData(refreshIntervalQueryKey, interval);
+    mutationFn: (interval: string) => settingsService.setUsageRefreshInterval(interval),
+    onMutate: async () => {
+      const sequence = beginSettingsMutation(SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY);
+      await queryClient.cancelQueries({
+        queryKey: SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY,
+      });
+      return { sequence };
+    },
+    onSuccess: async (interval, _variables, context) => {
+      await writeSettingsMutationPayload(
+        queryClient,
+        SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY,
+        interval,
+        context?.sequence,
+      );
     },
   });
 
@@ -198,7 +255,7 @@ export function useSettingsAppVersion() {
   const [appVersion, setAppVersion] = useState("...");
 
   useEffect(() => {
-    api.getAppVersion()
+    settingsService.getAppVersion()
       .then(setAppVersion)
       .catch(() => setAppVersion("unknown"));
   }, []);
@@ -207,7 +264,7 @@ export function useSettingsAppVersion() {
 }
 
 export function useApiProxyMutations(options?: {
-  onSaved?: (result: Awaited<ReturnType<typeof api.setApiProxyConfig>>) => Promise<unknown> | void;
+  onSaved?: (result: Awaited<ReturnType<typeof settingsService.setApiProxyConfig>>) => Promise<unknown> | void;
   onSaveError?: (error: unknown) => void;
   onTested?: (result: ApiProxyTestPayload) => void;
   onTestError?: (error: unknown) => void;
@@ -218,7 +275,7 @@ export function useApiProxyMutations(options?: {
 
   const saveProxyMutation = useMutation({
     mutationFn: ({ mode, url }: { mode: ApiProxyMode; url: string }) =>
-      api.setApiProxyConfig(mode, normalizeProxyUrl(mode, url)),
+      settingsService.setApiProxyConfig(mode, normalizeProxyUrl(mode, url)),
     onSuccess: async (result) => {
       queryClient.setQueryData<SnapshotEnvelope>(RUNTIME_STATE_DISPLAY_QUERY_KEY, (old) => {
         if (!old) return old;
@@ -240,13 +297,13 @@ export function useApiProxyMutations(options?: {
 
   const testProxyMutation = useMutation({
     mutationFn: ({ mode, url }: { mode: ApiProxyMode; url: string }) =>
-      api.testApiProxyConfig(mode, normalizeProxyUrl(mode, url)),
+      settingsService.testApiProxyConfig(mode, normalizeProxyUrl(mode, url)),
     onSuccess: (result) => options?.onTested?.(result.data),
     onError: options?.onTestError,
   });
 
   const detectProxyMutation = useMutation({
-    mutationFn: () => api.detectApiProxyConfig(),
+    mutationFn: () => settingsService.detectApiProxyConfig(),
     onSuccess: (result) => options?.onDetected?.(result.data),
     onError: () => options?.onDetectError?.(),
   });

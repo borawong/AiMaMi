@@ -5,97 +5,38 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-  type QueryClient,
-  type QueryKey,
 } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
 import { maintenanceService } from "@/services/maintenance";
 import {
-  invalidateMaintenanceContractQueries,
+  beginMaintenanceMutation,
   MaintenanceCache,
   MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
+  MAINTENANCE_SYSTEM_INFO_QUERY_KEY,
+  runMaintenanceQuery,
+  writeMaintenanceActionPayload,
+  writeMaintenanceMutationPayload,
 } from "../cache";
 import type {
   MaintenanceFixIssueInput,
   MaintenanceImageCompatInput,
 } from "../types";
 
-let maintenanceCacheSequence = 0;
-let maintenanceLatestAcceptedSequence = 0;
-
-function nextMaintenanceCacheSequence() {
-  maintenanceCacheSequence += 1;
-  return maintenanceCacheSequence;
-}
-
-async function writeMaintenanceMutationPayload<TPayload>(
-  queryClient: QueryClient,
-  payload: TPayload,
-) {
-  const sequence = nextMaintenanceCacheSequence();
-  if (!writeMaintenanceCachePayload(queryClient, payload, "mutation-payload", sequence)) {
-    return false;
-  }
-  await invalidateMaintenanceContractQueries(queryClient);
-  return true;
-}
-
-function writeMaintenanceCachePayload<TPayload>(
-  queryClient: QueryClient,
-  payload: TPayload,
-  source: "full-refresh" | "mutation-payload",
-  sequence: number,
-) {
-  if (sequence < maintenanceLatestAcceptedSequence) {
-    return false;
-  }
-
-  maintenanceLatestAcceptedSequence = sequence;
-  MaintenanceCache.writeAuthoritativePayload(queryClient, {
-    payload,
-    source,
-    sequence,
-    receivedAt: Date.now(),
-  });
-  return true;
-}
-
-async function runMaintenanceQuery<TPayload>(
-  queryClient: QueryClient,
-  queryKey: QueryKey,
-  load: () => Promise<TPayload>,
-) {
-  const sequence = nextMaintenanceCacheSequence();
-  const payload = await load();
-  const accepted = writeMaintenanceCachePayload(
-    queryClient,
-    payload,
-    "full-refresh",
-    sequence,
-  );
-  if (!accepted) {
-    return queryClient.getQueryData<TPayload>(queryKey) ?? payload;
-  }
-  return payload;
-}
-
 export function useMaintenanceCacheController() {
   return useModuleCacheController(MaintenanceCache);
 }
 
 export function useMaintenanceActionMutations(options: {
-  onDiagnosed: (result: Awaited<ReturnType<typeof api.diagnose>>) => void;
+  onDiagnosed: (result: Awaited<ReturnType<typeof maintenanceService.diagnose>>) => void;
   onDiagnoseError: (error: unknown) => void;
-  onCleaned: (result: Awaited<ReturnType<typeof api.clean>>) => void;
+  onCleaned: (result: Awaited<ReturnType<typeof maintenanceService.clean>>) => void;
   onCleanError: (error: unknown) => void;
-  onRebuilt: (result: Awaited<ReturnType<typeof api.rebuildRegistry>>) => void;
+  onRebuilt: (result: Awaited<ReturnType<typeof maintenanceService.rebuildRegistry>>) => void;
   onRebuildError: (error: unknown) => void;
   onRestarted: () => void;
   onRestartError: (error: unknown) => void;
 }) {
   const queryClient = useQueryClient();
-  const systemInfoQueryKey = [...MaintenanceCache.queryKeys.root, "system-info"] as const;
 
   const imageCompatQuery = useQuery({
     queryKey: MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
@@ -108,45 +49,45 @@ export function useMaintenanceActionMutations(options: {
     staleTime: 30_000,
   });
   const systemInfoQuery = useQuery({
-    queryKey: systemInfoQueryKey,
+    queryKey: MAINTENANCE_SYSTEM_INFO_QUERY_KEY,
     queryFn: () =>
-      runMaintenanceQuery(queryClient, systemInfoQueryKey, () =>
+      runMaintenanceQuery(queryClient, MAINTENANCE_SYSTEM_INFO_QUERY_KEY, () =>
         maintenanceService.getSystemInfo(),
       ),
     staleTime: 30_000,
   });
 
   const diagnoseMutation = useMutation({
-    mutationFn: () => api.diagnose(),
+    mutationFn: () => maintenanceService.diagnose(),
     onSuccess: async (result) => {
-      await writeMaintenanceMutationPayload(queryClient, result);
+      await writeMaintenanceActionPayload(queryClient, result);
       options.onDiagnosed(result);
     },
     onError: options.onDiagnoseError,
   });
 
   const cleanMutation = useMutation({
-    mutationFn: () => api.clean(),
+    mutationFn: () => maintenanceService.clean(),
     onSuccess: async (result) => {
-      await writeMaintenanceMutationPayload(queryClient, result);
+      await writeMaintenanceActionPayload(queryClient, result);
       options.onCleaned(result);
     },
     onError: options.onCleanError,
   });
 
   const rebuildMutation = useMutation({
-    mutationFn: () => api.rebuildRegistry(),
+    mutationFn: () => maintenanceService.rebuildRegistry(),
     onSuccess: async (result) => {
-      await writeMaintenanceMutationPayload(queryClient, result);
+      await writeMaintenanceActionPayload(queryClient, result);
       options.onRebuilt(result);
     },
     onError: options.onRebuildError,
   });
 
   const restartMutation = useMutation({
-    mutationFn: () => api.restartCodex(),
+    mutationFn: () => maintenanceService.restartCodex(),
     onSuccess: async (result) => {
-      await writeMaintenanceMutationPayload(queryClient, result);
+      await writeMaintenanceActionPayload(queryClient, result);
       options.onRestarted();
     },
     onError: options.onRestartError,
@@ -155,34 +96,41 @@ export function useMaintenanceActionMutations(options: {
   const forceKillMutation = useMutation({
     mutationFn: () => maintenanceService.forceKillCodex(),
     onSuccess: async (result) => {
-      await writeMaintenanceMutationPayload(queryClient, result);
+      await writeMaintenanceActionPayload(queryClient, result);
     },
   });
 
   const resetConfigMutation = useMutation({
     mutationFn: () => maintenanceService.resetCodexConfig(),
     onSuccess: async (result) => {
-      await writeMaintenanceMutationPayload(queryClient, result);
+      await writeMaintenanceActionPayload(queryClient, result);
     },
   });
 
   const setImageCompatMutation = useMutation({
     mutationFn: ({ enabled }: MaintenanceImageCompatInput) =>
       maintenanceService.setImageCompat(enabled),
-    onMutate: () =>
-      queryClient.cancelQueries({
+    onMutate: async () => {
+      const sequence = beginMaintenanceMutation(MAINTENANCE_IMAGE_COMPAT_QUERY_KEY);
+      await queryClient.cancelQueries({
         queryKey: MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
-      }),
-    onSuccess: async (result) => {
-      queryClient.setQueryData(MAINTENANCE_IMAGE_COMPAT_QUERY_KEY, result);
-      await writeMaintenanceMutationPayload(queryClient, result);
+      });
+      return { sequence };
+    },
+    onSuccess: async (result, _variables, context) => {
+      await writeMaintenanceMutationPayload(
+        queryClient,
+        MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
+        result,
+        context?.sequence,
+      );
     },
   });
 
   const routerDiagnosticsMutation = useMutation({
     mutationFn: () => maintenanceService.runCodexRouterDiagnostics(),
     onSuccess: async (result) => {
-      await writeMaintenanceMutationPayload(queryClient, result);
+      await writeMaintenanceActionPayload(queryClient, result);
     },
   });
 
@@ -190,9 +138,16 @@ export function useMaintenanceActionMutations(options: {
     mutationFn: ({ itemId }: MaintenanceFixIssueInput) =>
       maintenanceService.fixCodexRouterIssue(itemId),
     onSuccess: async (result) => {
-      await writeMaintenanceMutationPayload(queryClient, result);
+      await writeMaintenanceActionPayload(queryClient, result);
       const diagnostics = await maintenanceService.runCodexRouterDiagnostics();
-      await writeMaintenanceMutationPayload(queryClient, diagnostics);
+      await writeMaintenanceActionPayload(queryClient, diagnostics);
+    },
+  });
+
+  const openPathMutation = useMutation({
+    mutationFn: ({ path }: { path: string }) => maintenanceService.openPath(path),
+    onSuccess: async (result) => {
+      await writeMaintenanceActionPayload(queryClient, result);
     },
   });
 
@@ -208,5 +163,6 @@ export function useMaintenanceActionMutations(options: {
     setImageCompatMutation,
     routerDiagnosticsMutation,
     fixRouterIssueMutation,
+    openPathMutation,
   };
 }

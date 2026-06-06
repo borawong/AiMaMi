@@ -93,7 +93,7 @@ impl<'a> VoiceUseCase<'a> {
         Ok(CoreEnvelope::from_backend_plan(
             VoiceWorkspacePayload {
                 status: BackendSkeletonStatus::from_plan(&plan),
-                source_path: self.repositories.config().voice_source_path(),
+                source_path: self.repositories.voice().source_path(),
                 ..VoiceWorkspacePayload::default()
             },
             &plan,
@@ -339,7 +339,7 @@ impl<'a> VoiceUseCase<'a> {
                 },
                 workspace: VoiceWorkspacePayload {
                     status: BackendSkeletonStatus::from_plan(&plan),
-                    source_path: self.repositories.config().voice_source_path(),
+                    source_path: self.repositories.voice().source_path(),
                     ..VoiceWorkspacePayload::default()
                 },
                 processing_status: "pending".into(),
@@ -757,7 +757,7 @@ impl<'a> VoiceUseCase<'a> {
     }
 
     fn repository_boundary(&self) -> BackendBoundaryProbe {
-        BackendBoundaryProbe::from_repository_source(self.repositories.config().voice_source_path())
+        BackendBoundaryProbe::from_repository_source(self.repositories.voice().source_path())
     }
 }
 

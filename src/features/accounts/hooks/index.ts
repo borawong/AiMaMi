@@ -1,8 +1,16 @@
+import { useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { api } from "@/lib/api";
 import { accountsService } from "@/services/accounts";
-import { AccountsCache } from "../cache";
+import {
+  AccountsAuthoritativeQueryKeys,
+  AccountsCache,
+  AccountsDumpedQueryKeys,
+  invalidateAccountsDumpedQueries,
+  writeAccountsMutationPayload,
+  writeAccountsSnapshotPayload,
+} from "../cache";
 import type {
   AccountExportFileInput,
   AccountImportFileInput,
@@ -19,58 +27,96 @@ export function useAccountsCacheController() {
 
 export function useAccountsModule() {
   const queryClient = useQueryClient();
-  const invalidateDumpedContractQueries = () => {
-    void AccountsCache.invalidateContractQueries(queryClient);
-    void queryClient.invalidateQueries({ queryKey: ["runtime-state", "display"] });
-    void queryClient.invalidateQueries({ queryKey: ["quota-history"] });
-  };
-  const writeMutationPayload = (payload: unknown) => {
-    AccountsCache.writeAuthoritativePayload(queryClient, {
+  const sequenceRef = useRef(0);
+  const refreshPromiseRef = useRef<Promise<void> | null>(null);
+  const nextSequence = () => ++sequenceRef.current;
+  const writeSnapshotPayload = (
+    payload: unknown,
+    source: "full-refresh" | "active-only-refresh",
+  ) => {
+    writeAccountsSnapshotPayload(queryClient, {
       payload,
-      source: "mutation-payload",
-      sequence: Date.now(),
+      source,
+      sequence: nextSequence(),
       receivedAt: Date.now(),
     });
-    invalidateDumpedContractQueries();
+  };
+  const writeMutationPayload = (
+    payload: unknown,
+    options: { invalidateDumpedQueries?: boolean } = {},
+  ) => {
+    writeAccountsMutationPayload(queryClient, {
+      payload,
+      source: "mutation-payload",
+      sequence: nextSequence(),
+      receivedAt: Date.now(),
+    });
+    if (options.invalidateDumpedQueries ?? true) {
+      void invalidateAccountsDumpedQueries(queryClient);
+    }
   };
 
+  const snapshotEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+    queryKey: AccountsAuthoritativeQueryKeys.snapshot,
+    queryFn: async () =>
+      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(
+        AccountsAuthoritativeQueryKeys.snapshot,
+      ) ?? null,
+    enabled: false,
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
+
   const snapshotQuery = useQuery({
-    queryKey: [...AccountsCache.queryKeys.root, "snapshot"],
-    queryFn: () => api.loadSnapshot(true),
+    queryKey: AccountsDumpedQueryKeys.snapshot,
+    queryFn: async () => {
+      const sequence = nextSequence();
+      const payload = await accountsService.loadSnapshot(true);
+      writeAccountsSnapshotPayload(queryClient, {
+        payload,
+        source: "full-refresh",
+        sequence,
+        receivedAt: Date.now(),
+      });
+      return payload;
+    },
     staleTime: 30_000,
   });
 
   const attachMonitorMutation = useMutation({
     mutationFn: () => accountsService.beginAddAccountAttachMonitor(),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) => writeMutationPayload(payload),
   });
 
   const refreshUsageSnapshotMutation = useMutation({
     mutationFn: () => accountsService.refreshUsageSnapshot(),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) => {
+      writeSnapshotPayload(payload, "active-only-refresh");
+      void invalidateAccountsDumpedQueries(queryClient);
+    },
   });
 
   const switchAccountMutation = useMutation({
     mutationFn: ({ accountKey }: AccountSwitchInput) =>
       accountsService.switchAccount(accountKey),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) => writeMutationPayload(payload),
   });
 
   const switchAccountAndRestartMutation = useMutation({
     mutationFn: ({ accountKey }: AccountSwitchInput) =>
       accountsService.switchAccountAndRestartCodex(accountKey),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) => writeMutationPayload(payload),
   });
 
   const removeAccountsMutation = useMutation({
     mutationFn: ({ accountKeys }: AccountKeysInput) =>
       accountsService.removeAccounts(accountKeys),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) => writeMutationPayload(payload),
   });
 
   const logoutMutation = useMutation({
     mutationFn: () => accountsService.logout(),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) => writeMutationPayload(payload),
   });
 
   const importSessionMutation = useMutation({
@@ -79,19 +125,21 @@ export function useAccountsModule() {
         sessionJson,
         overwriteExisting,
       ),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) => writeMutationPayload(payload),
   });
 
   const exportAccountsMutation = useMutation({
     mutationFn: ({ targetPath, accountKeys }: AccountExportFileInput) =>
       accountsService.exportAccountsToFile(targetPath, accountKeys),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) =>
+      writeMutationPayload(payload, { invalidateDumpedQueries: false }),
   });
 
   const previewImportMutation = useMutation({
     mutationFn: ({ filePath }: AccountPreviewImportInput) =>
       accountsService.previewAccountImport(filePath),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) =>
+      writeMutationPayload(payload, { invalidateDumpedQueries: false }),
   });
 
   const importFileMutation = useMutation({
@@ -105,25 +153,40 @@ export function useAccountsModule() {
         overwriteExisting,
         selectedKeys,
       ),
-    onSuccess: writeMutationPayload,
+    onSuccess: (payload) => writeMutationPayload(payload),
   });
 
   const openPathMutation = useMutation({
     mutationFn: ({ path }: AccountOpenPathInput) => accountsService.openPath(path),
   });
 
+  const refreshAccounts = () => {
+    if (!refreshPromiseRef.current) {
+      refreshPromiseRef.current = Promise.all([
+        snapshotQuery.refetch(),
+        refreshUsageSnapshotMutation.mutateAsync(undefined),
+      ])
+        .then(() => undefined)
+        .finally(() => {
+          refreshPromiseRef.current = null;
+        });
+    }
+    return refreshPromiseRef.current;
+  };
+
   return {
+    snapshotEnvelope: snapshotEnvelopeQuery.data,
     snapshotQuery,
     refreshUsageSnapshotAction: {
       id: "refresh-usage-snapshot",
       labelKey: "accounts.refreshUsageSnapshot",
-      run: () => refreshUsageSnapshotMutation.mutateAsync(),
-      isPending: refreshUsageSnapshotMutation.isPending,
+      run: refreshAccounts,
+      isPending: snapshotQuery.isFetching || refreshUsageSnapshotMutation.isPending,
     },
     attachMonitorAction: {
       id: "attach-monitor",
       labelKey: "accounts.beginAttachMonitor",
-      run: () => attachMonitorMutation.mutateAsync(),
+      run: () => attachMonitorMutation.mutateAsync(undefined),
       isPending: attachMonitorMutation.isPending,
     },
     switchAccount: {
@@ -140,7 +203,7 @@ export function useAccountsModule() {
       isPending: removeAccountsMutation.isPending,
     },
     logout: {
-      run: () => logoutMutation.mutateAsync(),
+      run: () => logoutMutation.mutateAsync(undefined),
       isPending: logoutMutation.isPending,
     },
     importChatGptSessionAccount: {

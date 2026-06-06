@@ -13,9 +13,9 @@ export const analyticsService = {
   loadUsageAnalytics: () =>
     invokeIpc<CoreEnvelope<UsageAnalyticsPayload>>("load_usage_analytics"),
 
-  loadQuotaHistory: (accountKey: string) =>
+  loadQuotaHistory: (accountKey?: string | null) =>
     invokeIpc<CoreEnvelope<QuotaHistoryPayload>>("load_quota_history", {
-      accountKey,
+      accountKey: accountKey?.trim() || undefined,
     }),
 
   loadSessionAnalytics: (range: AnalyticsRange = "week") =>

@@ -67,7 +67,10 @@ type AccountRecord = unknown;
 export function AccountsPage() {
   const { t } = useTranslation();
   const module = useAccountsModule();
-  const snapshot = envelopeData(module.snapshotQuery.data);
+  const snapshotPayload =
+    module.snapshotEnvelope?.payload ??
+    (module.snapshotEnvelope ? null : module.snapshotQuery.data);
+  const snapshot = envelopeData(snapshotPayload);
   const accounts = readArray(snapshot, [
     "accounts",
     "items",
@@ -120,13 +123,10 @@ export function AccountsPage() {
     "status.api.usageStatus",
     "apiConnectivity.usageStatus",
   ], "unknown");
-  const loading = !module.snapshotQuery.data && (module.snapshotQuery.isLoading || module.snapshotQuery.isFetching);
+  const loading = !snapshotPayload && (module.snapshotQuery.isLoading || module.snapshotQuery.isFetching);
 
   const refresh = async () => {
-    await Promise.all([
-      module.snapshotQuery.refetch(),
-      module.refreshUsageSnapshotAction.run(),
-    ]);
+    await module.refreshUsageSnapshotAction.run();
   };
 
   const importSession = async () => {
@@ -139,7 +139,7 @@ export function AccountsPage() {
     setSessionJson("");
     setOverwriteExisting(false);
     setAddOpen(false);
-    await module.snapshotQuery.refetch();
+    await module.refreshUsageSnapshotAction.run();
   };
 
   return (

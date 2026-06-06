@@ -4,6 +4,7 @@ export { customInstructionsService, type ApplyCustomInstructionParams } from "./
 export { daemonAutoswitchService } from "./daemon-autoswitch";
 export { maintenanceService } from "./maintenance";
 export { mcpService, type UpsertMcpServerInput } from "./mcp";
+export { pluginsService } from "./plugins";
 export { relayService } from "./relay";
 export { runtimeExtensionsService } from "./runtime-extensions";
 export { sessionsService } from "./sessions";
