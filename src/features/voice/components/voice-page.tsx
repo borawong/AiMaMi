@@ -1,71 +1,34 @@
 /**
- * 中文职责说明：语音页面渲染语音工作区与运行时状态，不持有语音处理事务。
+ * 中文职责说明：语音模块没有 raw live route 证据时只渲染模块骨架和运行时状态，不承诺完整页面还原。
  */
-import { useState, type ReactElement } from "react";
-import type { VoiceProcessingMode, VoiceSpeechModel } from "@/types";
+import type { ReactElement, ReactNode } from "react";
 import {
   History,
-  Keyboard,
-  Mic,
-  Play,
-  Save,
+  RefreshCw,
   ScrollText,
   Search,
-  Square,
-  Trash2,
   Wand2,
-  X,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Badge } from "@/components/ui/badge";
+import { BentoCard } from "@/components/ui/bento-card";
 import { Button } from "@/components/ui/button";
-import {
-  BoolBadge,
-  EvidencePageHeader,
-  MetricCard,
-  QueryPanel,
-  RecordList,
-  RecordSummary,
-} from "@/features/_shared/evidence-panels";
+import { cn } from "@/lib/utils";
 import type { VoiceRecordPreview } from "../cache";
 import { useVoiceModule } from "../hooks";
+import { previewText, recordEntries } from "../utils";
 
 export function VoicePage() {
   const { t } = useTranslation();
   const module = useVoiceModule();
-  const [shortcutDraft, setShortcutDraft] = useState("");
-  const [injectDraft, setInjectDraft] = useState("");
-  const [overlayQueryDraft, setOverlayQueryDraft] = useState("");
-  const [overlayOutputDraft, setOverlayOutputDraft] = useState("");
-  const [llmProviderDraft, setLlmProviderDraft] = useState("");
-  const [asrProviderDraft, setAsrProviderDraft] = useState("");
   const { workspaceFacts, runtimeFacts } = module;
   const templates = workspaceFacts.templates;
   const vocabulary = workspaceFacts.vocabulary;
   const history = workspaceFacts.history;
-  const {
-    supported,
-    enabled,
-    captureState,
-    globalShortcut,
-    processingMode,
-    processingModeId,
-    speechModel,
-    triggerStyle,
-    triggerKeyLabel,
-    activeAsrProvider,
-    activeAsrModel,
-    capturedBundleId,
-    capturedAppName,
-  } = runtimeFacts;
-  const isBusy = module.isAnyMutationPending;
 
   return (
     <div className="space-y-5">
-      <EvidencePageHeader
-        titleKey="nav.voice"
-        descriptionKey="voice.description"
-        actions={[module.requestPermissionsAction, module.requestAccessibilityAction]}
-      />
+      <VoicePageHeader titleKey="nav.voice" descriptionKey="voice.description" />
 
       <div className="grid gap-3 md:grid-cols-4">
         <MetricCard
@@ -85,12 +48,12 @@ export function VoicePage() {
           value={
             <span className="inline-flex flex-wrap gap-2">
               <BoolBadge
-                value={supported}
+                value={runtimeFacts.supported}
                 trueKey="voice.supported"
                 falseKey="voice.unsupported"
               />
               <BoolBadge
-                value={enabled}
+                value={runtimeFacts.enabled}
                 trueKey="overview.enabled"
                 falseKey="overview.disabled"
               />
@@ -101,414 +64,297 @@ export function VoicePage() {
 
       <div className="grid gap-4 xl:grid-cols-2">
         <QueryPanel titleKey="voice.workspace" state={module.workspaceQuery}>
-          <RecordList
-            items={templates}
-            emptyKey="voice.emptyTemplates"
-            renderItem={(template) => {
-              const item = template as VoiceRecordPreview;
-              return (
-                <div className="flex min-w-0 items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-foreground">
-                      {item.primary || t("voice.unknownTemplate")}
-                    </p>
-                    <p className="mt-1 truncate text-xs text-muted-foreground">
-                      {item.secondary}
-                    </p>
-                  </div>
-                  <Button
-                    type="button"
-                    size="icon-sm"
-                    variant="ghost"
-                    className="shrink-0 text-destructive hover:text-destructive"
-                    aria-label={t("voice.removeTemplate")}
-                    disabled={!item.id || isBusy}
-                    onClick={() =>
-                      void module.workspaceActions.removeTemplate.run(item.id)
-                    }
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              );
-            }}
-          />
-          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
-            {/* 新增或更新模板需要完整编辑器与字段校验，本轮只保留已证实通信边界。 */}
-            <BoundaryButton
-              icon={<Save />}
-              label={t("voice.upsertTemplateBoundary")}
+          <div className="space-y-5">
+            <PreviewList
+              titleKey="voice.templateCount"
+              items={templates}
+              emptyKey="voice.emptyTemplates"
+              fallbackKey="voice.unknownTemplate"
             />
-          </div>
-        </QueryPanel>
-
-        <QueryPanel titleKey="voice.vocabulary" state={module.workspaceQuery}>
-          <RecordList
-            items={vocabulary}
-            emptyKey="voice.emptyVocabulary"
-            renderItem={(entry) => {
-              const item = entry as VoiceRecordPreview;
-              return (
-                <div className="flex min-w-0 items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-foreground">
-                      {item.primary || t("voice.unknownVocabulary")}
-                    </p>
-                    <p className="mt-1 truncate text-xs text-muted-foreground">
-                      {item.secondary}
-                    </p>
-                  </div>
-                  <Button
-                    type="button"
-                    size="icon-sm"
-                    variant="ghost"
-                    className="shrink-0 text-destructive hover:text-destructive"
-                    aria-label={t("voice.removeVocabulary")}
-                    disabled={!item.id || isBusy}
-                    onClick={() =>
-                      void module.workspaceActions.removeVocabulary.run(item.id)
-                    }
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              );
-            }}
-          />
-          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
-            {/* 词表写入、批量替换和应用范围需要完整传输结构，还原前不编造表单。 */}
-            <BoundaryButton
-              icon={<Save />}
-              label={t("voice.upsertVocabularyBoundary")}
+            <PreviewList
+              titleKey="voice.vocabularyCount"
+              items={vocabulary}
+              emptyKey="voice.emptyVocabulary"
+              fallbackKey="voice.unknownVocabulary"
             />
-            <BoundaryButton
-              icon={<Wand2 />}
-              label={t("voice.replaceVocabularyBoundary")}
-            />
-            <BoundaryButton
-              icon={<Search />}
-              label={t("voice.vocabularyAppBoundary")}
-            />
-            <BoundaryButton
-              icon={<X />}
-              label={t("voice.removeVocabularyAppScopeBoundary")}
-            />
-            <BoundaryButton
-              icon={<Search />}
-              label={t("voice.resolveVocabularyAppInfoBoundary")}
+            <PreviewList
+              titleKey="voice.historyCount"
+              items={history}
+              emptyKey="voice.emptyHistory"
+              fallbackKey="voice.unknownHistory"
             />
           </div>
         </QueryPanel>
 
         <QueryPanel titleKey="voice.runtime" state={module.runtimeQuery}>
           <div className="space-y-3">
-            <RuntimeRow label={t("voice.captureState")} value={captureState || "-"} />
-            <RuntimeRow label={t("voice.shortcut")} value={globalShortcut || "-"} />
-            <RuntimeRow label={t("voice.triggerStyle")} value={triggerStyle || "-"} />
-            <RuntimeRow label={t("voice.triggerKey")} value={triggerKeyLabel || "-"} />
-            <RuntimeRow label={t("voice.processingMode")} value={processingMode || "-"} />
-            <RuntimeRow label={t("voice.processingModeId")} value={processingModeId || "-"} />
-            <RecordSummary value={runtimeFacts.permissions} />
+            <DetailRow label={t("voice.captureState")}>
+              {runtimeFacts.captureState || "-"}
+            </DetailRow>
+            <DetailRow label={t("voice.shortcut")}>
+              {runtimeFacts.globalShortcut || "-"}
+            </DetailRow>
+            <DetailRow label={t("voice.triggerStyle")}>
+              {runtimeFacts.triggerStyle || "-"}
+            </DetailRow>
+            <DetailRow label={t("voice.triggerKey")}>
+              {runtimeFacts.triggerKeyLabel || "-"}
+            </DetailRow>
+            <DetailRow label={t("voice.processingMode")}>
+              {runtimeFacts.processingMode || "-"}
+            </DetailRow>
+            <DetailRow label={t("voice.processingModeId")}>
+              {runtimeFacts.processingModeId || "-"}
+            </DetailRow>
+            <DetailRow label={t("voice.speechModel")}>
+              {runtimeFacts.speechModel || "-"}
+            </DetailRow>
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-3">
-            <ActionButton
-              icon={<Mic />}
-              label={t("voice.startCapture")}
-              disabled={isBusy}
-              onClick={() => void module.runtimeActions.startCapture.run()}
-            />
-            <ActionButton
-              icon={<Square />}
-              label={t("voice.stopCapture")}
-              disabled={isBusy}
-              onClick={() => void module.runtimeActions.stopCapture.run()}
-            />
-            <ActionButton
-              icon={<Keyboard />}
-              label={t("voice.captureHoldTrigger")}
-              disabled={isBusy}
-              onClick={() => void module.runtimeActions.captureTriggerKey.run("hold")}
-            />
-            <ActionButton
-              icon={<Keyboard />}
-              label={t("voice.captureToggleTrigger")}
-              disabled={isBusy}
-              onClick={() => void module.runtimeActions.captureTriggerKey.run("toggle")}
-            />
-            <ActionButton
-              icon={<X />}
-              label={t("voice.cancelTriggerCapture")}
-              disabled={isBusy}
-              onClick={() => void module.runtimeActions.cancelTriggerCapture.run()}
-            />
-            <ActionButton
-              icon={<Play />}
-              label={t("voice.allowTriggerListener")}
-              disabled={isBusy}
-              onClick={() =>
-                void module.runtimeActions.setTriggerListenerSuppressed.run(false)
-              }
-            />
-            <ActionButton
-              icon={<Square />}
-              label={t("voice.suppressTriggerListener")}
-              disabled={isBusy}
-              onClick={() =>
-                void module.runtimeActions.setTriggerListenerSuppressed.run(true)
-              }
-            />
-          </div>
-          <div className="mt-4 grid gap-3 border-t border-border pt-3 sm:grid-cols-[minmax(0,1fr)_auto_auto]">
-            <label className="min-w-0 text-xs text-muted-foreground">
-              <span>{t("voice.shortcutDraft")}</span>
-              <input
-                className="mt-1 h-9 w-full rounded-[8px] border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
-                value={shortcutDraft}
-                placeholder={globalShortcut || t("voice.shortcutPlaceholder")}
-                onChange={(event) => setShortcutDraft(event.target.value)}
-              />
-            </label>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              disabled={isBusy}
-              onClick={() =>
-                void module.runtimeActions.setGlobalShortcut.run(
-                  shortcutDraft.trim() || null,
-                )
-              }
-            >
-              <Keyboard className="h-3.5 w-3.5" />
-              {t("voice.setShortcut")}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              disabled={isBusy}
-              onClick={() =>
-                void module.runtimeActions.updateRuntimeSettings.run({
-                  enabled: !enabled,
-                  shortcut: globalShortcut || null,
-                  speechModel: speechModel
-                    ? (speechModel as VoiceSpeechModel)
-                    : null,
-                  processingMode: processingMode
-                    ? (processingMode as VoiceProcessingMode)
-                    : null,
-                  processingModeId: processingModeId || null,
-                })
-              }
-            >
-              <Play className="h-3.5 w-3.5" />
-              {t(enabled ? "voice.disableRuntime" : "voice.enableRuntime")}
-            </Button>
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {/* 触发键、触发绑定和模式快捷键需要真实按键传输结构，先只暴露禁用边界。 */}
-            <BoundaryButton
-              icon={<Keyboard />}
-              label={t("voice.setTriggerKeyBoundary")}
-            />
-            <BoundaryButton
-              icon={<Keyboard />}
-              label={t("voice.setTriggerBindingsBoundary")}
-            />
-            <BoundaryButton
-              icon={<Save />}
-              label={t("voice.setProcessingModeBoundary")}
-            />
-            <BoundaryButton
-              icon={<Keyboard />}
-              label={t("voice.modeShortcutBoundary")}
-            />
-            <BoundaryButton
-              icon={<X />}
-              label={t("voice.removeModeShortcutBoundary")}
-            />
-          </div>
-        </QueryPanel>
 
-        <QueryPanel titleKey="voice.history" state={module.workspaceQuery}>
-          <RecordList
-            items={history}
-            emptyKey="voice.emptyHistory"
-            renderItem={(entry) => {
-              const item = entry as VoiceRecordPreview;
-              return (
-                <div className="flex min-w-0 items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-foreground">
-                      {item.primary || t("voice.unknownHistory")}
-                    </p>
-                    <p className="mt-1 truncate text-xs text-muted-foreground">
-                      {item.secondary}
-                    </p>
-                  </div>
-                  <Button
-                    type="button"
-                    size="icon-sm"
-                    variant="ghost"
-                    className="shrink-0 text-destructive hover:text-destructive"
-                    aria-label={t("voice.removeHistoryEntry")}
-                    disabled={!item.id || isBusy}
-                    onClick={() =>
-                      void module.workspaceActions.removeHistoryEntry.run(item.id)
-                    }
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              );
-            }}
-          />
-          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
-            {/* 提示词生成需要原始文本、模板和上下文输入，本轮仅保留动作边界。 */}
-            <BoundaryButton
-              icon={<Wand2 />}
-              label={t("voice.generatePromptBoundary")}
-            />
-          </div>
-        </QueryPanel>
-
-        <QueryPanel titleKey="voice.injectOverlay" state={module.runtimeQuery}>
-          <div className="grid gap-3">
-            <label className="min-w-0 text-xs text-muted-foreground">
-              <span>{t("voice.injectDraft")}</span>
-              <textarea
-                className="mt-1 min-h-20 w-full resize-y rounded-[8px] border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
-                value={injectDraft}
-                placeholder={t("voice.injectPlaceholder")}
-                onChange={(event) => setInjectDraft(event.target.value)}
-              />
-            </label>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <RuntimeRow label={t("voice.capturedApp")} value={capturedAppName || "-"} />
-              <RuntimeRow label={t("voice.capturedBundle")} value={capturedBundleId || "-"} />
+          <div className="mt-4 border-t border-border pt-4">
+            <h3 className="text-xs font-medium text-muted-foreground">
+              {t("voice.requestPermissions")}
+            </h3>
+            <div className="mt-3">
+              <LocalObjectPreview value={runtimeFacts.permissions} />
             </div>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              className="justify-self-start"
-              disabled={!injectDraft.trim() || isBusy}
-              onClick={() =>
-                void module.runtimeActions.injectText.run({
-                  text: injectDraft.trim(),
-                  expectedBundleId: capturedBundleId || null,
-                })
-              }
-            >
-              <Play className="h-3.5 w-3.5" />
-              {t("voice.injectText")}
-            </Button>
-          </div>
-
-          <div className="mt-4 grid gap-3 border-t border-border pt-3">
-            <label className="min-w-0 text-xs text-muted-foreground">
-              <span>{t("voice.overlayQuery")}</span>
-              <input
-                className="mt-1 h-9 w-full rounded-[8px] border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
-                value={overlayQueryDraft}
-                placeholder={t("voice.overlayQueryPlaceholder")}
-                onChange={(event) => setOverlayQueryDraft(event.target.value)}
-              />
-            </label>
-            <label className="min-w-0 text-xs text-muted-foreground">
-              <span>{t("voice.overlayOutput")}</span>
-              <textarea
-                className="mt-1 min-h-20 w-full resize-y rounded-[8px] border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
-                value={overlayOutputDraft}
-                placeholder={t("voice.overlayOutputPlaceholder")}
-                onChange={(event) => setOverlayOutputDraft(event.target.value)}
-              />
-            </label>
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              className="justify-self-start"
-              disabled={
-                !overlayQueryDraft.trim() || !overlayOutputDraft.trim() || isBusy
-              }
-              onClick={() =>
-                void module.runtimeActions.showSearchOverlay.run({
-                  query: overlayQueryDraft.trim(),
-                  output: overlayOutputDraft.trim(),
-                })
-              }
-            >
-              <Search className="h-3.5 w-3.5" />
-              {t("voice.showOverlay")}
-            </Button>
           </div>
         </QueryPanel>
 
         <QueryPanel titleKey="voice.config" state={module.runtimeQuery}>
           <div className="grid gap-3 sm:grid-cols-2">
-            <RuntimeRow label={t("voice.speechModel")} value={speechModel || "-"} />
-            <RuntimeRow label={t("voice.activeAsrProvider")} value={activeAsrProvider || "-"} />
-            <RuntimeRow label={t("voice.activeAsrModel")} value={activeAsrModel || "-"} />
-            <RuntimeRow label={t("voice.processingMode")} value={processingMode || "-"} />
-          </div>
-          <div className="mt-4 grid gap-3 border-t border-border pt-3 sm:grid-cols-2">
-            <label className="min-w-0 text-xs text-muted-foreground">
-              <span>{t("voice.llmProvider")}</span>
-              <input
-                className="mt-1 h-9 w-full rounded-[8px] border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
-                value={llmProviderDraft}
-                placeholder={t("voice.providerPlaceholder")}
-                onChange={(event) => setLlmProviderDraft(event.target.value)}
-              />
-            </label>
-            <label className="min-w-0 text-xs text-muted-foreground">
-              <span>{t("voice.asrProvider")}</span>
-              <input
-                className="mt-1 h-9 w-full rounded-[8px] border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
-                value={asrProviderDraft}
-                placeholder={activeAsrProvider || t("voice.providerPlaceholder")}
-                onChange={(event) => setAsrProviderDraft(event.target.value)}
-              />
-            </label>
-          </div>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <ActionButton
-              icon={<Search />}
-              label={t("voice.loadLlmConfig")}
-              disabled={!llmProviderDraft.trim() || isBusy}
-              onClick={() =>
-                void module.configActions.loadLlmConfig.run(llmProviderDraft.trim())
-              }
-            />
-            <ActionButton
-              icon={<Search />}
-              label={t("voice.loadAsrConfig")}
-              disabled={!asrProviderDraft.trim() || isBusy}
-              onClick={() =>
-                void module.configActions.loadAsrConfig.run(asrProviderDraft.trim())
-              }
-            />
-            {/* 保存和测试配置需要密钥、模型和基础地址草稿，未补齐前不编造真实表单。 */}
-            <BoundaryButton
-              icon={<Save />}
-              label={t("voice.saveLlmConfigBoundary")}
-            />
-            <BoundaryButton
-              icon={<Save />}
-              label={t("voice.saveAsrConfigBoundary")}
-            />
-            <BoundaryButton
-              icon={<Search />}
-              label={t("voice.testLlmConfigBoundary")}
-            />
-            <BoundaryButton
-              icon={<Search />}
-              label={t("voice.testAsrConfigBoundary")}
-            />
+            <DetailRow label={t("voice.activeAsrProvider")}>
+              {runtimeFacts.activeAsrProvider || "-"}
+            </DetailRow>
+            <DetailRow label={t("voice.activeAsrModel")}>
+              {runtimeFacts.activeAsrModel || "-"}
+            </DetailRow>
+            <DetailRow label={t("voice.capturedApp")}>
+              {runtimeFacts.capturedAppName || "-"}
+            </DetailRow>
+            <DetailRow label={t("voice.capturedBundle")}>
+              {runtimeFacts.capturedBundleId || "-"}
+            </DetailRow>
           </div>
         </QueryPanel>
+
+        <BentoCard className="min-w-0">
+          <div className="flex items-start gap-3">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-muted text-muted-foreground">
+              <Search className="h-4 w-4" />
+            </span>
+            <div className="min-w-0">
+              <h3 className="text-sm font-medium text-foreground">
+                {t("voice.injectOverlay")}
+              </h3>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                {t("voice.description")}
+              </p>
+            </div>
+          </div>
+        </BentoCard>
       </div>
+    </div>
+  );
+}
+
+function VoicePageHeader({
+  titleKey,
+  descriptionKey,
+}: {
+  titleKey: string;
+  descriptionKey: string;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <section className="border-b border-border pb-4">
+      <h2 className="text-lg font-semibold text-foreground">{t(titleKey)}</h2>
+      <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
+        {t(descriptionKey)}
+      </p>
+    </section>
+  );
+}
+
+function MetricCard({
+  labelKey,
+  value,
+}: {
+  labelKey: string;
+  value: ReactNode;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <BentoCard compact>
+      <span className="text-xs text-muted-foreground">{t(labelKey)}</span>
+      <span className="mt-1 block truncate text-lg font-semibold text-foreground">
+        {value}
+      </span>
+    </BentoCard>
+  );
+}
+
+function QueryPanel({
+  titleKey,
+  state,
+  children,
+}: {
+  titleKey: string;
+  state: {
+    isLoading?: boolean;
+    isFetching?: boolean;
+    isError?: boolean;
+    refetch?: () => Promise<unknown>;
+  };
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <BentoCard className="min-w-0">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="truncate text-sm font-medium text-foreground">
+            {t(titleKey)}
+          </h3>
+          <StatusLine state={state} />
+        </div>
+        {state.refetch && (
+          <Button
+            type="button"
+            size="icon-sm"
+            variant="ghost"
+            disabled={state.isFetching}
+            aria-label={t("common.refresh")}
+            onClick={() => void state.refetch?.()}
+          >
+            <RefreshCw
+              className={cn("h-3.5 w-3.5", state.isFetching && "animate-spin")}
+            />
+          </Button>
+        )}
+      </div>
+      <div className="mt-4">{children}</div>
+    </BentoCard>
+  );
+}
+
+function StatusLine({
+  state,
+}: {
+  state: { isLoading?: boolean; isFetching?: boolean; isError?: boolean };
+}) {
+  const { t } = useTranslation();
+  const key = state.isLoading
+    ? "feature.restored.loading"
+    : state.isError
+      ? "feature.restored.error"
+      : state.isFetching
+        ? "feature.restored.refreshing"
+        : "feature.restored.ready";
+
+  return (
+    <span
+      className={cn(
+        "text-xs text-muted-foreground",
+        state.isError && "text-destructive",
+      )}
+    >
+      {t(key)}
+    </span>
+  );
+}
+
+function PreviewList({
+  titleKey,
+  items,
+  emptyKey,
+  fallbackKey,
+}: {
+  titleKey: string;
+  items: VoiceRecordPreview[];
+  emptyKey: string;
+  fallbackKey: string;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <section>
+      <h3 className="text-xs font-medium text-muted-foreground">{t(titleKey)}</h3>
+      {items.length === 0 ? (
+        <p className="mt-2 rounded-[8px] border border-dashed border-border p-4 text-sm text-muted-foreground">
+          {t(emptyKey)}
+        </p>
+      ) : (
+        <div className="mt-2 divide-y divide-border rounded-[8px] border border-border">
+          {items.map((item, index) => (
+            <div key={item.id || index} className="min-w-0 px-4 py-3">
+              <p className="truncate text-sm font-medium text-foreground">
+                {item.primary || t(fallbackKey)}
+              </p>
+              {item.secondary && (
+                <p className="mt-1 truncate text-xs text-muted-foreground">
+                  {item.secondary}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function LocalObjectPreview({ value }: { value: unknown }) {
+  const entries = recordEntries(value).slice(0, 4);
+
+  if (entries.length === 0) {
+    return <p className="truncate text-sm text-muted-foreground">{previewText(value)}</p>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {entries.map(([key, item]) => (
+        <div key={key} className="grid gap-2 text-xs sm:grid-cols-[9rem_minmax(0,1fr)]">
+          <span className="text-muted-foreground">{key}</span>
+          <span className="min-w-0 truncate text-foreground">{previewText(item)}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function BoolBadge({
+  value,
+  trueKey,
+  falseKey,
+}: {
+  value: boolean;
+  trueKey: string;
+  falseKey: string;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <Badge variant={value ? "default" : "outline"} className="shrink-0">
+      {t(value ? trueKey : falseKey)}
+    </Badge>
+  );
+}
+
+function DetailRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="grid gap-2 text-sm sm:grid-cols-[10rem_minmax(0,1fr)]">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="min-w-0 truncate text-foreground">{children}</span>
     </div>
   );
 }
@@ -519,48 +365,5 @@ function MetricIcon({ icon, value }: { icon: ReactElement; value: number }) {
       {icon}
       {value}
     </span>
-  );
-}
-
-function RuntimeRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="grid gap-2 text-sm sm:grid-cols-[10rem_minmax(0,1fr)]">
-      <span className="text-muted-foreground">{label}</span>
-      <span className="min-w-0 truncate text-foreground">{value}</span>
-    </div>
-  );
-}
-
-function ActionButton({
-  icon,
-  label,
-  disabled,
-  onClick,
-}: {
-  icon: ReactElement;
-  label: string;
-  disabled?: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <Button type="button" size="sm" variant="outline" disabled={disabled} onClick={onClick}>
-      {icon}
-      {label}
-    </Button>
-  );
-}
-
-function BoundaryButton({
-  icon,
-  label,
-}: {
-  icon: ReactElement;
-  label: string;
-}) {
-  return (
-    <Button type="button" size="sm" variant="outline" disabled aria-label={label}>
-      {icon}
-      {label}
-    </Button>
   );
 }

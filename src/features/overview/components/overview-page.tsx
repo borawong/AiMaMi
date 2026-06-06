@@ -1,5 +1,5 @@
 /**
- * 中文职责说明：overview 页面聚合各模块只读事实，只展示 dumped 证据支撑的仪表盘面板和禁用边界动作。
+ * 中文职责说明：overview 页面聚合本模块只读事实，页面只渲染仪表盘骨架和用户意图。
  */
 import type { ReactElement, ReactNode } from "react";
 import {
@@ -8,6 +8,7 @@ import {
   FolderOpen,
   KeyRound,
   Merge,
+  RefreshCw,
   Server,
   Sparkles,
   UserRound,
@@ -24,15 +25,9 @@ import {
   readBoolean,
   readNumber,
   readString,
-} from "@/features/_shared/evidence-data";
-import {
-  BoolBadge,
-  EvidencePageHeader,
-  MetricCard,
-  QueryPanel,
-  RecordList,
-  RecordSummary,
-} from "@/features/_shared/evidence-panels";
+  recordEntries,
+  previewText,
+} from "../utils";
 import { cn } from "@/lib/utils";
 import { useOverviewModule } from "../hooks";
 
@@ -68,7 +63,7 @@ export function OverviewPage() {
 
   return (
     <div className="space-y-5">
-      <EvidencePageHeader
+      <OverviewPageHeader
         titleKey="nav.overview"
         descriptionKey="overview.description"
         actions={[module.refreshUsageAction, module.focusMainWindowAction]}
@@ -87,7 +82,7 @@ export function OverviewPage() {
       </div>
 
       <div className="grid gap-3 md:grid-cols-4">
-        <MetricCard
+        <OverviewMetricCard
           labelKey="overview.todaySessions"
           value={
             <span className="inline-flex items-center gap-2">
@@ -97,7 +92,7 @@ export function OverviewPage() {
           }
           hint={t("overview.todayActive", { minutes: activeMinutes })}
         />
-        <MetricCard
+        <OverviewMetricCard
           labelKey="overview.statMcp"
           value={
             <span className="inline-flex items-center gap-2">
@@ -106,7 +101,7 @@ export function OverviewPage() {
             </span>
           }
         />
-        <MetricCard
+        <OverviewMetricCard
           labelKey="overview.statSkills"
           value={
             <span className="inline-flex items-center gap-2">
@@ -115,16 +110,16 @@ export function OverviewPage() {
             </span>
           }
         />
-        <MetricCard
+        <OverviewMetricCard
           labelKey="overview.healthTitle"
           value={
             <span className="inline-flex flex-wrap gap-2">
-              <BoolBadge
+              <OverviewBoolBadge
                 value={health.authExists}
                 trueKey="overview.healthAuthOk"
                 falseKey="overview.healthAuthMissing"
               />
-              <BoolBadge
+              <OverviewBoolBadge
                 value={health.registryExists}
                 trueKey="overview.healthRegistryOk"
                 falseKey="overview.healthRegistryMissing"
@@ -135,7 +130,7 @@ export function OverviewPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <QueryPanel titleKey="overview.snapshot" state={module.snapshotQuery}>
+        <OverviewDataPanel titleKey="overview.snapshot" state={module.snapshotQuery}>
           <div className="space-y-3 text-sm">
             <HealthRow label={t("overview.deviceId")} value={deviceId || "-"} />
             <HealthRow
@@ -147,15 +142,15 @@ export function OverviewPage() {
               value={readString(snapshot, ["status.usageSource", "usageSource"], "-")}
             />
           </div>
-        </QueryPanel>
-        <QueryPanel titleKey="overview.usage" state={module.usageQuery}>
-          <RecordList items={readArray(usage, ["dailyActivity"])} emptyKey="analytics.emptySeries" />
-        </QueryPanel>
-        <QueryPanel titleKey="overview.mcp" state={module.mcpQuery}>
-          <RecordList items={mcpItems} emptyKey="mcp.empty" />
-        </QueryPanel>
-        <QueryPanel titleKey="overview.skills" state={module.skillsQuery}>
-          <RecordList
+        </OverviewDataPanel>
+        <OverviewDataPanel titleKey="overview.usage" state={module.usageQuery}>
+          <OverviewRecordList items={readArray(usage, ["dailyActivity"])} emptyKey="analytics.emptySeries" />
+        </OverviewDataPanel>
+        <OverviewDataPanel titleKey="overview.mcp" state={module.mcpQuery}>
+          <OverviewRecordList items={mcpItems} emptyKey="mcp.empty" />
+        </OverviewDataPanel>
+        <OverviewDataPanel titleKey="overview.skills" state={module.skillsQuery}>
+          <OverviewRecordList
             items={skillItems}
             emptyKey="skills.empty"
             renderItem={(skill) => (
@@ -172,21 +167,214 @@ export function OverviewPage() {
               </div>
             )}
           />
-        </QueryPanel>
-        <QueryPanel titleKey="overview.notificationState" state={module.notificationStateQuery}>
-          <RecordSummary value={notificationState} />
-        </QueryPanel>
-        <QueryPanel titleKey="overview.mysteryGrants" state={module.mysteryUnlockGrantsQuery}>
-          <RecordSummary value={mysteryUnlockGrants} />
+        </OverviewDataPanel>
+        <OverviewDataPanel titleKey="overview.notificationState" state={module.notificationStateQuery}>
+          <SafePayloadSummary value={notificationState} />
+        </OverviewDataPanel>
+        <OverviewDataPanel titleKey="overview.mysteryGrants" state={module.mysteryUnlockGrantsQuery}>
+          <SafePayloadSummary value={mysteryUnlockGrants} />
           <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
-            {/* 远端设备密钥、grants 合并和通知交互需要完整安全流程证据，当前切片只保留禁用边界。 */}
+            {/* 远端密钥和授权合并需要完整安全流程证据，当前只保留禁用边界入口。 */}
             <BoundaryButton icon={<KeyRound />} label={t("overview.remoteSecretBoundary")} />
             <BoundaryButton icon={<Bell />} label={t("overview.importRemoteSecretBoundary")} />
             <BoundaryButton icon={<Merge />} label={t("overview.mergeMysteryGrantsBoundary")} />
           </div>
-        </QueryPanel>
+        </OverviewDataPanel>
       </div>
     </div>
+  );
+}
+
+interface OverviewAction {
+  id: string;
+  labelKey: string;
+  isPending: boolean;
+  run: () => Promise<unknown> | unknown;
+}
+
+interface OverviewQueryState {
+  isLoading?: boolean;
+  isError?: boolean;
+  isFetching?: boolean;
+  refetch?: () => Promise<unknown> | unknown;
+}
+
+function OverviewPageHeader({
+  titleKey,
+  descriptionKey,
+  actions,
+}: {
+  titleKey: string;
+  descriptionKey: string;
+  actions: OverviewAction[];
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <section className="flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
+      <div className="min-w-0">
+        <h2 className="text-lg font-semibold text-foreground">{t(titleKey)}</h2>
+        <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
+          {t(descriptionKey)}
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {actions.map((action) => (
+          <Button
+            key={action.id}
+            type="button"
+            size="sm"
+            variant="outline"
+            disabled={action.isPending}
+            onClick={() => void action.run()}
+          >
+            <RefreshCw className={cn("h-3.5 w-3.5", action.isPending && "animate-spin")} />
+            {t(action.labelKey)}
+          </Button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function OverviewMetricCard({
+  labelKey,
+  value,
+  hint,
+}: {
+  labelKey: string;
+  value: ReactNode;
+  hint?: ReactNode;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <BentoCard compact>
+      <span className="text-xs text-muted-foreground">{t(labelKey)}</span>
+      <span className="mt-1 block truncate text-lg font-semibold text-foreground">
+        {value}
+      </span>
+      {hint ? <span className="mt-1 block truncate text-xs text-muted-foreground">{hint}</span> : null}
+    </BentoCard>
+  );
+}
+
+function OverviewDataPanel({
+  titleKey,
+  state,
+  children,
+}: {
+  titleKey: string;
+  state: OverviewQueryState;
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+  const statusKey = state.isLoading
+    ? "common.loading"
+    : state.isError
+      ? "common.error"
+      : state.isFetching
+        ? "common.refreshing"
+        : "";
+
+  return (
+    <BentoCard className="min-w-0">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="truncate text-sm font-medium text-foreground">{t(titleKey)}</h3>
+          {statusKey ? (
+            <span
+              className={cn(
+                "text-xs text-muted-foreground",
+                state.isError && "text-destructive",
+              )}
+            >
+              {t(statusKey)}
+            </span>
+          ) : null}
+        </div>
+        {state.refetch ? (
+          <Button
+            type="button"
+            size="icon-sm"
+            variant="ghost"
+            disabled={state.isFetching}
+            aria-label={t("common.refresh")}
+            onClick={() => void state.refetch?.()}
+          >
+            <RefreshCw className={cn("h-3.5 w-3.5", state.isFetching && "animate-spin")} />
+          </Button>
+        ) : null}
+      </div>
+      <div className="mt-4">{children}</div>
+    </BentoCard>
+  );
+}
+
+function OverviewRecordList({
+  items,
+  emptyKey,
+  renderItem,
+}: {
+  items: unknown[];
+  emptyKey: string;
+  renderItem?: (item: unknown, index: number) => ReactNode;
+}) {
+  const { t } = useTranslation();
+
+  if (items.length === 0) {
+    return (
+      <p className="rounded-[8px] border border-dashed border-border p-4 text-sm text-muted-foreground">
+        {t(emptyKey)}
+      </p>
+    );
+  }
+
+  return (
+    <div className="divide-y divide-border rounded-[8px] border border-border">
+      {items.map((item, index) => (
+        <div key={index} className="min-w-0 px-4 py-3">
+          {renderItem ? renderItem(item, index) : <SafePayloadSummary value={item} />}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SafePayloadSummary({ value }: { value: unknown }) {
+  const entries = recordEntries(value).slice(0, 4);
+
+  if (entries.length === 0) {
+    return <p className="truncate text-sm text-muted-foreground">{previewText(value)}</p>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {entries.map(([key, item]) => (
+        <div key={key} className="grid gap-2 text-xs sm:grid-cols-[9rem_minmax(0,1fr)]">
+          <span className="text-muted-foreground">{key}</span>
+          <span className="min-w-0 truncate text-foreground">{previewText(item)}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OverviewBoolBadge({
+  value,
+  trueKey,
+  falseKey,
+}: {
+  value: boolean;
+  trueKey: string;
+  falseKey: string;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <Badge variant={value ? "default" : "outline"} className="shrink-0">
+      {t(value ? trueKey : falseKey)}
+    </Badge>
   );
 }
 

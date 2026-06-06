@@ -37,6 +37,18 @@ const targetModules = [
   { id: "skills", chunk: /^assets\/skills-page-[^/]+\.js$/ },
 ];
 
+const rawVisibleRoutes = [
+  "overview",
+  "accounts",
+  "sessions",
+  "mcp",
+  "skills",
+  "plugins",
+  "relay",
+  "maintenance",
+  "settings",
+];
+
 const queryKeyAllowlist = {};
 
 const forbiddenReferenceNames = [
@@ -365,7 +377,7 @@ function validateRoutesAndLocales(controlFlowRows) {
   const visibleRoutes = routeEntries.filter((entry) => entry.visible).map((entry) => entry.route);
 
   assertNoDuplicates("routeDefinitions.route", registryRoutes);
-  assertSameArray("route registry visible routes 与 ALL_APP_ROUTES", allAppRoutes, visibleRoutes);
+  assertSameArray("route registry visible routes 与 raw live routes", rawVisibleRoutes, visibleRoutes);
   assertSameArray("route registry routeDefinitions 与 ALL_APP_ROUTES", allAppRoutes, registryRoutes);
 
   const routeTitleKeys = unique(

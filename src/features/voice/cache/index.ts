@@ -8,7 +8,7 @@ import {
   readArray,
   readBoolean,
   readString,
-} from "@/features/_shared/evidence-data";
+} from "../utils";
 import {
   createModuleCacheOwner,
   type ModuleCacheSource,
