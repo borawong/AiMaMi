@@ -1,13 +1,15 @@
 use crate::adapters::tauri::state::TauriAppState;
 use crate::commands::respond;
-use crate::contracts::{CoreEnvelope, RuntimeExtensionPayload};
-use serde_json::Value;
+use crate::contracts::{
+    CoreEnvelope, RuntimeExtensionConfigPayload, RuntimeExtensionListPayload,
+    RuntimeExtensionSettingsValue, RuntimeExtensionTogglePayload,
+};
 use tauri::State;
 
 #[tauri::command]
 pub(crate) fn list_plugins(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<RuntimeExtensionPayload>, String> {
+) -> Result<CoreEnvelope<RuntimeExtensionListPayload>, String> {
     respond(state.services().runtime_extensions().list_plugins())
 }
 
@@ -16,7 +18,7 @@ pub(crate) fn toggle_plugin(
     state: State<'_, TauriAppState>,
     id: String,
     enabled: bool,
-) -> Result<CoreEnvelope<RuntimeExtensionPayload>, String> {
+) -> Result<CoreEnvelope<RuntimeExtensionTogglePayload>, String> {
     respond(
         state
             .services()
@@ -29,7 +31,7 @@ pub(crate) fn toggle_plugin(
 pub(crate) fn get_plugin_config(
     state: State<'_, TauriAppState>,
     id: String,
-) -> Result<CoreEnvelope<RuntimeExtensionPayload>, String> {
+) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, String> {
     respond(state.services().runtime_extensions().get_plugin_config(id))
 }
 
@@ -37,8 +39,8 @@ pub(crate) fn get_plugin_config(
 pub(crate) fn update_plugin_config(
     state: State<'_, TauriAppState>,
     id: String,
-    settings: Option<Value>,
-) -> Result<CoreEnvelope<RuntimeExtensionPayload>, String> {
+    settings: Option<RuntimeExtensionSettingsValue>,
+) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, String> {
     respond(
         state
             .services()

@@ -24,6 +24,11 @@ import type {
   RelayRouterTogglePayload,
   RelayStatePayload,
   RelayTestPayload,
+  RuntimeExtensionConfigPayload,
+  RuntimeExtensionListPayload,
+  RuntimeExtensionPluginPayload,
+  RuntimeExtensionSettingsValue,
+  RuntimeExtensionTogglePayload,
   SessionAnalyticsPayload,
   SessionsDeletePayload,
   SessionsListPayload,
@@ -70,6 +75,9 @@ export type IpcCommandMockData =
   | RelayRouterTogglePayload
   | RelayStatePayload
   | RelayTestPayload
+  | RuntimeExtensionConfigPayload
+  | RuntimeExtensionListPayload
+  | RuntimeExtensionTogglePayload
   | QuotaHistoryPayload
   | SessionAnalyticsPayload
   | SessionsDeletePayload
@@ -466,6 +474,112 @@ const loadChangeAnalyticsHandler: IpcCommandHandler = (context) => {
 
 function normalizeAnalyticsRange(value: string) {
   return value === "today" || value === "month" ? value : "week";
+}
+
+function pluginSummaryFromId(
+  id: string,
+  enabled: boolean,
+): RuntimeExtensionPluginPayload {
+  return {
+    id,
+    name: id,
+    title: null,
+    description: null,
+    path: null,
+    enabled,
+  };
+}
+
+const listPluginsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: RuntimeExtensionListPayload = {
+    backendStatus: envelope.data.status,
+    items: [],
+    total: 0,
+    sourcePath: "",
+    lastScanAt: 0,
+  };
+  return { ...envelope, data };
+};
+
+const togglePluginHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const id = readArgString(context.args, "id", "");
+  const plugin = pluginSummaryFromId(id, context.args?.enabled === true);
+  const data: RuntimeExtensionTogglePayload = {
+    backendStatus: envelope.data.status,
+    plugin,
+    items: plugin.id ? [plugin] : [],
+    total: plugin.id ? 1 : 0,
+    sourcePath: "",
+    lastScanAt: 0,
+  };
+  return { ...envelope, data };
+};
+
+const getPluginConfigHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: RuntimeExtensionConfigPayload = {
+    backendStatus: envelope.data.status,
+    id: readArgString(context.args, "id", ""),
+    settings: {},
+    sourcePath: "",
+    updated: false,
+  };
+  return { ...envelope, data };
+};
+
+const updatePluginConfigHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: RuntimeExtensionConfigPayload = {
+    backendStatus: envelope.data.status,
+    id: readArgString(context.args, "id", ""),
+    settings: normalizePluginSettingsValue(context.args?.settings),
+    sourcePath: "",
+    updated: false,
+  };
+  return { ...envelope, data };
+};
+
+function normalizePluginSettingsValue(value: unknown): RuntimeExtensionSettingsValue {
+  if (
+    value === null ||
+    typeof value === "boolean" ||
+    typeof value === "string"
+  ) {
+    return value;
+  }
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : null;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizePluginSettingsValue(item));
+  }
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [
+        key,
+        normalizePluginSettingsValue(item),
+      ]),
+    );
+  }
+  return {};
 }
 
 function readArgString(args: IpcArgs | undefined, key: string, fallback: string) {
@@ -1041,6 +1155,13 @@ const skillsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> 
   restore_skill_backup: restoreSkillBackupHandler,
 };
 
+const pluginsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  get_plugin_config: getPluginConfigHandler,
+  list_plugins: listPluginsHandler,
+  toggle_plugin: togglePluginHandler,
+  update_plugin_config: updatePluginConfigHandler,
+};
+
 const relayCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
   activate_relay_provider: relayStateMutationHandler,
   deactivate_relay_provider: relayStateMutationHandler,
@@ -1074,6 +1195,7 @@ export const ipcCommandFixtures = IPC_COMMAND_DEFINITIONS.reduce(
         sessionsCommandHandlers[definition.command] ??
         analyticsCommandHandlers[definition.command] ??
         relayCommandHandlers[definition.command] ??
+        pluginsCommandHandlers[definition.command] ??
         skillsCommandHandlers[definition.command] ??
         systemCommandHandlers[definition.command] ??
         defaultHandler,

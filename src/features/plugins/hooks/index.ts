@@ -2,19 +2,21 @@ import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tansta
 import { useModuleCacheController } from "@/features/_shared/controller";
 import {
   pluginsService,
-  type PluginJsonValue,
-  type PluginsEnvelope,
+  type PluginsListEnvelope,
+  type PluginsToggleEnvelope,
 } from "@/services/plugins";
 import {
   invalidatePluginsContractQueries,
   PluginsCache,
   PLUGINS_LIST_QUERY_KEY,
+  writePluginsAuthoritativePayload,
 } from "../cache";
 import {
   countEnabledPlugins,
   selectPluginEnvelopeData,
   selectPluginRecords,
 } from "../utils";
+import type { PluginsCachePayload } from "../types";
 
 let pluginsCacheSequence = 0;
 let pluginsLatestAcceptedSequence = 0;
@@ -24,7 +26,7 @@ function nextPluginsCacheSequence() {
   return pluginsCacheSequence;
 }
 
-function writePluginsCachePayload<TPayload>(
+function writePluginsCachePayload<TPayload extends PluginsCachePayload>(
   queryClient: QueryClient,
   payload: TPayload,
   source: "full-refresh" | "active-only-refresh" | "mutation-payload",
@@ -35,7 +37,7 @@ function writePluginsCachePayload<TPayload>(
   }
 
   pluginsLatestAcceptedSequence = sequence;
-  PluginsCache.writeAuthoritativePayload(queryClient, {
+  writePluginsAuthoritativePayload(queryClient, {
     payload,
     source,
     sequence,
@@ -44,7 +46,7 @@ function writePluginsCachePayload<TPayload>(
   return true;
 }
 
-async function writePluginsMutationPayload<TPayload>(
+async function writePluginsMutationPayload<TPayload extends PluginsCachePayload>(
   queryClient: QueryClient,
   payload: TPayload,
 ) {
@@ -56,7 +58,9 @@ async function writePluginsMutationPayload<TPayload>(
   );
   if (!accepted) return;
 
-  queryClient.setQueryData(PLUGINS_LIST_QUERY_KEY, payload);
+  if (isPluginsToggleEnvelope(payload)) {
+    queryClient.setQueryData(PLUGINS_LIST_QUERY_KEY, toPluginsListEnvelope(payload));
+  }
   await invalidatePluginsContractQueries(queryClient);
 }
 
@@ -95,7 +99,7 @@ export function usePluginsModule() {
       const payload = await pluginsService.list();
       const accepted = writePluginsCachePayload(queryClient, payload, "full-refresh", sequence);
       if (!accepted) {
-        return queryClient.getQueryData<typeof payload>(PLUGINS_LIST_QUERY_KEY) ?? payload;
+        return queryClient.getQueryData<PluginsListEnvelope>(PLUGINS_LIST_QUERY_KEY) ?? payload;
       }
       return payload;
     },
@@ -123,8 +127,8 @@ export function usePluginsModule() {
       pluginsService.toggle(id, enabled),
     onMutate: async ({ id, enabled }) => {
       await queryClient.cancelQueries({ queryKey: PLUGINS_LIST_QUERY_KEY });
-      const previousList = queryClient.getQueryData<PluginsEnvelope>(PLUGINS_LIST_QUERY_KEY);
-      queryClient.setQueryData<PluginsEnvelope>(
+      const previousList = queryClient.getQueryData<PluginsListEnvelope>(PLUGINS_LIST_QUERY_KEY);
+      queryClient.setQueryData<PluginsListEnvelope>(
         PLUGINS_LIST_QUERY_KEY,
         (current) => updatePluginEnabled(current, id, enabled),
       );
@@ -151,62 +155,37 @@ export function usePluginsModule() {
 }
 
 function updatePluginEnabled(
-  current: PluginsEnvelope | undefined,
+  current: PluginsListEnvelope | undefined,
   id: string,
   enabled: boolean,
-): PluginsEnvelope | undefined {
+): PluginsListEnvelope | undefined {
   if (!current) return current;
-  if (Array.isArray(current.data)) {
-    return {
-      ...current,
-      data: current.data.map((plugin) => updatePluginRecord(plugin, id, enabled)),
-    };
-  }
-  if (!isRecord(current.data)) return current;
-
-  const items = current.data.items;
-  if (Array.isArray(items)) {
-    return {
-      ...current,
-      data: {
-        ...current.data,
-        items: items.map((plugin) => updatePluginRecord(plugin, id, enabled)),
-      },
-    };
-  }
-
-  const plugins = current.data.plugins;
-  if (Array.isArray(plugins)) {
-    return {
-      ...current,
-      data: {
-        ...current.data,
-        plugins: plugins.map((plugin) => updatePluginRecord(plugin, id, enabled)),
-      },
-    };
-  }
-
-  return current;
-}
-
-function updatePluginRecord(plugin: PluginJsonValue, id: string, enabled: boolean): PluginJsonValue {
-  if (!isRecord(plugin)) return plugin;
-  const pluginId = readPluginId(plugin);
-  if (pluginId !== id) return plugin;
   return {
-    ...plugin,
-    enabled,
+    ...current,
+    data: {
+      ...current.data,
+      items: current.data.items.map((plugin) =>
+        plugin.id === id ? { ...plugin, enabled } : plugin,
+      ),
+    },
   };
 }
 
-function readPluginId(plugin: Record<string, PluginJsonValue>) {
-  for (const key of ["id", "name", "key"]) {
-    const value = plugin[key];
-    if (typeof value === "string" && value.length > 0) return value;
-  }
-  return "";
+function isPluginsToggleEnvelope(
+  value: PluginsCachePayload,
+): value is PluginsToggleEnvelope {
+  return "plugin" in value.data && "items" in value.data;
 }
 
-function isRecord(value: PluginJsonValue): value is Record<string, PluginJsonValue> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+function toPluginsListEnvelope(envelope: PluginsToggleEnvelope): PluginsListEnvelope {
+  return {
+    ...envelope,
+    data: {
+      backendStatus: envelope.data.backendStatus,
+      items: envelope.data.items,
+      total: envelope.data.total,
+      sourcePath: envelope.data.sourcePath,
+      lastScanAt: envelope.data.lastScanAt,
+    },
+  };
 }

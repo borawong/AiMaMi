@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import type { PluginsPageController } from "../hooks";
-import { readBoolean, readString } from "../utils";
+import { readPluginDescription, readPluginTitle } from "../utils";
 
 export function PluginsPagePanel({
   controller,
@@ -154,7 +154,7 @@ function PluginRows({
   loading,
   controller,
 }: {
-  items: unknown[];
+  items: PluginsPageController["plugins"];
   emptyKey: string;
   loading: boolean;
   controller: PluginsPageController;
@@ -171,8 +171,8 @@ function PluginRows({
   return (
     <div className="divide-y divide-border/60 rounded-xl border border-border/60 bg-muted/30">
       {items.map((plugin, index) => {
-        const id = readString(plugin, ["id", "name", "key"], "");
-        const enabled = readBoolean(plugin, ["enabled", "active"]);
+        const id = plugin.id;
+        const enabled = plugin.enabled;
         return (
           <div
             key={id || String(index)}
@@ -181,14 +181,10 @@ function PluginRows({
             <div className="flex min-w-0 items-center justify-between gap-3">
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-foreground">
-                  {readString(
-                    plugin,
-                    ["title", "name", "id"],
-                    t("plugins.unknown"),
-                  )}
+                  {readPluginTitle(plugin, t("plugins.unknown"))}
                 </p>
                 <p className="mt-1 truncate text-xs text-muted-foreground">
-                  {readString(plugin, ["description", "summary", "path"], "")}
+                  {readPluginDescription(plugin)}
                 </p>
               </div>
               <Switch

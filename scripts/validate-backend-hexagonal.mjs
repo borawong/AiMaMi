@@ -697,6 +697,105 @@ function validateRelayTypedPayloadContracts() {
 
 validateRelayTypedPayloadContracts();
 
+function validateRuntimeExtensionsTypedPayloadContracts() {
+  const commandPath = join(backendRoot, "commands", "runtime_extensions.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "runtime_extensions.rs");
+  const contractPath = join(backendRoot, "contracts", "runtime_extensions.rs");
+  const servicePath = join(frontendRoot, "services", "runtime-extensions", "index.ts");
+  const pluginsServicePath = join(frontendRoot, "services", "plugins", "index.ts");
+  const featureTypesPath = join(frontendRoot, "features", "plugins", "types", "index.ts");
+  const featureCachePath = join(frontendRoot, "features", "plugins", "cache", "index.ts");
+  const featureHooksPath = join(frontendRoot, "features", "plugins", "hooks", "index.ts");
+  const commandText = readUtf8(commandPath);
+  const usecaseText = readUtf8(usecasePath);
+  const contractText = readUtf8(contractPath);
+  const serviceText = readUtf8(servicePath);
+  const pluginsServiceText = readUtf8(pluginsServicePath);
+  const featureTypesText = readUtf8(featureTypesPath);
+  const featureCacheText = readUtf8(featureCachePath);
+  const featureHooksText = readUtf8(featureHooksPath);
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) enum RuntimeExtensionSettingsValue",
+    "pub(crate) struct RuntimeExtensionPluginPayload",
+    "pub(crate) struct RuntimeExtensionListPayload",
+    "pub(crate) struct RuntimeExtensionTogglePayload",
+    "pub(crate) struct RuntimeExtensionConfigPayload",
+    "pub backend_status: BackendSkeletonStatus",
+  ], "runtime-extensions 后端 typed DTO");
+
+  assertContains(commandPath, commandText, [
+    "Result<CoreEnvelope<RuntimeExtensionListPayload>, String>",
+    "Result<CoreEnvelope<RuntimeExtensionTogglePayload>, String>",
+    "Result<CoreEnvelope<RuntimeExtensionConfigPayload>, String>",
+    "settings: Option<RuntimeExtensionSettingsValue>",
+  ], "runtime-extensions command typed envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<RuntimeExtensionListPayload>, CoreError>",
+    "Result<CoreEnvelope<RuntimeExtensionTogglePayload>, CoreError>",
+    "Result<CoreEnvelope<RuntimeExtensionConfigPayload>, CoreError>",
+    "RuntimeExtensionPluginPayload {",
+    "BackendOperationPlan::pending",
+    "BackendOperationPlan::no_op",
+    "BackendBoundaryProbe::from_repository_source",
+  ], "runtime-extensions usecase typed 骨架");
+
+  assertContains(servicePath, serviceText, [
+    "CoreEnvelope<RuntimeExtensionListPayload>",
+    "CoreEnvelope<RuntimeExtensionTogglePayload>",
+    "CoreEnvelope<RuntimeExtensionConfigPayload>",
+    "RuntimeExtensionSettingsValue",
+  ], "runtime-extensions service typed envelope");
+
+  assertContains(pluginsServicePath, pluginsServiceText, [
+    "CoreEnvelope<RuntimeExtensionListPayload>",
+    "CoreEnvelope<RuntimeExtensionTogglePayload>",
+    "CoreEnvelope<RuntimeExtensionConfigPayload>",
+  ], "plugins service typed envelope");
+
+  assertContains(featureTypesPath, featureTypesText, [
+    "export type PluginsCachePayload",
+    "export type PluginsListEnvelope",
+    "export type PluginsToggleEnvelope",
+    "export type PluginsConfigEnvelope",
+  ], "plugins 前端模块 typed cache payload");
+
+  assertContains(featureHooksPath, featureHooksText, [
+    "PluginsListEnvelope",
+    "PluginsToggleEnvelope",
+    "writePluginsAuthoritativePayload",
+    "toPluginsListEnvelope",
+  ], "plugins hooks typed authoritative envelope");
+
+  assertContains(featureCachePath, featureCacheText, [
+    "Omit<PluginsCacheEnvelope, \"moduleId\">",
+  ], "plugins cache helper typed envelope");
+
+  assertNotContainsSnippet(contractPath, contractText, [
+    "pub(crate) struct RuntimeExtensionPayload",
+    "serde_json::Value",
+  ], "runtime-extensions 合同不得回退泛型 payload");
+
+  assertNotContainsSnippet(commandPath, commandText, [
+    "RuntimeExtensionPayload",
+    "serde_json::Value",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "runtime-extensions command 不得返回泛型 payload");
+
+  assertNotContainsSnippet(servicePath, serviceText, [
+    "IpcEvidencePayload",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "runtime-extensions service 不得返回 generic evidence payload");
+
+  assertNotContainsSnippet(pluginsServicePath, pluginsServiceText, [
+    "IpcEvidencePayload",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "plugins service 不得返回 generic evidence payload");
+}
+
+validateRuntimeExtensionsTypedPayloadContracts();
+
 function validateVoiceMutationPayloadContracts() {
   {
     const commandPath = join(backendRoot, "commands", "voice.rs");

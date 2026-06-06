@@ -393,6 +393,47 @@ function validateAnalyticsMockPayloadHandlers() {
   }
 }
 
+function validatePluginsMockPayloadHandlers() {
+  const commandFixturePath = path.join(
+    repoRoot,
+    "src",
+    "mocks",
+    "fixtures",
+    "commands.ts",
+  );
+  const ipcCommandsPath = path.join(repoRoot, "src", "contracts", "ipc", "commands.ts");
+  const commandFixtureText = readRequired(commandFixturePath);
+  const ipcCommandsText = readRequired(ipcCommandsPath);
+  const pluginsCommands = [
+    ...ipcCommandsText.matchAll(
+      /\{\s*"domain":\s*"runtime-extensions"[\s\S]*?"command":\s*"([^"]+)"/g,
+    ),
+  ].map((match) => match[1]);
+
+  if (pluginsCommands.length === 0) {
+    failures.push("src/contracts/ipc/commands.ts 没有可验证的 runtime-extensions command");
+    return;
+  }
+
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+    "const pluginsCommandHandlers",
+    "pluginsCommandHandlers[definition.command] ??",
+    "listPluginsHandler",
+    "togglePluginHandler",
+    "getPluginConfigHandler",
+    "updatePluginConfigHandler",
+    "RuntimeExtensionListPayload",
+    "RuntimeExtensionTogglePayload",
+    "RuntimeExtensionConfigPayload",
+  ]);
+
+  for (const command of pluginsCommands) {
+    if (!commandFixtureText.includes(`${command}:`)) {
+      failures.push(`src/mocks/fixtures/commands.ts 缺少 plugins 专用 handler：${command}`);
+    }
+  }
+}
+
 function validateSessionsMockPayloadHandlers() {
   const commandFixturePath = path.join(
     repoRoot,
@@ -438,6 +479,7 @@ validateSkillsCommandMirror();
 validateScenarioFiles();
 validateAccountsMockPayloadHandlers();
 validateAnalyticsMockPayloadHandlers();
+validatePluginsMockPayloadHandlers();
 validateSessionsMockPayloadHandlers();
 validateRelayMockPayloadHandlers();
 validateIpcMockBridge();

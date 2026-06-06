@@ -381,6 +381,48 @@ export interface SkillDeleteBackupPayload {
   remainingBackupCount: number;
 }
 
+export type RuntimeExtensionSettingsValue =
+  | null
+  | boolean
+  | number
+  | string
+  | RuntimeExtensionSettingsValue[]
+  | { [key: string]: RuntimeExtensionSettingsValue };
+
+export interface RuntimeExtensionPluginPayload {
+  id: string;
+  name: string;
+  title: string | null;
+  description: string | null;
+  path: string | null;
+  enabled: boolean;
+}
+
+export interface RuntimeExtensionListPayload {
+  backendStatus: BackendSkeletonStatus;
+  items: RuntimeExtensionPluginPayload[];
+  total: number;
+  sourcePath: string;
+  lastScanAt: number;
+}
+
+export interface RuntimeExtensionTogglePayload {
+  backendStatus: BackendSkeletonStatus;
+  plugin: RuntimeExtensionPluginPayload;
+  items: RuntimeExtensionPluginPayload[];
+  total: number;
+  sourcePath: string;
+  lastScanAt: number;
+}
+
+export interface RuntimeExtensionConfigPayload {
+  backendStatus: BackendSkeletonStatus;
+  id: string;
+  settings: RuntimeExtensionSettingsValue;
+  sourcePath: string;
+  updated: boolean;
+}
+
 export interface CleanPayload {
   authBackupsRemoved: number;
   registryBackupsRemoved: number;

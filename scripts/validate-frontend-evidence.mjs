@@ -665,16 +665,22 @@ function validatePluginsFrontendNoPromotionGate() {
   const acceptance = parseJsonFile(pluginsGateFiles.acceptanceMatrix) ?? {};
   const composite = parseJsonFile(pluginsGateFiles.compositeGateMatrix) ?? {};
   const pluginsServicePath = join(repoRoot, "src", "services", "plugins", "index.ts");
+  const runtimeExtensionsServicePath = join(repoRoot, "src", "services", "runtime-extensions", "index.ts");
   const pluginsContractPath = join(repoRoot, "src", "features", "plugins", "contract.ts");
   const pluginsHooksPath = join(repoRoot, "src", "features", "plugins", "hooks", "index.ts");
+  const pluginsCachePath = join(repoRoot, "src", "features", "plugins", "cache", "index.ts");
+  const pluginsTypesPath = join(repoRoot, "src", "features", "plugins", "types", "index.ts");
   const pluginsPagePath = join(repoRoot, "src", "features", "plugins", "components", "page.tsx");
   const pluginsPanelPath = join(repoRoot, "src", "features", "plugins", "panels", "page.tsx");
   const pluginsDialogsIndexPath = join(repoRoot, "src", "features", "plugins", "dialogs", "index.ts");
   const pluginsConfigDialogPath = join(repoRoot, "src", "features", "plugins", "dialogs", "config.tsx");
 
   const service = readRequired(pluginsServicePath);
+  const runtimeService = readRequired(runtimeExtensionsServicePath);
   const contract = readRequired(pluginsContractPath);
   const hooks = readRequired(pluginsHooksPath);
+  const cache = readRequired(pluginsCachePath);
+  const types = readRequired(pluginsTypesPath);
   const page = readRequired(pluginsPagePath);
   const panel = readRequired(pluginsPanelPath);
   const dialogsIndex = readRequired(pluginsDialogsIndexPath);
@@ -779,6 +785,48 @@ function validatePluginsFrontendNoPromotionGate() {
   console.log("PASS plugins frontend gate：list/toggle 可见，config wrapper 不提升为 UI 还原");
 }
 
+function validatePluginsTypedPayloadGate() {
+  const pluginsServicePath = join(repoRoot, "src", "services", "plugins", "index.ts");
+  const runtimeExtensionsServicePath = join(repoRoot, "src", "services", "runtime-extensions", "index.ts");
+  const pluginsHooksPath = join(repoRoot, "src", "features", "plugins", "hooks", "index.ts");
+  const pluginsCachePath = join(repoRoot, "src", "features", "plugins", "cache", "index.ts");
+  const pluginsTypesPath = join(repoRoot, "src", "features", "plugins", "types", "index.ts");
+  const pluginsPanelPath = join(repoRoot, "src", "features", "plugins", "panels", "page.tsx");
+
+  const service = readRequired(pluginsServicePath);
+  const runtimeService = readRequired(runtimeExtensionsServicePath);
+  const hooks = readRequired(pluginsHooksPath);
+  const cache = readRequired(pluginsCachePath);
+  const types = readRequired(pluginsTypesPath);
+  const panel = readRequired(pluginsPanelPath);
+
+  const typedPayloadOk =
+    service.includes("CoreEnvelope<RuntimeExtensionListPayload>") &&
+    service.includes("CoreEnvelope<RuntimeExtensionTogglePayload>") &&
+    service.includes("CoreEnvelope<RuntimeExtensionConfigPayload>") &&
+    runtimeService.includes("CoreEnvelope<RuntimeExtensionListPayload>") &&
+    runtimeService.includes("CoreEnvelope<RuntimeExtensionTogglePayload>") &&
+    runtimeService.includes("CoreEnvelope<RuntimeExtensionConfigPayload>") &&
+    !service.includes("IpcEvidencePayload") &&
+    !runtimeService.includes("IpcEvidencePayload") &&
+    types.includes("export type PluginsCachePayload") &&
+    types.includes("export type PluginsListEnvelope") &&
+    types.includes("export type PluginsToggleEnvelope") &&
+    types.includes("export type PluginsConfigEnvelope") &&
+    hooks.includes("PluginsListEnvelope") &&
+    hooks.includes("PluginsToggleEnvelope") &&
+    hooks.includes("writePluginsAuthoritativePayload") &&
+    cache.includes("Omit<PluginsCacheEnvelope, \"moduleId\">") &&
+    !cache.includes("ModuleCacheEnvelope<unknown>") &&
+    !panel.includes("items: unknown[]");
+
+  if (!typedPayloadOk) {
+    failures.push("plugins IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
+  } else {
+    console.log("PASS plugins typed IPC payload owner：service/hook/cache");
+  }
+}
+
 function validateNoForbiddenReferenceNames() {
   const textFiles = [
     ...walkFiles(join(repoRoot, "src"), (file) => /\.(cjs|css|html|js|json|jsx|md|mjs|ts|tsx|txt|yml|yaml)$/i.test(file)),
@@ -814,6 +862,7 @@ validatePageChunks(raw.frontendFiles);
 validateRoutesAndLocales(raw.controlFlow);
 validateKnownInternalFrontendGates();
 validatePluginsFrontendNoPromotionGate();
+validatePluginsTypedPayloadGate();
 validateNoForbiddenReferenceNames();
 
 for (const note of notes) {

@@ -1,8 +1,11 @@
-use crate::contracts::{BackendSkeletonStatus, CoreEnvelope, RuntimeExtensionPayload};
+use crate::contracts::{
+    BackendSkeletonStatus, CoreEnvelope, RuntimeExtensionConfigPayload,
+    RuntimeExtensionListPayload, RuntimeExtensionPluginPayload, RuntimeExtensionSettingsValue,
+    RuntimeExtensionTogglePayload,
+};
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::repository::RepositoryBundle;
-use serde_json::{json, Value};
 
 const MODULE: &str = "runtime_extensions";
 
@@ -15,10 +18,12 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
         Self { repositories }
     }
 
-    pub(crate) fn list_plugins(&self) -> Result<CoreEnvelope<RuntimeExtensionPayload>, CoreError> {
+    pub(crate) fn list_plugins(
+        &self,
+    ) -> Result<CoreEnvelope<RuntimeExtensionListPayload>, CoreError> {
         let plan = self.pending_plan("list_plugins");
         Ok(CoreEnvelope::from_backend_plan(
-            self.payload(&plan, None, None, json!({})),
+            self.list_payload(&plan),
             &plan,
         ))
     }
@@ -27,11 +32,26 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
         &self,
         id: String,
         enabled: bool,
-    ) -> Result<CoreEnvelope<RuntimeExtensionPayload>, CoreError> {
+    ) -> Result<CoreEnvelope<RuntimeExtensionTogglePayload>, CoreError> {
         let id = required_text(id, "empty_runtime_extension_id", "运行时扩展标识不能为空。")?;
         let plan = self.no_op_plan("toggle_plugin");
+        let plugin = RuntimeExtensionPluginPayload {
+            id: id.clone(),
+            name: id,
+            title: None,
+            description: None,
+            path: None,
+            enabled,
+        };
         Ok(CoreEnvelope::from_backend_plan(
-            self.payload(&plan, Some(id), Some(enabled), json!({})),
+            RuntimeExtensionTogglePayload {
+                backend_status: BackendSkeletonStatus::from_plan(&plan),
+                plugin: plugin.clone(),
+                items: vec![plugin],
+                total: 1,
+                source_path: self.source_path(),
+                last_scan_at: 0,
+            },
             &plan,
         ))
     }
@@ -39,11 +59,11 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
     pub(crate) fn get_plugin_config(
         &self,
         id: String,
-    ) -> Result<CoreEnvelope<RuntimeExtensionPayload>, CoreError> {
+    ) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, CoreError> {
         let id = required_text(id, "empty_runtime_extension_id", "运行时扩展标识不能为空。")?;
         let plan = self.no_op_plan("get_plugin_config");
         Ok(CoreEnvelope::from_backend_plan(
-            self.payload(&plan, Some(id), None, json!({})),
+            self.config_payload(&plan, id, RuntimeExtensionSettingsValue::default(), false),
             &plan,
         ))
     }
@@ -51,30 +71,40 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
     pub(crate) fn update_plugin_config(
         &self,
         id: String,
-        settings: Option<Value>,
-    ) -> Result<CoreEnvelope<RuntimeExtensionPayload>, CoreError> {
+        settings: Option<RuntimeExtensionSettingsValue>,
+    ) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, CoreError> {
         let id = required_text(id, "empty_runtime_extension_id", "运行时扩展标识不能为空。")?;
-        let settings = optional_json_value(settings, "empty_runtime_extension_settings")?;
+        let settings = optional_settings(settings, "empty_runtime_extension_settings")?;
         let plan = self.no_op_plan("update_plugin_config");
         Ok(CoreEnvelope::from_backend_plan(
-            self.payload(&plan, Some(id), None, settings),
+            self.config_payload(&plan, id, settings, false),
             &plan,
         ))
     }
 
-    fn payload(
+    fn list_payload(&self, plan: &BackendOperationPlan) -> RuntimeExtensionListPayload {
+        RuntimeExtensionListPayload {
+            backend_status: BackendSkeletonStatus::from_plan(plan),
+            items: Vec::new(),
+            total: 0,
+            source_path: self.source_path(),
+            last_scan_at: 0,
+        }
+    }
+
+    fn config_payload(
         &self,
         plan: &BackendOperationPlan,
-        id: Option<String>,
-        enabled: Option<bool>,
-        settings: Value,
-    ) -> RuntimeExtensionPayload {
-        RuntimeExtensionPayload {
-            status: BackendSkeletonStatus::from_plan(plan),
+        id: String,
+        settings: RuntimeExtensionSettingsValue,
+        updated: bool,
+    ) -> RuntimeExtensionConfigPayload {
+        RuntimeExtensionConfigPayload {
+            backend_status: BackendSkeletonStatus::from_plan(plan),
             id,
-            enabled,
             settings,
-            ..Default::default()
+            source_path: self.source_path(),
+            updated,
         }
     }
 
@@ -91,6 +121,10 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
             self.repositories.runtime_extensions().source_path(),
         )
     }
+
+    fn source_path(&self) -> String {
+        self.repositories.runtime_extensions().source_path()
+    }
 }
 
 fn required_text(
@@ -106,10 +140,15 @@ fn required_text(
     }
 }
 
-fn optional_json_value(value: Option<Value>, code: &'static str) -> Result<Value, CoreError> {
+fn optional_settings(
+    value: Option<RuntimeExtensionSettingsValue>,
+    code: &'static str,
+) -> Result<RuntimeExtensionSettingsValue, CoreError> {
     match value {
-        Some(Value::Null) => Err(CoreError::domain(code, "运行时扩展配置不能为空。")),
+        Some(RuntimeExtensionSettingsValue::Null) => {
+            Err(CoreError::domain(code, "运行时扩展配置不能为空。"))
+        }
         Some(value) => Ok(value),
-        None => Ok(json!({})),
+        None => Ok(RuntimeExtensionSettingsValue::default()),
     }
 }

@@ -5,8 +5,8 @@ import {
   daemonAutoswitchService,
   maintenanceService,
   mcpService,
+  pluginsService,
   relayService,
-  runtimeExtensionsService,
   sessionsService,
   settingsService,
   skillsService,
@@ -196,8 +196,8 @@ export const api = {
   diagnoseCodexRouter: relayService.diagnoseCodexRouter,
   fixCodexRouterIssue: relayService.fixCodexRouterIssue,
 
-  listPlugins: runtimeExtensionsService.listPlugins,
-  togglePlugin: runtimeExtensionsService.togglePlugin,
-  getPluginConfig: runtimeExtensionsService.getPluginConfig,
-  updatePluginConfig: runtimeExtensionsService.updatePluginConfig,
+  listPlugins: pluginsService.list,
+  togglePlugin: pluginsService.toggle,
+  getPluginConfig: pluginsService.getConfig,
+  updatePluginConfig: pluginsService.updateConfig,
 };
