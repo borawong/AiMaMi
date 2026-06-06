@@ -3,9 +3,7 @@
  */
 import {
   useCallback,
-  useEffect,
   useMemo,
-  useState,
   type CSSProperties,
 } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
@@ -17,30 +15,28 @@ import {
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useRouteRenderSettings } from "@/app/providers/route-settings-provider";
-import { useDeferredReady } from "@/hooks/use-deferred-ready";
 import { isMacPlatform } from "@/lib/platform";
 import { getRouteMeta, getVisibleRouteMeta } from "@/routes/registry/route-meta";
-import { preloadVisibleRoutes } from "@/routes/registry/route-preload";
 import {
   resolveRouteFromPath,
   resolveRoutePath,
   type RouteRenderContext,
 } from "@/routes/registry/route-registry";
 import type { Route } from "@/types/navigation";
+import { useRoutePrewarm } from "./use-route-prewarm";
+import { useSidebarOpenState } from "./use-sidebar-open-state";
 
 const DRAG_REGION_HEIGHT = isMacPlatform() ? 48 : 0;
 
 export function AppRouterShell() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(
-    () => localStorage.getItem("sidebar_collapsed") === "false",
-  );
+  const { sidebarOpen, setSidebarOpen } = useSidebarOpenState();
   const settings = useRouteRenderSettings();
   const activeRoute = resolveRouteFromPath(location.pathname);
   const activeRouteMeta = getRouteMeta(activeRoute);
   const visibleRouteMeta = useMemo(() => getVisibleRouteMeta(), []);
-  const prewarmRoutes = useDeferredReady(900);
+  useRoutePrewarm();
 
   const handleNavigate = useCallback(
     (nextRoute: Route) => {
@@ -55,12 +51,6 @@ export function AppRouterShell() {
     }),
     [settings],
   );
-
-  useEffect(() => {
-    if (prewarmRoutes) {
-      void preloadVisibleRoutes();
-    }
-  }, [prewarmRoutes]);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#FFFFFF] dark:bg-background">
@@ -77,10 +67,7 @@ export function AppRouterShell() {
 
       <SidebarProvider
         open={sidebarOpen}
-        onOpenChange={(open) => {
-          setSidebarOpen(open);
-          localStorage.setItem("sidebar_collapsed", String(!open));
-        }}
+        onOpenChange={setSidebarOpen}
         style={
           {
             "--sidebar-width": `${SIDEBAR_EXPANDED_WIDTH_PX}px`,

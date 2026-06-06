@@ -5,6 +5,7 @@ import {
   type QueryClient,
   type QueryKey,
 } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import {
   relayService,
@@ -16,7 +17,10 @@ import {
 import {
   invalidateRelayContractQueries,
   RelayCache,
+  RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY,
   RELAY_STATE_QUERY_KEY,
+  type RelayRouterToggleProgress,
+  writeRelayRouterToggleProgress,
 } from "../cache";
 
 export function useRelayCacheController() {
@@ -205,8 +209,57 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
+function parseRelayRouterToggleProgress(
+  payload: unknown,
+): RelayRouterToggleProgress | null {
+  if (!isRecord(payload)) return null;
+  const step = readFiniteNumber(payload.step, 0);
+  const total = Math.max(readFiniteNumber(payload.total, 1), 1);
+  const label = typeof payload.label === "string" ? payload.label : "writing_config";
+
+  return {
+    label,
+    step: Math.min(Math.max(step, 0), total),
+    total,
+    current: readOptionalFiniteNumber(payload.current),
+    totalItems:
+      readOptionalFiniteNumber(payload.total_items) ??
+      readOptionalFiniteNumber(payload.totalItems),
+    receivedAt: Date.now(),
+  };
+}
+
+function readFiniteNumber(value: unknown, fallback: number) {
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+}
+
+function readOptionalFiniteNumber(value: unknown) {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function useRelayRouterToggleProgress(queryClient: QueryClient) {
+  const [progress, setProgress] = useState<RelayRouterToggleProgress | null>(
+    () =>
+      queryClient.getQueryData<RelayRouterToggleProgress>(
+        RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY,
+      ) ?? null,
+  );
+
+  useEffect(() => {
+    return relayService.subscribeRouterToggleProgress((payload) => {
+      const nextProgress = parseRelayRouterToggleProgress(payload);
+      if (!nextProgress) return;
+      writeRelayRouterToggleProgress(queryClient, nextProgress);
+      setProgress(nextProgress);
+    });
+  }, [queryClient]);
+
+  return progress;
+}
+
 export function useRelayModule() {
   const queryClient = useQueryClient();
+  const routerToggleProgress = useRelayRouterToggleProgress(queryClient);
   const stateQuery = useQuery({
     queryKey: RELAY_STATE_QUERY_KEY,
     queryFn: () =>
@@ -405,6 +458,7 @@ export function useRelayModule() {
       run: () => diagnosticsMutation.mutateAsync(),
       isPending: diagnosticsMutation.isPending,
     },
+    routerToggleProgress,
     isAnyMutationPending,
   };
 }

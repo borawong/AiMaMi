@@ -1,4 +1,4 @@
 /**
- * 中文职责说明：voice 模块面板边界；无证据前保持空导出。
+ * 中文职责说明：voice panels 标准 owner 入口，统一导出本模块交互壳。
  */
-export {};
+export * from "./voice-panels";

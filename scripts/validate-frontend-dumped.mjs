@@ -253,6 +253,10 @@ function assertFeatureEntrypoints(contractFiles) {
     }
 
     const content = readRequired(contentPath);
+    if (isVoiceDeepOwnerContent(featureId, content)) {
+      continue;
+    }
+
     const hasBoundary = content.includes("DumpedContractBoundary");
     const hasModuleId = content.includes(`moduleId="${featureId}"`);
     const hasCommands = exportedName.length > 0 && content.includes(exportedName);
@@ -267,6 +271,28 @@ function assertFeatureEntrypoints(contractFiles) {
   } else {
     logFail("模块 Content 合同边界", `${contractFiles.length - (failures.length - before)}/${contractFiles.length}`);
   }
+}
+
+function isVoiceDeepOwnerContent(featureId, content) {
+  if (featureId !== "voice") return false;
+
+  const panelsIndexPath = join(featuresRoot, "voice", "panels", "index.ts");
+  const panelsPath = join(featuresRoot, "voice", "panels", "voice-panels.tsx");
+  const cachePath = join(featuresRoot, "voice", "cache", "index.ts");
+  if (!existsSync(panelsIndexPath) || !existsSync(panelsPath) || !existsSync(cachePath)) return false;
+
+  const panelsIndex = readRequired(panelsIndexPath);
+  const panels = readRequired(panelsPath);
+  return (
+    content.includes("VoicePage") &&
+    content.includes("<VoicePage") &&
+    !content.includes("DumpedContractBoundary") &&
+    panelsIndex.includes("./voice-panels") &&
+    panels.includes("VoiceWorkspacePanel") &&
+    panels.includes("VoiceRuntimePanel") &&
+    panels.includes("VoiceConfigPanel") &&
+    panels.includes("VoiceOverlayPanel")
+  );
 }
 
 function assertFeatureContracts(rawCommands) {
@@ -301,9 +327,10 @@ function validateRawPageRouteAndContent(rawModules) {
       featureIndex.includes(`${pascal}Provider`) &&
       featureIndex.includes(`${pascal}Content`);
     const contentOk =
-      featureContent.includes(`${pascal}Page`) &&
-      featureContent.includes(`<${pascal}Page`) &&
-      featureContent.includes("DumpedContractBoundary");
+      (featureContent.includes(`${pascal}Page`) &&
+        featureContent.includes(`<${pascal}Page`) &&
+        featureContent.includes("DumpedContractBoundary")) ||
+      isVoiceDeepOwnerContent(moduleId, featureContent);
     const pageOk = featurePage.includes(`export function ${pascal}Page`);
 
     if (!routeOk) failures.push(`${moduleId} raw page chunk 已存在，但 route shell 未正确挂载 ${pascal}Feature`);

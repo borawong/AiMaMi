@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { I18nProvider } from "@/app/providers/i18n-provider";
 import { AppQueryClientProvider } from "@/app/providers/query-client-provider";
 import { RouteSettingsProvider } from "@/app/providers/route-settings-provider";
-import { PromptHost } from "@/app/runtime/prompt-host";
+import { PromptHost } from "@/app/providers/prompt-host";
 
 export function AppProviders({ children }: { children: ReactNode }) {
   return (

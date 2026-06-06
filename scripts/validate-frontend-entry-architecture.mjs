@@ -7,8 +7,11 @@ const repoRoot = process.cwd();
 const requiredFiles = [
   "src/entry/root.tsx",
   "src/app/providers/app-providers.tsx",
+  "src/app/providers/prompt-host.tsx",
   "src/app/router/app-router.tsx",
   "src/app/router/app-shell.tsx",
+  "src/app/router/use-route-prewarm.ts",
+  "src/app/router/use-sidebar-open-state.ts",
   "src/app/runtime/runtime-initializer.tsx",
   "src/app/runtime/runtime-events.ts",
   "src/routes/registry/route-registry.tsx",
@@ -135,6 +138,7 @@ expectNotIncludes("src/entry/root.tsx", root, [
 
 const appProviders = readRequiredFile("src/app/providers/app-providers.tsx");
 expectIncludes("src/app/providers/app-providers.tsx", appProviders, [
+  "import { PromptHost } from \"@/app/providers/prompt-host\";",
   "<I18nProvider>",
   "<AppQueryClientProvider>",
   "<TooltipProvider",
@@ -145,6 +149,19 @@ expectNotIncludes("src/app/providers/app-providers.tsx", appProviders, [
   "@/features/",
   "@/services/",
   "@/routes/desktop/",
+]);
+
+const promptHost = readRequiredFile("src/app/providers/prompt-host.tsx");
+expectIncludes("src/app/providers/prompt-host.tsx", promptHost, [
+  "export function PromptHost",
+  "<Toaster />",
+  "<InstallLocationPromptDialog",
+  "<PendingAutoSwitchPromptDialog",
+  "<UpdateOverlay",
+]);
+expectNotIncludes("src/app/providers/prompt-host.tsx", promptHost, [
+  "subscribeRuntimeEvent",
+  "applyRuntimeEventToQueryCache",
 ]);
 
 const queryProvider = readRequiredFile("src/app/providers/query-client-provider.tsx");
@@ -169,7 +186,8 @@ const appShell = readRequiredFile("src/app/router/app-shell.tsx");
 expectIncludes("src/app/router/app-shell.tsx", appShell, [
   "getRouteMeta(activeRoute)",
   "getVisibleRouteMeta()",
-  "preloadVisibleRoutes()",
+  "useRoutePrewarm();",
+  "useSidebarOpenState()",
   "resolveRouteFromPath(location.pathname)",
   "resolveRoutePath(nextRoute)",
   "<SiteHeader routeMeta={activeRouteMeta} />",
@@ -180,6 +198,19 @@ expectNotIncludes("src/app/router/app-shell.tsx", appShell, [
   "visible:",
   "preload:",
   "skeleton:",
+]);
+
+const routePrewarm = readRequiredFile("src/app/router/use-route-prewarm.ts");
+expectIncludes("src/app/router/use-route-prewarm.ts", routePrewarm, [
+  "useDeferredReady(900)",
+  "preloadVisibleRoutes()",
+]);
+
+const sidebarOpenState = readRequiredFile("src/app/router/use-sidebar-open-state.ts");
+expectIncludes("src/app/router/use-sidebar-open-state.ts", sidebarOpenState, [
+  "SIDEBAR_COLLAPSED_STORAGE_KEY",
+  "localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY)",
+  "localStorage.setItem(SIDEBAR_COLLAPSED_STORAGE_KEY",
 ]);
 
 const routeRegistry = readRequiredFile("src/routes/registry/route-registry.tsx");

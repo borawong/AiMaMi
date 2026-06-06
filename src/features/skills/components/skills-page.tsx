@@ -22,6 +22,7 @@ import {
   RotateCcw,
   Archive,
   Copy,
+  AlertTriangle,
 } from "lucide-react";
 import {
   useSkillsPageMutations,
@@ -49,6 +50,8 @@ export function SkillsPage() {
   const backups = backupsQuery.data?.data.items ?? [];
   const skillsRootPath = skillsQuery.data?.data.rootPath ?? "";
   const backupsRootPath = backupsQuery.data?.data.rootPath ?? "";
+  const activeQuery = tab === "installed" ? skillsQuery : backupsQuery;
+  const activeQueryErrorVisible = activeQuery.isError;
 
   const copyPath = (path: string) => {
     navigator.clipboard.writeText(path);
@@ -115,7 +118,34 @@ export function SkillsPage() {
       </div>
 
       {/* 列表内容 */}
-      {tab === "installed" ? (
+      {activeQueryErrorVisible ? (
+        <BentoCard
+          role="alert"
+          className="border-destructive/30 bg-destructive/5"
+        >
+          <div className="flex items-start gap-3 text-sm">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+            <div className="min-w-0">
+              <div className="font-medium text-destructive">
+                {t("skills.loadFailed")}
+              </div>
+              <p className="mt-1 text-muted-foreground">
+                {t("skills.loadFailedDesc")}
+              </p>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="mt-3"
+                onClick={() => void activeQuery.refetch()}
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                {t("common.retry")}
+              </Button>
+            </div>
+          </div>
+        </BentoCard>
+      ) : tab === "installed" ? (
         skills.length === 0 ? (
           <BentoCard>
             <div className="flex h-48 flex-col items-center justify-center">

@@ -46,6 +46,15 @@ export function readBoolean(value: unknown, paths: string[], fallback = false): 
   return typeof current === "boolean" ? current : fallback;
 }
 
+export function readNumber(
+  value: unknown,
+  paths: string[],
+  fallback: number | null = null,
+): number | null {
+  const current = firstPath(value, paths);
+  return typeof current === "number" ? current : fallback;
+}
+
 export function recordEntries(value: unknown): [string, unknown][] {
   if (!isRecord(value)) return [];
   return Object.entries(value).filter(([, item]) => item !== undefined);

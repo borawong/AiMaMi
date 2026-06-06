@@ -16,8 +16,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useUpdateCheck } from "@/hooks/use-update-check";
-import { useInstallLocationPrompt } from "./use-install-location-prompt";
-import { usePendingAutoSwitchPrompt } from "./use-pending-auto-switch-prompt";
+import { useInstallLocationPrompt } from "@/app/runtime/use-install-location-prompt";
+import { usePendingAutoSwitchPrompt } from "@/app/runtime/use-pending-auto-switch-prompt";
 
 interface PromptHostActions {
   checkForUpdate: () => Promise<"available" | "up-to-date" | "error">;

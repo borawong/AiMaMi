@@ -4,6 +4,7 @@ import {
   type IpcJsonObject,
   type IpcJsonValue,
 } from "@/contracts/ipc";
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import type { CoreEnvelope } from "@/types";
 
 export type RelayProviderDraft = IpcJsonObject;
@@ -18,8 +19,43 @@ export type RelayImportDialogInput = {
   title: string;
   filterName: string;
 };
+export type RelayRouterToggleProgressHandler = (payload: unknown) => void;
+
+const CODEX_ROUTER_TOGGLE_PROGRESS_EVENT = "codex-router-toggle-progress";
+
+function subscribeRouterToggleProgress(
+  handler: RelayRouterToggleProgressHandler,
+  onError?: (error: unknown) => void,
+) {
+  let disposed = false;
+  let unlisten: UnlistenFn | null = null;
+
+  void listen<unknown>(CODEX_ROUTER_TOGGLE_PROGRESS_EVENT, (event) => {
+    handler(event.payload);
+  })
+    .then((nextUnlisten) => {
+      if (disposed) {
+        nextUnlisten();
+        return;
+      }
+      unlisten = nextUnlisten;
+    })
+    .catch((error: unknown) => {
+      if (!disposed) {
+        onError?.(error);
+      }
+    });
+
+  return () => {
+    disposed = true;
+    unlisten?.();
+    unlisten = null;
+  };
+}
 
 export const relayService = {
+  subscribeRouterToggleProgress,
+
   loadState: () => invokeIpc<CoreEnvelope<IpcEvidencePayload>>("load_relay_state"),
   upsert: (input: RelayProviderDraft) =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("upsert_relay_provider", { input }),

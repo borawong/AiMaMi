@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { usePromptHostActions } from "@/app/runtime/prompt-host";
+import { usePromptHostActions } from "@/app/providers/prompt-host";
 import { useAccentColor } from "@/hooks/use-accent-color";
 import { useAutoRefresh } from "@/hooks/use-auto-refresh";
 import { useTheme } from "@/hooks/use-theme";

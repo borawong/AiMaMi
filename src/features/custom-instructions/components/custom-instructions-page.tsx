@@ -198,6 +198,7 @@ export function CustomInstructionsPage() {
   };
 
   const protectedMode = current?.protectionState === "protected";
+  const loadErrorVisible = stateQuery.isError || templatesQuery.isError;
 
   return (
     <div className="space-y-6">
@@ -212,6 +213,35 @@ export function CustomInstructionsPage() {
           onChange={(value) => setTab(value as CustomInstructionsTab)}
         />
       </div>
+
+      {loadErrorVisible ? (
+        <BentoCard
+          role="alert"
+          className="border-destructive/30 bg-destructive/5"
+        >
+          <div className="flex items-start gap-3 text-sm">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+            <div className="min-w-0">
+              <div className="font-medium text-destructive">
+                {t("customInstructions.loadFailed")}
+              </div>
+              <p className="mt-1 text-muted-foreground">
+                {t("customInstructions.loadFailedDesc")}
+              </p>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="mt-3"
+                onClick={() => void handleRefresh()}
+              >
+                <RotateCw className="h-3.5 w-3.5" />
+                {t("common.retry")}
+              </Button>
+            </div>
+          </div>
+        </BentoCard>
+      ) : null}
 
       {tab === "templates" ? (
         <BentoCard className="min-h-[520px]">

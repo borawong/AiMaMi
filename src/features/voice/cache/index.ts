@@ -7,6 +7,7 @@ import {
   isRecord,
   readArray,
   readBoolean,
+  readNumber,
   readString,
 } from "../utils";
 import {
@@ -37,7 +38,10 @@ export interface VoiceRecordPreview {
 export interface VoiceWorkspaceFacts {
   templates: VoiceRecordPreview[];
   vocabulary: VoiceRecordPreview[];
+  vocabularyApps: VoiceRecordPreview[];
   history: VoiceRecordPreview[];
+  sourcePath: string;
+  lastUpdatedAt: number | null;
 }
 
 export interface VoiceRuntimeFacts {
@@ -52,8 +56,21 @@ export interface VoiceRuntimeFacts {
   triggerKeyLabel: string;
   activeAsrProvider: string;
   activeAsrModel: string;
+  recognitionLanguage: string;
+  detectedAsrLanguage: string;
+  detectedAsrEmotion: string;
+  lastAsrDurationMs: number | null;
+  lastAsrErrorCode: string;
   capturedBundleId: string;
   capturedAppName: string;
+  capturedSelectedText: string;
+  capturedClipboardText: string;
+  liveText: string;
+  committedText: string;
+  lastError: string;
+  configPath: string;
+  sidecarPath: string;
+  autoInject: boolean;
   permissions: unknown;
 }
 
@@ -141,9 +158,14 @@ export function selectVoiceWorkspaceFacts(payload: unknown): VoiceWorkspaceFacts
     vocabulary: readArray(workspace, ["vocabulary"]).map((item) =>
       toPreview(item, ["source", "id"], ["replacement", "kind"]),
     ),
+    vocabularyApps: readArray(workspace, ["vocabularyApps"]).map((item) =>
+      toPreview(item, ["name", "bundleId"], ["path"]),
+    ),
     history: readArray(workspace, ["history"]).map((item) =>
       toPreview(item, ["templateTitle", "id"], ["renderedText", "rawText"]),
     ),
+    sourcePath: readString(workspace, ["sourcePath"]),
+    lastUpdatedAt: readNumber(workspace, ["lastUpdatedAt"]),
   };
 }
 
@@ -162,8 +184,21 @@ export function selectVoiceRuntimeFacts(payload: unknown): VoiceRuntimeFacts {
     triggerKeyLabel: readString(runtime, ["triggerKeyLabel"]),
     activeAsrProvider: readString(runtime, ["activeAsrProvider"]),
     activeAsrModel: readString(runtime, ["activeAsrModel"]),
+    recognitionLanguage: readString(runtime, ["recognitionLanguage"]),
+    detectedAsrLanguage: readString(runtime, ["detectedAsrLanguage"]),
+    detectedAsrEmotion: readString(runtime, ["detectedAsrEmotion"]),
+    lastAsrDurationMs: readNumber(runtime, ["lastAsrDurationMs"]),
+    lastAsrErrorCode: readString(runtime, ["lastAsrErrorCode"]),
     capturedBundleId: readString(runtime, ["capturedTargetBundleId"]),
     capturedAppName: readString(runtime, ["capturedTargetAppName"]),
+    capturedSelectedText: readString(runtime, ["capturedSelectedText"]),
+    capturedClipboardText: readString(runtime, ["capturedClipboardText"]),
+    liveText: readString(runtime, ["liveText"]),
+    committedText: readString(runtime, ["committedText"]),
+    lastError: readString(runtime, ["lastError"]),
+    configPath: readString(runtime, ["configPath"]),
+    sidecarPath: readString(runtime, ["sidecarPath"]),
+    autoInject: readBoolean(runtime, ["autoInject"]),
     permissions: isRecord(runtime) ? runtime.permissions ?? null : null,
   };
 }

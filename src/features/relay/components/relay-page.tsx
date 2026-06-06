@@ -67,6 +67,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useRelayModule } from "../hooks";
+import type { RelayRouterToggleProgress } from "../cache";
 
 type WireApi = "openai-responses" | "anthropic" | "openai-chat";
 type RelayNetworkMode = "system" | "direct";
@@ -370,6 +371,9 @@ export function RelayPage() {
   const formValid = Boolean(form.name.trim() && form.baseUrl.trim() && !extraHeadersInvalid);
   const locked = routerEnabled;
   const busy = module.isAnyMutationPending || deleting || testingDraft || fetchingModels;
+  const showRouterProgress =
+    module.routerActions.setCodexRouterEnabled.isPending &&
+    Boolean(module.routerToggleProgress);
 
   const resetForm = () => {
     setEditingProviderId(null);
@@ -804,6 +808,9 @@ export function RelayPage() {
               }
             />
           </div>
+          {showRouterProgress && module.routerToggleProgress ? (
+            <RelayRouterProgress progress={module.routerToggleProgress} />
+          ) : null}
           <div className="mt-4 space-y-2 text-xs text-muted-foreground">
             <BoolBadge
               value={routerEnabled}
@@ -2032,11 +2039,70 @@ function DeleteProviderDialog({
 
 function InlineError({ title, description }: { title: string; description: string }) {
   return (
-    <div className="m-4 rounded-[8px] border border-destructive/30 bg-destructive/5 p-3 text-sm">
+    <div
+      role="alert"
+      className="m-4 rounded-[8px] border border-destructive/30 bg-destructive/5 p-3 text-sm"
+    >
       <div className="font-medium text-destructive">{title}</div>
       <div className="mt-1 text-xs text-muted-foreground">{description}</div>
     </div>
   );
+}
+
+function RelayRouterProgress({
+  progress,
+}: {
+  progress: RelayRouterToggleProgress;
+}) {
+  const { t } = useTranslation();
+  const ratio = progress.total > 0 ? progress.step / progress.total : 0;
+  const percent = Math.max(0, Math.min(100, Math.round(ratio * 100)));
+  const detailKey =
+    progress.label === "migrating_threads"
+      ? "relay.codexRouter.progressMigratingDetail"
+      : progress.label === "rolling_back_threads"
+        ? "relay.codexRouter.progressRollingBackDetail"
+        : null;
+  const labelKey = `relay.codexRouter.${resolveRouterProgressLabelKey(progress.label)}`;
+
+  return (
+    <div className="mt-4 space-y-2 rounded-[8px] border border-border bg-muted/30 px-3 py-3">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+        <div
+          className="h-full rounded-full bg-primary transition-[width] duration-300"
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+      <p className="text-center text-xs text-muted-foreground">
+        {detailKey && progress.current !== null && progress.totalItems !== null
+          ? t(detailKey, {
+              current: progress.current,
+              total: progress.totalItems,
+            })
+          : t(labelKey)}
+      </p>
+    </div>
+  );
+}
+
+function resolveRouterProgressLabelKey(label: string) {
+  switch (label) {
+    case "stopping_codex":
+      return "progressStoppingCodex";
+    case "starting_proxy":
+      return "progressStartingProxy";
+    case "migrating_threads":
+      return "progressMigratingThreads";
+    case "rolling_back_threads":
+      return "progressRollingBackThreads";
+    case "updating_database":
+      return "progressUpdatingDatabase";
+    case "launching_codex":
+      return "progressLaunchingCodex";
+    case "writing_config":
+    default:
+      return "progressWritingConfig";
+  }
 }
 
 function IconTooltip({

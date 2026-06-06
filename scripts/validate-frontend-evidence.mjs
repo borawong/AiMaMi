@@ -407,6 +407,66 @@ function validateRoutesAndLocales(controlFlowRows) {
   );
 }
 
+function validateKnownInternalFrontendGates() {
+  const relayHooksPath = join(repoRoot, "src", "features", "relay", "hooks", "index.ts");
+  const relayCachePath = join(repoRoot, "src", "features", "relay", "cache", "index.ts");
+  const relayPagePath = join(repoRoot, "src", "features", "relay", "components", "relay-page.tsx");
+  const relayServicePath = join(repoRoot, "src", "services", "relay", "index.ts");
+  const customInstructionsPagePath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "components",
+    "custom-instructions-page.tsx",
+  );
+  const skillsPagePath = join(repoRoot, "src", "features", "skills", "components", "skills-page.tsx");
+
+  const relayHooks = readRequired(relayHooksPath);
+  const relayCache = readRequired(relayCachePath);
+  const relayPage = readRequired(relayPagePath);
+  const relayService = readRequired(relayServicePath);
+  const customInstructionsPage = readRequired(customInstructionsPagePath);
+  const skillsPage = readRequired(skillsPagePath);
+
+  const relayEventOk =
+    relayService.includes("codex-router-toggle-progress") &&
+    relayService.includes("listen<unknown>") &&
+    relayService.includes("unlisten?.()") &&
+    relayHooks.includes("subscribeRouterToggleProgress") &&
+    relayCache.includes("RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY") &&
+    relayCache.includes("writeRelayRouterToggleProgress") &&
+    relayPage.includes("RelayRouterProgress") &&
+    relayPage.includes("module.routerToggleProgress");
+  if (!relayEventOk) {
+    failures.push("relay router toggle progress 事件链未覆盖 listen、cleanup、cache key 和页面反馈");
+  } else {
+    console.log("PASS relay router toggle progress 事件链：listen/cleanup/cache/page");
+  }
+
+  const customInstructionsErrorOk =
+    customInstructionsPage.includes("stateQuery.isError") &&
+    customInstructionsPage.includes("templatesQuery.isError") &&
+    customInstructionsPage.includes('role="alert"') &&
+    customInstructionsPage.includes("customInstructions.loadFailed");
+  if (!customInstructionsErrorOk) {
+    failures.push("custom-instructions initial query failure 缺少可见 alert");
+  } else {
+    console.log("PASS custom-instructions initial query failure 可见 alert");
+  }
+
+  const skillsErrorOk =
+    skillsPage.includes("activeQuery.isError") &&
+    skillsPage.includes('role="alert"') &&
+    skillsPage.includes("skills.loadFailed") &&
+    skillsPage.includes("activeQuery.refetch()");
+  if (!skillsErrorOk) {
+    failures.push("skills installed/backups query failure 缺少可见 alert");
+  } else {
+    console.log("PASS skills query failure 可见 alert");
+  }
+}
+
 function validateNoForbiddenReferenceNames() {
   const textFiles = [
     ...walkFiles(join(repoRoot, "src"), (file) => /\.(cjs|css|html|js|json|jsx|md|mjs|ts|tsx|txt|yml|yaml)$/i.test(file)),
@@ -440,6 +500,7 @@ assertEvidenceInputs(raw);
 validateQueryKeys(raw.queryHits);
 validatePageChunks(raw.frontendFiles);
 validateRoutesAndLocales(raw.controlFlow);
+validateKnownInternalFrontendGates();
 validateNoForbiddenReferenceNames();
 
 for (const note of notes) {
