@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Puzzle, Settings2 } from "lucide-react";
+import { Puzzle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -191,25 +191,13 @@ function PluginRows({
                   {readString(plugin, ["description", "summary", "path"], "")}
                 </p>
               </div>
-              <div className="flex shrink-0 items-center gap-2">
-                <Switch
-                  checked={enabled}
-                  disabled={!id || controller.togglePlugin.isPending}
-                  onCheckedChange={(checked) =>
-                    controller.togglePlugin.run(id, checked)
-                  }
-                />
-                <Button
-                  type="button"
-                  size="icon-sm"
-                  variant="outline"
-                  disabled={!id || controller.configDialog.isLoading}
-                  onClick={() => void controller.configDialog.openForPlugin(id)}
-                  aria-label={t("plugins.config")}
-                >
-                  <Settings2 className="h-3.5 w-3.5" />
-                </Button>
-              </div>
+              <Switch
+                checked={enabled}
+                disabled={!id || controller.togglePlugin.isPending}
+                onCheckedChange={(checked) =>
+                  controller.togglePlugin.run(id, checked)
+                }
+              />
             </div>
           </div>
         );

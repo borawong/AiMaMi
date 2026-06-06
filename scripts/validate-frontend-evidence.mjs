@@ -24,6 +24,33 @@ const evidenceFiles = {
   contractReport: join(evidenceRoot, "frontend-contract-report.md"),
 };
 
+const pluginsGateFiles = {
+  acceptanceMatrix: join(
+    repoRoot,
+    "evidence",
+    "full-chain",
+    "raw",
+    "aimami",
+    "1.0.9",
+    "windows",
+    "plugins_frontend_acceptance_mapping",
+    "evidence",
+    "acceptance-matrix.json",
+  ),
+  compositeGateMatrix: join(
+    repoRoot,
+    "evidence",
+    "full-chain",
+    "raw",
+    "aimami",
+    "1.0.9",
+    "windows",
+    "plugins_composite_gate_gap_matrix",
+    "evidence",
+    "composite-gate-matrix.json",
+  ),
+};
+
 const targetModules = [
   { id: "accounts", chunk: /^assets\/accounts-page-[^/]+\.js$/ },
   { id: "sessions", chunk: /^assets\/sessions-page-[^/]+\.js$/ },
@@ -496,6 +523,124 @@ function validateKnownInternalFrontendGates() {
   }
 }
 
+function validatePluginsFrontendNoPromotionGate() {
+  const acceptance = parseJsonFile(pluginsGateFiles.acceptanceMatrix) ?? {};
+  const composite = parseJsonFile(pluginsGateFiles.compositeGateMatrix) ?? {};
+  const pluginsServicePath = join(repoRoot, "src", "services", "plugins", "index.ts");
+  const pluginsContractPath = join(repoRoot, "src", "features", "plugins", "contract.ts");
+  const pluginsHooksPath = join(repoRoot, "src", "features", "plugins", "hooks", "index.ts");
+  const pluginsPagePath = join(repoRoot, "src", "features", "plugins", "components", "page.tsx");
+  const pluginsPanelPath = join(repoRoot, "src", "features", "plugins", "panels", "page.tsx");
+  const pluginsDialogsIndexPath = join(repoRoot, "src", "features", "plugins", "dialogs", "index.ts");
+  const pluginsConfigDialogPath = join(repoRoot, "src", "features", "plugins", "dialogs", "config.tsx");
+
+  const service = readRequired(pluginsServicePath);
+  const contract = readRequired(pluginsContractPath);
+  const hooks = readRequired(pluginsHooksPath);
+  const page = readRequired(pluginsPagePath);
+  const panel = readRequired(pluginsPanelPath);
+  const dialogsIndex = readRequired(pluginsDialogsIndexPath);
+
+  const falseGateFields = [
+    "consumerStartReady",
+    "strictImplementationUse",
+    "readyToImplement",
+    "implementation_use",
+    "gate_accepted",
+    "full_leaf_100",
+  ];
+  const acceptanceGlobalGate = acceptance.globalGate ?? {};
+  const compositeModuleGate = composite.module_gate ?? {};
+  for (const field of falseGateFields) {
+    if (acceptanceGlobalGate[field] !== false) {
+      failures.push(`plugins frontend acceptance gate 不得提升 ${field}=true`);
+    }
+    if (compositeModuleGate[field] !== false) {
+      failures.push(`plugins composite gate 不得提升 ${field}=true`);
+    }
+  }
+  if (compositeModuleGate.no_gate_promotion !== true) {
+    failures.push("plugins composite gate 必须声明 no_gate_promotion=true");
+  }
+
+  const acceptanceCommands = new Map(
+    Array.isArray(acceptance.commands)
+      ? acceptance.commands.map((item) => [item.command, item])
+      : [],
+  );
+  const listGate = acceptanceCommands.get("list_plugins") ?? {};
+  const toggleGate = acceptanceCommands.get("toggle_plugin") ?? {};
+  const getConfigGate = acceptanceCommands.get("get_plugin_config") ?? {};
+  const updateConfigGate = acceptanceCommands.get("update_plugin_config") ?? {};
+  if (listGate.uiTriggerObserved !== true || listGate.blocked !== false) {
+    failures.push("plugins list_plugins 必须保持 visible UI trigger 已观察且未阻塞");
+  }
+  if (toggleGate.uiTriggerObserved !== true || toggleGate.blocked !== false) {
+    failures.push("plugins toggle_plugin 必须保持 visible UI trigger 已观察且未阻塞");
+  }
+  for (const [command, gate] of [
+    ["get_plugin_config", getConfigGate],
+    ["update_plugin_config", updateConfigGate],
+  ]) {
+    if (gate.uiTriggerObserved !== false || gate.frontendConsumptionMapped !== false || gate.blocked !== true) {
+      failures.push(`plugins ${command} 必须保持缺少可见配置 UI caller 的阻塞结论`);
+    }
+  }
+
+  const serviceWrappersOk =
+    service.includes('"list_plugins"') &&
+    service.includes('"toggle_plugin"') &&
+    service.includes('"get_plugin_config"') &&
+    service.includes('"update_plugin_config"') &&
+    service.includes("{ id, enabled }") &&
+    service.includes("{ id, settings }");
+  if (!serviceWrappersOk) {
+    failures.push("plugins service 必须保留四个 raw wrapper 和参数边界");
+  }
+
+  const contractOk =
+    contract.includes('"command": "list_plugins"') &&
+    contract.includes('"command": "toggle_plugin"') &&
+    contract.includes('"command": "get_plugin_config"') &&
+    contract.includes('"command": "update_plugin_config"') &&
+    contract.includes('"controlFlowCount": 0') &&
+    contract.includes('"controlFlowCount": 1');
+  if (!contractOk) {
+    failures.push("plugins dumped contract 必须记录四个命令及 controlFlowCount 差异");
+  }
+
+  const visibleConfigUiSignals = [
+    "PluginConfigDialog",
+    "configDialog",
+    "openForPlugin",
+    "loadConfigMutation",
+    "updatePluginConfigMutation",
+    "pluginsService.getConfig",
+    "pluginsService.updateConfig",
+    "pluginConfigQueryKey",
+  ];
+  for (const signal of visibleConfigUiSignals) {
+    if (hooks.includes(signal) || page.includes(signal) || panel.includes(signal) || dialogsIndex.includes(signal)) {
+      failures.push(`plugins 缺少可见配置 UI 证据，前端 owner 不得消费 ${signal}`);
+    }
+  }
+  if (existsSync(pluginsConfigDialogPath)) {
+    failures.push("plugins 缺少可见配置 UI 证据，不得保留 dialogs/config.tsx");
+  }
+
+  const listToggleOwnerOk =
+    hooks.includes("pluginsService.list()") &&
+    hooks.includes("pluginsService.toggle(id, enabled)") &&
+    hooks.includes("writePluginsMutationPayload") &&
+    panel.includes("controller.togglePlugin.run(id, checked)") &&
+    !panel.includes("Settings2");
+  if (!listToggleOwnerOk) {
+    failures.push("plugins 页面 owner 只应承接 list/toggle 可见 UI，并保留 mutation payload 写回");
+  }
+
+  console.log("PASS plugins frontend gate：list/toggle 可见，config wrapper 不提升为 UI 还原");
+}
+
 function validateNoForbiddenReferenceNames() {
   const textFiles = [
     ...walkFiles(join(repoRoot, "src"), (file) => /\.(cjs|css|html|js|json|jsx|md|mjs|ts|tsx|txt|yml|yaml)$/i.test(file)),
@@ -530,6 +675,7 @@ validateQueryKeys(raw.queryHits);
 validatePageChunks(raw.frontendFiles);
 validateRoutesAndLocales(raw.controlFlow);
 validateKnownInternalFrontendGates();
+validatePluginsFrontendNoPromotionGate();
 validateNoForbiddenReferenceNames();
 
 for (const note of notes) {

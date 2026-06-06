@@ -1,22 +1,17 @@
-import { useState } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/controller";
 import {
   pluginsService,
   type PluginJsonValue,
-  type PluginSettingsPayload,
   type PluginsEnvelope,
 } from "@/services/plugins";
-import type { PluginSettingsDraft } from "../types";
 import {
   invalidatePluginsContractQueries,
-  pluginConfigQueryKey,
   PluginsCache,
   PLUGINS_LIST_QUERY_KEY,
 } from "../cache";
 import {
   countEnabledPlugins,
-  formatJsonDraft,
   selectPluginEnvelopeData,
   selectPluginRecords,
 } from "../utils";
@@ -71,70 +66,9 @@ export function usePluginsCacheController() {
 
 export function usePluginsPageController() {
   const module = usePluginsModule();
-  const [configPluginId, setConfigPluginId] = useState<string | null>(null);
-  const [configDraft, setConfigDraft] = useState("");
-  const [configParseErrorKey, setConfigParseErrorKey] = useState<string | null>(
-    null,
-  );
-
   const payload = selectPluginEnvelopeData(module.pluginsQuery.data);
   const plugins = selectPluginRecords(payload);
   const enabledCount = countEnabledPlugins(plugins);
-
-  const openConfig = async (id: string) => {
-    setConfigPluginId(id);
-    setConfigDraft("");
-    setConfigParseErrorKey(null);
-    module.updatePluginConfigMutation.reset();
-
-    try {
-      const response = await module.loadConfigMutation.mutateAsync(id);
-      setConfigDraft(formatJsonDraft(selectPluginEnvelopeData(response)));
-    } catch {
-      setConfigDraft("null");
-    }
-  };
-
-  const closeConfig = () => {
-    setConfigPluginId(null);
-    setConfigDraft("");
-    setConfigParseErrorKey(null);
-    module.loadConfigMutation.reset();
-    module.updatePluginConfigMutation.reset();
-  };
-
-  const updateConfigDraft = (nextDraft: string) => {
-    setConfigDraft(nextDraft);
-    if (configParseErrorKey) setConfigParseErrorKey(null);
-  };
-
-  const resetConfigDraft = () => {
-    setConfigDraft(
-      formatJsonDraft(selectPluginEnvelopeData(module.loadConfigMutation.data)),
-    );
-    setConfigParseErrorKey(null);
-    module.updatePluginConfigMutation.reset();
-  };
-
-  const saveConfig = async () => {
-    if (!configPluginId) return;
-
-    let settings: PluginSettingsDraft;
-    try {
-      settings = JSON.parse(configDraft) as PluginSettingsDraft;
-    } catch {
-      setConfigParseErrorKey("plugins.configJsonInvalid");
-      return;
-    }
-
-    setConfigParseErrorKey(null);
-    try {
-      await module.updatePluginConfigMutation.mutateAsync({
-        id: configPluginId,
-        settings,
-      });
-    } catch {}
-  };
 
   return {
     plugins,
@@ -145,27 +79,6 @@ export function usePluginsPageController() {
       isPending: module.togglePluginMutation.isPending,
       run: (id: string, enabled: boolean) =>
         module.togglePluginMutation.mutate({ id, enabled }),
-    },
-    configDialog: {
-      open: configPluginId !== null,
-      pluginId: configPluginId,
-      draft: configDraft,
-      parseErrorKey: configParseErrorKey,
-      summaryValue: selectPluginEnvelopeData(module.loadConfigMutation.data),
-      isLoading: module.loadConfigMutation.isPending,
-      isLoadError: module.loadConfigMutation.isError,
-      isSaving: module.updatePluginConfigMutation.isPending,
-      isSaveError: module.updatePluginConfigMutation.isError,
-      canSave:
-        Boolean(configPluginId) &&
-        !module.loadConfigMutation.isPending &&
-        !module.loadConfigMutation.isError &&
-        !module.updatePluginConfigMutation.isPending,
-      openForPlugin: openConfig,
-      close: closeConfig,
-      updateDraft: updateConfigDraft,
-      resetDraft: resetConfigDraft,
-      save: saveConfig,
     },
   };
 }
@@ -225,30 +138,6 @@ export function usePluginsModule() {
     onSuccess: (payload) => writePluginsMutationPayload(queryClient, payload),
   });
 
-  const loadConfigMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const payload = await pluginsService.getConfig(id);
-      queryClient.setQueryData(pluginConfigQueryKey(id), payload);
-      return payload;
-    },
-    onSuccess: (payload) => {
-      writePluginsCachePayload(
-        queryClient,
-        payload,
-        "active-only-refresh",
-        nextPluginsCacheSequence(),
-      );
-    },
-  });
-
-  const updatePluginConfigMutation = useMutation({
-    mutationFn: ({ id, settings }: { id: string; settings: PluginSettingsPayload }) =>
-      pluginsService.updateConfig(id, settings),
-    onMutate: ({ id }) =>
-      queryClient.cancelQueries({ queryKey: pluginConfigQueryKey(id) }),
-    onSuccess: (payload) => writePluginsMutationPayload(queryClient, payload),
-  });
-
   return {
     pluginsQuery,
     refreshAction: {
@@ -258,8 +147,6 @@ export function usePluginsModule() {
       isPending: refreshMutation.isPending,
     },
     togglePluginMutation,
-    loadConfigMutation,
-    updatePluginConfigMutation,
   };
 }
 

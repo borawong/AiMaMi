@@ -271,7 +271,23 @@ function validateNoForbiddenReferenceNames() {
   console.log("PASS 外部参考项目名未写入前端源码和脚本");
 }
 
+function validateNoDuplicateSharedLibraryRoots() {
+  const forbiddenDirectories = [
+    join(srcRoot, "libs"),
+    join(srcRoot, "shared", "lib"),
+  ];
+
+  for (const directory of forbiddenDirectories) {
+    if (existsSync(directory)) {
+      failures.push(`${repoPath(directory)} 是重复公共库目录；前端公共门面只能归属 src/lib`);
+    }
+  }
+
+  console.log("PASS 前端公共库目录唯一：src/lib");
+}
+
 validateSourceFileNames();
+validateNoDuplicateSharedLibraryRoots();
 validateFeatureDeepOwners();
 validateRouteShells();
 validateFeaturePageShells();

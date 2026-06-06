@@ -1,1 +1,1 @@
-export { PluginConfigDialog } from "./config";
+export {};

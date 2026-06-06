@@ -298,6 +298,98 @@ function assertFeatureContracts(rawCommands) {
   assertFeatureEntrypoints(contractFiles);
 }
 
+function extractPluginsCommandBlocks(source) {
+  const blocks = new Map();
+  const pattern = /\{\s*"command":\s*"([^"]+)"([\s\S]*?)\n\s*\}/g;
+  for (const match of source.matchAll(pattern)) {
+    blocks.set(match[1], match[0]);
+  }
+  return blocks;
+}
+
+function extractStringArray(block, field) {
+  const match = block.match(new RegExp(`"${field}"\\s*:\\s*\\[([\\s\\S]*?)\\]`));
+  if (!match) return [];
+  return [...match[1].matchAll(/"([^"]+)"/g)].map((item) => item[1]).sort();
+}
+
+function validatePluginsDumpedContract() {
+  const before = failures.length;
+  const pluginsContractPath = join(featuresRoot, "plugins", "contract.ts");
+  const pluginsServicePath = join(servicesRoot, "plugins", "index.ts");
+  const pluginsContentPath = join(featuresRoot, "plugins", "Content.tsx");
+  const contract = readRequired(pluginsContractPath);
+  const service = readRequired(pluginsServicePath);
+  const content = readRequired(pluginsContentPath);
+  const commandBlocks = extractPluginsCommandBlocks(contract);
+  const expected = [
+    { command: "list_plugins", argKeys: [], controlFlowCount: 1, serviceArgs: [] },
+    {
+      command: "toggle_plugin",
+      argKeys: ["enabled", "id"],
+      controlFlowCount: 1,
+      serviceArgs: ["id", "enabled"],
+    },
+    {
+      command: "get_plugin_config",
+      argKeys: ["id"],
+      controlFlowCount: 0,
+      serviceArgs: ["id"],
+    },
+    {
+      command: "update_plugin_config",
+      argKeys: ["id", "settings"],
+      controlFlowCount: 0,
+      serviceArgs: ["id", "settings"],
+    },
+  ];
+
+  const actualCommands = [...commandBlocks.keys()].sort();
+  const expectedCommands = expected.map((item) => item.command).sort();
+  const commandDiff = diffValues(expectedCommands, actualCommands);
+  if (commandDiff.missing.length > 0 || commandDiff.extra.length > 0) {
+    failures.push(
+      `plugins dumped contract 命令集合不匹配：missing=${commandDiff.missing.join(", ")} extra=${commandDiff.extra.join(", ")}`,
+    );
+  }
+
+  for (const item of expected) {
+    const block = commandBlocks.get(item.command) ?? "";
+    const argKeys = extractStringArray(block, "argKeys");
+    const argDiff = diffValues(item.argKeys, argKeys);
+    if (argDiff.missing.length > 0 || argDiff.extra.length > 0) {
+      failures.push(
+        `plugins ${item.command} argKeys 不匹配：missing=${argDiff.missing.join(", ")} extra=${argDiff.extra.join(", ")}`,
+      );
+    }
+    if (!block.includes(`"controlFlowCount": ${item.controlFlowCount}`)) {
+      failures.push(`plugins ${item.command} controlFlowCount 必须为 ${item.controlFlowCount}`);
+    }
+    if (!service.includes(`"${item.command}"`)) {
+      failures.push(`plugins service 缺少 raw wrapper：${item.command}`);
+    }
+    for (const arg of item.serviceArgs) {
+      if (!service.includes(arg)) {
+        failures.push(`plugins service ${item.command} 缺少参数：${arg}`);
+      }
+    }
+  }
+
+  if (
+    !content.includes("DumpedContractBoundary") ||
+    !content.includes('moduleId="plugins"') ||
+    !content.includes("DUMPED_PLUGINS_COMMANDS")
+  ) {
+    failures.push("plugins Content 必须挂载 DumpedContractBoundary 和 DUMPED_PLUGINS_COMMANDS");
+  }
+
+  if (failures.length === before) {
+    logPass("plugins dumped contract 精确门禁", "4/4");
+  } else {
+    logFail("plugins dumped contract 精确门禁", "存在缺失");
+  }
+}
+
 function validateRawPageRouteAndContent(rawModules) {
   const before = failures.length;
 
@@ -585,6 +677,7 @@ const commandsByModule = controlFlowCommandsByModule(raw.controlFlow, rawModules
 assertExactSet("IPC 合同覆盖 raw dumped 命令", rawCommands, contractCommands);
 assertCommandsMentioned("service wrapper 覆盖 raw dumped 命令", rawCommands, serviceText);
 assertFeatureContracts(rawCommands);
+validatePluginsDumpedContract();
 validateRawPageRouteAndContent(rawModules);
 validateRouterEvidence(rawModules, raw.routerHits);
 validateRawQueryKeys(raw.queryHits, rawModules);
