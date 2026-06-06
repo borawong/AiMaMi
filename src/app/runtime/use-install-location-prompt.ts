@@ -2,15 +2,14 @@
  * 中文职责说明：安装位置提示 hook 只拥有启动期安装可写性检查和打开应用目录动作。
  */
 import { useEffect, useState } from "react";
-import { maintenanceService } from "@/services/maintenance";
-import { settingsService } from "@/services/settings";
+import { api } from "@/lib/api";
 
 export function useInstallLocationPrompt() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    void settingsService
+    void api
       .checkUpdateInstallability()
       .then((payload) => {
         if (cancelled) {
@@ -30,7 +29,7 @@ export function useInstallLocationPrompt() {
   const dismiss = () => setOpen(false);
 
   const openApplications = async () => {
-    await maintenanceService.openPath("/Applications");
+    await api.openPath("/Applications");
     setOpen(false);
   };
 

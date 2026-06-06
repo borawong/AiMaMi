@@ -6,7 +6,7 @@ import { useModuleCacheController } from "@/features/_shared/use-module-cache-co
 import {
   mergeCustomInstructionTemplates,
 } from "@/lib/custom-instruction-templates";
-import { customInstructionsService } from "@/services/custom-instructions";
+import { api } from "@/lib/api";
 import type {
   CustomInstructionPreviewPayload,
   CustomInstructionStatePayload,
@@ -67,7 +67,7 @@ export function useCustomInstructionQueries() {
     queryKey: customInstructionStateQueryKey,
     queryFn: async () => {
       const sequence = nextCustomInstructionsCacheSequence();
-      const payload = await customInstructionsService.loadState();
+      const payload = await api.loadCustomInstructionState();
       writeCustomInstructionsCachePayload(queryClient, payload, "full-refresh", sequence);
       return payload;
     },
@@ -97,7 +97,7 @@ export function useCustomInstructionMutations(options: {
   const queryClient = useQueryClient();
 
   const previewMutation = useMutation({
-    mutationFn: (content: string) => customInstructionsService.previewApply(content),
+    mutationFn: (content: string) => api.previewCustomInstructionApply(content),
     onSuccess: async (response) => {
       await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onPreviewed(response.data);
@@ -106,7 +106,7 @@ export function useCustomInstructionMutations(options: {
   });
 
   const applyMutation = useMutation({
-    mutationFn: (params: CustomInstructionApplyInput) => customInstructionsService.apply(params),
+    mutationFn: (params: CustomInstructionApplyInput) => api.applyCustomInstruction(params),
     onSuccess: async (response) => {
       await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onApplied(response.data);
@@ -115,7 +115,7 @@ export function useCustomInstructionMutations(options: {
   });
 
   const clearMutation = useMutation({
-    mutationFn: () => customInstructionsService.clearBlock(),
+    mutationFn: () => api.clearCustomInstructionBlock(),
     onSuccess: async (response) => {
       await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onCleared(response.data);
@@ -124,7 +124,7 @@ export function useCustomInstructionMutations(options: {
   });
 
   const rollbackMutation = useMutation({
-    mutationFn: (historyId: string) => customInstructionsService.rollback(historyId),
+    mutationFn: (historyId: string) => api.rollbackCustomInstruction(historyId),
     onSuccess: async (response) => {
       await writeCustomInstructionsMutationPayload(queryClient, response);
       options.onRolledBack(response.data);
@@ -142,6 +142,6 @@ export function useCustomInstructionMutations(options: {
 
 export function useCustomInstructionPathActions() {
   return {
-    openPath: (path: string) => customInstructionsService.openPath(path),
+    openPath: (path: string) => api.openCustomInstructionPath(path),
   };
 }

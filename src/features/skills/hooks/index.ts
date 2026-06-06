@@ -3,7 +3,7 @@
  */
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { skillsService } from "@/services/skills";
+import { api } from "@/lib/api";
 import { SkillsCache } from "../cache";
 
 const skillsInstalledQueryKey = ["skills", "installed"] as const;
@@ -55,7 +55,7 @@ export function useSkillsPageQueries(tab: SkillsPageTab) {
     queryKey: skillsInstalledQueryKey,
     queryFn: async () => {
       const sequence = nextSkillsCacheSequence();
-      const payload = await skillsService.loadInstalled();
+      const payload = await api.loadInstalledSkills();
       writeSkillsCachePayload(queryClient, payload, "full-refresh", sequence);
       return payload;
     },
@@ -66,7 +66,7 @@ export function useSkillsPageQueries(tab: SkillsPageTab) {
     queryKey: skillsBackupsQueryKey,
     queryFn: async () => {
       const sequence = nextSkillsCacheSequence();
-      const payload = await skillsService.loadBackups();
+      const payload = await api.loadSkillBackups();
       writeSkillsCachePayload(queryClient, payload, "full-refresh", sequence);
       return payload;
     },
@@ -87,15 +87,15 @@ export function useSkillsPageMutations(options?: {
 
   const importMutation = useMutation({
     mutationFn: async () => {
-      const path = await skillsService.pickSkillDirectory();
-      if (path) return skillsService.importSkill(path);
+      const path = await api.pickSkillDirectory();
+      if (path) return api.importSkill(path);
       throw new Error("cancelled");
     },
     onSuccess: (payload) => writeSkillsMutationPayload(queryClient, payload),
   });
 
   const removeMutation = useMutation({
-    mutationFn: (id: string) => skillsService.removeSkill(id),
+    mutationFn: (id: string) => api.removeSkill(id),
     onSuccess: async (payload) => {
       await writeSkillsMutationPayload(queryClient, payload);
       options?.onRemoved?.();
@@ -103,12 +103,12 @@ export function useSkillsPageMutations(options?: {
   });
 
   const restoreMutation = useMutation({
-    mutationFn: (id: string) => skillsService.restoreBackup(id),
+    mutationFn: (id: string) => api.restoreSkillBackup(id),
     onSuccess: (payload) => writeSkillsMutationPayload(queryClient, payload),
   });
 
   const deleteBackupMutation = useMutation({
-    mutationFn: (id: string) => skillsService.deleteBackup(id),
+    mutationFn: (id: string) => api.deleteSkillBackup(id),
     onSuccess: async (payload) => {
       await writeSkillsMutationPayload(queryClient, payload);
       options?.onBackupDeleted?.();

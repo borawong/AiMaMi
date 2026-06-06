@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { accountsService } from "@/services/accounts";
-import { systemService } from "@/services/system";
+import { api } from "@/lib/api";
 import { AccountsCache } from "../cache";
 import type {
   AccountExportFileInput,
@@ -30,41 +29,41 @@ export function useAccountsModule() {
 
   const snapshotQuery = useQuery({
     queryKey: [...AccountsCache.queryKeys.root, "snapshot"],
-    queryFn: () => systemService.loadSnapshot(true),
+    queryFn: () => api.loadSnapshot(true),
     staleTime: 30_000,
   });
 
   const attachMonitorMutation = useMutation({
-    mutationFn: () => accountsService.beginAddAccountAttachMonitor(),
+    mutationFn: () => api.beginAddAccountAttachMonitor(),
     onSuccess: writeMutationPayload,
   });
 
   const switchAccountMutation = useMutation({
     mutationFn: ({ accountKey }: AccountSwitchInput) =>
-      accountsService.switchAccount(accountKey),
+      api.switchAccount(accountKey),
     onSuccess: writeMutationPayload,
   });
 
   const switchAccountAndRestartMutation = useMutation({
     mutationFn: ({ accountKey }: AccountSwitchInput) =>
-      accountsService.switchAccountAndRestartCodex(accountKey),
+      api.switchAccountAndRestartCodex(accountKey),
     onSuccess: writeMutationPayload,
   });
 
   const removeAccountsMutation = useMutation({
     mutationFn: ({ accountKeys }: AccountKeysInput) =>
-      accountsService.removeAccounts(accountKeys),
+      api.removeAccounts(accountKeys),
     onSuccess: writeMutationPayload,
   });
 
   const logoutMutation = useMutation({
-    mutationFn: () => accountsService.logout(),
+    mutationFn: () => api.logout(),
     onSuccess: writeMutationPayload,
   });
 
   const importSessionMutation = useMutation({
     mutationFn: ({ sessionJson, overwriteExisting }: AccountImportSessionInput) =>
-      accountsService.importChatGptSessionAccount(
+      api.importChatGptSessionAccount(
         sessionJson,
         overwriteExisting,
       ),
@@ -73,13 +72,13 @@ export function useAccountsModule() {
 
   const exportAccountsMutation = useMutation({
     mutationFn: ({ targetPath, accountKeys }: AccountExportFileInput) =>
-      accountsService.exportAccountsToFile(targetPath, accountKeys),
+      api.exportAccountsToFile(targetPath, accountKeys),
     onSuccess: writeMutationPayload,
   });
 
   const previewImportMutation = useMutation({
     mutationFn: ({ filePath }: AccountPreviewImportInput) =>
-      accountsService.previewAccountImport(filePath),
+      api.previewAccountImport(filePath),
     onSuccess: writeMutationPayload,
   });
 
@@ -89,7 +88,7 @@ export function useAccountsModule() {
       overwriteExisting,
       selectedKeys,
     }: AccountImportFileInput) =>
-      accountsService.importAccountsFromFile(
+      api.importAccountsFromFile(
         filePath,
         overwriteExisting,
         selectedKeys,

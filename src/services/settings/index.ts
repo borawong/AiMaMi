@@ -1,4 +1,9 @@
 import { invokeIpc } from "@/contracts/ipc";
+import {
+  checkDesktopRuntimeUpdate,
+  getDesktopAppVersion,
+  type DesktopRuntimeUpdate,
+} from "@/lib/desktop-adapter";
 import type {
   ApiModePayload,
   ApiProxyDetectPayload,
@@ -9,7 +14,6 @@ import type {
   CoreSnapshotPayload,
   UpdateInstallabilityPayload,
 } from "@/types";
-import type { DownloadEvent, Update } from "@tauri-apps/plugin-updater";
 
 export interface RuntimeUpdateInfo {
   version: string;
@@ -22,7 +26,7 @@ export interface RuntimeDownloadProgress {
   downloaded: number;
 }
 
-let pendingRuntimeUpdate: Update | null = null;
+let pendingRuntimeUpdate: DesktopRuntimeUpdate | null = null;
 
 export const settingsService = {
   loadSnapshot: (localOnly = false) =>
@@ -77,8 +81,7 @@ export const settingsService = {
   },
 
   checkRuntimeUpdate: async (): Promise<RuntimeUpdateInfo | null> => {
-    const { check } = await import("@tauri-apps/plugin-updater");
-    const update = await check();
+    const update = await checkDesktopRuntimeUpdate();
     pendingRuntimeUpdate = update ?? null;
     return update
       ? {
@@ -95,18 +98,7 @@ export const settingsService = {
     const update = pendingRuntimeUpdate;
     if (!update) return;
 
-    let totalBytes = 0;
-    let downloadedBytes = 0;
-    await update.downloadAndInstall((event: DownloadEvent) => {
-      if (event.event === "Started" && event.data.contentLength) {
-        totalBytes = event.data.contentLength;
-        downloadedBytes = 0;
-        onProgress?.({ total: totalBytes, downloaded: 0 });
-      } else if (event.event === "Progress") {
-        downloadedBytes += event.data.chunkLength;
-        onProgress?.({ total: totalBytes, downloaded: downloadedBytes });
-      }
-    });
+    await update.downloadAndInstall(onProgress);
   },
 
   dismissRuntimeUpdate: async () => {
@@ -114,10 +106,7 @@ export const settingsService = {
     pendingRuntimeUpdate = null;
   },
 
-  getAppVersion: async () => {
-    const { getVersion } = await import("@tauri-apps/api/app");
-    return getVersion();
-  },
+  getAppVersion: getDesktopAppVersion,
 
   hasNotch: () => invokeIpc<boolean>("has_notch").catch(() => false),
 

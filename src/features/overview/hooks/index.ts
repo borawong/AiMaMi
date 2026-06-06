@@ -1,9 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { analyticsService } from "@/services/analytics";
-import { mcpService } from "@/services/mcp";
-import { skillsService } from "@/services/skills";
-import { systemService } from "@/services/system";
+import { api } from "@/lib/api";
 import { OverviewCache } from "../cache";
 
 export function useOverviewCacheController() {
@@ -13,22 +10,22 @@ export function useOverviewCacheController() {
 export function useOverviewModule() {
   const snapshotQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "snapshot"],
-    queryFn: () => systemService.loadSnapshot(true),
+    queryFn: () => api.loadSnapshot(true),
     staleTime: 30_000,
   });
   const usageQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "usage"],
-    queryFn: () => analyticsService.loadUsageAnalytics(),
+    queryFn: () => api.loadUsageAnalytics(),
     staleTime: 30_000,
   });
   const mcpQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "mcp"],
-    queryFn: () => mcpService.loadServers(),
+    queryFn: () => api.loadMcpServers(),
     staleTime: 30_000,
   });
   const skillsQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "skills"],
-    queryFn: () => skillsService.loadInstalled(),
+    queryFn: () => api.loadInstalledSkills(),
     staleTime: 30_000,
   });
 

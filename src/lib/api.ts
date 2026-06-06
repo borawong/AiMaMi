@@ -16,6 +16,8 @@ import {
   type UpsertMcpServerInput,
 } from "@/services";
 
+export type { UpsertMcpServerInput } from "@/services";
+
 function normalizeCustomInstructionApply(
   input: ApplyCustomInstructionParams | string,
   content?: string,
@@ -118,6 +120,7 @@ export const api = {
   runDaemonOnce: daemonAutoswitchService.runDaemonOnce,
 
   setApiProxyConfig: settingsService.setApiProxyConfig,
+  loadSettingsSnapshot: settingsService.loadSnapshot,
   getUsageRefreshInterval: settingsService.getUsageRefreshInterval,
   setUsageRefreshInterval: settingsService.setUsageRefreshInterval,
   testApiProxyConfig: settingsService.testApiProxyConfig,
@@ -172,6 +175,7 @@ export const api = {
     ),
   clearCustomInstructionBlock: customInstructionsService.clearBlock,
   rollbackCustomInstruction: customInstructionsService.rollback,
+  openCustomInstructionPath: customInstructionsService.openPath,
 
   loadRelayState: relayService.loadState,
   upsertRelayProvider: relayService.upsert,

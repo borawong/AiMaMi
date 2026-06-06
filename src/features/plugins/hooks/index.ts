@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { IpcJsonValue } from "@/contracts/ipc";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { runtimeExtensionsService } from "@/services/runtime-extensions";
+import { api } from "@/lib/api";
 import { PluginsCache } from "../cache";
 
 export function usePluginsCacheController() {
@@ -13,12 +13,12 @@ export function usePluginsModule() {
 
   const pluginsQuery = useQuery({
     queryKey: [...PluginsCache.queryKeys.root, "list"],
-    queryFn: () => runtimeExtensionsService.listPlugins(),
+    queryFn: () => api.listPlugins(),
     staleTime: 30_000,
   });
 
   const refreshMutation = useMutation({
-    mutationFn: () => runtimeExtensionsService.listPlugins(),
+    mutationFn: () => api.listPlugins(),
     onSuccess: (payload) => {
       PluginsCache.writeAuthoritativePayload(queryClient, {
         payload,
@@ -32,7 +32,7 @@ export function usePluginsModule() {
 
   const togglePluginMutation = useMutation({
     mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) =>
-      runtimeExtensionsService.togglePlugin(id, enabled),
+      api.togglePlugin(id, enabled),
     onSuccess: (payload) => {
       PluginsCache.writeAuthoritativePayload(queryClient, {
         payload,
@@ -45,12 +45,12 @@ export function usePluginsModule() {
   });
 
   const loadConfigMutation = useMutation({
-    mutationFn: (id: string) => runtimeExtensionsService.getPluginConfig(id),
+    mutationFn: (id: string) => api.getPluginConfig(id),
   });
 
   const updatePluginConfigMutation = useMutation({
     mutationFn: ({ id, settings }: { id: string; settings: IpcJsonValue }) =>
-      runtimeExtensionsService.updatePluginConfig(id, settings),
+      api.updatePluginConfig(id, settings),
     onSuccess: (payload) => {
       PluginsCache.writeAuthoritativePayload(queryClient, {
         payload,

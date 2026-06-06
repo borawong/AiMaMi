@@ -4,13 +4,13 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { settingsService } from "@/services/settings";
+import { api } from "@/lib/api";
 import type { ApiProxyDetectPayload, ApiProxyMode, ApiProxyTestPayload } from "@/types";
 import { SettingsCache } from "../cache";
 
 export const RUNTIME_STATE_DISPLAY_QUERY_KEY = ["runtime-state", "display"] as const;
 
-type SnapshotEnvelope = Awaited<ReturnType<typeof settingsService.loadSnapshot>>;
+type SnapshotEnvelope = Awaited<ReturnType<typeof api.loadSettingsSnapshot>>;
 
 export function useSettingsCacheController() {
   return useModuleCacheController(SettingsCache);
@@ -19,17 +19,17 @@ export function useSettingsCacheController() {
 export function useSettingsRuntimeState(supportsHotspot: boolean) {
   const statusQuery = useQuery({
     queryKey: RUNTIME_STATE_DISPLAY_QUERY_KEY,
-    queryFn: () => settingsService.loadSnapshot(false),
+    queryFn: () => api.loadSettingsSnapshot(false),
     staleTime: Infinity,
     refetchOnMount: false,
   });
 
   const status = statusQuery.data?.data.status;
-  const currentProxy = status?.api.proxy ?? { mode: "direct" as ApiProxyMode, url: null };
+  const currentProxy = status?.api?.proxy ?? { mode: "direct" as ApiProxyMode, url: null };
 
   const notchQuery = useQuery({
     queryKey: ["has-notch"],
-    queryFn: () => settingsService.hasNotch(),
+    queryFn: () => api.hasNotch(),
     staleTime: Infinity,
     enabled: supportsHotspot,
   });
@@ -38,7 +38,7 @@ export function useSettingsRuntimeState(supportsHotspot: boolean) {
 
   const hotspotQuery = useQuery({
     queryKey: ["hotspot-enabled"],
-    queryFn: () => settingsService.getHotspotEnabled(),
+    queryFn: () => api.getHotspotEnabled(),
     enabled: supportsHotspot && hasNotch,
   });
 
@@ -59,19 +59,20 @@ export function useSettingsAutoSwitchMutations(options?: {
   const queryClient = useQueryClient();
 
   const disableAutoSwitchMutation = useMutation({
-    mutationFn: () => settingsService.setAutoSwitch(false),
+    mutationFn: () => api.setAutoSwitch(false),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: RUNTIME_STATE_DISPLAY_QUERY_KEY });
       const previous = queryClient.getQueryData<SnapshotEnvelope>(RUNTIME_STATE_DISPLAY_QUERY_KEY);
       queryClient.setQueryData<SnapshotEnvelope>(RUNTIME_STATE_DISPLAY_QUERY_KEY, (old) => {
         if (!old) return old;
+        const { autoSwitch } = old.data.status;
         return {
           ...old,
           data: {
             ...old.data,
             status: {
               ...old.data.status,
-              autoSwitch: { ...old.data.status.autoSwitch, enabled: false },
+              autoSwitch: { ...(autoSwitch ?? {}), enabled: false },
             },
           },
         };
@@ -90,12 +91,13 @@ export function useSettingsAutoSwitchMutations(options?: {
 
   const saveThresholdsMutation = useMutation({
     mutationFn: async (params: { enable: boolean; t5h: number; tWeekly: number }) => {
-      if (params.enable) await settingsService.setAutoSwitch(true);
-      return settingsService.configureAutoSwitch(params.t5h, params.tWeekly);
+      if (params.enable) await api.setAutoSwitch(true);
+      return api.configureAutoSwitch(params.t5h, params.tWeekly);
     },
     onSuccess: (_data, params) => {
       queryClient.setQueryData<SnapshotEnvelope>(RUNTIME_STATE_DISPLAY_QUERY_KEY, (old) => {
         if (!old) return old;
+        const { autoSwitch } = old.data.status;
         return {
           ...old,
           data: {
@@ -103,7 +105,7 @@ export function useSettingsAutoSwitchMutations(options?: {
             status: {
               ...old.data.status,
               autoSwitch: {
-                ...old.data.status.autoSwitch,
+                ...(autoSwitch ?? {}),
                 enabled: true,
                 threshold5hPercent: params.t5h,
                 thresholdWeeklyPercent: params.tWeekly,
@@ -126,7 +128,7 @@ export function useSettingsHotspotMutation(options?: { onChanged?: (enabled: boo
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (enabled: boolean) => settingsService.setHotspotEnabled(enabled),
+    mutationFn: (enabled: boolean) => api.setHotspotEnabled(enabled),
     onSuccess: (_data, enabled) => {
       queryClient.invalidateQueries({ queryKey: ["hotspot-enabled"] });
       options?.onChanged?.(enabled);
@@ -138,7 +140,7 @@ export function useSettingsAppVersion() {
   const [appVersion, setAppVersion] = useState("...");
 
   useEffect(() => {
-    settingsService.getAppVersion()
+    api.getAppVersion()
       .then(setAppVersion)
       .catch(() => setAppVersion("unknown"));
   }, []);
@@ -147,7 +149,7 @@ export function useSettingsAppVersion() {
 }
 
 export function useApiProxyMutations(options?: {
-  onSaved?: (result: Awaited<ReturnType<typeof settingsService.setApiProxyConfig>>) => Promise<unknown> | void;
+  onSaved?: (result: Awaited<ReturnType<typeof api.setApiProxyConfig>>) => Promise<unknown> | void;
   onSaveError?: (error: unknown) => void;
   onTested?: (result: ApiProxyTestPayload) => void;
   onTestError?: (error: unknown) => void;
@@ -158,7 +160,7 @@ export function useApiProxyMutations(options?: {
 
   const saveProxyMutation = useMutation({
     mutationFn: ({ mode, url }: { mode: ApiProxyMode; url: string }) =>
-      settingsService.setApiProxyConfig(mode, normalizeProxyUrl(mode, url)),
+      api.setApiProxyConfig(mode, normalizeProxyUrl(mode, url)),
     onSuccess: async (result) => {
       queryClient.setQueryData<SnapshotEnvelope>(RUNTIME_STATE_DISPLAY_QUERY_KEY, (old) => {
         if (!old) return old;
@@ -180,13 +182,13 @@ export function useApiProxyMutations(options?: {
 
   const testProxyMutation = useMutation({
     mutationFn: ({ mode, url }: { mode: ApiProxyMode; url: string }) =>
-      settingsService.testApiProxyConfig(mode, normalizeProxyUrl(mode, url)),
+      api.testApiProxyConfig(mode, normalizeProxyUrl(mode, url)),
     onSuccess: (result) => options?.onTested?.(result.data),
     onError: options?.onTestError,
   });
 
   const detectProxyMutation = useMutation({
-    mutationFn: () => settingsService.detectApiProxyConfig(),
+    mutationFn: () => api.detectApiProxyConfig(),
     onSuccess: (result) => options?.onDetected?.(result.data),
     onError: () => options?.onDetectError?.(),
   });

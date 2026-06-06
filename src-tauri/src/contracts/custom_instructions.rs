@@ -1,3 +1,4 @@
+use crate::contracts::BackendSkeletonStatus;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
@@ -62,6 +63,8 @@ pub(crate) struct CustomInstructionHistoryEntry {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct CustomInstructionStatePayload {
+    #[serde(default)]
+    pub status: BackendSkeletonStatus,
     pub current: CustomInstructionCurrentState,
     pub history: Vec<CustomInstructionHistoryEntry>,
 }
@@ -69,6 +72,8 @@ pub(crate) struct CustomInstructionStatePayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct CustomInstructionPreviewPayload {
+    #[serde(default)]
+    pub status: BackendSkeletonStatus,
     pub global_path: String,
     pub protection_state: CustomInstructionProtectionState,
     pub issue_message: Option<String>,
@@ -80,6 +85,7 @@ pub(crate) struct CustomInstructionPreviewPayload {
 impl Default for CustomInstructionPreviewPayload {
     fn default() -> Self {
         Self {
+            status: BackendSkeletonStatus::default(),
             global_path: String::new(),
             protection_state: CustomInstructionProtectionState::Unmanaged,
             issue_message: None,

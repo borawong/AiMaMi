@@ -1,4 +1,5 @@
 import { invokeIpc } from "@/contracts/ipc";
+import { pickDesktopDirectory } from "@/lib/desktop-adapter";
 import type {
   CoreEnvelope,
   SkillBackupListPayload,
@@ -19,11 +20,7 @@ export const skillsService = {
   importSkill: (path: string) =>
     invokeIpc<CoreEnvelope<SkillImportPayload>>("import_skill", { path }),
 
-  pickSkillDirectory: async () => {
-    const { open } = await import("@tauri-apps/plugin-dialog");
-    const path = await open({ directory: true });
-    return typeof path === "string" ? path : null;
-  },
+  pickSkillDirectory: pickDesktopDirectory,
 
   removeSkill: (id: string) =>
     invokeIpc<CoreEnvelope<SkillRemovePayload>>("remove_skill", { id }),

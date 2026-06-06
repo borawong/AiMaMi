@@ -3,7 +3,7 @@
  */
 import { useMutation, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { maintenanceService } from "@/services/maintenance";
+import { api } from "@/lib/api";
 import { MaintenanceCache } from "../cache";
 
 let maintenanceCacheSequence = 0;
@@ -31,11 +31,11 @@ export function useMaintenanceCacheController() {
 }
 
 export function useMaintenanceActionMutations(options: {
-  onDiagnosed: (result: Awaited<ReturnType<typeof maintenanceService.diagnose>>) => void;
+  onDiagnosed: (result: Awaited<ReturnType<typeof api.diagnose>>) => void;
   onDiagnoseError: (error: unknown) => void;
-  onCleaned: (result: Awaited<ReturnType<typeof maintenanceService.clean>>) => void;
+  onCleaned: (result: Awaited<ReturnType<typeof api.clean>>) => void;
   onCleanError: (error: unknown) => void;
-  onRebuilt: (result: Awaited<ReturnType<typeof maintenanceService.rebuildRegistry>>) => void;
+  onRebuilt: (result: Awaited<ReturnType<typeof api.rebuildRegistry>>) => void;
   onRebuildError: (error: unknown) => void;
   onRestarted: () => void;
   onRestartError: (error: unknown) => void;
@@ -43,7 +43,7 @@ export function useMaintenanceActionMutations(options: {
   const queryClient = useQueryClient();
 
   const diagnoseMutation = useMutation({
-    mutationFn: () => maintenanceService.diagnose(),
+    mutationFn: () => api.diagnose(),
     onSuccess: async (result) => {
       await writeMaintenanceMutationPayload(queryClient, result);
       options.onDiagnosed(result);
@@ -52,7 +52,7 @@ export function useMaintenanceActionMutations(options: {
   });
 
   const cleanMutation = useMutation({
-    mutationFn: () => maintenanceService.clean(),
+    mutationFn: () => api.clean(),
     onSuccess: async (result) => {
       await writeMaintenanceMutationPayload(queryClient, result);
       options.onCleaned(result);
@@ -61,7 +61,7 @@ export function useMaintenanceActionMutations(options: {
   });
 
   const rebuildMutation = useMutation({
-    mutationFn: () => maintenanceService.rebuildRegistry(),
+    mutationFn: () => api.rebuildRegistry(),
     onSuccess: async (result) => {
       await writeMaintenanceMutationPayload(queryClient, result);
       options.onRebuilt(result);
@@ -70,7 +70,7 @@ export function useMaintenanceActionMutations(options: {
   });
 
   const restartMutation = useMutation({
-    mutationFn: () => maintenanceService.restartCodex(),
+    mutationFn: () => api.restartCodex(),
     onSuccess: async (result) => {
       await writeMaintenanceMutationPayload(queryClient, result);
       options.onRestarted();

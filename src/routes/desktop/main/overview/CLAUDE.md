@@ -13,4 +13,4 @@
 
 - 本目录只负责 overview 路由参数、页面骨架、layout 装配和模块入口挂载。
 - overview-page.tsx 不得同时 owning store、query、event、dialog 和 content。
-- 具体业务还原必须进入 src/features/overview、src/components/overview、src/services/overview、src/store/overview 和模块 cache/tests。
+- 具体业务还原必须进入 `src/features/overview` 的 Provider、hooks、cache、StoreUpdater、Content、components、dialogs、panels、types 和 tests 等模块 owner；本路由目录和 `overview-page.tsx` 只消费 feature Provider、hooks、cache、StoreUpdater/Content，不拥有业务状态、查询或弹窗流程。

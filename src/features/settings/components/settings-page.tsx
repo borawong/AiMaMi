@@ -85,6 +85,7 @@ export function SettingsPage({
     hasNotch,
     hotspotQuery,
   } = useSettingsRuntimeState(supportsHotspot);
+  const autoSwitch = status?.autoSwitch;
 
   const [thresholdDialogOpen, setThresholdDialogOpen] = useState(false);
   const [draft5h, setDraft5h] = useState(15);
@@ -95,8 +96,8 @@ export function SettingsPage({
 
   const openThresholdDialog = (enabling: boolean) => {
     setPendingEnable(enabling);
-    setDraft5h(status?.autoSwitch.threshold5hPercent ?? 15);
-    setDraftWeekly(status?.autoSwitch.thresholdWeeklyPercent ?? 10);
+    setDraft5h(autoSwitch?.threshold5hPercent ?? 15);
+    setDraftWeekly(autoSwitch?.thresholdWeeklyPercent ?? 10);
     setThresholdDialogOpen(true);
   };
 
@@ -247,20 +248,20 @@ export function SettingsPage({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[13px] font-medium">{t("settings.autoSwitch")}</span>
-              {status?.autoSwitch.enabled && (
+              {autoSwitch?.enabled && (
                 <Badge
                   variant="secondary"
                   className="cursor-pointer text-[11px] font-normal hover:bg-secondary/60"
                   onClick={() => openThresholdDialog(false)}
                 >
-                  5h ≤{status.autoSwitch.threshold5hPercent ?? 15}% · 1w ≤{status.autoSwitch.thresholdWeeklyPercent ?? 10}%
+                  5h ≤{autoSwitch?.threshold5hPercent ?? 15}% · 1w ≤{autoSwitch?.thresholdWeeklyPercent ?? 10}%
                 </Badge>
               )}
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground">{t("settings.autoSwitchDesc")}</p>
           </div>
           <Switch
-            checked={status?.autoSwitch.enabled ?? false}
+            checked={autoSwitch?.enabled ?? false}
             onCheckedChange={(v) => {
               if (v) {
                 openThresholdDialog(true);

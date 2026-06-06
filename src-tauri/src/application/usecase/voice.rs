@@ -1,10 +1,13 @@
 use crate::contracts::{
-    CoreEnvelope, VoiceAsrConfigPayload, VoiceGeneratePayload, VoiceLlmConfigPayload,
-    VoiceRuntimeStatusPayload, VoiceWorkspacePayload,
+    BackendSkeletonStatus, CoreEnvelope, VoiceAsrConfigPayload, VoiceGeneratePayload,
+    VoiceLlmConfigPayload, VoiceRuntimeStatusPayload, VoiceWorkspacePayload,
 };
+use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::repository::RepositoryBundle;
 use serde_json::{json, Value};
+
+const MODULE: &str = "voice";
 
 /// 中文职责说明：语音工作区、词汇、模型配置和运行态用户动作事务 owner。
 pub(crate) struct VoiceUseCase<'a> {
@@ -17,12 +20,14 @@ impl<'a> VoiceUseCase<'a> {
     }
 
     pub(crate) fn load_workspace(&self) -> Result<CoreEnvelope<VoiceWorkspacePayload>, CoreError> {
-        Ok(CoreEnvelope::pending(
+        let plan = self.pending_plan("voice_workspace");
+        Ok(CoreEnvelope::from_backend_plan(
             VoiceWorkspacePayload {
+                status: BackendSkeletonStatus::from_plan(&plan),
                 source_path: self.repositories.config().voice_source_path(),
                 ..VoiceWorkspacePayload::default()
             },
-            "voice_workspace",
+            &plan,
         ))
     }
 
@@ -33,22 +38,42 @@ impl<'a> VoiceUseCase<'a> {
         description: Option<String>,
         content: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        let payload = json!({
-            "id": id.unwrap_or_default(),
-            "title": title.unwrap_or_default(),
-            "description": description.unwrap_or_default(),
-            "content": content.unwrap_or_default()
-        });
-        Ok(CoreEnvelope::no_op(payload, "upsert_voice_template"))
+        let id = text_or_default(id);
+        let title = required_option_text(
+            title,
+            "empty_voice_template_title",
+            "语音模板标题不能为空。",
+        )?;
+        let description = text_or_default(description);
+        let content = required_option_text(
+            content,
+            "empty_voice_template_content",
+            "语音模板内容不能为空。",
+        )?;
+        let plan = self.no_op_plan("upsert_voice_template");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "id": id,
+                    "title": title,
+                    "description": description,
+                    "content": content
+                }),
+                &plan,
+            ),
+            &plan,
+        ))
     }
 
     pub(crate) fn remove_template(
         &self,
         id: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({ "id": id.unwrap_or_default() }),
-            "remove_voice_template",
+        let id = required_option_text(id, "empty_voice_template_id", "语音模板 ID 不能为空。")?;
+        let plan = self.no_op_plan("remove_voice_template");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({ "id": id }), &plan),
+            &plan,
         ))
     }
 
@@ -62,17 +87,40 @@ impl<'a> VoiceUseCase<'a> {
         app_name: Option<String>,
         notes: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({
-                "id": id.unwrap_or_default(),
-                "source": source.unwrap_or_default(),
-                "replacement": replacement.unwrap_or_default(),
-                "kind": kind.unwrap_or_default(),
-                "appBundleId": app_bundle_id,
-                "appName": app_name,
-                "notes": notes
-            }),
-            "upsert_voice_vocabulary",
+        let id = text_or_default(id);
+        let source = required_option_text(
+            source,
+            "empty_voice_vocabulary_source",
+            "语音词汇原文不能为空。",
+        )?;
+        let replacement = required_option_text(
+            replacement,
+            "empty_voice_vocabulary_replacement",
+            "语音词汇替换文本不能为空。",
+        )?;
+        let kind = required_option_text(
+            kind,
+            "empty_voice_vocabulary_kind",
+            "语音词汇类型不能为空。",
+        )?;
+        let app_bundle_id = trim_optional_text(app_bundle_id);
+        let app_name = trim_optional_text(app_name);
+        let notes = trim_optional_text(notes);
+        let plan = self.no_op_plan("upsert_voice_vocabulary");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "id": id,
+                    "source": source,
+                    "replacement": replacement,
+                    "kind": kind,
+                    "appBundleId": app_bundle_id,
+                    "appName": app_name,
+                    "notes": notes
+                }),
+                &plan,
+            ),
+            &plan,
         ))
     }
 
@@ -80,9 +128,11 @@ impl<'a> VoiceUseCase<'a> {
         &self,
         id: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({ "id": id.unwrap_or_default() }),
-            "remove_voice_vocabulary",
+        let id = required_option_text(id, "empty_voice_vocabulary_id", "语音词汇 ID 不能为空。")?;
+        let plan = self.no_op_plan("remove_voice_vocabulary");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({ "id": id }), &plan),
+            &plan,
         ))
     }
 
@@ -96,17 +146,31 @@ impl<'a> VoiceUseCase<'a> {
         app_name: Option<String>,
         notes: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({
-                "kind": kind.unwrap_or_default(),
-                "source": source.unwrap_or_default(),
-                "replacement": replacement.unwrap_or_default(),
-                "entries": entries.unwrap_or_else(|| json!([])),
-                "appBundleId": app_bundle_id,
-                "appName": app_name,
-                "notes": notes
-            }),
-            "replace_voice_vocabulary_kind",
+        let kind = required_option_text(
+            kind,
+            "empty_voice_vocabulary_kind",
+            "语音词汇类型不能为空。",
+        )?;
+        let source = text_or_default(source);
+        let replacement = text_or_default(replacement);
+        let app_bundle_id = trim_optional_text(app_bundle_id);
+        let app_name = trim_optional_text(app_name);
+        let notes = trim_optional_text(notes);
+        let plan = self.no_op_plan("replace_voice_vocabulary_kind");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "kind": kind,
+                    "source": source,
+                    "replacement": replacement,
+                    "entries": entries.unwrap_or_else(|| json!([])),
+                    "appBundleId": app_bundle_id,
+                    "appName": app_name,
+                    "notes": notes
+                }),
+                &plan,
+            ),
+            &plan,
         ))
     }
 
@@ -114,9 +178,15 @@ impl<'a> VoiceUseCase<'a> {
         &self,
         app_bundle_id: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({ "appBundleId": app_bundle_id }),
-            "remove_voice_vocabulary_app_scope",
+        let app_bundle_id = required_option_text(
+            app_bundle_id,
+            "empty_voice_app_bundle_id",
+            "语音应用标识不能为空。",
+        )?;
+        let plan = self.no_op_plan("remove_voice_vocabulary_app_scope");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({ "appBundleId": app_bundle_id }), &plan),
+            &plan,
         ))
     }
 
@@ -126,13 +196,24 @@ impl<'a> VoiceUseCase<'a> {
         name: Option<String>,
         path: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({
-                "bundleId": bundle_id.unwrap_or_default(),
-                "name": name.unwrap_or_default(),
-                "path": path.unwrap_or_default()
-            }),
-            "upsert_voice_vocabulary_app_scope",
+        let bundle_id = required_option_text(
+            bundle_id,
+            "empty_voice_app_bundle_id",
+            "语音应用标识不能为空。",
+        )?;
+        let name = required_option_text(name, "empty_voice_app_name", "语音应用名称不能为空。")?;
+        let path = required_option_text(path, "empty_voice_app_path", "语音应用路径不能为空。")?;
+        let plan = self.no_op_plan("upsert_voice_vocabulary_app_scope");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "bundleId": bundle_id,
+                    "name": name,
+                    "path": path
+                }),
+                &plan,
+            ),
+            &plan,
         ))
     }
 
@@ -140,20 +221,29 @@ impl<'a> VoiceUseCase<'a> {
         &self,
         path: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::pending(
-            json!({
-                "bundleId": "",
-                "name": "",
-                "path": path.unwrap_or_default()
-            }),
-            "resolve_voice_vocabulary_app_info",
+        let path = required_option_text(path, "empty_voice_app_path", "语音应用路径不能为空。")?;
+        let plan = self.pending_plan("resolve_voice_vocabulary_app_info");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "bundleId": "",
+                    "name": "",
+                    "path": path
+                }),
+                &plan,
+            ),
+            &plan,
         ))
     }
 
     pub(crate) fn generate_prompt(&self) -> Result<CoreEnvelope<VoiceGeneratePayload>, CoreError> {
-        Ok(CoreEnvelope::pending(
-            VoiceGeneratePayload::default(),
-            "generate_voice_prompt",
+        let plan = self.pending_plan("generate_voice_prompt");
+        Ok(CoreEnvelope::from_backend_plan(
+            VoiceGeneratePayload {
+                status: BackendSkeletonStatus::from_plan(&plan),
+                ..VoiceGeneratePayload::default()
+            },
+            &plan,
         ))
     }
 
@@ -161,49 +251,66 @@ impl<'a> VoiceUseCase<'a> {
         &self,
         provider: Option<String>,
     ) -> Result<CoreEnvelope<VoiceLlmConfigPayload>, CoreError> {
-        Ok(CoreEnvelope::pending(
+        let provider = required_provider(provider)?;
+        let plan = self.pending_plan("load_voice_llm_config");
+        Ok(CoreEnvelope::from_backend_plan(
             VoiceLlmConfigPayload {
-                provider: provider.unwrap_or_default(),
+                status: BackendSkeletonStatus::from_plan(&plan),
+                provider,
                 ..VoiceLlmConfigPayload::default()
             },
-            "load_voice_llm_config",
+            &plan,
         ))
     }
 
     pub(crate) fn save_llm_config(
         &self,
         provider: Option<String>,
-        _api_key: Option<String>,
+        api_key: Option<String>,
         model: Option<String>,
         base_url: Option<String>,
     ) -> Result<CoreEnvelope<VoiceLlmConfigPayload>, CoreError> {
-        Ok(CoreEnvelope::no_op(
+        let provider = required_provider(provider)?;
+        let _api_key = trim_optional_text(api_key);
+        let model = text_or_default(model);
+        let base_url = text_or_default(base_url);
+        let plan = self.no_op_plan("save_voice_llm_config");
+        Ok(CoreEnvelope::from_backend_plan(
             VoiceLlmConfigPayload {
-                provider: provider.unwrap_or_default(),
+                status: BackendSkeletonStatus::from_plan(&plan),
+                provider,
                 api_key: String::new(),
-                model: model.unwrap_or_default(),
-                base_url: base_url.unwrap_or_default(),
+                model,
+                base_url,
                 configured: false,
             },
-            "save_voice_llm_config",
+            &plan,
         ))
     }
 
     pub(crate) fn test_llm_config(
         &self,
         provider: Option<String>,
-        _api_key: Option<String>,
+        api_key: Option<String>,
         model: Option<String>,
         base_url: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::pending(
-            json!({
-                "provider": provider.unwrap_or_default(),
-                "model": model.unwrap_or_default(),
-                "baseUrl": base_url.unwrap_or_default(),
-                "reachable": false
-            }),
-            "test_voice_llm_config",
+        let provider = required_provider(provider)?;
+        let _api_key = trim_optional_text(api_key);
+        let model = text_or_default(model);
+        let base_url = text_or_default(base_url);
+        let plan = self.pending_plan("test_voice_llm_config");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "provider": provider,
+                    "model": model,
+                    "baseUrl": base_url,
+                    "reachable": false
+                }),
+                &plan,
+            ),
+            &plan,
         ))
     }
 
@@ -211,49 +318,66 @@ impl<'a> VoiceUseCase<'a> {
         &self,
         provider: Option<String>,
     ) -> Result<CoreEnvelope<VoiceAsrConfigPayload>, CoreError> {
-        Ok(CoreEnvelope::pending(
+        let provider = required_provider(provider)?;
+        let plan = self.pending_plan("load_voice_asr_config");
+        Ok(CoreEnvelope::from_backend_plan(
             VoiceAsrConfigPayload {
-                provider: provider.unwrap_or_default(),
+                status: BackendSkeletonStatus::from_plan(&plan),
+                provider,
                 ..VoiceAsrConfigPayload::default()
             },
-            "load_voice_asr_config",
+            &plan,
         ))
     }
 
     pub(crate) fn save_asr_config(
         &self,
         provider: Option<String>,
-        _api_key: Option<String>,
+        api_key: Option<String>,
         model: Option<String>,
         base_url: Option<String>,
     ) -> Result<CoreEnvelope<VoiceAsrConfigPayload>, CoreError> {
-        Ok(CoreEnvelope::no_op(
+        let provider = required_provider(provider)?;
+        let _api_key = trim_optional_text(api_key);
+        let model = text_or_default(model);
+        let base_url = text_or_default(base_url);
+        let plan = self.no_op_plan("save_voice_asr_config");
+        Ok(CoreEnvelope::from_backend_plan(
             VoiceAsrConfigPayload {
-                provider: provider.unwrap_or_default(),
+                status: BackendSkeletonStatus::from_plan(&plan),
+                provider,
                 api_key: String::new(),
-                model: model.unwrap_or_default(),
-                base_url: base_url.unwrap_or_default(),
+                model,
+                base_url,
                 configured: false,
             },
-            "save_voice_asr_config",
+            &plan,
         ))
     }
 
     pub(crate) fn test_asr_config(
         &self,
         provider: Option<String>,
-        _api_key: Option<String>,
+        api_key: Option<String>,
         model: Option<String>,
         base_url: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::pending(
-            json!({
-                "provider": provider.unwrap_or_default(),
-                "model": model.unwrap_or_default(),
-                "baseUrl": base_url.unwrap_or_default(),
-                "reachable": false
-            }),
-            "test_voice_asr_config",
+        let provider = required_provider(provider)?;
+        let _api_key = trim_optional_text(api_key);
+        let model = text_or_default(model);
+        let base_url = text_or_default(base_url);
+        let plan = self.pending_plan("test_voice_asr_config");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "provider": provider,
+                    "model": model,
+                    "baseUrl": base_url,
+                    "reachable": false
+                }),
+                &plan,
+            ),
+            &plan,
         ))
     }
 
@@ -261,34 +385,42 @@ impl<'a> VoiceUseCase<'a> {
         &self,
         id: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({ "id": id.unwrap_or_default() }),
-            "remove_voice_history_entry",
+        let id = required_option_text(id, "empty_voice_history_id", "语音历史 ID 不能为空。")?;
+        let plan = self.no_op_plan("remove_voice_history_entry");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({ "id": id }), &plan),
+            &plan,
         ))
     }
 
     pub(crate) fn load_runtime_status(
         &self,
     ) -> Result<CoreEnvelope<VoiceRuntimeStatusPayload>, CoreError> {
-        Ok(CoreEnvelope::pending(
-            VoiceRuntimeStatusPayload::default(),
-            "load_voice_runtime_status",
+        let plan = self.pending_plan("load_voice_runtime_status");
+        Ok(CoreEnvelope::from_backend_plan(
+            VoiceRuntimeStatusPayload {
+                status: BackendSkeletonStatus::from_plan(&plan),
+                ..VoiceRuntimeStatusPayload::default()
+            },
+            &plan,
         ))
     }
 
     pub(crate) fn request_permissions(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::pending(
-            json!({}),
-            "request_voice_permissions",
+        let plan = self.pending_plan("request_voice_permissions");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({}), &plan),
+            &plan,
         ))
     }
 
     pub(crate) fn request_accessibility_permission(
         &self,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::pending(
-            json!({}),
-            "request_accessibility_permission",
+        let plan = self.pending_plan("request_accessibility_permission");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({}), &plan),
+            &plan,
         ))
     }
 
@@ -296,9 +428,12 @@ impl<'a> VoiceUseCase<'a> {
         &self,
         shortcut: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({ "shortcut": shortcut }),
-            "set_voice_global_shortcut",
+        let shortcut =
+            required_option_text(shortcut, "empty_voice_shortcut", "语音快捷键不能为空。")?;
+        let plan = self.no_op_plan("set_voice_global_shortcut");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({ "shortcut": shortcut }), &plan),
+            &plan,
         ))
     }
 
@@ -306,16 +441,19 @@ impl<'a> VoiceUseCase<'a> {
         &self,
         style: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::pending(
-            json!({ "style": style.unwrap_or_default() }),
-            "capture_voice_trigger_key",
+        let style = text_or_default(style);
+        let plan = self.pending_plan("capture_voice_trigger_key");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({ "style": style }), &plan),
+            &plan,
         ))
     }
 
     pub(crate) fn cancel_trigger_capture(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({}),
-            "cancel_voice_trigger_capture",
+        let plan = self.no_op_plan("cancel_voice_trigger_capture");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({}), &plan),
+            &plan,
         ))
     }
 
@@ -323,24 +461,34 @@ impl<'a> VoiceUseCase<'a> {
         &self,
         suppressed: bool,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({ "suppressed": suppressed }),
-            "set_voice_trigger_listener_suppressed",
+        let plan = self.no_op_plan("set_voice_trigger_listener_suppressed");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({ "suppressed": suppressed }), &plan),
+            &plan,
         ))
     }
 
     pub(crate) fn set_trigger_key(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(json!({}), "set_voice_trigger_key"))
+        let plan = self.no_op_plan("set_voice_trigger_key");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({}), &plan),
+            &plan,
+        ))
     }
 
     pub(crate) fn set_trigger_bindings(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(json!({}), "set_voice_trigger_bindings"))
+        let plan = self.no_op_plan("set_voice_trigger_bindings");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({}), &plan),
+            &plan,
+        ))
     }
 
     pub(crate) fn update_runtime_settings(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({}),
-            "update_voice_runtime_settings",
+        let plan = self.no_op_plan("update_voice_runtime_settings");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({}), &plan),
+            &plan,
         ))
     }
 
@@ -349,21 +497,39 @@ impl<'a> VoiceUseCase<'a> {
         mode_id: Option<String>,
         processing_mode: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({
-                "modeId": mode_id.unwrap_or_default(),
-                "processingMode": processing_mode
-            }),
-            "set_voice_processing_mode_id",
+        let mode_id = required_option_text(
+            mode_id,
+            "empty_voice_processing_mode_id",
+            "语音处理模式 ID 不能为空。",
+        )?;
+        let processing_mode = trim_optional_text(processing_mode);
+        let plan = self.no_op_plan("set_voice_processing_mode_id");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "modeId": mode_id,
+                    "processingMode": processing_mode
+                }),
+                &plan,
+            ),
+            &plan,
         ))
     }
 
     pub(crate) fn start_capture(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::pending(json!({}), "start_voice_capture"))
+        let plan = self.pending_plan("start_voice_capture");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({}), &plan),
+            &plan,
+        ))
     }
 
     pub(crate) fn stop_capture(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::pending(json!({}), "stop_voice_capture"))
+        let plan = self.pending_plan("stop_voice_capture");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({}), &plan),
+            &plan,
+        ))
     }
 
     pub(crate) fn inject_text(
@@ -371,12 +537,18 @@ impl<'a> VoiceUseCase<'a> {
         text: Option<String>,
         expected_bundle_id: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({
-                "text": text.unwrap_or_default(),
-                "expectedBundleId": expected_bundle_id
-            }),
-            "inject_voice_text",
+        let text = required_option_text(text, "empty_voice_text", "注入文本不能为空。")?;
+        let expected_bundle_id = trim_optional_text(expected_bundle_id);
+        let plan = self.no_op_plan("inject_voice_text");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "text": text,
+                    "expectedBundleId": expected_bundle_id
+                }),
+                &plan,
+            ),
+            &plan,
         ))
     }
 
@@ -385,26 +557,94 @@ impl<'a> VoiceUseCase<'a> {
         query: Option<String>,
         output: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({
-                "query": query.unwrap_or_default(),
-                "output": output.unwrap_or_default()
-            }),
-            "show_voice_search_overlay",
+        let query = text_or_default(query);
+        let output = text_or_default(output);
+        let plan = self.no_op_plan("show_voice_search_overlay");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(
+                json!({
+                    "query": query,
+                    "output": output
+                }),
+                &plan,
+            ),
+            &plan,
         ))
     }
 
     pub(crate) fn set_mode_shortcut(&self) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(json!({}), "set_voice_mode_shortcut"))
+        let plan = self.no_op_plan("set_voice_mode_shortcut");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({}), &plan),
+            &plan,
+        ))
     }
 
     pub(crate) fn remove_mode_shortcut(
         &self,
         mode_id: Option<String>,
     ) -> Result<CoreEnvelope<Value>, CoreError> {
-        Ok(CoreEnvelope::no_op(
-            json!({ "modeId": mode_id.unwrap_or_default() }),
-            "remove_voice_mode_shortcut",
+        let mode_id =
+            required_option_text(mode_id, "empty_voice_mode_id", "语音模式 ID 不能为空。")?;
+        let plan = self.no_op_plan("remove_voice_mode_shortcut");
+        Ok(CoreEnvelope::from_backend_plan(
+            json_with_status(json!({ "modeId": mode_id }), &plan),
+            &plan,
         ))
     }
+
+    fn pending_plan(&self, command: &'static str) -> BackendOperationPlan {
+        BackendOperationPlan::pending(MODULE, command, self.repository_boundary())
+    }
+
+    fn no_op_plan(&self, command: &'static str) -> BackendOperationPlan {
+        BackendOperationPlan::no_op(MODULE, command, self.repository_boundary())
+    }
+
+    fn repository_boundary(&self) -> BackendBoundaryProbe {
+        BackendBoundaryProbe::from_repository_source(self.repositories.config().voice_source_path())
+    }
+}
+
+fn json_with_status(mut payload: Value, plan: &BackendOperationPlan) -> Value {
+    if let Value::Object(ref mut object) = payload {
+        object.insert(
+            "backendStatus".into(),
+            json!(BackendSkeletonStatus::from_plan(plan)),
+        );
+    }
+    payload
+}
+
+fn required_provider(value: Option<String>) -> Result<String, CoreError> {
+    required_option_text(value, "empty_voice_provider", "语音服务提供方不能为空。")
+}
+
+fn required_option_text(
+    value: Option<String>,
+    code: &'static str,
+    public_message: &'static str,
+) -> Result<String, CoreError> {
+    required_text(value.unwrap_or_default(), code, public_message)
+}
+
+fn required_text(
+    value: String,
+    code: &'static str,
+    public_message: &'static str,
+) -> Result<String, CoreError> {
+    let value = value.trim().to_owned();
+    if value.is_empty() {
+        Err(CoreError::domain(code, public_message))
+    } else {
+        Ok(value)
+    }
+}
+
+fn text_or_default(value: Option<String>) -> String {
+    trim_optional_text(value).unwrap_or_default()
+}
+
+fn trim_optional_text(value: Option<String>) -> Option<String> {
+    value.map(|value| value.trim().to_owned())
 }

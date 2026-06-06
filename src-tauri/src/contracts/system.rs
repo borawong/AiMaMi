@@ -1,4 +1,4 @@
-use crate::contracts::{McpServerListPayload, SkillListPayload};
+use crate::contracts::{BackendSkeletonStatus, McpServerListPayload, SkillListPayload};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
@@ -110,6 +110,8 @@ pub(crate) struct AppStatusPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct CleanPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub auth_backups_removed: i32,
     pub registry_backups_removed: i32,
     pub stale_entries_removed: i32,
@@ -118,6 +120,8 @@ pub(crate) struct CleanPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct RebuildRegistryPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub account_count: i32,
     pub active_account_key: Option<String>,
     pub registry_updated: bool,
@@ -126,18 +130,24 @@ pub(crate) struct RebuildRegistryPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct AutoSwitchConfigPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub auto_switch: AutoSwitchStatusPayload,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ApiModePayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub api: ApiConfigPayload,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ApiProxyTestPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub code: String,
     pub reachable: bool,
     pub status_code: Option<i32>,
@@ -147,6 +157,7 @@ pub(crate) struct ApiProxyTestPayload {
 impl Default for ApiProxyTestPayload {
     fn default() -> Self {
         Self {
+            backend_status: BackendSkeletonStatus::default(),
             code: "not_implemented".into(),
             reachable: false,
             status_code: None,
@@ -158,6 +169,8 @@ impl Default for ApiProxyTestPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct ApiProxyDetectPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub found: bool,
     pub mode: Option<ApiProxyMode>,
     pub url: Option<String>,
@@ -167,6 +180,8 @@ pub(crate) struct ApiProxyDetectPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct UpdateInstallabilityPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub can_install: bool,
     pub code: String,
     pub executable_path: Option<String>,
@@ -178,6 +193,7 @@ pub(crate) struct UpdateInstallabilityPayload {
 impl Default for UpdateInstallabilityPayload {
     fn default() -> Self {
         Self {
+            backend_status: BackendSkeletonStatus::default(),
             can_install: false,
             code: "not_implemented".into(),
             executable_path: None,
@@ -191,6 +207,8 @@ impl Default for UpdateInstallabilityPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct DaemonRunPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub executed_at: i64,
     pub run_once: bool,
     pub auto_switch_enabled: bool,
@@ -232,6 +250,8 @@ pub(crate) struct DiagnoseApiState {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct DiagnosePayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub paths: AppPathState,
     pub core_version: String,
     pub platform: DiagnosePlatform,
@@ -252,6 +272,8 @@ pub(crate) struct SystemInfo {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct CoreSnapshotPayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub status: AppStatusPayload,
 }
 
@@ -316,6 +338,8 @@ pub(crate) struct HotspotStatePayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct BootstrapStatePayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
     pub written_at: Option<i64>,
     pub snapshot_progressive: Option<CoreSnapshotPayload>,
     pub usage_analytics: Option<UsageAnalyticsPayload>,

@@ -1,11 +1,7 @@
 import { useRef, type MutableRefObject } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import {
-  relayService,
-  type RelayNetworkConfig,
-  type RelayProviderDraft,
-} from "@/services/relay";
+import { api } from "@/lib/api";
 import { RelayCache } from "../cache";
 
 export function useRelayCacheController() {
@@ -16,6 +12,9 @@ type RelayMutationContext = {
   sequence: number;
   receivedAt: number;
 };
+
+type RelayProviderDraft = Parameters<typeof api.upsertRelayProvider>[0];
+type RelayNetworkConfig = Parameters<typeof api.setRelayProviderNetwork>[1];
 
 type RelayProviderIdeInput = {
   providerId: string;
@@ -72,85 +71,85 @@ export function useRelayModule() {
 
   const stateQuery = useQuery({
     queryKey: RelayCache.queryKeys.state,
-    queryFn: () => relayService.loadState(),
+    queryFn: () => api.loadRelayState(),
     staleTime: 30_000,
   });
   const activeQuery = useQuery({
     queryKey: RelayCache.queryKeys.active,
-    queryFn: () => relayService.getActive(),
+    queryFn: () => api.getRelayActive(),
     staleTime: 30_000,
   });
   const proxyQuery = useQuery({
     queryKey: [...RelayCache.queryKeys.root, "proxy-status"],
-    queryFn: () => relayService.getProxyStatus(),
+    queryFn: () => api.getRelayProxyStatus(),
     staleTime: 30_000,
   });
   const auditLogQuery = useQuery({
     queryKey: [...RelayCache.queryKeys.root, "passthrough-audit-log", 50],
-    queryFn: () => relayService.getPassthroughAuditLog(50),
+    queryFn: () => api.getPassthroughAuditLog(50),
     staleTime: 30_000,
   });
 
   const upsertProviderMutation = useRelayEvidenceMutation<RelayProviderDraft>(
     latestMutationSequenceRef,
-    (input) => relayService.upsert(input),
+    (input) => api.upsertRelayProvider(input),
   );
   const deleteProviderMutation = useRelayEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (providerId) => relayService.delete(providerId),
+    (providerId) => api.deleteRelayProvider(providerId),
   );
   const activateProviderMutation = useRelayEvidenceMutation<RelayProviderIdeInput>(
     latestMutationSequenceRef,
-    ({ providerId, ide }) => relayService.activate(providerId, ide),
+    ({ providerId, ide }) => api.activateRelayProvider(providerId, ide),
   );
   const deactivateProviderMutation = useRelayEvidenceMutation<RelayProviderIdeInput>(
     latestMutationSequenceRef,
-    ({ providerId, ide }) => relayService.deactivate(providerId, ide),
+    ({ providerId, ide }) => api.deactivateRelayProvider(providerId, ide),
   );
   const setNetworkMutation = useRelayEvidenceMutation<RelayNetworkInput>(
     latestMutationSequenceRef,
-    ({ providerId, network }) => relayService.setNetwork(providerId, network),
+    ({ providerId, network }) => api.setRelayProviderNetwork(providerId, network),
   );
   const testProviderMutation = useRelayEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (providerId) => relayService.test(providerId),
+    (providerId) => api.testRelayProvider(providerId),
   );
   const testDraftMutation = useRelayEvidenceMutation<RelayProviderDraft>(
     latestMutationSequenceRef,
-    (input) => relayService.testDraft(input),
+    (input) => api.testRelayDraft(input),
   );
   const fetchModelsDraftMutation = useRelayEvidenceMutation<RelayProviderDraft>(
     latestMutationSequenceRef,
-    (input) => relayService.fetchModelsDraft(input),
+    (input) => api.fetchRelayModelsDraft(input),
   );
   const setRouterEnabledMutation = useRelayEvidenceMutation<RelayRouterInput>(
     latestMutationSequenceRef,
-    ({ enabled, relaunch }) => relayService.setCodexRouterEnabled(enabled, relaunch),
+    ({ enabled, relaunch }) => api.setCodexRouterEnabled(enabled, relaunch),
   );
   const setBlockPassthroughMutation = useRelayEvidenceMutation<boolean>(
     latestMutationSequenceRef,
-    (blocked) => relayService.setBlockOfficialPassthrough(blocked),
+    (blocked) => api.setBlockOfficialPassthrough(blocked),
   );
   const exportConfigMutation = useRelayEvidenceMutation<RelayExportInput>(
     latestMutationSequenceRef,
     ({ filePath, includeApiKeys }) =>
-      relayService.exportConfig(filePath, includeApiKeys),
+      api.exportRelayConfig(filePath, includeApiKeys),
   );
   const importConfigMutation = useRelayEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (filePath) => relayService.importConfig(filePath),
+    (filePath) => api.importRelayConfig(filePath),
   );
   const diagnosticsMutation = useRelayEvidenceMutation<void>(
     latestMutationSequenceRef,
-    () => relayService.runCodexRouterDiagnostics(),
+    () => api.runCodexRouterDiagnostics(),
   );
   const diagnoseRouterMutation = useRelayEvidenceMutation<void>(
     latestMutationSequenceRef,
-    () => relayService.diagnoseCodexRouter(),
+    () => api.diagnoseCodexRouter(),
   );
   const fixRouterIssueMutation = useRelayEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (itemId) => relayService.fixCodexRouterIssue(itemId),
+    (itemId) => api.fixCodexRouterIssue(itemId),
   );
 
   const isAnyMutationPending =

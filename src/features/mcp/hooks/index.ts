@@ -4,10 +4,10 @@
 import { useCallback } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { mcpService, type UpsertMcpServerInput } from "@/services/mcp";
+import { api, type UpsertMcpServerInput } from "@/lib/api";
 import { McpCache } from "../cache";
 
-export type { UpsertMcpServerInput } from "@/services/mcp";
+export type { UpsertMcpServerInput } from "@/lib/api";
 
 let mcpCacheSequence = 0;
 
@@ -54,7 +54,7 @@ export function useMcpServers() {
     queryKey: McpCache.queryKeys.root,
     queryFn: async () => {
       const sequence = nextMcpCacheSequence();
-      const payload = await mcpService.loadServers();
+      const payload = await api.loadMcpServers();
       writeMcpCachePayload(queryClient, payload, "full-refresh", sequence);
       return payload;
     },
@@ -77,12 +77,12 @@ export function useMcpServerMutations(options?: { onRemoved?: () => void }) {
 
   const toggleMutation = useMutation({
     mutationFn: ({ name, enabled }: { name: string; enabled: boolean }) =>
-      mcpService.setServerEnabled(name, enabled),
+      api.setMcpServerEnabled(name, enabled),
     onSuccess: (payload) => writeMcpMutationPayload(queryClient, payload),
   });
 
   const removeMutation = useMutation({
-    mutationFn: (name: string) => mcpService.removeServer(name),
+    mutationFn: (name: string) => api.removeMcpServer(name),
     onSuccess: async (payload) => {
       await writeMcpMutationPayload(queryClient, payload);
       options?.onRemoved?.();
@@ -99,7 +99,7 @@ export function useUpsertMcpServerMutation(options?: { onSaved?: () => void }) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: UpsertMcpServerInput) => mcpService.upsertServer(input),
+    mutationFn: (input: UpsertMcpServerInput) => api.upsertMcpServer(input),
     onSuccess: async (payload) => {
       await writeMcpMutationPayload(queryClient, payload);
       options?.onSaved?.();

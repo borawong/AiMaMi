@@ -1,3 +1,4 @@
+use crate::contracts::BackendSkeletonStatus;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -176,6 +177,8 @@ fn default_voice_history_status() -> String {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct VoiceWorkspacePayload {
+    #[serde(default)]
+    pub status: BackendSkeletonStatus,
     pub templates: Vec<VoicePromptTemplate>,
     pub vocabulary: Vec<VoiceVocabularyEntry>,
     #[serde(default)]
@@ -202,6 +205,8 @@ pub(crate) struct VoiceVocabularyMutationPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct VoiceGeneratePayload {
+    #[serde(default)]
+    pub status: BackendSkeletonStatus,
     pub output: String,
     pub history_entry: VoiceHistoryEntry,
     pub workspace: VoiceWorkspacePayload,
@@ -212,6 +217,8 @@ pub(crate) struct VoiceGeneratePayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct VoiceLlmConfigPayload {
+    #[serde(default)]
+    pub status: BackendSkeletonStatus,
     pub provider: String,
     pub api_key: String,
     pub model: String,
@@ -222,6 +229,8 @@ pub(crate) struct VoiceLlmConfigPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct VoiceAsrConfigPayload {
+    #[serde(default)]
+    pub status: BackendSkeletonStatus,
     pub provider: String,
     pub api_key: String,
     pub model: String,
@@ -251,6 +260,8 @@ pub(crate) struct PerModeShortcutPayload {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct VoiceRuntimeStatusPayload {
+    #[serde(default)]
+    pub status: BackendSkeletonStatus,
     pub supported: bool,
     pub enabled: bool,
     pub capture_state: VoiceCaptureState,

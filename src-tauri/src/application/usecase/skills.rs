@@ -1,10 +1,13 @@
 use crate::contracts::{
-    CoreEnvelope, InstalledSkillSummary, SkillBackupListPayload, SkillBackupSummary,
-    SkillDeleteBackupPayload, SkillImportPayload, SkillListPayload, SkillRemovePayload,
-    SkillRestorePayload,
+    BackendSkeletonStatus, CoreEnvelope, InstalledSkillSummary, SkillBackupListPayload,
+    SkillBackupSummary, SkillDeleteBackupPayload, SkillImportPayload, SkillListPayload,
+    SkillRemovePayload, SkillRestorePayload,
 };
-use crate::core::{dto, error::CoreError};
+use crate::core::dto::{self, BackendBoundaryProbe, BackendOperationPlan};
+use crate::core::error::CoreError;
 use crate::repository::RepositoryBundle;
+
+const MODULE: &str = "skills";
 
 /// 中文职责说明：技能安装、备份、恢复和删除事务 owner，真实文件变更后续只能在本边界补齐。
 pub(crate) struct SkillsUseCase<'a> {
@@ -17,22 +20,28 @@ impl<'a> SkillsUseCase<'a> {
     }
 
     pub(crate) fn load_installed(&self) -> Result<CoreEnvelope<SkillListPayload>, CoreError> {
-        Ok(CoreEnvelope::pending(
+        let root_path = self.repositories.skills().root_path();
+        let plan = self.pending_plan("skills", root_path.clone());
+        Ok(CoreEnvelope::from_backend_plan(
             SkillListPayload {
-                root_path: self.repositories.skills().root_path(),
+                status: BackendSkeletonStatus::from_plan(&plan),
+                root_path,
                 ..SkillListPayload::default()
             },
-            "skills",
+            &plan,
         ))
     }
 
     pub(crate) fn load_backups(&self) -> Result<CoreEnvelope<SkillBackupListPayload>, CoreError> {
-        Ok(CoreEnvelope::pending(
+        let root_path = self.repositories.skills().backup_root_path();
+        let plan = self.pending_plan("skill_backups", root_path.clone());
+        Ok(CoreEnvelope::from_backend_plan(
             SkillBackupListPayload {
-                root_path: self.repositories.skills().backup_root_path(),
+                status: BackendSkeletonStatus::from_plan(&plan),
+                root_path,
                 ..SkillBackupListPayload::default()
             },
-            "skill_backups",
+            &plan,
         ))
     }
 
@@ -40,14 +49,22 @@ impl<'a> SkillsUseCase<'a> {
         &self,
         source_path: String,
     ) -> Result<CoreEnvelope<SkillImportPayload>, CoreError> {
-        let name = dto::name_from_path(&source_path).unwrap_or_else(|| "skill".into());
-        Ok(CoreEnvelope::no_op(
+        let source_path = required_text(
+            source_path,
+            "empty_skill_source_path",
+            "技能来源路径不能为空。",
+        )?;
+        let name = dto::name_from_path(&source_path)
+            .ok_or_else(|| CoreError::domain("empty_skill_name", "技能名称不能为空。"))?;
+        let plan = self.no_op_plan("import_skill", self.repositories.skills().root_path());
+        Ok(CoreEnvelope::from_backend_plan(
             SkillImportPayload {
+                status: BackendSkeletonStatus::from_plan(&plan),
                 skill: skill_from_name(name),
                 replaced_existing: false,
                 backup: None,
             },
-            "import_skill",
+            &plan,
         ))
     }
 
@@ -56,13 +73,15 @@ impl<'a> SkillsUseCase<'a> {
         name: String,
     ) -> Result<CoreEnvelope<SkillRemovePayload>, CoreError> {
         let name = require_name(name)?;
-        Ok(CoreEnvelope::no_op(
+        let plan = self.no_op_plan("remove_skill", self.repositories.skills().root_path());
+        Ok(CoreEnvelope::from_backend_plan(
             SkillRemovePayload {
+                status: BackendSkeletonStatus::from_plan(&plan),
                 removed_skill_id: name.clone(),
                 backup: backup_from_name(name),
                 remaining_installed_count: 0,
             },
-            "remove_skill",
+            &plan,
         ))
     }
 
@@ -71,13 +90,18 @@ impl<'a> SkillsUseCase<'a> {
         name: String,
     ) -> Result<CoreEnvelope<SkillRestorePayload>, CoreError> {
         let name = require_name(name)?;
-        Ok(CoreEnvelope::no_op(
+        let plan = self.no_op_plan(
+            "restore_skill_backup",
+            self.repositories.skills().backup_root_path(),
+        );
+        Ok(CoreEnvelope::from_backend_plan(
             SkillRestorePayload {
+                status: BackendSkeletonStatus::from_plan(&plan),
                 restored_skill: skill_from_name(name.clone()),
                 backup: backup_from_name(name),
                 rollback_backup: None,
             },
-            "restore_skill_backup",
+            &plan,
         ))
     }
 
@@ -86,21 +110,47 @@ impl<'a> SkillsUseCase<'a> {
         name: String,
     ) -> Result<CoreEnvelope<SkillDeleteBackupPayload>, CoreError> {
         let name = require_name(name)?;
-        Ok(CoreEnvelope::no_op(
+        let plan = self.no_op_plan(
+            "delete_skill_backup",
+            self.repositories.skills().backup_root_path(),
+        );
+        Ok(CoreEnvelope::from_backend_plan(
             SkillDeleteBackupPayload {
+                status: BackendSkeletonStatus::from_plan(&plan),
                 deleted_backup_id: name,
                 remaining_backup_count: 0,
             },
-            "delete_skill_backup",
+            &plan,
         ))
+    }
+
+    fn pending_plan(&self, command: &'static str, source_path: String) -> BackendOperationPlan {
+        BackendOperationPlan::pending(MODULE, command, self.repository_boundary(source_path))
+    }
+
+    fn no_op_plan(&self, command: &'static str, source_path: String) -> BackendOperationPlan {
+        BackendOperationPlan::no_op(MODULE, command, self.repository_boundary(source_path))
+    }
+
+    fn repository_boundary(&self, source_path: String) -> BackendBoundaryProbe {
+        BackendBoundaryProbe::from_repository_source(source_path)
     }
 }
 
 fn require_name(name: String) -> Result<String, CoreError> {
-    if name.trim().is_empty() {
-        Err(CoreError::domain("empty_skill_name", "技能名称不能为空。"))
+    required_text(name, "empty_skill_name", "技能名称不能为空。")
+}
+
+fn required_text(
+    value: String,
+    code: &'static str,
+    public_message: &'static str,
+) -> Result<String, CoreError> {
+    let value = value.trim().to_owned();
+    if value.is_empty() {
+        Err(CoreError::domain(code, public_message))
     } else {
-        Ok(name)
+        Ok(value)
     }
 }
 

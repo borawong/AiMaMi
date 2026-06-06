@@ -6,7 +6,7 @@ import {
   type QueryClient,
 } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
-import { voiceService } from "@/services/voice";
+import { api } from "@/lib/api";
 import { VoiceCache } from "../cache";
 
 export function useVoiceCacheController() {
@@ -18,17 +18,17 @@ type VoiceMutationContext = {
   receivedAt: number;
 };
 
-type VoiceTemplateInput = Parameters<typeof voiceService.upsertTemplate>[0];
-type VoiceVocabularyInput = Parameters<typeof voiceService.upsertVocabulary>[0];
-type VoiceVocabularyKindInput = Parameters<typeof voiceService.replaceVocabularyKind>[0];
-type VoiceVocabularyAppScopeInput = Parameters<typeof voiceService.upsertVocabularyAppScope>[0];
-type VoiceGeneratePromptInput = Parameters<typeof voiceService.generatePrompt>[0];
-type VoiceLlmConfigInput = Parameters<typeof voiceService.saveLlmConfig>[0];
-type VoiceAsrConfigInput = Parameters<typeof voiceService.saveAsrConfig>[0];
-type VoiceRuntimeSettingsInput = Parameters<typeof voiceService.updateRuntimeSettings>[0];
-type VoiceTriggerKeyInput = Parameters<typeof voiceService.setTriggerKey>[0];
-type VoiceTriggerBindingsInput = Parameters<typeof voiceService.setTriggerBindings>[0];
-type VoiceModeShortcutInput = Parameters<typeof voiceService.setModeShortcut>[0];
+type VoiceTemplateInput = Parameters<typeof api.upsertVoiceTemplate>[0];
+type VoiceVocabularyInput = Parameters<typeof api.upsertVoiceVocabulary>[0];
+type VoiceVocabularyKindInput = Parameters<typeof api.replaceVoiceVocabularyKind>[0];
+type VoiceVocabularyAppScopeInput = Parameters<typeof api.upsertVoiceVocabularyAppScope>[0];
+type VoiceGeneratePromptInput = Parameters<typeof api.generateVoicePrompt>[0];
+type VoiceLlmConfigInput = Parameters<typeof api.saveVoiceLlmConfig>[0];
+type VoiceAsrConfigInput = Parameters<typeof api.saveVoiceAsrConfig>[0];
+type VoiceRuntimeSettingsInput = Parameters<typeof api.updateVoiceRuntimeSettings>[0];
+type VoiceTriggerKeyInput = Parameters<typeof api.setVoiceTriggerKey>[0];
+type VoiceTriggerBindingsInput = Parameters<typeof api.setVoiceTriggerBindings>[0];
+type VoiceModeShortcutInput = Parameters<typeof api.setVoiceModeShortcut>[0];
 
 type VoiceProcessingModeInput = {
   modeId: string;
@@ -159,144 +159,144 @@ export function useVoiceModule() {
 
   const workspaceQuery = useQuery({
     queryKey: voiceWorkspaceQueryKey,
-    queryFn: () => voiceService.loadWorkspace(),
+    queryFn: () => api.loadVoiceWorkspace(),
     staleTime: 30_000,
   });
   const runtimeQuery = useQuery({
     queryKey: voiceRuntimeQueryKey,
-    queryFn: () => voiceService.loadRuntimeStatus(),
+    queryFn: () => api.loadVoiceRuntimeStatus(),
     staleTime: 30_000,
   });
 
   const upsertTemplateMutation = useVoiceEvidenceMutation<VoiceTemplateInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.upsertTemplate(input),
+    (input) => api.upsertVoiceTemplate(input),
   );
   const removeTemplateMutation = useVoiceEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (id) => voiceService.removeTemplate(id),
+    (id) => api.removeVoiceTemplate(id),
   );
   const upsertVocabularyMutation = useVoiceEvidenceMutation<VoiceVocabularyInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.upsertVocabulary(input),
+    (input) => api.upsertVoiceVocabulary(input),
   );
   const removeVocabularyMutation = useVoiceEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (id) => voiceService.removeVocabulary(id),
+    (id) => api.removeVoiceVocabulary(id),
   );
   const replaceVocabularyKindMutation = useVoiceEvidenceMutation<VoiceVocabularyKindInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.replaceVocabularyKind(input),
+    (input) => api.replaceVoiceVocabularyKind(input),
   );
   const removeVocabularyAppScopeMutation = useVoiceEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (appBundleId) => voiceService.removeVocabularyAppScope(appBundleId),
+    (appBundleId) => api.removeVoiceVocabularyAppScope(appBundleId),
   );
   const upsertVocabularyAppScopeMutation =
     useVoiceEvidenceMutation<VoiceVocabularyAppScopeInput>(
       latestMutationSequenceRef,
-      (input) => voiceService.upsertVocabularyAppScope(input),
+      (input) => api.upsertVoiceVocabularyAppScope(input),
     );
   const resolveVocabularyAppInfoMutation = useVoiceEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (path) => voiceService.resolveVocabularyAppInfo(path),
+    (path) => api.resolveVoiceVocabularyAppInfo(path),
   );
   const generatePromptMutation = useVoiceEvidenceMutation<VoiceGeneratePromptInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.generatePrompt(input),
+    (input) => api.generateVoicePrompt(input),
   );
   const loadLlmConfigMutation = useVoiceEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (provider) => voiceService.loadLlmConfig(provider),
+    (provider) => api.loadVoiceLlmConfig(provider),
   );
   const saveLlmConfigMutation = useVoiceEvidenceMutation<VoiceLlmConfigInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.saveLlmConfig(input),
+    (input) => api.saveVoiceLlmConfig(input),
   );
   const testLlmConfigMutation = useVoiceEvidenceMutation<VoiceLlmConfigInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.testLlmConfig(input),
+    (input) => api.testVoiceLlmConfig(input),
   );
   const loadAsrConfigMutation = useVoiceEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (provider) => voiceService.loadAsrConfig(provider),
+    (provider) => api.loadVoiceAsrConfig(provider),
   );
   const saveAsrConfigMutation = useVoiceEvidenceMutation<VoiceAsrConfigInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.saveAsrConfig(input),
+    (input) => api.saveVoiceAsrConfig(input),
   );
   const testAsrConfigMutation = useVoiceEvidenceMutation<VoiceAsrConfigInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.testAsrConfig(input),
+    (input) => api.testVoiceAsrConfig(input),
   );
   const removeHistoryEntryMutation = useVoiceEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (id) => voiceService.removeHistoryEntry(id),
+    (id) => api.removeVoiceHistoryEntry(id),
   );
   const permissionsMutation = useVoiceEvidenceMutation<void>(
     latestMutationSequenceRef,
-    () => voiceService.requestPermissions(),
+    () => api.requestVoicePermissions(),
   );
   const accessibilityPermissionMutation = useVoiceEvidenceMutation<void>(
     latestMutationSequenceRef,
-    () => voiceService.requestAccessibilityPermission(),
+    () => api.requestAccessibilityPermission(),
   );
   const setGlobalShortcutMutation = useVoiceEvidenceMutation<string | null | undefined>(
     latestMutationSequenceRef,
-    (shortcut) => voiceService.setGlobalShortcut(shortcut),
+    (shortcut) => api.setVoiceGlobalShortcut(shortcut),
   );
   const captureTriggerKeyMutation = useVoiceEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (style) => voiceService.captureTriggerKey(style),
+    (style) => api.captureVoiceTriggerKey(style),
   );
   const cancelTriggerCaptureMutation = useVoiceEvidenceMutation<void>(
     latestMutationSequenceRef,
-    () => voiceService.cancelTriggerCapture(),
+    () => api.cancelVoiceTriggerCapture(),
   );
   const setTriggerListenerSuppressedMutation = useVoiceEvidenceMutation<boolean>(
     latestMutationSequenceRef,
-    (suppressed) => voiceService.setTriggerListenerSuppressed(suppressed),
+    (suppressed) => api.setVoiceTriggerListenerSuppressed(suppressed),
   );
   const setTriggerKeyMutation = useVoiceEvidenceMutation<VoiceTriggerKeyInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.setTriggerKey(input),
+    (input) => api.setVoiceTriggerKey(input),
   );
   const setTriggerBindingsMutation = useVoiceEvidenceMutation<VoiceTriggerBindingsInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.setTriggerBindings(input),
+    (input) => api.setVoiceTriggerBindings(input),
   );
   const updateRuntimeSettingsMutation = useVoiceEvidenceMutation<VoiceRuntimeSettingsInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.updateRuntimeSettings(input),
+    (input) => api.updateVoiceRuntimeSettings(input),
   );
   const setProcessingModeIdMutation = useVoiceEvidenceMutation<VoiceProcessingModeInput>(
     latestMutationSequenceRef,
     ({ modeId, processingMode }) =>
-      voiceService.setProcessingModeId(modeId, processingMode),
+      api.setVoiceProcessingModeId(modeId, processingMode),
   );
   const startCaptureMutation = useVoiceEvidenceMutation<void>(
     latestMutationSequenceRef,
-    () => voiceService.startCapture(),
+    () => api.startVoiceCapture(),
   );
   const stopCaptureMutation = useVoiceEvidenceMutation<void>(
     latestMutationSequenceRef,
-    () => voiceService.stopCapture(),
+    () => api.stopVoiceCapture(),
   );
   const injectTextMutation = useVoiceEvidenceMutation<VoiceInjectInput>(
     latestMutationSequenceRef,
-    ({ text, expectedBundleId }) => voiceService.injectText(text, expectedBundleId),
+    ({ text, expectedBundleId }) => api.injectVoiceText(text, expectedBundleId),
   );
   const showSearchOverlayMutation = useVoiceEvidenceMutation<VoiceOverlayInput>(
     latestMutationSequenceRef,
-    ({ query, output }) => voiceService.showSearchOverlay(query, output),
+    ({ query, output }) => api.showVoiceSearchOverlay(query, output),
   );
   const setModeShortcutMutation = useVoiceEvidenceMutation<VoiceModeShortcutInput>(
     latestMutationSequenceRef,
-    (input) => voiceService.setModeShortcut(input),
+    (input) => api.setVoiceModeShortcut(input),
   );
   const removeModeShortcutMutation = useVoiceEvidenceMutation<string>(
     latestMutationSequenceRef,
-    (modeId) => voiceService.removeModeShortcut(modeId),
+    (modeId) => api.removeVoiceModeShortcut(modeId),
   );
 
   const isAnyMutationPending =
