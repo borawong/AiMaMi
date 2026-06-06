@@ -399,101 +399,74 @@ function validatePluginsDumpedContract() {
 }
 
 function validateVoiceReopenedContract() {
-  const before = failures.length;
-  const expectedCommands = extractVoiceGapCommands();
-  const voiceContractPath = join(featuresRoot, "voice", "contract.ts");
-  const voiceServicePath = join(servicesRoot, "voice", "index.ts");
-  const voiceContentPath = join(featuresRoot, "voice", "Content.tsx");
-  const voiceCommandPath = join(backendRoot, "commands", "voice.rs");
-  const voiceUsecasePath = join(backendRoot, "application", "usecase", "voice.rs");
-  const voiceContractDtoPath = join(backendRoot, "contracts", "voice.rs");
-  const lifecyclePath = join(backendRoot, "adapters", "tauri", "lifecycle.rs");
-  const contract = readRequired(voiceContractPath);
-  const service = readRequired(voiceServicePath);
-  const content = readRequired(voiceContentPath);
-  const ipc = readRequired(ipcContractPath);
-  const commandFile = readRequired(voiceCommandPath);
-  const usecaseFile = readRequired(voiceUsecasePath);
-  const contractDtoFile = readRequired(voiceContractDtoPath);
-  const lifecycle = readRequired(lifecyclePath);
-  const contractBlocks = extractCommandBlocks(contract);
-  const actualCommands = [...contractBlocks.keys()].sort();
-  const diff = diffValues(expectedCommands, actualCommands);
+  {
+    const before = failures.length;
+    const expectedCommands = extractVoiceGapCommands();
+    const voiceContractPath = join(featuresRoot, "voice", "contract.ts");
+    const voiceServicePath = join(servicesRoot, "voice", "index.ts");
+    const voiceContentPath = join(featuresRoot, "voice", "Content.tsx");
+    const voiceHooksPath = join(featuresRoot, "voice", "hooks", "index.ts");
+    const voicePanelsPath = join(featuresRoot, "voice", "panels", "panels.tsx");
+    const voiceCommandPath = join(backendRoot, "commands", "voice.rs");
+    const lifecyclePath = join(backendRoot, "adapters", "tauri", "lifecycle.rs");
+    const contract = readRequired(voiceContractPath);
+    const service = readRequired(voiceServicePath);
+    const content = readRequired(voiceContentPath);
+    const hooks = readRequired(voiceHooksPath);
+    const commandFile = readRequired(voiceCommandPath);
+    const lifecycle = readRequired(lifecyclePath);
+    const contractBlocks = extractCommandBlocks(contract);
+    const actualCommands = [...contractBlocks.keys()].sort();
+    const diff = diffValues(expectedCommands, actualCommands);
 
-  if (diff.missing.length > 0 || diff.extra.length > 0) {
-    failures.push(
-      `voice reopened contract 命令集合不匹配：missing=${diff.missing.join(", ")} extra=${diff.extra.join(", ")}`,
-    );
-  }
-
-  for (const command of expectedCommands) {
-    const contractBlock = contractBlocks.get(command) ?? "";
-    const ipcHasCommand = ipc.includes(`"command": "${command}"`);
-    if (!ipcHasCommand) {
-      failures.push(`voice IPC contract 缺少命令：${command}`);
-    }
-    if (!service.includes(`"${command}"`)) {
-      failures.push(`voice service 缺少 raw wrapper：${command}`);
-    }
-    if (!commandFile.includes(`fn ${command}`)) {
-      failures.push(`voice Rust command 缺少 handler：${command}`);
-    }
-    if (!lifecycle.includes(`commands::voice::${command}`)) {
-      failures.push(`voice Tauri lifecycle 未注册 handler：${command}`);
-    }
-
-    const contractArgKeys = extractStringArray(contractBlock, "argKeys");
-    const ipcArgKeys = extractArgKeysForCommand(ipc, command);
-    const argDiff = diffValues(contractArgKeys, ipcArgKeys);
-    if (argDiff.missing.length > 0 || argDiff.extra.length > 0) {
+    if (diff.missing.length > 0 || diff.extra.length > 0) {
       failures.push(
-        `voice ${command} feature contract 与 IPC argKeys 不一致：missing=${argDiff.missing.join(", ")} extra=${argDiff.extra.join(", ")}`,
+        `voice 空骨架合同命令集合不匹配：missing=${diff.missing.join(", ")} extra=${diff.extra.join(", ")}`,
       );
     }
-  }
 
-  if (
-    !content.includes("DumpedContractBoundary") ||
-    !content.includes('moduleId="voice"') ||
-    !content.includes("DUMPED_VOICE_COMMANDS") ||
-    !content.includes("VoiceView")
-  ) {
-    failures.push("voice Content 必须挂载 dumped contract、moduleId、DUMPED_VOICE_COMMANDS 和 VoiceView");
-  }
-
-  const requiredVoiceContractSnippets = [
-    [contractDtoFile, "pub(crate) struct VoiceTemplateMutationPayload", "voice Rust DTO 缺少模板 mutation payload"],
-    [contractDtoFile, "pub(crate) struct VoiceVocabularyMutationPayload", "voice Rust DTO 缺少词汇 mutation payload"],
-    [service, "invokeIpc<CoreEnvelope<VoiceTemplateMutationPayload>>(\"upsert_voice_template\"", "voice service 模板 upsert 必须消费模板 mutation payload"],
-    [service, "invokeIpc<CoreEnvelope<VoiceVocabularyMutationPayload>>(", "voice service 词汇 upsert 必须消费词汇 mutation payload"],
-    [service, "source: input.source ?? null", "voice replaceVocabularyKind 必须透传 source"],
-    [service, "replacement: input.replacement ?? null", "voice replaceVocabularyKind 必须透传 replacement"],
-    [service, "notes: input.notes ?? null", "voice replaceVocabularyKind 必须透传 notes"],
-    [service, "setGlobalShortcut: (shortcut: string)", "voice setGlobalShortcut 不得允许空快捷键"],
-    [service, "invokeIpc<CoreEnvelope<VoiceRuntimeStatusPayload>>(\"set_voice_global_shortcut\"", "voice setGlobalShortcut 必须返回 runtime payload"],
-    [commandFile, "Result<CoreEnvelope<VoiceTemplateMutationPayload>, String>", "voice Rust command 模板 upsert 不得返回 Value"],
-    [commandFile, "Result<CoreEnvelope<VoiceVocabularyMutationPayload>, String>", "voice Rust command 词汇 upsert 不得返回 Value"],
-    [commandFile, "Result<CoreEnvelope<VoiceRuntimeStatusPayload>, String>", "voice Rust command 快捷键必须返回 runtime payload"],
-    [usecaseFile, "Result<CoreEnvelope<VoiceTemplateMutationPayload>, CoreError>", "voice usecase 模板 upsert 不得返回 Value"],
-    [usecaseFile, "Result<CoreEnvelope<VoiceVocabularyMutationPayload>, CoreError>", "voice usecase 词汇 upsert 不得返回 Value"],
-    [usecaseFile, "Result<CoreEnvelope<VoiceRuntimeStatusPayload>, CoreError>", "voice usecase 快捷键必须返回 runtime payload"],
-    [usecaseFile, "VoiceTemplateMutationPayload {", "voice usecase 必须组装模板 mutation payload"],
-    [usecaseFile, "VoiceVocabularyMutationPayload {", "voice usecase 必须组装词汇 mutation payload"],
-    [usecaseFile, "workspace: self.workspace_payload(&plan)", "voice usecase mutation payload 必须携带 workspace"],
-    [usecaseFile, "global_shortcut: shortcut", "voice usecase 快捷键 mutation payload 必须写入 global_shortcut"],
-  ];
-
-  for (const [source, snippet, message] of requiredVoiceContractSnippets) {
-    if (!source.includes(snippet)) {
-      failures.push(message);
+    for (const command of expectedCommands) {
+      if (!commandFile.includes(`fn ${command}`)) {
+        failures.push(`voice 空骨架 Rust command 缺少 handler：${command}`);
+      }
+      if (!lifecycle.includes(`commands::voice::${command}`)) {
+        failures.push(`voice 空骨架 Tauri lifecycle 未注册 handler：${command}`);
+      }
     }
+
+    if (
+      !content.includes("DumpedContractBoundary") ||
+      !content.includes('moduleId="voice"') ||
+      !content.includes("DUMPED_VOICE_COMMANDS") ||
+      !content.includes("skeletonTitle")
+    ) {
+      failures.push("voice Content 必须只挂载合同边界和空骨架说明");
+    }
+
+    for (const snippet of ["invokeIpc", "load_voice_", "upsert_voice_", "start_voice_capture"]) {
+      if (service.includes(snippet)) {
+        failures.push(`voice service 空骨架不得包含真实 IPC wrapper：${snippet}`);
+      }
+    }
+
+    for (const snippet of ["useQuery", "useMutation", "voiceService", "writeVoiceMutationPayload"]) {
+      if (hooks.includes(snippet)) {
+        failures.push(`voice hooks 空骨架不得包含真实查询或 mutation：${snippet}`);
+      }
+    }
+
+    if (existsSync(voicePanelsPath)) {
+      failures.push("voice 空骨架不得保留可操作业务面板 panels.tsx");
+    }
+
+    if (failures.length === before) {
+      logPass("voice empty skeleton boundary", `${expectedCommands.length}/${expectedCommands.length}`);
+    } else {
+      logFail("voice empty skeleton boundary", "存在缺失");
+    }
+    return;
   }
 
-  if (failures.length === before) {
-    logPass("voice reopened frontend/backend contract", `${expectedCommands.length}/${expectedCommands.length}`);
-  } else {
-    logFail("voice reopened frontend/backend contract", "存在缺失");
-  }
 }
 
 function validateRawPageRouteAndContent(rawModules) {
@@ -777,9 +750,13 @@ const serviceFiles = walkFiles(servicesRoot, (file) => /\.(ts|tsx)$/.test(file))
 const serviceText = readTextFromFiles(serviceFiles);
 const rawModules = collectRawPageModules(raw.frontendFiles, raw.controlFlow);
 const commandsByModule = controlFlowCommandsByModule(raw.controlFlow, rawModules);
+const voiceSkeletonCommands = extractVoiceGapCommands();
+const serviceRequiredCommands = rawCommands.filter(
+  (command) => !voiceSkeletonCommands.includes(command),
+);
 
 assertExactSet("IPC 合同覆盖 raw dumped 命令", rawCommands, contractCommands);
-assertCommandsMentioned("service wrapper 覆盖 raw dumped 命令", rawCommands, serviceText);
+assertCommandsMentioned("service wrapper 覆盖 raw dumped 命令", serviceRequiredCommands, serviceText);
 assertFeatureContracts(rawCommands);
 validatePluginsDumpedContract();
 validateVoiceReopenedContract();

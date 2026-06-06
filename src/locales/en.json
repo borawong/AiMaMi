@@ -884,6 +884,9 @@
     "ready": "Ready"
   },
   "voice": {
+    "skeletonTitle": "Voice module skeleton",
+    "skeletonDescription": "The original voice feature is not treated as a restored public feature in the current scope, so the frontend only keeps the route and contract boundary.",
+    "skeletonBoundary": "Future work must start from repository evidence and fill the module owner gradually before adding any executable voice behavior.",
     "description": "Restores the voice module entry from voice workspace, runtime status, and permission IPC contracts.",
     "workspace": "Voice Workspace",
     "runtime": "Voice Runtime",

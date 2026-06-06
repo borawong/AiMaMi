@@ -4,6 +4,8 @@ import { extname, join, relative } from "node:path";
 
 const repoRoot = process.cwd();
 const maxTrackedBytes = 5 * 1024 * 1024;
+const checks = [];
+
 const forbiddenTrackedExtensions = new Set([
   ".i64",
   ".idb",
@@ -41,16 +43,19 @@ const rawTextExtensions = new Set([
 ]);
 
 const publishForbiddenTerms = [
-  "扫码",
   "二维码",
   "付款码",
-  "扫一扫",
+  "扫码",
   "微信扫码",
   "QR code",
   "QRCode",
 ];
 
-const checks = [];
+const repositoryForbiddenTerms = [
+  ["lobe", "hub"].join(""),
+  ["C", "5"].join(""),
+  ["Codex", "Manager"].join(""),
+];
 
 function toRepoPath(path) {
   return relative(repoRoot, path).replaceAll("\\", "/");
@@ -69,13 +74,12 @@ function isBinaryLike(buffer) {
 }
 
 function listTrackedFiles() {
-  const output = execFileSync("git", ["-c", "core.quotePath=false", "ls-files", "-z"], {
-    cwd: repoRoot,
-  });
-  return output
-    .toString("utf8")
-    .split("\0")
-    .filter(Boolean);
+  const output = execFileSync(
+    "git",
+    ["-c", "core.quotePath=false", "ls-files", "-z"],
+    { cwd: repoRoot },
+  );
+  return output.toString("utf8").split("\0").filter(Boolean);
 }
 
 function walkFiles(root) {
@@ -126,7 +130,9 @@ function validateGitAttributes() {
   addCheck(
     ".gitattributes 发布资产规则",
     missing.length === 0,
-    missing.length === 0 ? "发布资产扩展名已列入规则" : `缺少规则：${missing.join(", ")}`,
+    missing.length === 0
+      ? "发布资产扩展名已列入规则"
+      : `缺少规则：${missing.join(", ")}`,
   );
 }
 
@@ -141,39 +147,50 @@ function validateReadmeFile(path) {
     .split(/\r?\n/)
     .filter((line) => /^#{1,6}\s+/.test(line))
     .map((line) => line.trim());
-  const allowedHeadings = ["# OpenAiMami", "## 为什么开源"];
-  allowedHeadings.push("# OpenAiMaMi");
-  const unexpectedHeadings = headings.filter((heading) => !allowedHeadings.includes(heading));
+  const requiredHeadings = [
+    "# OpenAiMami",
+    "## 为什么公开",
+    "## 仓库内容",
+    "## 重建流程",
+    "## 可直接给 AI 的重建提示",
+    "## PR 规则",
+    "## 匿名化规则",
+  ];
+  const missingHeadings = requiredHeadings.filter(
+    (heading) => !headings.includes(heading),
+  );
   const requiredReasons = [
-    { name: "个人迭代", pattern: /个人迭代/ },
+    { name: "个人迭代", pattern: /个人.*迭代|继续迭代/ },
     { name: "Apache License", pattern: /Apache License/ },
-    { name: "隐私放心", pattern: /(隐私泄露|用得更放心|放心)/ },
+    { name: "隐私泄露风险", pattern: /隐私泄露|隐私相关行为|使用者.*检查/ },
+    { name: "raw/internal 主链路", pattern: /raw\/internal|raw、internal/ },
   ];
   const missingReasons = requiredReasons
     .filter(({ pattern }) => !pattern.test(content))
     .map(({ name }) => name);
-  const forbiddenSections = [
-    /##\s*仓库内容/,
-    /##\s*重建流程/,
-    /##\s*可直接给 AI 的重建提示/,
-    /##\s*匿名化规则/,
-    /prompt/i,
-  ];
-  const hasForbiddenSection = forbiddenSections.some((pattern) => pattern.test(content));
+  const forbiddenTerms = repositoryForbiddenTerms.filter((term) =>
+    content.includes(term),
+  );
   const ok =
-    unexpectedHeadings.length === 0 &&
+    missingHeadings.length === 0 &&
     missingReasons.length === 0 &&
-    !hasForbiddenSection;
+    forbiddenTerms.length === 0;
 
   const details = [];
-  if (unexpectedHeadings.length > 0) details.push(`额外标题：${unexpectedHeadings.join(", ")}`);
-  if (missingReasons.length > 0) details.push(`缺少理由：${missingReasons.join(", ")}`);
-  if (hasForbiddenSection) details.push("包含重建提示或流程类内容");
+  if (missingHeadings.length > 0) {
+    details.push(`缺少标题：${missingHeadings.join(", ")}`);
+  }
+  if (missingReasons.length > 0) {
+    details.push(`缺少理由：${missingReasons.join(", ")}`);
+  }
+  if (forbiddenTerms.length > 0) {
+    details.push(`包含禁止公开标识：${forbiddenTerms.join(", ")}`);
+  }
 
   addCheck(
-    `${path} 只保留开源理由方向`,
+    `${path} 保留完整中文公开重建说明`,
     ok,
-    details.length === 0 ? "章节和理由符合公开说明边界" : details.join("；"),
+    details.length === 0 ? "README 保留中文说明、重建流程和匿名化规则" : details.join("；"),
   );
 }
 
@@ -201,12 +218,16 @@ function validateTrackedAssets() {
   addCheck(
     "tracked 文件不存在 IDB/压缩包/安装包",
     forbiddenAssets.length === 0,
-    forbiddenAssets.length === 0 ? "未发现禁止发布资产" : forbiddenAssets.join("；"),
+    forbiddenAssets.length === 0
+      ? "未发现禁止发布资产"
+      : forbiddenAssets.join("；"),
   );
   addCheck(
     "tracked 文件不存在大文件",
     largeFiles.length === 0,
-    largeFiles.length === 0 ? "未发现超过 5MB 的 tracked 文件" : largeFiles.join("；"),
+    largeFiles.length === 0
+      ? "未发现超过 5MB 的 tracked 文件"
+      : largeFiles.join("；"),
   );
 }
 
@@ -236,7 +257,37 @@ function validateRawFrontendAssets() {
   addCheck(
     "raw 前端资产不存在发布禁词",
     hits.length === 0,
-    hits.length === 0 ? "未发现扫码/支付类发布禁词" : hits.slice(0, 20).join("；"),
+    hits.length === 0
+      ? "未发现扫码、支付或二维码类发布禁词"
+      : hits.slice(0, 20).join("；"),
+  );
+}
+
+function validateRepositoryTextBoundary() {
+  const trackedTextFiles = listTrackedFiles().filter((file) =>
+    [".md", ".ts", ".tsx", ".js", ".mjs", ".rs", ".json"].includes(
+      extname(file).toLowerCase(),
+    ),
+  );
+  const hits = [];
+
+  for (const file of trackedTextFiles) {
+    const absolute = join(repoRoot, file);
+    if (!existsSync(absolute)) continue;
+    const buffer = readFileSync(absolute);
+    if (isBinaryLike(buffer)) continue;
+    const content = buffer.toString("utf8");
+    for (const term of repositoryForbiddenTerms) {
+      if (content.includes(term)) {
+        hits.push(`${file} 命中 ${term}`);
+      }
+    }
+  }
+
+  addCheck(
+    "公开文本不存在禁止标识",
+    hits.length === 0,
+    hits.length === 0 ? "未发现禁止公开标识" : hits.join("；"),
   );
 }
 
@@ -245,20 +296,15 @@ validateReadmeFile("README.md");
 validateReadmeFile("README-cn.md");
 validateTrackedAssets();
 validateRawFrontendAssets();
+validateRepositoryTextBoundary();
 
-let failed = 0;
+let failed = false;
 for (const check of checks) {
-  if (check.ok) {
-    console.log(`PASS ${check.name}：${check.detail}`);
-  } else {
-    failed += 1;
-    console.log(`FAIL ${check.name}：${check.detail}`);
-  }
+  const prefix = check.ok ? "PASS" : "FAIL";
+  console.log(`${prefix} ${check.name}${check.detail ? `：${check.detail}` : ""}`);
+  if (!check.ok) failed = true;
 }
 
-if (failed > 0) {
-  console.error(`公开发布边界验证失败：${failed} 项不通过。`);
+if (failed) {
   process.exit(1);
 }
-
-console.log("公开发布边界验证通过。");

@@ -420,46 +420,46 @@ function validateRelayTypedPayloadContracts() {
 validateRelayTypedPayloadContracts();
 
 function validateVoiceMutationPayloadContracts() {
-  const commandPath = join(backendRoot, "commands", "voice.rs");
-  const usecasePath = join(backendRoot, "application", "usecase", "voice.rs");
-  const contractPath = join(backendRoot, "contracts", "voice.rs");
-  const servicePath = join(frontendRoot, "services", "voice", "index.ts");
-  const commandText = readUtf8(commandPath);
-  const usecaseText = readUtf8(usecasePath);
-  const contractText = readUtf8(contractPath);
-  const serviceText = readUtf8(servicePath);
+  {
+    const commandPath = join(backendRoot, "commands", "voice.rs");
+    const usecasePath = join(backendRoot, "application", "usecase", "voice.rs");
+    const servicePath = join(frontendRoot, "services", "voice", "index.ts");
+    const commandText = readUtf8(commandPath);
+    const usecaseText = readUtf8(usecasePath);
+    const serviceText = readUtf8(servicePath);
 
-  assertContains(contractPath, contractText, [
-    "pub(crate) struct VoiceTemplateMutationPayload",
-    "pub(crate) struct VoiceVocabularyMutationPayload",
-    "pub(crate) struct VoiceRuntimeStatusPayload",
-  ], "voice DTO 合同");
+    assertContains(commandPath, commandText, [
+      "pub(crate) fn load_voice_workspace",
+      "pub(crate) fn generate_voice_prompt",
+      "pub(crate) fn start_voice_capture",
+      "pub(crate) fn stop_voice_capture",
+    ], "voice command 空骨架 adapter");
 
-  assertContains(commandPath, commandText, [
-    "Result<CoreEnvelope<VoiceTemplateMutationPayload>, String>",
-    "Result<CoreEnvelope<VoiceVocabularyMutationPayload>, String>",
-    "Result<CoreEnvelope<VoiceRuntimeStatusPayload>, String>",
-  ], "voice command 强类型 envelope");
+    assertContains(usecasePath, usecaseText, [
+      "BackendOperationPlan::unsupported",
+      "VoiceUseCase",
+      "workspace_payload",
+      "runtime_payload",
+    ], "voice usecase 空骨架边界");
 
-  assertContains(usecasePath, usecaseText, [
-    "Result<CoreEnvelope<VoiceTemplateMutationPayload>, CoreError>",
-    "Result<CoreEnvelope<VoiceVocabularyMutationPayload>, CoreError>",
-    "Result<CoreEnvelope<VoiceRuntimeStatusPayload>, CoreError>",
-    "VoiceTemplateMutationPayload {",
-    "VoiceVocabularyMutationPayload {",
-    "workspace: self.workspace_payload(&plan)",
-    "global_shortcut: shortcut",
-  ], "voice usecase mutation payload 组装");
+    assertNotContainsSnippet(usecasePath, usecaseText, [
+      "required_option_text",
+      "parse_voice_vocabulary_kind",
+      "self.no_op_plan",
+      "VoicePromptTemplate {",
+      "VoiceVocabularyEntry {",
+      "global_shortcut: shortcut",
+    ], "voice usecase 不得保留真实业务组装");
 
-  assertContains(servicePath, serviceText, [
-    "invokeIpc<CoreEnvelope<VoiceTemplateMutationPayload>>(\"upsert_voice_template\"",
-    "invokeIpc<CoreEnvelope<VoiceVocabularyMutationPayload>>(",
-    "source: input.source ?? null",
-    "replacement: input.replacement ?? null",
-    "notes: input.notes ?? null",
-    "setGlobalShortcut: (shortcut: string)",
-    "invokeIpc<CoreEnvelope<VoiceRuntimeStatusPayload>>(\"set_voice_global_shortcut\"",
-  ], "voice 前端服务合同");
+    assertNotContainsSnippet(servicePath, serviceText, [
+      "invokeIpc",
+      "load_voice_",
+      "upsert_voice_",
+      "start_voice_capture",
+    ], "voice service 不得保留真实 IPC wrapper");
+    return;
+  }
+
 }
 
 validateVoiceMutationPayloadContracts();
