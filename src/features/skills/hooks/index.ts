@@ -129,14 +129,16 @@ export function useSkillsPageMutations(options?: {
     mutationFn: async () => {
       const path = await skillsService.pickSkillDirectory();
       if (path) return skillsService.importSkill(path);
-      throw new Error("cancelled");
+      return null;
     },
     onMutate: () =>
       Promise.all([
         queryClient.cancelQueries({ queryKey: SKILLS_INSTALLED_QUERY_KEY }),
         queryClient.cancelQueries({ queryKey: SKILLS_BACKUPS_QUERY_KEY }),
       ]),
-    onSuccess: (payload) => writeSkillsMutationPayload(queryClient, payload),
+    onSuccess: (payload) => {
+      if (payload) return writeSkillsMutationPayload(queryClient, payload);
+    },
   });
 
   const removeMutation = useMutation({

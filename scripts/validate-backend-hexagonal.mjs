@@ -3,7 +3,19 @@ import { join, relative } from "node:path";
 
 const repoRoot = process.cwd();
 const backendRoot = join(repoRoot, "src-tauri", "src");
+const frontendRoot = join(repoRoot, "src");
 const failures = [];
+const mcpUpsertArgKeys = [
+  "args",
+  "command",
+  "config",
+  "enabled",
+  "environment",
+  "headers",
+  "name",
+  "transport",
+  "url",
+];
 
 const requiredFiles = [
   "commands/mod.rs",
@@ -81,6 +93,14 @@ function assertContains(file, content, snippets, rule) {
   for (const snippet of snippets) {
     if (!content.includes(snippet)) {
       failures.push(`${toRelative(file)} 缺少 ${rule}：${snippet}`);
+    }
+  }
+}
+
+function assertNotContainsSnippet(file, content, snippets, rule) {
+  for (const snippet of snippets) {
+    if (content.includes(snippet)) {
+      failures.push(`${toRelative(file)} 违反 ${rule}：${snippet}`);
     }
   }
 }
@@ -205,6 +225,61 @@ assertContains(
   ["RepositoryBundle", "SingleFlight", "pub(crate) fn accounts(&self)", "pub(crate) fn system(&self)"],
   "application service 聚合 usecase 依赖",
 );
+
+function validateMcpUpsertArgumentChain() {
+  const servicePath = join(frontendRoot, "services", "mcp", "index.ts");
+  const ipcPath = join(frontendRoot, "contracts", "ipc", "commands.ts");
+  const commandPath = join(backendRoot, "commands", "mcp.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "mcp.rs");
+  const serviceText = readUtf8(servicePath);
+  const ipcText = readUtf8(ipcPath);
+  const commandText = readUtf8(commandPath);
+  const usecaseText = readUtf8(usecasePath);
+
+  assertContains(servicePath, serviceText, [
+    "export interface UpsertMcpServerInput",
+    "...input",
+    "args: input.args ?? []",
+    "headers: input.headers ?? {}",
+    "environment: input.environment ?? {}",
+  ], "MCP upsert 前端参数门面");
+
+  for (const key of mcpUpsertArgKeys) {
+    assertContains(servicePath, serviceText, [key], "MCP upsert service 参数");
+    assertContains(ipcPath, ipcText, [`"${key}"`], "MCP upsert IPC argKeys");
+    assertContains(commandPath, commandText, [`${key}: Option<`], "MCP upsert command Option 参数");
+    assertContains(commandPath, commandText, [`${key},`], "MCP upsert command 到 usecase 传参");
+  }
+
+  assertContains(usecasePath, usecaseText, [
+    "pub name: Option<String>",
+    "normalize_mcp_name(",
+    "input.name.as_ref()",
+    "fn server_from_input(input: McpUpsertInput, name: String)",
+  ], "MCP upsert usecase owning 输入校验和归一化");
+  assertNotContainsSnippet(commandPath, commandText, [
+    "..McpUpsertInput::default()",
+    "unwrap_or_default()",
+  ], "MCP upsert command 不得吞掉缺参或补默认业务值");
+}
+
+validateMcpUpsertArgumentChain();
+
+function validateSystemEnvelopeServiceTypes() {
+  const systemServicePath = join(frontendRoot, "services", "system", "index.ts");
+  const systemServiceText = readUtf8(systemServicePath);
+  for (const command of [
+    "get_notification_client_state",
+    "get_mystery_unlock_grants",
+    "merge_mystery_unlock_grants",
+  ]) {
+    assertContains(systemServicePath, systemServiceText, [
+      `invokeIpc<CoreEnvelope<IpcEvidencePayload>>("${command}"`,
+    ], "system service 必须按后端 envelope 类型消费");
+  }
+}
+
+validateSystemEnvelopeServiceTypes();
 
 if (failures.length > 0) {
   console.error("后端六边形静态验证失败：");

@@ -66,6 +66,14 @@ const requiredScenarios = [
 ];
 
 const failures = [];
+const skillsCommands = [
+  "load_installed_skills",
+  "load_skill_backups",
+  "import_skill",
+  "remove_skill",
+  "restore_skill_backup",
+  "delete_skill_backup",
+];
 
 function repoPath(file) {
   return path.relative(repoRoot, file).replaceAll(path.sep, "/");
@@ -127,7 +135,61 @@ function validateScenarioRegistry() {
     "e2eScenarioPresets",
     "getE2eScenario",
     "createE2eScenarioConfig",
+    "SKILLS_E2E_COMMANDS",
   ]);
+}
+
+function validateSkillsCommandMirror() {
+  const skillsPath = path.join(scenariosRoot, "skills.ts");
+  const commandFixturePath = path.join(
+    repoRoot,
+    "src",
+    "mocks",
+    "fixtures",
+    "commands.ts",
+  );
+  const skillsText = readRequired(skillsPath);
+  const commandFixtureText = readRequired(commandFixturePath);
+  assertIncludes("src/mocks/e2e/scenarios/skills.ts", skillsText, [
+    "SKILLS_E2E_COMMANDS",
+    "satisfies readonly IpcCommandName[]",
+  ]);
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+    "skillsCommandHandlers",
+    "loadInstalledSkillsHandler",
+    "loadSkillBackupsHandler",
+    "importSkillHandler",
+    "removeSkillHandler",
+    "restoreSkillBackupHandler",
+    "deleteSkillBackupHandler",
+    "skillSummaryFromId",
+    "skillBackupFromId",
+  ]);
+
+  for (const command of skillsCommands) {
+    assertIncludes("src/mocks/e2e/scenarios/skills.ts", skillsText, [
+      `"${command}"`,
+    ]);
+    assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+      `${command}:`,
+    ]);
+  }
+
+  for (const field of [
+    "items: []",
+    "total: 0",
+    "rootPath: \"\"",
+    "lastScanAt: 0",
+    "replacedExisting: false",
+    "removedSkillID",
+    "remainingInstalledCount",
+    "restoredSkill",
+    "rollbackBackup",
+    "deletedBackupID",
+    "remainingBackupCount",
+  ]) {
+    assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [field]);
+  }
 }
 
 function validateScenarioFiles() {
@@ -216,6 +278,7 @@ function validateIpcMockBridge() {
 }
 
 validateScenarioRegistry();
+validateSkillsCommandMirror();
 validateScenarioFiles();
 validateIpcMockBridge();
 

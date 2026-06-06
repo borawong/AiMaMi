@@ -1,14 +1,10 @@
 import { createElement } from "react";
-import { SkillsProvider } from "./Provider";
-import { SkillsContent } from "./Content";
+import { SkillsPage } from "./components/page";
 
 export function SkillsFeature() {
-  return createElement(
-    SkillsProvider,
-    null,
-    createElement(SkillsContent),
-  );
+  return createElement(SkillsPage);
 }
 
 export { SkillsProvider } from "./Provider";
 export { SkillsContent } from "./Content";
+export { SkillsPage } from "./components/page";

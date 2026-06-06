@@ -13,7 +13,7 @@ const MODULE: &str = "mcp";
 
 #[derive(Debug, Clone, Default)]
 pub(crate) struct McpUpsertInput {
-    pub name: String,
+    pub name: Option<String>,
     pub config: Option<Value>,
     pub transport: Option<String>,
     pub enabled: Option<bool>,
@@ -43,13 +43,17 @@ impl<'a> McpUseCase<'a> {
 
     pub(crate) fn upsert_server(
         &self,
-        mut input: McpUpsertInput,
+        input: McpUpsertInput,
     ) -> Result<CoreEnvelope<McpServerMutationPayload>, CoreError> {
         reject_null_config(input.config.as_ref())?;
-        input.name = normalize_mcp_name(input.name, input.config.as_ref(), input.args.as_ref());
+        let name = normalize_mcp_name(
+            input.name.as_ref(),
+            input.config.as_ref(),
+            input.args.as_ref(),
+        );
         let plan = self.no_op_plan("upsert_mcp_server");
         Ok(CoreEnvelope::from_backend_plan(
-            self.mutation_payload(&plan, server_from_input(input)),
+            self.mutation_payload(&plan, server_from_input(input, name)),
             &plan,
         ))
     }
@@ -159,8 +163,12 @@ fn reject_null_config(value: Option<&Value>) -> Result<(), CoreError> {
     }
 }
 
-fn normalize_mcp_name(name: String, config: Option<&Value>, args: Option<&Vec<String>>) -> String {
-    let trimmed = name.trim();
+fn normalize_mcp_name(
+    name: Option<&String>,
+    config: Option<&Value>,
+    args: Option<&Vec<String>>,
+) -> String {
+    let trimmed = name.map(|value| value.trim()).unwrap_or_default();
     if !trimmed.is_empty() {
         return trimmed.to_owned();
     }
@@ -177,10 +185,10 @@ fn normalize_mcp_name(name: String, config: Option<&Value>, args: Option<&Vec<St
         .unwrap_or_else(|| "pending-mcp-server".to_owned())
 }
 
-fn server_from_input(input: McpUpsertInput) -> McpServerSummary {
+fn server_from_input(input: McpUpsertInput, name: String) -> McpServerSummary {
     let config = input.config.as_ref();
     McpServerSummary {
-        name: input.name,
+        name,
         transport: input
             .transport
             .or_else(|| config_string(config, "transport"))

@@ -27,13 +27,15 @@ export const systemService = {
     readEnvelopeData(invokeIpc<CoreEnvelope<string>>("get_device_id")),
 
   getNotificationClientState: () =>
-    invokeIpc<IpcEvidencePayload>("get_notification_client_state"),
+    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("get_notification_client_state"),
 
   getMysteryUnlockGrants: () =>
-    invokeIpc<IpcEvidencePayload>("get_mystery_unlock_grants"),
+    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("get_mystery_unlock_grants"),
 
   mergeMysteryUnlockGrants: (grants: IpcJsonValue) =>
-    invokeIpc<IpcEvidencePayload>("merge_mystery_unlock_grants", { grants }),
+    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("merge_mystery_unlock_grants", {
+      grants,
+    }),
 
   getOrCreateRemoteDeviceSecret: () =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>(

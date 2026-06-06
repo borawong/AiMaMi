@@ -56,6 +56,10 @@ const strictFeaturePageShells = [
   "voice",
 ];
 
+const providerContentPageShells = [
+  "skills",
+];
+
 const requiredFeatureFiles = [
   "Provider.tsx",
   "StoreUpdater.tsx",
@@ -190,7 +194,16 @@ function validateFeaturePageShells() {
       .join("")}Page`;
     const unexpectedFunctions = declaredFunctions.filter((name) => name !== expectedPageName);
 
-    assertIncludes(label, text, ["../hooks"]);
+    if (providerContentPageShells.includes(moduleId)) {
+      assertIncludes(label, text, ["../Provider", "../Content"]);
+      assertNotMatches(label, text, [
+        [/\.\.\/hooks/, "module page 必须只装配 Provider 和 Content，不得直接持有模块 hook"],
+        [/\.\.\/panels/, "module page 必须只装配 Provider 和 Content，不得直接挂载面板"],
+        [/\.\.\/dialogs/, "module page 必须只装配 Provider 和 Content，不得直接挂载弹窗"],
+      ]);
+    } else {
+      assertIncludes(label, text, ["../hooks"]);
+    }
     assertNotMatches(label, text, [
       [/\buse(State|Reducer|Effect|Memo|Callback)\b/, "module page 只能作为 shell，不得 owning 组件私有状态或复杂派生"],
       [/\buse(Query|Mutation)\b/, "module page 不得直接 owning TanStack query/mutation"],

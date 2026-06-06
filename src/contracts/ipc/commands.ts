@@ -440,8 +440,14 @@ export const IPC_COMMAND_DEFINITIONS = [
     ],
     "argKeys": [
       "args",
+      "command",
+      "config",
+      "enabled",
       "environment",
-      "headers"
+      "headers",
+      "name",
+      "transport",
+      "url"
     ],
     "source": "minified",
     "tier": "P1"

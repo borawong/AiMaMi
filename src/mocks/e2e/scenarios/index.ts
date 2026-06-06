@@ -54,6 +54,7 @@ export { emptyScenario } from "./empty";
 export { eventReplayScenario } from "./replay";
 export { failureScenario } from "./failure";
 export { normalScenario } from "./normal";
+export { SKILLS_E2E_COMMANDS } from "./skills";
 export { staleScenario } from "./stale";
 export type {
   E2eScenario,

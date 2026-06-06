@@ -464,6 +464,7 @@ function validateKnownInternalFrontendGates() {
     "error.tsx",
   );
   const skillsPagePath = join(repoRoot, "src", "features", "skills", "components", "page.tsx");
+  const skillsContentPath = join(repoRoot, "src", "features", "skills", "Content.tsx");
   const skillsHooksPath = join(repoRoot, "src", "features", "skills", "hooks", "index.ts");
   const skillsPanelPath = join(repoRoot, "src", "features", "skills", "panels", "page.tsx");
 
@@ -476,6 +477,7 @@ function validateKnownInternalFrontendGates() {
   const customInstructionsHooks = readRequired(customInstructionsHooksPath);
   const customInstructionsLoadErrorPanel = readRequired(customInstructionsLoadErrorPanelPath);
   const skillsPage = readRequired(skillsPagePath);
+  const skillsContent = readRequired(skillsContentPath);
   const skillsHooks = readRequired(skillsHooksPath);
   const skillsPanel = readRequired(skillsPanelPath);
 
@@ -514,12 +516,25 @@ function validateKnownInternalFrontendGates() {
     skillsHooks.includes("activeQuery.refetch()") &&
     skillsHooks.includes("skills.loadFailed") &&
     skillsHooks.includes("skills.loadFailedDesc") &&
-    skillsPage.includes("SkillsPagePanel") &&
+    skillsPage.includes("SkillsProvider") &&
+    skillsPage.includes("SkillsContent") &&
+    skillsContent.includes("SkillsPagePanel") &&
+    skillsContent.includes("SkillsConfirmDialogs") &&
     skillsPanel.includes('role="alert"');
   if (!skillsErrorOk) {
     failures.push("skills installed/backups query failure 缺少可见 alert");
   } else {
     console.log("PASS skills query failure 可见 alert");
+  }
+
+  const skillsImportCancelOk =
+    skillsHooks.includes("skillsService.pickSkillDirectory()") &&
+    skillsHooks.includes("return null;") &&
+    skillsHooks.includes("if (payload) return writeSkillsMutationPayload(queryClient, payload)");
+  if (!skillsImportCancelOk) {
+    failures.push("skills import 取消必须保持静默 no-op，不得进入 mutation error");
+  } else {
+    console.log("PASS skills import 取消语义：silent no-op");
   }
 }
 

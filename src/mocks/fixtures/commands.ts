@@ -78,6 +78,143 @@ const evidenceObjectHandler: IpcCommandHandler = (context) => {
   };
 };
 
+function readArgString(args: IpcArgs | undefined, key: string, fallback: string) {
+  const value = args?.[key];
+  return typeof value === "string" && value.trim() ? value : fallback;
+}
+
+function skillSummaryFromId(id: string) {
+  return {
+    id,
+    name: id,
+    title: null,
+    summary: null,
+    relativePath: id,
+    directoryPath: "",
+    skillFilePath: "",
+    updatedAt: null,
+  };
+}
+
+function skillBackupFromId(id: string) {
+  return {
+    id,
+    skillID: id,
+    name: id,
+    title: null,
+    relativePath: id,
+    backupPath: "",
+    createdAt: 0,
+  };
+}
+
+const loadInstalledSkillsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: {
+      status: envelope.data.status,
+      items: [],
+      total: 0,
+      rootPath: "",
+      lastScanAt: 0,
+    },
+  };
+};
+
+const loadSkillBackupsHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: {
+      status: envelope.data.status,
+      items: [],
+      total: 0,
+      rootPath: "",
+      lastScanAt: 0,
+    },
+  };
+};
+
+const importSkillHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const id = readArgString(context.args, "path", "mock-skill");
+  return {
+    ...envelope,
+    data: {
+      status: envelope.data.status,
+      skill: skillSummaryFromId(id),
+      replacedExisting: false,
+      backup: null,
+    },
+  };
+};
+
+const removeSkillHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const id = readArgString(context.args, "id", "mock-skill");
+  return {
+    ...envelope,
+    data: {
+      status: envelope.data.status,
+      removedSkillID: id,
+      backup: skillBackupFromId(id),
+      remainingInstalledCount: 0,
+    },
+  };
+};
+
+const restoreSkillBackupHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const id = readArgString(context.args, "id", "mock-skill");
+  return {
+    ...envelope,
+    data: {
+      status: envelope.data.status,
+      restoredSkill: skillSummaryFromId(id),
+      backup: skillBackupFromId(id),
+      rollbackBackup: null,
+    },
+  };
+};
+
+const deleteSkillBackupHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const id = readArgString(context.args, "id", "mock-skill");
+  return {
+    ...envelope,
+    data: {
+      status: envelope.data.status,
+      deletedBackupID: id,
+      remainingBackupCount: 0,
+    },
+  };
+};
+
 const systemInfoHandler: IpcCommandHandler = (context) => {
   const envelope = createEvidenceBackedIpcFixture(
     context.command,
@@ -109,13 +246,25 @@ const systemCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> 
   set_usage_refresh_interval: writeIntervalArgHandler,
 };
 
+const skillsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  delete_skill_backup: deleteSkillBackupHandler,
+  import_skill: importSkillHandler,
+  load_installed_skills: loadInstalledSkillsHandler,
+  load_skill_backups: loadSkillBackupsHandler,
+  remove_skill: removeSkillHandler,
+  restore_skill_backup: restoreSkillBackupHandler,
+};
+
 export const ipcCommandFixtures = IPC_COMMAND_DEFINITIONS.reduce(
   (fixtures, definition) => {
     fixtures[definition.command] = {
       argKeys: definition.argKeys,
       command: definition.command,
       domain: definition.domain,
-      handler: systemCommandHandlers[definition.command] ?? defaultHandler,
+      handler:
+        skillsCommandHandlers[definition.command] ??
+        systemCommandHandlers[definition.command] ??
+        defaultHandler,
       source: definition.source,
       tier: definition.tier,
       wrapperNames: definition.wrapperNames,

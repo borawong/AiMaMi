@@ -1,14 +1,10 @@
-import { SkillsConfirmDialogs } from "../dialogs";
-import { useSkillsPageController } from "../hooks";
-import { SkillsPagePanel } from "../panels";
+import { SkillsContent } from "../Content";
+import { SkillsProvider } from "../Provider";
 
 export function SkillsPage() {
-  const controller = useSkillsPageController();
-
   return (
-    <>
-      <SkillsPagePanel controller={controller} />
-      <SkillsConfirmDialogs controller={controller} />
-    </>
+    <SkillsProvider>
+      <SkillsContent />
+    </SkillsProvider>
   );
 }

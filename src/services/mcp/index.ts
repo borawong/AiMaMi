@@ -1,4 +1,5 @@
 import { invokeIpc } from "@/contracts/ipc";
+import type { IpcJsonObject } from "@/contracts/ipc";
 import type {
   CoreEnvelope,
   McpServerListPayload,
@@ -11,6 +12,7 @@ export interface UpsertMcpServerInput {
   name: string;
   transport: McpTransport;
   enabled?: boolean;
+  config?: IpcJsonObject | null;
   command?: string | null;
   args?: string[];
   url?: string | null;
