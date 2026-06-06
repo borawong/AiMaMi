@@ -1,4 +1,6 @@
-use crate::contracts::{BackendSkeletonStatus, CoreEnvelope, SessionsPayload};
+use crate::contracts::{
+    BackendSkeletonStatus, CoreEnvelope, SessionsDeletePayload, SessionsListPayload,
+};
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::repository::RepositoryBundle;
@@ -14,10 +16,16 @@ impl<'a> SessionsUseCase<'a> {
         Self { repositories }
     }
 
-    pub(crate) fn load_sessions(&self) -> Result<CoreEnvelope<SessionsPayload>, CoreError> {
+    pub(crate) fn load_sessions(&self) -> Result<CoreEnvelope<SessionsListPayload>, CoreError> {
         let plan = self.pending_plan("load_sessions");
         Ok(CoreEnvelope::from_backend_plan(
-            self.payload(&plan, Vec::new()),
+            SessionsListPayload {
+                backend_status: self.status(&plan),
+                items: Vec::new(),
+                total: 0,
+                source_path: self.repositories.sessions().source_path(),
+                last_scan_at: 0,
+            },
             &plan,
         ))
     }
@@ -25,21 +33,20 @@ impl<'a> SessionsUseCase<'a> {
     pub(crate) fn delete_sessions(
         &self,
         ids: Vec<String>,
-    ) -> Result<CoreEnvelope<SessionsPayload>, CoreError> {
+    ) -> Result<CoreEnvelope<SessionsDeletePayload>, CoreError> {
         let ids = required_text_list(ids, "empty_session_ids", "会话标识列表不能为空。")?;
         let plan = self.no_op_plan("delete_sessions");
         Ok(CoreEnvelope::from_backend_plan(
-            self.payload(&plan, ids),
+            SessionsDeletePayload {
+                backend_status: self.status(&plan),
+                requested_ids: ids.clone(),
+                deleted_count: ids.len(),
+                deleted_ids: ids,
+                skipped_ids: Vec::new(),
+                source_path: self.repositories.sessions().source_path(),
+            },
             &plan,
         ))
-    }
-
-    fn payload(&self, plan: &BackendOperationPlan, ids: Vec<String>) -> SessionsPayload {
-        SessionsPayload {
-            status: BackendSkeletonStatus::from_plan(plan),
-            ids,
-            ..Default::default()
-        }
     }
 
     fn pending_plan(&self, command: &'static str) -> BackendOperationPlan {
@@ -52,6 +59,10 @@ impl<'a> SessionsUseCase<'a> {
 
     fn repository_boundary(&self) -> BackendBoundaryProbe {
         BackendBoundaryProbe::from_repository_source(self.repositories.sessions().source_path())
+    }
+
+    fn status(&self, plan: &BackendOperationPlan) -> BackendSkeletonStatus {
+        BackendSkeletonStatus::from_plan(plan)
     }
 }
 

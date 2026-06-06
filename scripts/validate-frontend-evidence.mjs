@@ -438,6 +438,11 @@ function validateKnownInternalFrontendGates() {
   const accountsCachePath = join(repoRoot, "src", "features", "accounts", "cache", "index.ts");
   const accountsTypesPath = join(repoRoot, "src", "features", "accounts", "types", "index.ts");
   const accountsServicePath = join(repoRoot, "src", "services", "accounts", "index.ts");
+  const sessionsHooksPath = join(repoRoot, "src", "features", "sessions", "hooks", "index.ts");
+  const sessionsCachePath = join(repoRoot, "src", "features", "sessions", "cache", "index.ts");
+  const sessionsTypesPath = join(repoRoot, "src", "features", "sessions", "types", "index.ts");
+  const sessionsServicePath = join(repoRoot, "src", "services", "sessions", "index.ts");
+  const analyticsServicePath = join(repoRoot, "src", "services", "analytics", "index.ts");
   const relayHooksPath = join(repoRoot, "src", "features", "relay", "hooks", "index.ts");
   const relayCachePath = join(repoRoot, "src", "features", "relay", "cache", "index.ts");
   const relayPagePath = join(repoRoot, "src", "features", "relay", "components", "page.tsx");
@@ -476,6 +481,11 @@ function validateKnownInternalFrontendGates() {
   const accountsCache = readRequired(accountsCachePath);
   const accountsTypes = readRequired(accountsTypesPath);
   const accountsService = readRequired(accountsServicePath);
+  const sessionsHooks = readRequired(sessionsHooksPath);
+  const sessionsCache = readRequired(sessionsCachePath);
+  const sessionsTypes = readRequired(sessionsTypesPath);
+  const sessionsService = readRequired(sessionsServicePath);
+  const analyticsService = readRequired(analyticsServicePath);
   const relayHooks = readRequired(relayHooksPath);
   const relayCache = readRequired(relayCachePath);
   const relayPage = readRequired(relayPagePath);
@@ -512,6 +522,28 @@ function validateKnownInternalFrontendGates() {
     failures.push("accounts IPC payload owner 未收口到 typed envelope、模块 types 和 cache helper");
   } else {
     console.log("PASS accounts typed IPC payload owner：service/hook/cache");
+  }
+
+  const sessionsTypedPayloadOk =
+    sessionsService.includes("CoreEnvelope<SessionsListPayload>") &&
+    sessionsService.includes("CoreEnvelope<SessionsDeletePayload>") &&
+    sessionsService.includes("CoreEnvelope<SessionAnalyticsPayload>") &&
+    analyticsService.includes("CoreEnvelope<SessionAnalyticsPayload>") &&
+    !sessionsService.includes("IpcEvidencePayload") &&
+    !analyticsService.includes("CoreEnvelope<IpcEvidencePayload>>(\"load_session_analytics\"") &&
+    sessionsTypes.includes("export type SessionsListEnvelope") &&
+    sessionsTypes.includes("export type SessionsDeleteEnvelope") &&
+    sessionsTypes.includes("export type SessionsMutationPayload") &&
+    sessionsTypes.includes("export type SessionsCachePayload") &&
+    sessionsHooks.includes("SessionsCacheEnvelope") &&
+    sessionsHooks.includes("SessionsDeleteEnvelope") &&
+    sessionsHooks.includes("selectDeletedSessionIds") &&
+    sessionsCache.includes("SessionsCachePayload") &&
+    !sessionsCache.includes("ModuleCacheEnvelope<unknown>");
+  if (!sessionsTypedPayloadOk) {
+    failures.push("sessions IPC payload owner 未收口到 typed envelope、模块 types 和 cache helper");
+  } else {
+    console.log("PASS sessions typed IPC payload owner：service/hook/cache");
   }
 
   const relayEventOk =

@@ -1,10 +1,26 @@
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
+import type {
+  CoreEnvelope,
+  SessionRecordPayload,
+  SessionsDeletePayload,
+  SessionsListPayload,
+} from "@/types";
 
 export type SessionsModuleId = "sessions";
-export type SessionsCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
+export type SessionsListEnvelope = CoreEnvelope<SessionsListPayload>;
+export type SessionsDeleteEnvelope = CoreEnvelope<SessionsDeletePayload>;
+export type SessionsMutationPayload = SessionsDeletePayload;
+export type SessionsMutationEnvelope = CoreEnvelope<SessionsMutationPayload>;
+export type SessionsCachePayload =
+  | SessionsListEnvelope
+  | SessionsMutationEnvelope
+  | null;
+export type SessionsCacheEnvelope<TPayload = SessionsCachePayload> =
+  ModuleCacheEnvelope<TPayload>;
+export type SessionRecord = SessionRecordPayload;
 
 export interface SessionNode {
-  session: unknown;
+  session: SessionRecord;
   isOrphan: boolean;
   children: SessionNode[];
 }

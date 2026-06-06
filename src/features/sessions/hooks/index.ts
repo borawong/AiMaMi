@@ -11,6 +11,12 @@ import {
 import { useModuleCacheController } from "@/features/_shared/controller";
 import { analyticsService } from "@/services/analytics";
 import { sessionsService } from "@/services/sessions";
+import type {
+  CoreEnvelope,
+  SessionsDeletePayload,
+  SessionsListPayload,
+  UsageAnalyticsPayload,
+} from "@/types";
 import {
   SessionsAuthoritativeQueryKeys,
   SessionsCache,
@@ -21,6 +27,8 @@ import {
 } from "../cache";
 import type {
   SessionMetricItem,
+  SessionsCacheEnvelope,
+  SessionsDeleteEnvelope,
   SessionsDeleteRequest,
   SessionsPageController,
 } from "../types";
@@ -30,6 +38,7 @@ import {
   flattenGroups,
   formatBytes,
   readNumber,
+  selectDeletedSessionIds,
   selectSessionRecords,
   selectSessionsEnvelopeData,
   sessionId,
@@ -45,10 +54,10 @@ export function useSessionsModule() {
   const refreshPromiseRef = useRef<Promise<void> | null>(null);
   const nextSequence = () => ++sequenceRef.current;
 
-  const sessionsEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+  const sessionsEnvelopeQuery = useQuery<SessionsCacheEnvelope | null>({
     queryKey: SessionsAuthoritativeQueryKeys.sessions,
     queryFn: async () =>
-      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(
+      queryClient.getQueryData<SessionsCacheEnvelope>(
         SessionsAuthoritativeQueryKeys.sessions,
       ) ?? null,
     enabled: false,
@@ -56,10 +65,14 @@ export function useSessionsModule() {
     gcTime: Infinity,
   });
 
-  const usageEnvelopeQuery = useQuery<ModuleCacheEnvelope<unknown> | null>({
+  const usageEnvelopeQuery = useQuery<
+    ModuleCacheEnvelope<CoreEnvelope<UsageAnalyticsPayload> | null> | null
+  >({
     queryKey: AnalyticsAuthoritativeQueryKeys.usage,
     queryFn: async () =>
-      queryClient.getQueryData<ModuleCacheEnvelope<unknown>>(
+      queryClient.getQueryData<
+        ModuleCacheEnvelope<CoreEnvelope<UsageAnalyticsPayload> | null>
+      >(
         AnalyticsAuthoritativeQueryKeys.usage,
       ) ?? null,
     enabled: false,
@@ -101,7 +114,7 @@ export function useSessionsModule() {
 
   const deleteSessionsMutation = useMutation({
     mutationFn: (ids: string[]) => sessionsService.deleteSessions(ids),
-    onSuccess: (payload) => {
+    onSuccess: (payload: SessionsDeleteEnvelope) => {
       const mutationEnvelope = writeSessionsMutationPayload(queryClient, {
         payload,
         source: "mutation-payload",
@@ -159,8 +172,10 @@ export function useSessionsPageController(
   const usagePayload =
     module.usageEnvelope?.payload ??
     (module.usageEnvelope ? null : module.usageQuery.data);
-  const payload = selectSessionsEnvelopeData(sessionsPayload);
-  const usage = selectSessionsEnvelopeData(usagePayload);
+  const payload = selectSessionsEnvelopeData<SessionsListPayload | SessionsDeletePayload>(
+    sessionsPayload,
+  );
+  const usage = selectSessionsEnvelopeData<UsageAnalyticsPayload>(usagePayload);
   const sessions = useMemo(() => selectSessionRecords(payload), [payload]);
   const groups = useMemo(() => buildSessionGroups(sessions), [sessions]);
   const orphanCount = useMemo(() => countOrphans(groups), [groups]);
@@ -272,12 +287,14 @@ export function useSessionsPageController(
   const confirmDeleteRequest = async () => {
     if (!deleteRequest) return;
     const request = deleteRequest;
-    await module.deleteSessions.run(request.ids);
+    const payload = await module.deleteSessions.run(request.ids);
+    const deletedIds = selectDeletedSessionIds(payload);
     setSelected((current) => {
       const next = new Set(current);
-      for (const id of request.ids) next.delete(id);
+      for (const id of deletedIds) next.delete(id);
       return next;
     });
+    setFocusedId((current) => (current && deletedIds.includes(current) ? null : current));
     setDeleteRequest(null);
   };
 

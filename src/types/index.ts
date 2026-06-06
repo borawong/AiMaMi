@@ -563,6 +563,38 @@ export interface AccountImportPreviewPayload {
   conflictCount: number;
 }
 
+export interface SessionRecordPayload {
+  id: string;
+  threadName: string;
+  projectPath: string | null;
+  projectName: string | null;
+  parentSessionId: string | null;
+  updatedAt: number;
+  createdAt: number | null;
+  fileSize: number;
+  isConversationThread: boolean;
+  projectPathMissing: boolean;
+  agentNickname: string | null;
+  agentRole: string | null;
+}
+
+export interface SessionsListPayload {
+  backendStatus: BackendSkeletonStatus;
+  items: SessionRecordPayload[];
+  total: number;
+  sourcePath: string;
+  lastScanAt: number;
+}
+
+export interface SessionsDeletePayload {
+  backendStatus: BackendSkeletonStatus;
+  requestedIds: string[];
+  deletedIds: string[];
+  skippedIds: string[];
+  deletedCount: number;
+  sourcePath: string;
+}
+
 export interface BootstrapStatePayload {
   backendStatus: BackendSkeletonStatus;
   executedAt: string | null;
@@ -790,6 +822,20 @@ export interface QuotaHistoryPayload {
 // ---------------------------------------------------------------------------
 
 export type AnalyticsRange = "today" | "week" | "month";
+
+export interface SessionAnalyticsSeriesPoint {
+  date: string;
+  count: number;
+}
+
+export interface SessionAnalyticsPayload {
+  backendStatus: BackendSkeletonStatus;
+  range: AnalyticsRange;
+  totalSessions: number;
+  avgTurns: number;
+  activeDays: number;
+  series: SessionAnalyticsSeriesPoint[];
+}
 
 export interface TokenDaySeries {
   date: string;

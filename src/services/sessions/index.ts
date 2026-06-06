@@ -1,12 +1,18 @@
-import { invokeIpc, type IpcEvidencePayload } from "@/contracts/ipc";
-import type { AnalyticsRange, CoreEnvelope } from "@/types";
+import { invokeIpc } from "@/contracts/ipc";
+import type {
+  AnalyticsRange,
+  CoreEnvelope,
+  SessionAnalyticsPayload,
+  SessionsDeletePayload,
+  SessionsListPayload,
+} from "@/types";
 
 export const sessionsService = {
-  loadSessions: () => invokeIpc<CoreEnvelope<IpcEvidencePayload>>("load_sessions"),
+  loadSessions: () => invokeIpc<CoreEnvelope<SessionsListPayload>>("load_sessions"),
 
   loadSessionAnalytics: (range: AnalyticsRange = "week") =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("load_session_analytics", { range }),
+    invokeIpc<CoreEnvelope<SessionAnalyticsPayload>>("load_session_analytics", { range }),
 
   deleteSessions: (ids: string[]) =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("delete_sessions", { ids }),
+    invokeIpc<CoreEnvelope<SessionsDeletePayload>>("delete_sessions", { ids }),
 };
