@@ -1,6 +1,8 @@
 use crate::contracts::{
     BackendSkeletonStatus, CoreEnvelope, VoiceAsrConfigPayload, VoiceGeneratePayload,
-    VoiceHistoryEntry, VoiceLlmConfigPayload, VoiceRuntimeStatusPayload, VoiceWorkspacePayload,
+    VoiceHistoryEntry, VoiceLlmConfigPayload, VoicePromptTemplate, VoiceRuntimeStatusPayload,
+    VoiceTemplateKind, VoiceTemplateMutationPayload, VoiceVocabularyEntry, VoiceVocabularyKind,
+    VoiceVocabularyMutationPayload, VoiceWorkspacePayload,
 };
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
@@ -85,11 +87,7 @@ impl<'a> VoiceUseCase<'a> {
     pub(crate) fn load_workspace(&self) -> Result<CoreEnvelope<VoiceWorkspacePayload>, CoreError> {
         let plan = self.pending_plan("load_voice_workspace");
         Ok(CoreEnvelope::from_backend_plan(
-            VoiceWorkspacePayload {
-                status: BackendSkeletonStatus::from_plan(&plan),
-                source_path: self.repositories.voice().source_path(),
-                ..VoiceWorkspacePayload::default()
-            },
+            self.workspace_payload(&plan),
             &plan,
         ))
     }
@@ -100,7 +98,7 @@ impl<'a> VoiceUseCase<'a> {
         title: Option<String>,
         description: Option<String>,
         content: Option<String>,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<VoiceTemplateMutationPayload>, CoreError> {
         let id = text_or_default(id);
         let title = required_option_text(
             title,
@@ -114,16 +112,20 @@ impl<'a> VoiceUseCase<'a> {
             "语音模板内容不能为空。",
         )?;
         let plan = self.no_op_plan("upsert_voice_template");
+        let template = VoicePromptTemplate {
+            id,
+            title,
+            description,
+            kind: VoiceTemplateKind::default(),
+            content,
+            built_in: false,
+            updated_at: 0,
+        };
         Ok(CoreEnvelope::from_backend_plan(
-            json_with_status(
-                json!({
-                    "id": id,
-                    "title": title,
-                    "description": description,
-                    "content": content
-                }),
-                &plan,
-            ),
+            VoiceTemplateMutationPayload {
+                workspace: self.workspace_payload(&plan),
+                template,
+            },
             &plan,
         ))
     }
@@ -149,7 +151,7 @@ impl<'a> VoiceUseCase<'a> {
         app_bundle_id: Option<String>,
         app_name: Option<String>,
         notes: Option<String>,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<VoiceVocabularyMutationPayload>, CoreError> {
         let id = text_or_default(id);
         let source = required_option_text(
             source,
@@ -170,19 +172,21 @@ impl<'a> VoiceUseCase<'a> {
         let app_name = trim_optional_text(app_name);
         let notes = trim_optional_text(notes);
         let plan = self.no_op_plan("upsert_voice_vocabulary");
+        let entry = VoiceVocabularyEntry {
+            id,
+            source,
+            replacement,
+            kind: parse_voice_vocabulary_kind(&kind),
+            app_bundle_id,
+            app_name,
+            notes,
+            updated_at: 0,
+        };
         Ok(CoreEnvelope::from_backend_plan(
-            json_with_status(
-                json!({
-                    "id": id,
-                    "source": source,
-                    "replacement": replacement,
-                    "kind": kind,
-                    "appBundleId": app_bundle_id,
-                    "appName": app_name,
-                    "notes": notes
-                }),
-                &plan,
-            ),
+            VoiceVocabularyMutationPayload {
+                workspace: self.workspace_payload(&plan),
+                entry,
+            },
             &plan,
         ))
     }
@@ -523,12 +527,16 @@ impl<'a> VoiceUseCase<'a> {
     pub(crate) fn set_global_shortcut(
         &self,
         shortcut: Option<String>,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<VoiceRuntimeStatusPayload>, CoreError> {
         let shortcut =
             required_option_text(shortcut, "empty_voice_shortcut", "语音快捷键不能为空。")?;
         let plan = self.no_op_plan("set_voice_global_shortcut");
         Ok(CoreEnvelope::from_backend_plan(
-            json_with_status(json!({ "shortcut": shortcut }), &plan),
+            VoiceRuntimeStatusPayload {
+                status: BackendSkeletonStatus::from_plan(&plan),
+                global_shortcut: shortcut,
+                ..VoiceRuntimeStatusPayload::default()
+            },
             &plan,
         ))
     }
@@ -753,6 +761,14 @@ impl<'a> VoiceUseCase<'a> {
     fn repository_boundary(&self) -> BackendBoundaryProbe {
         BackendBoundaryProbe::from_repository_source(self.repositories.voice().source_path())
     }
+
+    fn workspace_payload(&self, plan: &BackendOperationPlan) -> VoiceWorkspacePayload {
+        VoiceWorkspacePayload {
+            status: BackendSkeletonStatus::from_plan(plan),
+            source_path: self.repositories.voice().source_path(),
+            ..VoiceWorkspacePayload::default()
+        }
+    }
 }
 
 fn json_with_status(mut payload: Value, plan: &BackendOperationPlan) -> Value {
@@ -796,4 +812,12 @@ fn text_or_default(value: Option<String>) -> String {
 
 fn trim_optional_text(value: Option<String>) -> Option<String> {
     value.map(|value| value.trim().to_owned())
+}
+
+fn parse_voice_vocabulary_kind(value: &str) -> VoiceVocabularyKind {
+    match value.trim().to_ascii_lowercase().as_str() {
+        "mapping" => VoiceVocabularyKind::Mapping,
+        "hotword" => VoiceVocabularyKind::Hotword,
+        _ => VoiceVocabularyKind::default(),
+    }
 }

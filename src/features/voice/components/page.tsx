@@ -1,8 +1,10 @@
-import { useVoicePageController } from "../hooks";
-import { VoiceView } from "../panels";
+import { VoiceContent } from "../Content";
+import { VoiceProvider } from "../Provider";
 
 export function VoicePage() {
-  const controller = useVoicePageController();
-
-  return <VoiceView controller={controller} />;
+  return (
+    <VoiceProvider>
+      <VoiceContent />
+    </VoiceProvider>
+  );
 }

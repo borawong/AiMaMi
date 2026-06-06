@@ -281,6 +281,51 @@ function validateSystemEnvelopeServiceTypes() {
 
 validateSystemEnvelopeServiceTypes();
 
+function validateVoiceMutationPayloadContracts() {
+  const commandPath = join(backendRoot, "commands", "voice.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "voice.rs");
+  const contractPath = join(backendRoot, "contracts", "voice.rs");
+  const servicePath = join(frontendRoot, "services", "voice", "index.ts");
+  const commandText = readUtf8(commandPath);
+  const usecaseText = readUtf8(usecasePath);
+  const contractText = readUtf8(contractPath);
+  const serviceText = readUtf8(servicePath);
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) struct VoiceTemplateMutationPayload",
+    "pub(crate) struct VoiceVocabularyMutationPayload",
+    "pub(crate) struct VoiceRuntimeStatusPayload",
+  ], "voice DTO 合同");
+
+  assertContains(commandPath, commandText, [
+    "Result<CoreEnvelope<VoiceTemplateMutationPayload>, String>",
+    "Result<CoreEnvelope<VoiceVocabularyMutationPayload>, String>",
+    "Result<CoreEnvelope<VoiceRuntimeStatusPayload>, String>",
+  ], "voice command 强类型 envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<VoiceTemplateMutationPayload>, CoreError>",
+    "Result<CoreEnvelope<VoiceVocabularyMutationPayload>, CoreError>",
+    "Result<CoreEnvelope<VoiceRuntimeStatusPayload>, CoreError>",
+    "VoiceTemplateMutationPayload {",
+    "VoiceVocabularyMutationPayload {",
+    "workspace: self.workspace_payload(&plan)",
+    "global_shortcut: shortcut",
+  ], "voice usecase mutation payload 组装");
+
+  assertContains(servicePath, serviceText, [
+    "invokeIpc<CoreEnvelope<VoiceTemplateMutationPayload>>(\"upsert_voice_template\"",
+    "invokeIpc<CoreEnvelope<VoiceVocabularyMutationPayload>>(",
+    "source: input.source ?? null",
+    "replacement: input.replacement ?? null",
+    "notes: input.notes ?? null",
+    "setGlobalShortcut: (shortcut: string)",
+    "invokeIpc<CoreEnvelope<VoiceRuntimeStatusPayload>>(\"set_voice_global_shortcut\"",
+  ], "voice 前端服务合同");
+}
+
+validateVoiceMutationPayloadContracts();
+
 if (failures.length > 0) {
   console.error("后端六边形静态验证失败：");
   for (const failure of failures) {

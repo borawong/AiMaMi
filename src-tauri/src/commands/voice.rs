@@ -6,7 +6,8 @@ use crate::application::usecase::voice::{
 use crate::commands::respond;
 use crate::contracts::{
     CoreEnvelope, VoiceAsrConfigPayload, VoiceGeneratePayload, VoiceLlmConfigPayload,
-    VoiceRuntimeStatusPayload, VoiceWorkspacePayload,
+    VoiceRuntimeStatusPayload, VoiceTemplateMutationPayload, VoiceVocabularyMutationPayload,
+    VoiceWorkspacePayload,
 };
 use serde_json::Value;
 use tauri::State;
@@ -25,7 +26,7 @@ pub(crate) fn upsert_voice_template(
     title: Option<String>,
     description: Option<String>,
     content: Option<String>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<VoiceTemplateMutationPayload>, String> {
     respond(
         state
             .services()
@@ -52,7 +53,7 @@ pub(crate) fn upsert_voice_vocabulary(
     app_bundle_id: Option<String>,
     app_name: Option<String>,
     notes: Option<String>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<VoiceVocabularyMutationPayload>, String> {
     respond(state.services().voice().upsert_vocabulary(
         id,
         source,
@@ -294,7 +295,7 @@ pub(crate) fn request_accessibility_permission(
 pub(crate) fn set_voice_global_shortcut(
     state: State<'_, TauriAppState>,
     shortcut: Option<String>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<VoiceRuntimeStatusPayload>, String> {
     respond(state.services().voice().set_global_shortcut(shortcut))
 }
 

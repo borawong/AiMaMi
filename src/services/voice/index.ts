@@ -121,15 +121,21 @@ export const voiceService = {
 
   replaceVocabularyKind: (input: {
     kind: string;
+    source?: string | null;
+    replacement?: string | null;
     entries: IpcJsonObject[];
     appBundleId?: string | null;
     appName?: string | null;
+    notes?: string | null;
   }) =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("replace_voice_vocabulary_kind", {
       kind: input.kind,
+      source: input.source ?? null,
+      replacement: input.replacement ?? null,
       entries: input.entries,
       appBundleId: input.appBundleId ?? null,
       appName: input.appName ?? null,
+      notes: input.notes ?? null,
     }),
 
   removeVocabularyAppScope: (appBundleId: string) =>
@@ -214,9 +220,9 @@ export const voiceService = {
   requestAccessibilityPermission: () =>
     invokeIpc<CoreEnvelope<IpcEvidencePayload>>("request_accessibility_permission"),
 
-  setGlobalShortcut: (shortcut?: string | null) =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("set_voice_global_shortcut", {
-      shortcut: shortcut ?? null,
+  setGlobalShortcut: (shortcut: string) =>
+    invokeIpc<CoreEnvelope<VoiceRuntimeStatusPayload>>("set_voice_global_shortcut", {
+      shortcut,
     }),
 
   captureTriggerKey: (style: string) =>

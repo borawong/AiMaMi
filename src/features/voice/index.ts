@@ -1,14 +1,10 @@
 import { createElement } from "react";
-import { VoiceProvider } from "./Provider";
-import { VoiceContent } from "./Content";
+import { VoicePage } from "./components/page";
 
 export function VoiceFeature() {
-  return createElement(
-    VoiceProvider,
-    null,
-    createElement(VoiceContent),
-  );
+  return createElement(VoicePage);
 }
 
 export { VoiceProvider } from "./Provider";
 export { VoiceContent } from "./Content";
+export { VoicePage } from "./components/page";

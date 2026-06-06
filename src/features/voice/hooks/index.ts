@@ -168,10 +168,9 @@ export function useVoiceModule() {
   const accessibilityPermissionMutation = useVoiceEvidenceMutation<void>(() =>
     voiceService.requestAccessibilityPermission(),
   );
-  const setGlobalShortcutMutation =
-    useVoiceEvidenceMutation<string | null | undefined>((shortcut) =>
-      voiceService.setGlobalShortcut(shortcut),
-    );
+  const setGlobalShortcutMutation = useVoiceEvidenceMutation<string>((shortcut) =>
+    voiceService.setGlobalShortcut(shortcut),
+  );
   const captureTriggerKeyMutation = useVoiceEvidenceMutation<string>((style) =>
     voiceService.captureTriggerKey(style),
   );
@@ -345,8 +344,7 @@ export function useVoiceModule() {
     },
     runtimeActions: {
       setGlobalShortcut: {
-        run: (shortcut?: string | null) =>
-          setGlobalShortcutMutation.mutateAsync(shortcut),
+        run: (shortcut: string) => setGlobalShortcutMutation.mutateAsync(shortcut),
         isPending: setGlobalShortcutMutation.isPending,
       },
       captureTriggerKey: {

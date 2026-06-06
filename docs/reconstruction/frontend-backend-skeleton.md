@@ -26,7 +26,7 @@
 - `types`
 - `config`
 - `locales`
-- `libs`
+- `lib`
 - `layout`
 
 这些目录是重建边界，不是原始源码声明。跨模块导入应优先经过模块公开出口，特性私有实现应留在所属 feature 或 service 内。

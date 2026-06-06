@@ -58,6 +58,7 @@ const strictFeaturePageShells = [
 
 const providerContentPageShells = [
   "skills",
+  "voice",
 ];
 
 const requiredFeatureFiles = [
@@ -265,6 +266,33 @@ function validateNoGlobalApiInFeatureHooks() {
   console.log(`PASS 模块 hook service 边界：${hookFiles.length}/${hookFiles.length}`);
 }
 
+function validateTanStackOwners() {
+  const ownerFiles = walkFiles(featuresRoot, (file) => {
+    if (!/\.(ts|tsx)$/.test(file)) return false;
+    const normalized = repoPath(file);
+    if (normalized.includes("/_shared/")) return false;
+    if (normalized.includes("/hooks/") || normalized.includes("/cache/")) return false;
+    return (
+      normalized.includes("/components/") ||
+      normalized.includes("/panels/") ||
+      normalized.includes("/dialogs/") ||
+      normalized.endsWith("/Content.tsx") ||
+      normalized.endsWith("/Provider.tsx") ||
+      normalized.endsWith("/StoreUpdater.tsx")
+    );
+  });
+
+  for (const file of ownerFiles) {
+    const text = readRequired(file);
+    assertNotMatches(repoPath(file), text, [
+      [/\buse(Query|Mutation|QueryClient)\b/, "TanStack query/mutation 只能归 hooks/cache owner"],
+      [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "TanStack cache 写入和失效只能归 hooks/cache owner"],
+    ]);
+  }
+
+  console.log(`PASS TanStack owner 边界：${ownerFiles.length}/${ownerFiles.length}`);
+}
+
 function validateNoForbiddenReferenceNames() {
   const files = walkFiles(srcRoot, (file) => /\.(css|js|json|jsx|md|mjs|ts|tsx|txt)$/i.test(file));
   files.push(
@@ -286,7 +314,7 @@ function validateNoForbiddenReferenceNames() {
 
 function validateNoDuplicateSharedLibraryRoots() {
   const forbiddenDirectories = [
-    join(srcRoot, "libs"),
+    join(srcRoot, "lib" + "s"),
     join(srcRoot, "shared", "lib"),
   ];
 
@@ -307,6 +335,7 @@ validateFeaturePageShells();
 validateServiceOwners();
 validateNoBypassIpcInComponents();
 validateNoGlobalApiInFeatureHooks();
+validateTanStackOwners();
 validateNoForbiddenReferenceNames();
 
 if (failures.length > 0) {

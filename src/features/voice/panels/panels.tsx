@@ -305,10 +305,9 @@ export function VoiceRuntimePanel({ module }: { module: VoiceModuleView }) {
               icon={<Save />}
               labelKey="voice.setShortcut"
               action={module.runtimeActions.setGlobalShortcut}
+              disabled={!shortcutDraft.trim()}
               onRun={() =>
-                module.runtimeActions.setGlobalShortcut.run(
-                  shortcutDraft.trim() || null,
-                )
+                module.runtimeActions.setGlobalShortcut.run(shortcutDraft.trim())
               }
               onError={setError}
             />
