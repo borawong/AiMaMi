@@ -1,8 +1,23 @@
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
-import type { McpServerSummary, McpTransport } from "@/types";
+import type {
+  CoreEnvelope,
+  McpServerListPayload,
+  McpServerMutationPayload,
+  McpServerRemovePayload,
+  McpServerSummary,
+  McpTransport,
+} from "@/types";
 
 export type McpModuleId = "mcp";
-export type McpCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
+export type McpListEnvelope = CoreEnvelope<McpServerListPayload>;
+export type McpMutationEnvelope = CoreEnvelope<McpServerMutationPayload>;
+export type McpRemoveEnvelope = CoreEnvelope<McpServerRemovePayload>;
+export type McpCachePayload =
+  | McpListEnvelope
+  | McpMutationEnvelope
+  | McpRemoveEnvelope;
+export type McpCacheEnvelope<TPayload = McpCachePayload> =
+  ModuleCacheEnvelope<TPayload>;
 
 export type McpEditingTarget = McpServerSummary | "new" | null;
 export type McpPaginationItem = number | "ellipsis";

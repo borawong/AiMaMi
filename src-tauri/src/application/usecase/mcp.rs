@@ -1,12 +1,11 @@
 use crate::contracts::{
-    BackendSkeletonStatus, CoreEnvelope, McpServerListPayload, McpServerMutationPayload,
-    McpServerRemovePayload, McpServerSummary, McpTransport,
+    BackendSkeletonStatus, CoreEnvelope, McpServerConfigInput, McpServerListPayload,
+    McpServerMutationPayload, McpServerRemovePayload, McpServerSummary, McpTransport,
 };
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::core::parser;
 use crate::repository::RepositoryBundle;
-use serde_json::Value;
 use std::collections::HashMap;
 
 const MODULE: &str = "mcp";
@@ -14,7 +13,7 @@ const MODULE: &str = "mcp";
 #[derive(Debug, Clone, Default)]
 pub(crate) struct McpUpsertInput {
     pub name: Option<String>,
-    pub config: Option<Value>,
+    pub config: Option<McpServerConfigInput>,
     pub transport: Option<String>,
     pub enabled: Option<bool>,
     pub command: Option<String>,
@@ -45,7 +44,6 @@ impl<'a> McpUseCase<'a> {
         &self,
         input: McpUpsertInput,
     ) -> Result<CoreEnvelope<McpServerMutationPayload>, CoreError> {
-        reject_null_config(input.config.as_ref())?;
         let name = normalize_mcp_name(
             input.name.as_ref(),
             input.config.as_ref(),
@@ -155,17 +153,9 @@ fn required_text(
     }
 }
 
-fn reject_null_config(value: Option<&Value>) -> Result<(), CoreError> {
-    if value.is_some_and(Value::is_null) {
-        Err(CoreError::domain("empty_mcp_config", "MCP 配置不能为空。"))
-    } else {
-        Ok(())
-    }
-}
-
 fn normalize_mcp_name(
     name: Option<&String>,
-    config: Option<&Value>,
+    config: Option<&McpServerConfigInput>,
     args: Option<&Vec<String>>,
 ) -> String {
     let trimmed = name.map(|value| value.trim()).unwrap_or_default();
@@ -173,7 +163,7 @@ fn normalize_mcp_name(
         return trimmed.to_owned();
     }
 
-    if let Some(config_name) = config_string(config, "name") {
+    if let Some(config_name) = config.and_then(|value| value.name.as_ref()) {
         let trimmed_config_name = config_name.trim();
         if !trimmed_config_name.is_empty() {
             return trimmed_config_name.to_owned();
@@ -191,56 +181,32 @@ fn server_from_input(input: McpUpsertInput, name: String) -> McpServerSummary {
         name,
         transport: input
             .transport
-            .or_else(|| config_string(config, "transport"))
+            .or_else(|| config.and_then(|value| value.transport.clone()))
             .as_deref()
             .map(parser::parse_mcp_transport)
             .unwrap_or(McpTransport::Unknown),
         enabled: input
             .enabled
-            .or_else(|| config_bool(config, "enabled"))
+            .or_else(|| config.and_then(|value| value.enabled))
             .unwrap_or(false),
         source_path: String::new(),
-        command: input.command.or_else(|| config_string(config, "command")),
+        command: input
+            .command
+            .or_else(|| config.and_then(|value| value.command.clone())),
         args: input
             .args
-            .or_else(|| config_string_vec(config, "args"))
+            .or_else(|| config.and_then(|value| value.args.clone()))
             .unwrap_or_default(),
-        url: input.url.or_else(|| config_string(config, "url")),
+        url: input
+            .url
+            .or_else(|| config.and_then(|value| value.url.clone())),
         headers: input
             .headers
-            .or_else(|| config_string_map(config, "headers"))
+            .or_else(|| config.and_then(|value| value.headers.clone()))
             .unwrap_or_default(),
         environment: input
             .environment
-            .or_else(|| config_string_map(config, "environment"))
+            .or_else(|| config.and_then(|value| value.environment.clone()))
             .unwrap_or_default(),
     }
-}
-
-fn config_string(config: Option<&Value>, key: &str) -> Option<String> {
-    config?.get(key)?.as_str().map(ToOwned::to_owned)
-}
-
-fn config_bool(config: Option<&Value>, key: &str) -> Option<bool> {
-    config?.get(key)?.as_bool()
-}
-
-fn config_string_vec(config: Option<&Value>, key: &str) -> Option<Vec<String>> {
-    let values = config?.get(key)?.as_array()?;
-    Some(
-        values
-            .iter()
-            .filter_map(|value| value.as_str().map(ToOwned::to_owned))
-            .collect(),
-    )
-}
-
-fn config_string_map(config: Option<&Value>, key: &str) -> Option<HashMap<String, String>> {
-    let values = config?.get(key)?.as_object()?;
-    Some(
-        values
-            .iter()
-            .filter_map(|(name, value)| Some((name.clone(), value.as_str()?.to_owned())))
-            .collect(),
-    )
 }

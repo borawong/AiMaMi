@@ -1,7 +1,8 @@
 import { invokeIpc } from "@/contracts/ipc";
-import type { IpcJsonObject } from "@/contracts/ipc";
+import type { IpcArgValue } from "@/contracts/ipc";
 import type {
   CoreEnvelope,
+  McpServerConfigInput,
   McpServerListPayload,
   McpServerMutationPayload,
   McpServerRemovePayload,
@@ -12,7 +13,7 @@ export interface UpsertMcpServerInput {
   name: string;
   transport: McpTransport;
   enabled?: boolean;
-  config?: IpcJsonObject | null;
+  config?: McpServerConfigInput | null;
   command?: string | null;
   args?: string[];
   url?: string | null;
@@ -25,12 +26,10 @@ export const mcpService = {
     invokeIpc<CoreEnvelope<McpServerListPayload>>("load_mcp_servers"),
 
   upsertServer: (input: UpsertMcpServerInput) =>
-    invokeIpc<CoreEnvelope<McpServerMutationPayload>>("upsert_mcp_server", {
-      ...input,
-      args: input.args ?? [],
-      headers: input.headers ?? {},
-      environment: input.environment ?? {},
-    }),
+    invokeIpc<CoreEnvelope<McpServerMutationPayload>>(
+      "upsert_mcp_server",
+      toMcpUpsertArgs(input),
+    ),
 
   setServerEnabled: (name: string, enabled: boolean) =>
     invokeIpc<CoreEnvelope<McpServerMutationPayload>>(
@@ -43,3 +42,36 @@ export const mcpService = {
       name,
     }),
 };
+
+type McpInvokeArgs = Record<string, IpcArgValue>;
+
+function toMcpUpsertArgs(input: UpsertMcpServerInput): McpInvokeArgs {
+  return {
+    ...input,
+    name: input.name,
+    config: toMcpConfigArgs(input.config),
+    transport: input.transport,
+    enabled: input.enabled,
+    command: input.command,
+    args: input.args ?? [],
+    url: input.url,
+    headers: input.headers ?? {},
+    environment: input.environment ?? {},
+  };
+}
+
+function toMcpConfigArgs(
+  config: McpServerConfigInput | null | undefined,
+): McpInvokeArgs | null | undefined {
+  if (!config) return config;
+  return {
+    name: config.name,
+    transport: config.transport,
+    enabled: config.enabled,
+    command: config.command,
+    args: config.args ?? [],
+    url: config.url,
+    headers: config.headers ?? {},
+    environment: config.environment ?? {},
+  };
+}

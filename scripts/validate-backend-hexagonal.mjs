@@ -231,13 +231,22 @@ function validateMcpUpsertArgumentChain() {
   const ipcPath = join(frontendRoot, "contracts", "ipc", "commands.ts");
   const commandPath = join(backendRoot, "commands", "mcp.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "mcp.rs");
+  const contractPath = join(backendRoot, "contracts", "mcp.rs");
+  const featureTypesPath = join(frontendRoot, "features", "mcp", "types", "index.ts");
+  const featureCachePath = join(frontendRoot, "features", "mcp", "cache", "index.ts");
+  const featureHooksPath = join(frontendRoot, "features", "mcp", "hooks", "index.ts");
   const serviceText = readUtf8(servicePath);
   const ipcText = readUtf8(ipcPath);
   const commandText = readUtf8(commandPath);
   const usecaseText = readUtf8(usecasePath);
+  const contractText = readUtf8(contractPath);
+  const featureTypesText = readUtf8(featureTypesPath);
+  const featureCacheText = readUtf8(featureCachePath);
+  const featureHooksText = readUtf8(featureHooksPath);
 
   assertContains(servicePath, serviceText, [
     "export interface UpsertMcpServerInput",
+    "McpServerConfigInput",
     "...input",
     "args: input.args ?? []",
     "headers: input.headers ?? {}",
@@ -263,7 +272,98 @@ function validateMcpUpsertArgumentChain() {
   ], "MCP upsert command 不得吞掉缺参或补默认业务值");
 }
 
+function validateMcpTypedPayloadContracts() {
+  const servicePath = join(frontendRoot, "services", "mcp", "index.ts");
+  const commandPath = join(backendRoot, "commands", "mcp.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "mcp.rs");
+  const contractPath = join(backendRoot, "contracts", "mcp.rs");
+  const featureTypesPath = join(frontendRoot, "features", "mcp", "types", "index.ts");
+  const featureCachePath = join(frontendRoot, "features", "mcp", "cache", "index.ts");
+  const featureHooksPath = join(frontendRoot, "features", "mcp", "hooks", "index.ts");
+  const serviceText = readUtf8(servicePath);
+  const commandText = readUtf8(commandPath);
+  const usecaseText = readUtf8(usecasePath);
+  const contractText = readUtf8(contractPath);
+  const featureTypesText = readUtf8(featureTypesPath);
+  const featureCacheText = readUtf8(featureCachePath);
+  const featureHooksText = readUtf8(featureHooksPath);
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) struct McpServerConfigInput",
+    "pub(crate) struct McpServerListPayload",
+    "pub(crate) struct McpServerMutationPayload",
+    "pub(crate) struct McpServerRemovePayload",
+  ], "MCP 后端 typed DTO");
+
+  assertContains(commandPath, commandText, [
+    "config: Option<McpServerConfigInput>",
+    "Result<CoreEnvelope<McpServerListPayload>, String>",
+    "Result<CoreEnvelope<McpServerMutationPayload>, String>",
+    "Result<CoreEnvelope<McpServerRemovePayload>, String>",
+  ], "MCP command typed envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "pub config: Option<McpServerConfigInput>",
+    "Result<CoreEnvelope<McpServerListPayload>, CoreError>",
+    "Result<CoreEnvelope<McpServerMutationPayload>, CoreError>",
+    "Result<CoreEnvelope<McpServerRemovePayload>, CoreError>",
+  ], "MCP usecase typed payload");
+
+  assertContains(servicePath, serviceText, [
+    "McpServerConfigInput",
+    "CoreEnvelope<McpServerListPayload>",
+    "CoreEnvelope<McpServerMutationPayload>",
+    "CoreEnvelope<McpServerRemovePayload>",
+  ], "MCP service typed envelope");
+
+  assertContains(featureTypesPath, featureTypesText, [
+    "export type McpListEnvelope",
+    "export type McpMutationEnvelope",
+    "export type McpRemoveEnvelope",
+    "export type McpCachePayload",
+  ], "MCP 前端模块 typed cache payload");
+
+  assertContains(featureHooksPath, featureHooksText, [
+    "McpListEnvelope",
+    "McpMutationEnvelope",
+    "McpRemoveEnvelope",
+    "writeMcpAuthoritativePayload",
+    "writeMcpServersMutationPayload",
+  ], "MCP hooks typed authoritative envelope");
+
+  assertContains(featureCachePath, featureCacheText, [
+    "Omit<McpCacheEnvelope, \"moduleId\">",
+  ], "MCP cache helper typed envelope");
+
+  assertNotContainsSnippet(commandPath, commandText, [
+    "serde_json::Value",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "MCP command 不得回退泛型 payload");
+
+  assertNotContainsSnippet(usecasePath, usecaseText, [
+    "serde_json::Value",
+    "config_string(",
+    "config_bool(",
+  ], "MCP usecase 不得回退泛型 JSON 配置读取");
+
+  assertNotContainsSnippet(servicePath, serviceText, [
+    "IpcEvidencePayload",
+    "IpcJsonObject",
+    "CoreEnvelope<IpcEvidencePayload>",
+  ], "MCP service 不得返回 generic evidence payload");
+
+  assertNotContainsSnippet(featureTypesPath, featureTypesText, [
+    "McpCacheEnvelope<TPayload = unknown>",
+  ], "MCP feature cache payload 不得默认 unknown");
+
+  assertNotContainsSnippet(featureHooksPath, featureHooksText, [
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+  ], "MCP hooks 不得用 unknown authoritative payload");
+}
+
 validateMcpUpsertArgumentChain();
+validateMcpTypedPayloadContracts();
 
 function validateSystemEnvelopeServiceTypes() {
   const systemServicePath = join(frontendRoot, "services", "system", "index.ts");

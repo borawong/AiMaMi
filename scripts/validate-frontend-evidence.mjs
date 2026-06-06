@@ -661,6 +661,42 @@ function validateKnownInternalFrontendGates() {
   }
 }
 
+function validateMcpTypedPayloadGate() {
+  const servicePath = join(repoRoot, "src", "services", "mcp", "index.ts");
+  const hooksPath = join(repoRoot, "src", "features", "mcp", "hooks", "index.ts");
+  const cachePath = join(repoRoot, "src", "features", "mcp", "cache", "index.ts");
+  const typesPath = join(repoRoot, "src", "features", "mcp", "types", "index.ts");
+  const service = readRequired(servicePath);
+  const hooks = readRequired(hooksPath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+
+  const typedPayloadOk =
+    service.includes("McpServerConfigInput") &&
+    service.includes("CoreEnvelope<McpServerListPayload>") &&
+    service.includes("CoreEnvelope<McpServerMutationPayload>") &&
+    service.includes("CoreEnvelope<McpServerRemovePayload>") &&
+    !service.includes("IpcEvidencePayload") &&
+    !service.includes("IpcJsonObject") &&
+    types.includes("export type McpListEnvelope") &&
+    types.includes("export type McpMutationEnvelope") &&
+    types.includes("export type McpRemoveEnvelope") &&
+    types.includes("export type McpCachePayload") &&
+    hooks.includes("McpListEnvelope") &&
+    hooks.includes("McpMutationEnvelope") &&
+    hooks.includes("McpRemoveEnvelope") &&
+    hooks.includes("writeMcpAuthoritativePayload") &&
+    !hooks.includes("payload: unknown") &&
+    cache.includes("Omit<McpCacheEnvelope, \"moduleId\">") &&
+    !cache.includes("ModuleCacheEnvelope<unknown>");
+
+  if (!typedPayloadOk) {
+    failures.push("mcp IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
+  } else {
+    console.log("PASS mcp typed IPC payload owner：service/hook/cache");
+  }
+}
+
 function validatePluginsFrontendNoPromotionGate() {
   const acceptance = parseJsonFile(pluginsGateFiles.acceptanceMatrix) ?? {};
   const composite = parseJsonFile(pluginsGateFiles.compositeGateMatrix) ?? {};
@@ -861,6 +897,7 @@ validateQueryKeys(raw.queryHits);
 validatePageChunks(raw.frontendFiles);
 validateRoutesAndLocales(raw.controlFlow);
 validateKnownInternalFrontendGates();
+validateMcpTypedPayloadGate();
 validatePluginsFrontendNoPromotionGate();
 validatePluginsTypedPayloadGate();
 validateNoForbiddenReferenceNames();

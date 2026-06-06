@@ -434,6 +434,47 @@ function validatePluginsMockPayloadHandlers() {
   }
 }
 
+function validateMcpMockPayloadHandlers() {
+  const commandFixturePath = path.join(
+    repoRoot,
+    "src",
+    "mocks",
+    "fixtures",
+    "commands.ts",
+  );
+  const ipcCommandsPath = path.join(repoRoot, "src", "contracts", "ipc", "commands.ts");
+  const commandFixtureText = readRequired(commandFixturePath);
+  const ipcCommandsText = readRequired(ipcCommandsPath);
+  const mcpCommands = [
+    ...ipcCommandsText.matchAll(
+      /\{\s*"domain":\s*"mcp"[\s\S]*?"command":\s*"([^"]+)"/g,
+    ),
+  ].map((match) => match[1]);
+
+  if (mcpCommands.length === 0) {
+    failures.push("src/contracts/ipc/commands.ts 没有可验证的 mcp command");
+    return;
+  }
+
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+    "const mcpCommandHandlers",
+    "mcpCommandHandlers[definition.command] ??",
+    "loadMcpServersHandler",
+    "upsertMcpServerHandler",
+    "setMcpServerEnabledHandler",
+    "removeMcpServerHandler",
+    "McpServerListPayload",
+    "McpServerMutationPayload",
+    "McpServerRemovePayload",
+  ]);
+
+  for (const command of mcpCommands) {
+    if (!commandFixtureText.includes(`${command}:`)) {
+      failures.push(`src/mocks/fixtures/commands.ts 缺少 mcp 专用 handler：${command}`);
+    }
+  }
+}
+
 function validateSessionsMockPayloadHandlers() {
   const commandFixturePath = path.join(
     repoRoot,
@@ -479,6 +520,7 @@ validateSkillsCommandMirror();
 validateScenarioFiles();
 validateAccountsMockPayloadHandlers();
 validateAnalyticsMockPayloadHandlers();
+validateMcpMockPayloadHandlers();
 validatePluginsMockPayloadHandlers();
 validateSessionsMockPayloadHandlers();
 validateRelayMockPayloadHandlers();

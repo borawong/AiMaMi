@@ -28,6 +28,19 @@ pub(crate) struct McpServerSummary {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
+pub(crate) struct McpServerConfigInput {
+    pub name: Option<String>,
+    pub transport: Option<String>,
+    pub enabled: Option<bool>,
+    pub command: Option<String>,
+    pub args: Option<Vec<String>>,
+    pub url: Option<String>,
+    pub headers: Option<HashMap<String, String>>,
+    pub environment: Option<HashMap<String, String>>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+#[serde(rename_all = "camelCase")]
 pub(crate) struct McpServerListPayload {
     pub status: BackendSkeletonStatus,
     pub items: Vec<McpServerSummary>,

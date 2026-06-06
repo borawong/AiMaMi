@@ -5,19 +5,20 @@ import { toast } from "@/hooks/toast";
 import { useBusyAction } from "@/hooks/busy";
 import { useModuleCacheController } from "@/features/_shared/controller";
 import { mcpService, type UpsertMcpServerInput } from "@/services/mcp";
-import type {
-  CoreEnvelope,
-  McpServerListPayload,
-  McpServerSummary,
-} from "@/types";
+import type { McpServerSummary } from "@/types";
 import {
   invalidateMcpContractQueries,
   McpCache,
   MCP_SERVERS_QUERY_KEY,
+  writeMcpAuthoritativePayload,
 } from "../cache";
 import type {
+  McpCachePayload,
   McpEditingTarget,
+  McpListEnvelope,
+  McpMutationEnvelope,
   McpPageRequestState,
+  McpRemoveEnvelope,
   McpServerFormDraft,
   McpServerFormField,
 } from "../types";
@@ -37,7 +38,7 @@ function nextMcpCacheSequence() {
   return mcpCacheSequence;
 }
 
-function writeMcpCachePayload<TPayload>(
+function writeMcpCachePayload<TPayload extends McpCachePayload>(
   queryClient: QueryClient,
   payload: TPayload,
   source: "full-refresh" | "mutation-payload",
@@ -48,7 +49,7 @@ function writeMcpCachePayload<TPayload>(
   }
 
   mcpLatestAcceptedSequence = sequence;
-  McpCache.writeAuthoritativePayload(queryClient, {
+  writeMcpAuthoritativePayload(queryClient, {
     payload,
     source,
     sequence,
@@ -57,7 +58,7 @@ function writeMcpCachePayload<TPayload>(
   return true;
 }
 
-async function writeMcpMutationPayload<TPayload>(
+async function writeMcpMutationPayload<TPayload extends McpMutationEnvelope | McpRemoveEnvelope>(
   queryClient: QueryClient,
   payload: TPayload,
 ) {
@@ -92,7 +93,7 @@ export function useMcpServers() {
         sequence,
       );
       if (!accepted) {
-        return queryClient.getQueryData<typeof payload>(MCP_SERVERS_QUERY_KEY) ?? payload;
+        return queryClient.getQueryData<McpListEnvelope>(MCP_SERVERS_QUERY_KEY) ?? payload;
       }
       return payload;
     },
@@ -332,39 +333,39 @@ export function useMcpPageController() {
   };
 }
 
-function writeMcpServersMutationPayload(queryClient: QueryClient, payload: unknown) {
-  const data = readEnvelopeData(payload);
-  if (!isRecord(data)) return;
+function writeMcpServersMutationPayload(
+  queryClient: QueryClient,
+  payload: McpMutationEnvelope | McpRemoveEnvelope,
+) {
+  const data = payload.data;
 
-  queryClient.setQueryData<CoreEnvelope<McpServerListPayload>>(
+  queryClient.setQueryData<McpListEnvelope>(
     MCP_SERVERS_QUERY_KEY,
     (current) => {
-      if (!isMcpListEnvelope(current)) return current;
+      if (!current) return current;
 
-      const server = data.server;
-      if (isMcpServerSummary(server)) {
-        const items = upsertByName(current.data.items, server);
+      if ("server" in data) {
+        const items = upsertByName(current.data.items, data.server);
         return {
           ...current,
           data: {
             ...current.data,
             items,
-            total: readNumber(data.total) ?? items.length,
-            sourcePath: readString(data.sourcePath) ?? current.data.sourcePath,
+            total: data.total,
+            sourcePath: data.sourcePath,
           },
         };
       }
 
-      const removedName = readString(data.removedName);
-      if (removedName) {
-        const items = current.data.items.filter((item) => item.name !== removedName);
+      if ("removedName" in data) {
+        const items = current.data.items.filter((item) => item.name !== data.removedName);
         return {
           ...current,
           data: {
             ...current.data,
             items,
-            total: readNumber(data.total) ?? items.length,
-            sourcePath: readString(data.sourcePath) ?? current.data.sourcePath,
+            total: data.total,
+            sourcePath: data.sourcePath,
           },
         };
       }
@@ -378,33 +379,4 @@ function upsertByName(items: McpServerSummary[], server: McpServerSummary) {
   const index = items.findIndex((item) => item.name === server.name);
   if (index === -1) return [...items, server];
   return items.map((item, itemIndex) => (itemIndex === index ? server : item));
-}
-
-function readEnvelopeData(value: unknown) {
-  if (isRecord(value) && "data" in value) {
-    return value.data ?? null;
-  }
-  return null;
-}
-
-function isMcpListEnvelope(
-  value: unknown,
-): value is CoreEnvelope<McpServerListPayload> {
-  return isRecord(value) && isRecord(value.data) && Array.isArray(value.data.items);
-}
-
-function isMcpServerSummary(value: unknown): value is McpServerSummary {
-  return isRecord(value) && typeof value.name === "string";
-}
-
-function readString(value: unknown) {
-  return typeof value === "string" ? value : null;
-}
-
-function readNumber(value: unknown) {
-  return typeof value === "number" ? value : null;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }

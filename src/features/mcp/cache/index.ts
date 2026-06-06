@@ -1,10 +1,14 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { createModuleCacheOwner } from "@/features/_shared/cache";
+import type { McpCacheEnvelope } from "../types";
 
 export const McpCache = createModuleCacheOwner("mcp");
 export const McpQueryKeys = McpCache.queryKeys;
 export const MCP_SERVERS_QUERY_KEY = ["mcp-servers"] as const;
-export const writeMcpAuthoritativePayload = McpCache.writeAuthoritativePayload;
+export const writeMcpAuthoritativePayload = (
+  queryClient: QueryClient,
+  envelope: Omit<McpCacheEnvelope, "moduleId">,
+) => McpCache.writeAuthoritativePayload(queryClient, envelope);
 
 export async function invalidateMcpContractQueries(queryClient: QueryClient) {
   await Promise.all([

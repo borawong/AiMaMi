@@ -301,6 +301,17 @@ export interface McpServerSummary {
   environment: Record<string, string>;
 }
 
+export interface McpServerConfigInput {
+  name?: string | null;
+  transport?: McpTransport | string | null;
+  enabled?: boolean | null;
+  command?: string | null;
+  args?: string[];
+  url?: string | null;
+  headers?: Record<string, string>;
+  environment?: Record<string, string>;
+}
+
 export interface McpServerListPayload {
   status: BackendSkeletonStatus;
   items: McpServerSummary[];

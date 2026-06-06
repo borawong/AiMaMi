@@ -11,6 +11,11 @@ import type {
   AccountMonitorPayload,
   AccountSessionImportPayload,
   ChangeAnalyticsPayload,
+  McpServerListPayload,
+  McpServerMutationPayload,
+  McpServerRemovePayload,
+  McpServerSummary,
+  McpTransport,
   QuotaHistoryPayload,
   RelayActivePayload,
   RelayDiagnosticIssuePayload,
@@ -64,6 +69,9 @@ export type IpcCommandMockData =
   | AccountSessionImportPayload
   | ChangeAnalyticsPayload
   | LogoutPayload
+  | McpServerListPayload
+  | McpServerMutationPayload
+  | McpServerRemovePayload
   | RemovePayload
   | RelayActivePayload
   | RelayDiagnosticPayload
@@ -353,6 +361,92 @@ const deleteSessionsHandler: IpcCommandHandler = (context) => {
   return { ...envelope, data };
 };
 
+const loadMcpServersHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: McpServerListPayload = {
+    status: envelope.data.status,
+    items: [],
+    total: 0,
+    sourcePath: "",
+    lastScanAt: 0,
+  };
+  return { ...envelope, data };
+};
+
+const upsertMcpServerHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const server = mcpServerFromArgs(context.args);
+  const data: McpServerMutationPayload = {
+    status: envelope.data.status,
+    server,
+    total: server.name ? 1 : 0,
+    sourcePath: "",
+  };
+  return { ...envelope, data };
+};
+
+const setMcpServerEnabledHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const server = mcpServerFromArgs(context.args, context.args?.enabled === true);
+  const data: McpServerMutationPayload = {
+    status: envelope.data.status,
+    server,
+    total: server.name ? 1 : 0,
+    sourcePath: "",
+  };
+  return { ...envelope, data };
+};
+
+const removeMcpServerHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: McpServerRemovePayload = {
+    status: envelope.data.status,
+    removedName: readArgString(context.args, "name", ""),
+    total: 0,
+    sourcePath: "",
+  };
+  return { ...envelope, data };
+};
+
+function mcpServerFromArgs(
+  args: IpcArgs | undefined,
+  enabled = args?.enabled === true,
+): McpServerSummary {
+  return {
+    name: readArgString(args, "name", ""),
+    transport: normalizeMcpTransport(readArgString(args, "transport", "unknown")),
+    enabled,
+    sourcePath: "",
+    command: readArgOptionalString(args, "command"),
+    args: readArgStringArray(args, "args"),
+    url: readArgOptionalString(args, "url"),
+    headers: readArgStringRecord(args, "headers"),
+    environment: readArgStringRecord(args, "environment"),
+  };
+}
+
+function normalizeMcpTransport(value: string): McpTransport {
+  return value === "stdio" || value === "http" || value === "sse"
+    ? value
+    : "unknown";
+}
+
 const loadUsageAnalyticsHandler: IpcCommandHandler = (context) => {
   const envelope = createEvidenceBackedIpcFixture(
     context.command,
@@ -597,6 +691,16 @@ function readArgStringArray(args: IpcArgs | undefined, key: string) {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
     : [];
+}
+
+function readArgStringRecord(args: IpcArgs | undefined, key: string) {
+  const value = args?.[key];
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  );
 }
 
 function skillSummaryFromId(id: string) {
@@ -1139,6 +1243,13 @@ const analyticsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler
   load_usage_analytics: loadUsageAnalyticsHandler,
 };
 
+const mcpCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  load_mcp_servers: loadMcpServersHandler,
+  remove_mcp_server: removeMcpServerHandler,
+  set_mcp_server_enabled: setMcpServerEnabledHandler,
+  upsert_mcp_server: upsertMcpServerHandler,
+};
+
 const sessionsCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
   delete_sessions: deleteSessionsHandler,
   import_chatgpt_session_account: accountSessionImportHandler,
@@ -1194,6 +1305,7 @@ export const ipcCommandFixtures = IPC_COMMAND_DEFINITIONS.reduce(
         accountsCommandHandlers[definition.command] ??
         sessionsCommandHandlers[definition.command] ??
         analyticsCommandHandlers[definition.command] ??
+        mcpCommandHandlers[definition.command] ??
         relayCommandHandlers[definition.command] ??
         pluginsCommandHandlers[definition.command] ??
         skillsCommandHandlers[definition.command] ??
