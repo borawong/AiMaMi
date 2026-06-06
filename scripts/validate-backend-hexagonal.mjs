@@ -267,16 +267,48 @@ validateMcpUpsertArgumentChain();
 
 function validateSystemEnvelopeServiceTypes() {
   const systemServicePath = join(frontendRoot, "services", "system", "index.ts");
+  const commandPath = join(backendRoot, "commands", "system.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "system.rs");
+  const contractPath = join(backendRoot, "contracts", "system.rs");
   const systemServiceText = readUtf8(systemServicePath);
-  for (const command of [
-    "get_notification_client_state",
-    "get_mystery_unlock_grants",
-    "merge_mystery_unlock_grants",
-  ]) {
-    assertContains(systemServicePath, systemServiceText, [
-      `invokeIpc<CoreEnvelope<IpcEvidencePayload>>("${command}"`,
-    ], "system service 必须按后端 envelope 类型消费");
-  }
+  const commandText = readUtf8(commandPath);
+  const usecaseText = readUtf8(usecasePath);
+  const contractText = readUtf8(contractPath);
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) struct NotificationClientStatePayload",
+    "pub(crate) struct MysteryRouteGrant",
+  ], "system DTO 合同");
+
+  assertContains(commandPath, commandText, [
+    "Result<CoreEnvelope<String>, String>",
+    "Result<CoreEnvelope<()>, String>",
+    "Result<CoreEnvelope<NotificationClientStatePayload>, String>",
+    "Result<CoreEnvelope<Vec<MysteryRouteGrant>>, String>",
+  ], "system command 强类型 envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<String>, CoreError>",
+    "Result<CoreEnvelope<()>, CoreError>",
+    "Result<CoreEnvelope<NotificationClientStatePayload>, CoreError>",
+    "Result<CoreEnvelope<Vec<MysteryRouteGrant>>, CoreError>",
+    "NotificationClientStatePayload {",
+    "parse_mystery_route_grants(",
+  ], "system usecase 强类型 payload 组装");
+
+  assertContains(systemServicePath, systemServiceText, [
+    "CoreEnvelope<NotificationClientStatePayload>",
+    "CoreEnvelope<MysteryRouteGrant[]>",
+    "CoreEnvelope<string>>(\"get_or_create_remote_device_secret\")",
+    "CoreEnvelope<null>>(\"import_remote_device_secret_if_empty\"",
+    "toMysteryRouteGrantArgs(grants)",
+  ], "system service 强类型 envelope");
+
+  assertNotContainsSnippet(systemServicePath, systemServiceText, [
+    "CoreEnvelope<IpcEvidencePayload>>(\"get_notification_client_state\"",
+    "CoreEnvelope<IpcEvidencePayload>>(\"get_mystery_unlock_grants\"",
+    "CoreEnvelope<IpcEvidencePayload>>(\"merge_mystery_unlock_grants\"",
+  ], "system service 不得退回 generic evidence payload");
 }
 
 validateSystemEnvelopeServiceTypes();

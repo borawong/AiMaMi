@@ -1,19 +1,9 @@
-import { invokeIpc } from "@/contracts/ipc";
 import {
   checkDesktopRuntimeUpdate,
   getDesktopAppVersion,
   type DesktopRuntimeUpdate,
 } from "@/lib/desktop";
-import type {
-  ApiModePayload,
-  ApiProxyDetectPayload,
-  ApiProxyMode,
-  ApiProxyTestPayload,
-  AutoSwitchConfigPayload,
-  CoreEnvelope,
-  CoreSnapshotPayload,
-  UpdateInstallabilityPayload,
-} from "@/types";
+import { systemService } from "@/services/system";
 
 export interface RuntimeUpdateInfo {
   version: string;
@@ -28,63 +18,26 @@ export interface RuntimeDownloadProgress {
 
 let pendingRuntimeUpdate: DesktopRuntimeUpdate | null = null;
 
-async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T> {
-  return (await promise).data;
-}
-
 export const settingsService = {
-  loadSnapshot: (localOnly = false) =>
-    invokeIpc<CoreEnvelope<CoreSnapshotPayload>>("load_snapshot", { localOnly }),
+  loadSnapshot: systemService.loadSnapshot,
 
-  setAutoSwitch: (enabled: boolean) =>
-    invokeIpc<CoreEnvelope<AutoSwitchConfigPayload>>("set_auto_switch", {
-      enabled,
-    }),
+  setAutoSwitch: systemService.setAutoSwitch,
 
-  configureAutoSwitch: (
-    threshold5hPercent?: number,
-    thresholdWeeklyPercent?: number,
-  ) =>
-    invokeIpc<CoreEnvelope<AutoSwitchConfigPayload>>("configure_auto_switch", {
-      threshold5hPercent,
-      thresholdWeeklyPercent,
-    }),
+  configureAutoSwitch: systemService.configureAutoSwitch,
 
-  setApiProxyConfig: (mode: ApiProxyMode, url?: string | null) =>
-    invokeIpc<CoreEnvelope<ApiModePayload>>("set_api_proxy_config", {
-      mode,
-      url,
-    }),
+  setApiProxyConfig: systemService.setApiProxyConfig,
 
-  testApiProxyConfig: (mode: ApiProxyMode, url?: string | null) =>
-    invokeIpc<CoreEnvelope<ApiProxyTestPayload>>("test_api_proxy_config", {
-      mode,
-      url,
-    }),
+  testApiProxyConfig: systemService.testApiProxyConfig,
 
-  detectApiProxyConfig: () =>
-    invokeIpc<CoreEnvelope<ApiProxyDetectPayload>>("detect_api_proxy_config"),
+  detectApiProxyConfig: systemService.detectApiProxyConfig,
 
-  getUsageRefreshInterval: () =>
-    readEnvelopeData(invokeIpc<CoreEnvelope<string>>("get_usage_refresh_interval")),
+  getUsageRefreshInterval: systemService.getUsageRefreshInterval,
 
-  setUsageRefreshInterval: (interval: string) =>
-    readEnvelopeData(
-      invokeIpc<CoreEnvelope<string>>("set_usage_refresh_interval", { interval }),
-    ),
+  setUsageRefreshInterval: systemService.setUsageRefreshInterval,
 
-  checkUpdateInstallability: async () => {
-    const envelope = await invokeIpc<CoreEnvelope<UpdateInstallabilityPayload>>(
-      "check_update_installability",
-    );
-    return envelope.data;
-  },
+  checkUpdateInstallability: systemService.checkUpdateInstallability,
 
-  gracefulRestartForUpdate: async () => {
-    await invokeIpc<CoreEnvelope<Record<string, never>>>(
-      "graceful_restart_for_update",
-    );
-  },
+  gracefulRestartForUpdate: systemService.gracefulRestartForUpdate,
 
   checkRuntimeUpdate: async (): Promise<RuntimeUpdateInfo | null> => {
     const update = await checkDesktopRuntimeUpdate();
@@ -114,26 +67,15 @@ export const settingsService = {
 
   getAppVersion: getDesktopAppVersion,
 
-  hasNotch: () =>
-    readEnvelopeData(invokeIpc<CoreEnvelope<boolean>>("has_notch")).catch(() => false),
+  hasNotch: systemService.hasNotch,
 
-  getHotspotEnabled: () =>
-    readEnvelopeData(invokeIpc<CoreEnvelope<boolean>>("get_hotspot_enabled")),
+  getHotspotEnabled: systemService.getHotspotEnabled,
 
-  setHotspotEnabled: (enabled: boolean) =>
-    readEnvelopeData(
-      invokeIpc<CoreEnvelope<boolean>>("set_hotspot_enabled", { enabled }),
-    ),
+  setHotspotEnabled: systemService.setHotspotEnabled,
 
-  hotspotReady: async () => {
-    await invokeIpc<CoreEnvelope<unknown>>("hotspot_ready");
-  },
+  hotspotReady: systemService.hotspotReady,
 
-  getImageCompat: () =>
-    readEnvelopeData(invokeIpc<CoreEnvelope<boolean>>("get_image_compat")),
+  getImageCompat: systemService.getImageCompat,
 
-  setImageCompat: (enabled: boolean) =>
-    readEnvelopeData(
-      invokeIpc<CoreEnvelope<boolean>>("set_image_compat", { enabled }),
-    ),
+  setImageCompat: systemService.setImageCompat,
 };

@@ -3,7 +3,8 @@ use crate::commands::respond;
 use crate::contracts::{
     ApiModePayload, ApiProxyDetectPayload, ApiProxyMode, ApiProxyTestPayload,
     AutoSwitchConfigPayload, BootstrapStatePayload, CleanPayload, CoreEnvelope,
-    CoreSnapshotPayload, DaemonRunPayload, DiagnosePayload, RebuildRegistryPayload, SystemInfo,
+    CoreSnapshotPayload, DaemonRunPayload, DiagnosePayload, MysteryRouteGrant,
+    NotificationClientStatePayload, RebuildRegistryPayload, SystemInfo,
     UpdateInstallabilityPayload,
 };
 use serde_json::Value;
@@ -222,7 +223,7 @@ pub(crate) fn get_device_id(
 #[tauri::command]
 pub(crate) fn get_or_create_remote_device_secret(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<String>, String> {
     respond(
         state
             .services()
@@ -235,7 +236,7 @@ pub(crate) fn get_or_create_remote_device_secret(
 pub(crate) fn import_remote_device_secret_if_empty(
     state: State<'_, TauriAppState>,
     secret: Option<String>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<()>, String> {
     respond(
         state
             .services()
@@ -247,14 +248,14 @@ pub(crate) fn import_remote_device_secret_if_empty(
 #[tauri::command]
 pub(crate) fn get_notification_client_state(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<NotificationClientStatePayload>, String> {
     respond(state.services().system().get_notification_client_state())
 }
 
 #[tauri::command]
 pub(crate) fn get_mystery_unlock_grants(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<Vec<MysteryRouteGrant>>, String> {
     respond(state.services().system().get_mystery_unlock_grants())
 }
 
@@ -262,7 +263,7 @@ pub(crate) fn get_mystery_unlock_grants(
 pub(crate) fn merge_mystery_unlock_grants(
     state: State<'_, TauriAppState>,
     grants: Option<Value>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<Vec<MysteryRouteGrant>>, String> {
     respond(
         state
             .services()

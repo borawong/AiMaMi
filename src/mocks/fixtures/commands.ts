@@ -22,6 +22,8 @@ export interface IpcCommandFixture {
 
 export type IpcCommandMockData =
   | EvidenceBackedIpcFixture
+  | null
+  | unknown[]
   | boolean
   | string
   | Record<string, unknown>;
@@ -233,14 +235,48 @@ const systemInfoHandler: IpcCommandHandler = (context) => {
   };
 };
 
+const notificationClientStateHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: {
+      backendStatus: envelope.data.status,
+      deviceId: "00000000-0000-4000-8000-000000000000",
+      notificationsSince: 0,
+    },
+  };
+};
+
+const mysteryUnlockGrantsHandler: IpcCommandHandler = (context) => {
+  const grants = context.args?.grants;
+  return withMockData(context, Array.isArray(grants) ? grants : []);
+};
+
+const remoteDeviceSecretHandler: IpcCommandHandler = (context) =>
+  withMockData(
+    context,
+    "00000000-0000-4000-8000-000000000000-00000000-0000-4000-8000-000000000001",
+  );
+
+const unitHandler: IpcCommandHandler = (context) => withMockData(context, null);
+
 const systemCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
   focus_main_window: evidenceObjectHandler,
+  get_mystery_unlock_grants: mysteryUnlockGrantsHandler,
+  get_notification_client_state: notificationClientStateHandler,
+  get_or_create_remote_device_secret: remoteDeviceSecretHandler,
   get_hotspot_enabled: readFalseHandler,
   get_image_compat: readFalseHandler,
   get_system_info: systemInfoHandler,
   get_usage_refresh_interval: readManualIntervalHandler,
   has_notch: readFalseHandler,
   hotspot_ready: evidenceObjectHandler,
+  import_remote_device_secret_if_empty: unitHandler,
+  merge_mystery_unlock_grants: mysteryUnlockGrantsHandler,
   set_hotspot_enabled: writeBooleanArgHandler,
   set_image_compat: writeBooleanArgHandler,
   set_usage_refresh_interval: writeIntervalArgHandler,
