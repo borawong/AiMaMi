@@ -276,31 +276,43 @@ function validateSystemEnvelopeServiceTypes() {
   const contractText = readUtf8(contractPath);
 
   assertContains(contractPath, contractText, [
+    "pub(crate) struct BootstrapStatePayload",
     "pub(crate) struct NotificationClientStatePayload",
     "pub(crate) struct MysteryRouteGrant",
+    "pub(crate) struct PendingAutoSwitchStatePayload",
+    "pub executed_at: Option<String>",
+    "pub pending_switch_account_key: Option<String>",
   ], "system DTO 合同");
 
   assertContains(commandPath, commandText, [
     "Result<CoreEnvelope<String>, String>",
     "Result<CoreEnvelope<()>, String>",
+    "Result<CoreEnvelope<BootstrapStatePayload>, String>",
     "Result<CoreEnvelope<NotificationClientStatePayload>, String>",
+    "Result<CoreEnvelope<PendingAutoSwitchStatePayload>, String>",
     "Result<CoreEnvelope<Vec<MysteryRouteGrant>>, String>",
   ], "system command 强类型 envelope");
 
   assertContains(usecasePath, usecaseText, [
     "Result<CoreEnvelope<String>, CoreError>",
     "Result<CoreEnvelope<()>, CoreError>",
+    "Result<CoreEnvelope<BootstrapStatePayload>, CoreError>",
     "Result<CoreEnvelope<NotificationClientStatePayload>, CoreError>",
+    "Result<CoreEnvelope<PendingAutoSwitchStatePayload>, CoreError>",
     "Result<CoreEnvelope<Vec<MysteryRouteGrant>>, CoreError>",
     "NotificationClientStatePayload {",
+    "PendingAutoSwitchStatePayload {",
     "parse_mystery_route_grants(",
   ], "system usecase 强类型 payload 组装");
 
   assertContains(systemServicePath, systemServiceText, [
+    "CoreEnvelope<BootstrapStatePayload>",
     "CoreEnvelope<NotificationClientStatePayload>",
+    "CoreEnvelope<PendingAutoSwitchStatePayload>",
     "CoreEnvelope<MysteryRouteGrant[]>",
     "CoreEnvelope<string>>(\"get_or_create_remote_device_secret\")",
     "CoreEnvelope<null>>(\"import_remote_device_secret_if_empty\"",
+    "confirmPendingAutoSwitchAndRestartCodex",
     "toMysteryRouteGrantArgs(grants)",
   ], "system service 强类型 envelope");
 

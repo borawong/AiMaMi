@@ -1,4 +1,4 @@
-use crate::contracts::{BackendSkeletonStatus, McpServerListPayload, SkillListPayload};
+use crate::contracts::BackendSkeletonStatus;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
@@ -358,9 +358,20 @@ pub(crate) struct HotspotStatePayload {
 pub(crate) struct BootstrapStatePayload {
     #[serde(default)]
     pub backend_status: BackendSkeletonStatus,
-    pub written_at: Option<i64>,
-    pub snapshot_progressive: Option<CoreSnapshotPayload>,
-    pub usage_analytics: Option<UsageAnalyticsPayload>,
-    pub mcp_servers: Option<McpServerListPayload>,
-    pub installed_skills: Option<SkillListPayload>,
+    pub executed_at: Option<String>,
+    pub run_once: bool,
+    pub auto_switch_enabled: bool,
+    pub active_account_key: Option<String>,
+    pub switched_account_key: Option<String>,
+    pub pending_switch_account_key: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct PendingAutoSwitchStatePayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
+    pub current_account_key: String,
+    pub candidate_account_key: String,
+    pub dismissed_at: Option<String>,
 }

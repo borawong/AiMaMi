@@ -237,7 +237,10 @@ function validateSystemServiceFacadeOwners() {
     "check_update_installability",
     "clean",
     "configure_auto_switch",
+    "confirm_pending_auto_switch",
+    "confirm_pending_auto_switch_and_restart_codex",
     "detect_api_proxy_config",
+    "dismiss_pending_auto_switch",
     "diagnose",
     "force_kill_codex",
     "get_hotspot_enabled",
@@ -248,10 +251,12 @@ function validateSystemServiceFacadeOwners() {
     "has_notch",
     "hotspot_ready",
     "load_snapshot",
+    "load_pending_auto_switch",
     "open_path",
     "rebuild_registry",
     "reset_codex_config",
     "restart_codex",
+    "run_daemon_once",
     "set_api_proxy_config",
     "set_auto_switch",
     "set_hotspot_enabled",
@@ -267,7 +272,7 @@ function validateSystemServiceFacadeOwners() {
     }
   }
 
-  for (const moduleId of ["maintenance", "settings"]) {
+  for (const moduleId of ["maintenance", "settings", "daemon-autoswitch"]) {
     const servicePath = join(servicesRoot, moduleId, "index.ts");
     const text = readRequired(servicePath);
     if (!text.includes("@/services/system")) {

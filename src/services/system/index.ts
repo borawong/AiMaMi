@@ -8,12 +8,15 @@ import type {
   ApiProxyMode,
   ApiProxyTestPayload,
   AutoSwitchConfigPayload,
+  BootstrapStatePayload,
   CleanPayload,
   CoreEnvelope,
   CoreSnapshotPayload,
+  DaemonRunPayload,
   DiagnosePayload,
   MysteryRouteGrant,
   NotificationClientStatePayload,
+  PendingAutoSwitchStatePayload,
   RebuildRegistryPayload,
   SystemInfoPayload,
   UpdateInstallabilityPayload,
@@ -42,6 +45,9 @@ export const systemService = {
 
   refreshUsageSnapshot: () =>
     invokeIpc<CoreEnvelope<CoreSnapshotPayload>>("refresh_usage_snapshot"),
+
+  loadBootstrapState: () =>
+    invokeIpc<CoreEnvelope<BootstrapStatePayload>>("load_bootstrap_state"),
 
   clean: () => invokeIpc<CoreEnvelope<CleanPayload>>("clean"),
 
@@ -78,6 +84,27 @@ export const systemService = {
 
   detectApiProxyConfig: () =>
     invokeIpc<CoreEnvelope<ApiProxyDetectPayload>>("detect_api_proxy_config"),
+
+  runDaemonOnce: () =>
+    invokeIpc<CoreEnvelope<DaemonRunPayload>>("run_daemon_once"),
+
+  loadPendingAutoSwitch: () =>
+    invokeIpc<CoreEnvelope<PendingAutoSwitchStatePayload>>(
+      "load_pending_auto_switch",
+    ),
+
+  dismissPendingAutoSwitch: () =>
+    invokeIpc<CoreEnvelope<string | null>>("dismiss_pending_auto_switch"),
+
+  confirmPendingAutoSwitch: () =>
+    ignoreEnvelope(invokeIpc<CoreEnvelope<null>>("confirm_pending_auto_switch")),
+
+  confirmPendingAutoSwitchAndRestartCodex: () =>
+    ignoreEnvelope(
+      invokeIpc<CoreEnvelope<null>>(
+        "confirm_pending_auto_switch_and_restart_codex",
+      ),
+    ),
 
   getUsageRefreshInterval: () =>
     readEnvelopeData(invokeIpc<CoreEnvelope<string>>("get_usage_refresh_interval")),

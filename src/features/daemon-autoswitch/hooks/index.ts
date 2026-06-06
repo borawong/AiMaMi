@@ -22,8 +22,6 @@ import type {
 import {
   envelopeData,
   readBoolean,
-  readNumber,
-  readRecordField,
   readString,
 } from "../utils";
 
@@ -235,10 +233,10 @@ export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageControl
   const module = useDaemonAutoswitchModule();
   const bootstrap = envelopeData(module.bootstrapQuery.data);
   const pending = envelopeData(module.pendingQuery.data);
-  const autoSwitch = envelopeData(readRecordField(bootstrap, "autoSwitch"));
-  const enabled = readBoolean(autoSwitch, ["enabled"]);
-  const serviceState = readString(autoSwitch, ["serviceState"], "");
-  const writtenAt = readNumber(bootstrap, ["writtenAt"]);
+  const enabled = readBoolean(bootstrap, ["autoSwitchEnabled"]);
+  const pendingAccountKey = readString(bootstrap, ["pendingSwitchAccountKey"], "");
+  const executedAt = readString(bootstrap, ["executedAt"], "");
+  const executedAtEpoch = executedAt ? Date.parse(executedAt) : 0;
 
   const metrics: DaemonAutoswitchMetricModel[] = [
     {
@@ -257,7 +255,7 @@ export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageControl
       value: {
         kind: "text",
         icon: "activity",
-        value: serviceState || "-",
+        value: pendingAccountKey || "-",
       },
     },
     {
@@ -266,7 +264,7 @@ export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageControl
       value: {
         kind: "time",
         icon: "clock",
-        value: writtenAt,
+        value: Number.isFinite(executedAtEpoch) ? executedAtEpoch : 0,
       },
     },
   ];
@@ -276,7 +274,7 @@ export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageControl
       id: "bootstrap",
       titleKey: "daemonAutoswitch.bootstrap",
       state: module.bootstrapQuery,
-      payload: autoSwitch,
+      payload: bootstrap,
       icon: "toggle",
     },
     {

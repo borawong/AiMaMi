@@ -7,7 +7,7 @@ use crate::contracts::{
     ApiProxyTestPayload, AutoSwitchConfigPayload, AutoSwitchStatusPayload, BackendSkeletonStatus,
     BootstrapStatePayload, CleanPayload, CoreEnvelope, CoreSnapshotPayload, DaemonRunPayload,
     DiagnosePayload, DiagnosePlatform, MysteryRouteGrant, NotificationClientStatePayload,
-    RebuildRegistryPayload, SystemInfo, UpdateInstallabilityPayload,
+    PendingAutoSwitchStatePayload, RebuildRegistryPayload, SystemInfo, UpdateInstallabilityPayload,
 };
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
@@ -198,38 +198,38 @@ impl<'a> SystemUseCase<'a> {
         DaemonUseCase::new(self.repositories, self.single_flight).run_once()
     }
 
-    pub(crate) fn load_pending_auto_switch(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn load_pending_auto_switch(
+        &self,
+    ) -> Result<CoreEnvelope<PendingAutoSwitchStatePayload>, CoreError> {
         let plan = self.pending_plan("load_pending_auto_switch");
         Ok(CoreEnvelope::from_backend_plan(
-            json!({ "pending": null, "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            PendingAutoSwitchStatePayload {
+                backend_status: BackendSkeletonStatus::from_plan(&plan),
+                current_account_key: String::new(),
+                candidate_account_key: String::new(),
+                dismissed_at: None,
+            },
             &plan,
         ))
     }
 
-    pub(crate) fn dismiss_pending_auto_switch(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn dismiss_pending_auto_switch(
+        &self,
+    ) -> Result<CoreEnvelope<Option<String>>, CoreError> {
         let plan = self.no_op_plan("dismiss_pending_auto_switch");
-        Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
-            &plan,
-        ))
+        Ok(CoreEnvelope::from_backend_plan(None, &plan))
     }
 
-    pub(crate) fn confirm_pending_auto_switch(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn confirm_pending_auto_switch(&self) -> Result<CoreEnvelope<()>, CoreError> {
         let plan = self.no_op_plan("confirm_pending_auto_switch");
-        Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
-            &plan,
-        ))
+        Ok(CoreEnvelope::from_backend_plan((), &plan))
     }
 
     pub(crate) fn confirm_pending_auto_switch_and_restart_application(
         &self,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<()>, CoreError> {
         let plan = self.no_op_plan("confirm_pending_auto_switch_and_restart_codex");
-        Ok(CoreEnvelope::from_backend_plan(
-            json!({ "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
-            &plan,
-        ))
+        Ok(CoreEnvelope::from_backend_plan((), &plan))
     }
 
     pub(crate) fn diagnose(&self) -> Result<CoreEnvelope<DiagnosePayload>, CoreError> {

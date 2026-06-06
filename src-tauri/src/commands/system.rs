@@ -4,8 +4,8 @@ use crate::contracts::{
     ApiModePayload, ApiProxyDetectPayload, ApiProxyMode, ApiProxyTestPayload,
     AutoSwitchConfigPayload, BootstrapStatePayload, CleanPayload, CoreEnvelope,
     CoreSnapshotPayload, DaemonRunPayload, DiagnosePayload, MysteryRouteGrant,
-    NotificationClientStatePayload, RebuildRegistryPayload, SystemInfo,
-    UpdateInstallabilityPayload,
+    NotificationClientStatePayload, PendingAutoSwitchStatePayload, RebuildRegistryPayload,
+    SystemInfo, UpdateInstallabilityPayload,
 };
 use serde_json::Value;
 use tauri::State;
@@ -119,28 +119,28 @@ pub(crate) fn run_daemon_once(
 #[tauri::command]
 pub(crate) fn load_pending_auto_switch(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<PendingAutoSwitchStatePayload>, String> {
     respond(state.services().system().load_pending_auto_switch())
 }
 
 #[tauri::command]
 pub(crate) fn dismiss_pending_auto_switch(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<Option<String>>, String> {
     respond(state.services().system().dismiss_pending_auto_switch())
 }
 
 #[tauri::command]
 pub(crate) fn confirm_pending_auto_switch(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<()>, String> {
     respond(state.services().system().confirm_pending_auto_switch())
 }
 
 #[tauri::command]
 pub(crate) fn confirm_pending_auto_switch_and_restart_codex(
     state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<Value>, String> {
+) -> Result<CoreEnvelope<()>, String> {
     respond(
         state
             .services()

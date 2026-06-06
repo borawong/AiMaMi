@@ -468,11 +468,20 @@ export interface BackendSkeletonStatus {
 }
 
 export interface BootstrapStatePayload {
-  writtenAt: number | null;
-  snapshotProgressive: CoreSnapshotPayload | null;
-  usageAnalytics: UsageAnalyticsPayload | null;
-  mcpServers: McpServerListPayload | null;
-  installedSkills: SkillListPayload | null;
+  backendStatus: BackendSkeletonStatus;
+  executedAt: string | null;
+  runOnce: boolean;
+  autoSwitchEnabled: boolean;
+  activeAccountKey: string | null;
+  switchedAccountKey: string | null;
+  pendingSwitchAccountKey: string | null;
+}
+
+export interface PendingAutoSwitchStatePayload {
+  backendStatus: BackendSkeletonStatus;
+  currentAccountKey: string;
+  candidateAccountKey: string;
+  dismissedAt: string | null;
 }
 
 // ---------------------------------------------------------------------------

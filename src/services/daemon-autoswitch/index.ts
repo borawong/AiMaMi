@@ -1,13 +1,8 @@
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-import { invokeIpc, type IpcEvidencePayload } from "@/contracts/ipc";
-import type {
-  AutoSwitchConfigPayload,
-  BootstrapStatePayload,
-  CoreEnvelope,
-  DaemonRunPayload,
-} from "@/types";
+import { systemService } from "@/services/system";
+import type { PendingAutoSwitchStatePayload } from "@/types";
 
-export type PendingAutoSwitchEventPayload = IpcEvidencePayload;
+export type PendingAutoSwitchEventPayload = PendingAutoSwitchStatePayload;
 export type PendingAutoSwitchEventHandler = (
   payload: PendingAutoSwitchEventPayload,
 ) => void;
@@ -49,39 +44,22 @@ function subscribePendingAutoSwitch(
 }
 
 export const daemonAutoswitchService = {
-  setAutoSwitch: (enabled: boolean) =>
-    invokeIpc<CoreEnvelope<AutoSwitchConfigPayload>>("set_auto_switch", {
-      enabled,
-    }),
+  setAutoSwitch: systemService.setAutoSwitch,
 
-  configureAutoSwitch: (
-    threshold5hPercent?: number,
-    thresholdWeeklyPercent?: number,
-  ) =>
-    invokeIpc<CoreEnvelope<AutoSwitchConfigPayload>>("configure_auto_switch", {
-      threshold5hPercent,
-      thresholdWeeklyPercent,
-    }),
+  configureAutoSwitch: systemService.configureAutoSwitch,
 
-  loadBootstrapState: () =>
-    invokeIpc<CoreEnvelope<BootstrapStatePayload>>("load_bootstrap_state"),
+  loadBootstrapState: systemService.loadBootstrapState,
 
-  loadPendingAutoSwitch: () =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("load_pending_auto_switch"),
+  loadPendingAutoSwitch: systemService.loadPendingAutoSwitch,
 
-  dismissPendingAutoSwitch: () =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("dismiss_pending_auto_switch"),
+  dismissPendingAutoSwitch: systemService.dismissPendingAutoSwitch,
 
-  confirmPendingAutoSwitch: () =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>("confirm_pending_auto_switch"),
+  confirmPendingAutoSwitch: systemService.confirmPendingAutoSwitch,
 
-  confirmPendingAutoSwitchAndRestartCodex: () =>
-    invokeIpc<CoreEnvelope<IpcEvidencePayload>>(
-      "confirm_pending_auto_switch_and_restart_codex",
-    ),
+  confirmPendingAutoSwitchAndRestartCodex:
+    systemService.confirmPendingAutoSwitchAndRestartCodex,
 
   subscribePendingAutoSwitch,
 
-  runDaemonOnce: () =>
-    invokeIpc<CoreEnvelope<DaemonRunPayload>>("run_daemon_once"),
+  runDaemonOnce: systemService.runDaemonOnce,
 };

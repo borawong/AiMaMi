@@ -66,6 +66,43 @@ const writeIntervalArgHandler: IpcCommandHandler = (context) => {
   return withMockData(context, typeof interval === "string" ? interval : "manual");
 };
 
+const bootstrapStateHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: {
+      backendStatus: envelope.data.status,
+      executedAt: null,
+      runOnce: false,
+      autoSwitchEnabled: false,
+      activeAccountKey: null,
+      switchedAccountKey: null,
+      pendingSwitchAccountKey: null,
+    },
+  };
+};
+
+const pendingAutoSwitchStateHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  return {
+    ...envelope,
+    data: {
+      backendStatus: envelope.data.status,
+      currentAccountKey: "",
+      candidateAccountKey: "",
+      dismissedAt: null,
+    },
+  };
+};
+
 const evidenceObjectHandler: IpcCommandHandler = (context) => {
   const envelope = createEvidenceBackedIpcFixture(
     context.command,
@@ -265,6 +302,9 @@ const remoteDeviceSecretHandler: IpcCommandHandler = (context) =>
 const unitHandler: IpcCommandHandler = (context) => withMockData(context, null);
 
 const systemCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> = {
+  confirm_pending_auto_switch: unitHandler,
+  confirm_pending_auto_switch_and_restart_codex: unitHandler,
+  dismiss_pending_auto_switch: unitHandler,
   focus_main_window: evidenceObjectHandler,
   get_mystery_unlock_grants: mysteryUnlockGrantsHandler,
   get_notification_client_state: notificationClientStateHandler,
@@ -276,6 +316,8 @@ const systemCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> 
   has_notch: readFalseHandler,
   hotspot_ready: evidenceObjectHandler,
   import_remote_device_secret_if_empty: unitHandler,
+  load_bootstrap_state: bootstrapStateHandler,
+  load_pending_auto_switch: pendingAutoSwitchStateHandler,
   merge_mystery_unlock_grants: mysteryUnlockGrantsHandler,
   set_hotspot_enabled: writeBooleanArgHandler,
   set_image_compat: writeBooleanArgHandler,
