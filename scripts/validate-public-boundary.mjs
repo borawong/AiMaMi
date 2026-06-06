@@ -147,6 +147,7 @@ function validateReadmeFile(path) {
     .filter((line) => /^#{1,6}\s+/.test(line))
     .map((line) => line.trim());
   const allowedHeadings = ["# OpenAiMami", "## 为什么开源"];
+  allowedHeadings.push("# OpenAiMaMi");
   const unexpectedHeadings = headings.filter((heading) => !allowedHeadings.includes(heading));
   const requiredReasons = [
     { name: "个人迭代", pattern: /个人迭代/ },
