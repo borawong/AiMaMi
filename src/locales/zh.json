@@ -507,9 +507,23 @@
     "listTitle": "????",
     "noSelection": "?????",
     "notAvailable": "???",
-    "planFilter": "????",
-    "planUnknown": "????",
-    "profileName": "????",
+  "planFilter": "????",
+  "planUnknown": "????",
+  "planLabels": {
+    "free": "免费",
+    "plus": "Plus",
+    "pro5x": "Pro 5x",
+    "pro20x": "Pro 20x",
+    "team": "Team",
+    "business": "Business",
+    "enterprise": "Enterprise",
+    "edu": "Edu"
+  },
+  "authModes": {
+    "chatgpt": "ChatGPT OAuth",
+    "apikey": "API Key"
+  },
+  "profileName": "????",
     "removeActiveDisabled": "??????????",
     "removeConfirmTitle": "????",
     "removeSnapshot": "????",
@@ -577,7 +591,8 @@
     "range": {
       "today": "今日",
       "week": "本周",
-      "month": "本月"
+      "month": "本月",
+      "year": "全年"
     },
     "heatmap": {
       "sessions": "会话",
@@ -776,6 +791,7 @@
     "newProvider": "?? provider",
     "fromPreset": "?????",
     "test": "??",
+    "testDraftHint": "测试当前草稿 Provider，不保存配置。",
     "edit": "??",
     "deactivate": "??",
     "enable": "??",

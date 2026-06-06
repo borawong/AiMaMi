@@ -1,7 +1,11 @@
 /**
  * 中文职责说明：sessions 模块本地 selector/formatter 只解包会话和用量 envelope，不拥有业务状态。
  */
+import type { SessionGroup, SessionNode } from "../types";
+
 export type SessionEvidenceRecord = Record<string, unknown>;
+
+export const SESSIONS_CONVERSATION_GROUP_KEY = "__conversations__";
 
 export function selectSessionsEnvelopeData(value: unknown) {
   return unwrapEnvelope(value);
@@ -81,6 +85,111 @@ export function formatBytes(bytes: number) {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   }
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+}
+
+export function buildSessionGroups(sessions: unknown[]): SessionGroup[] {
+  const grouped = new Map<string, unknown[]>();
+  for (const session of sessions) {
+    const key = readBoolean(session, ["isConversationThread"])
+      ? SESSIONS_CONVERSATION_GROUP_KEY
+      : readString(session, ["projectPath"], "__ungrouped__") || "__ungrouped__";
+    const bucket = grouped.get(key) ?? [];
+    bucket.push(session);
+    grouped.set(key, bucket);
+  }
+
+  return [...grouped.entries()]
+    .map(([key, items]) => {
+      const nodeMap = new Map<string, SessionNode>();
+      for (const session of items) {
+        nodeMap.set(sessionId(session), { session, isOrphan: false, children: [] });
+      }
+
+      const roots: SessionNode[] = [];
+      for (const session of items) {
+        const id = sessionId(session);
+        const node = nodeMap.get(id);
+        if (!node) continue;
+        const parentId = readString(session, ["parentSessionId"], "");
+        const parent = parentId ? nodeMap.get(parentId) : undefined;
+        if (parent) {
+          parent.children.push(node);
+        } else {
+          node.isOrphan = Boolean(parentId);
+          roots.push(node);
+        }
+      }
+
+      sortNodes(roots);
+      const first = items[0];
+      return {
+        key,
+        name:
+          key === SESSIONS_CONVERSATION_GROUP_KEY
+            ? SESSIONS_CONVERSATION_GROUP_KEY
+            : readString(first, ["projectName"], ""),
+        path: key === SESSIONS_CONVERSATION_GROUP_KEY ? "" : readString(first, ["projectPath"], ""),
+        roots,
+        sessionCount: items.length,
+        projectPathMissing:
+          key !== SESSIONS_CONVERSATION_GROUP_KEY &&
+          items.some((item) => readBoolean(item, ["projectPathMissing"])),
+      };
+    })
+    .sort((left, right) => latestUpdated(right.roots) - latestUpdated(left.roots));
+}
+
+export function flattenNode(node: SessionNode): string[] {
+  return [sessionId(node.session), ...node.children.flatMap(flattenNode)];
+}
+
+export function flattenGroup(group: SessionGroup): string[] {
+  return group.roots.flatMap(flattenNode);
+}
+
+export function flattenGroups(groups: SessionGroup[]): string[] {
+  return groups.flatMap(flattenGroup);
+}
+
+export function countOrphans(groups: SessionGroup[]) {
+  let count = 0;
+  const visit = (node: SessionNode) => {
+    if (node.isOrphan) count += 1;
+    node.children.forEach(visit);
+  };
+  groups.forEach((group) => group.roots.forEach(visit));
+  return count;
+}
+
+export function sessionId(session: unknown) {
+  return readString(session, ["id", "sessionId", "conversationId", "path"], "");
+}
+
+export function sessionKindLabel(
+  node: SessionNode,
+  t: (key: string, options?: Record<string, unknown>) => string,
+) {
+  if (node.isOrphan) return t("sessions.orphanThread");
+  if (readString(node.session, ["parentSessionId"], "")) return t("sessions.childThread");
+  const count = node.children.length;
+  return `${t("sessions.mainThread")} - ${t("sessions.childThreadsInline", { count })}`;
+}
+
+function sortNodes(nodes: SessionNode[]) {
+  nodes.sort((left, right) => readNumber(right.session, ["updatedAt"]) - readNumber(left.session, ["updatedAt"]));
+  for (const node of nodes) sortNodes(node.children);
+}
+
+function latestUpdated(nodes: SessionNode[]) {
+  let latest = 0;
+  const visit = (items: SessionNode[]) => {
+    for (const item of items) {
+      latest = Math.max(latest, readNumber(item.session, ["updatedAt"]));
+      visit(item.children);
+    }
+  };
+  visit(nodes);
+  return latest;
 }
 
 function unwrapEnvelope(value: unknown) {

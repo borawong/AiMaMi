@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ModuleCacheEnvelope } from "@/features/_shared/module-cache";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
@@ -16,10 +16,22 @@ import type {
   AccountImportFileInput,
   AccountImportSessionInput,
   AccountKeysInput,
+  AccountPlanFilter,
   AccountOpenPathInput,
   AccountPreviewImportInput,
+  AccountRecord,
   AccountSwitchInput,
 } from "../types";
+import { ACCOUNT_PLAN_FILTERS } from "../types";
+import {
+  accountEmail,
+  accountKey,
+  accountPlan,
+  envelopeData,
+  isActiveAccount,
+  readArray,
+  readString,
+} from "../utils";
 
 export function useAccountsCacheController() {
   return useModuleCacheController(AccountsCache);
@@ -229,5 +241,126 @@ export function useAccountsModule() {
       run: (input: AccountOpenPathInput) => openPathMutation.mutateAsync(input),
       isPending: openPathMutation.isPending,
     },
+  };
+}
+
+export type AccountsModuleController = ReturnType<typeof useAccountsModule>;
+
+export interface AccountsPageController {
+  module: AccountsModuleController;
+  query: string;
+  setQuery: (query: string) => void;
+  planFilter: AccountPlanFilter;
+  setPlanFilter: (planFilter: AccountPlanFilter) => void;
+  planFilters: readonly AccountPlanFilter[];
+  accounts: AccountRecord[];
+  filteredAccounts: AccountRecord[];
+  selectedKey: string | null;
+  effectiveSelectedKey: string;
+  selectedAccount: AccountRecord | null;
+  activeAccount: AccountRecord | null;
+  apiReachability: string;
+  loading: boolean;
+  error: unknown;
+  isFetching: boolean;
+  isRefreshing: boolean;
+  selectAccount: (accountKey: string) => void;
+  refresh: () => Promise<void>;
+}
+
+// 中文职责说明：页面 controller owning accounts 快照派生、筛选状态和选择回退，route shell 只负责装配。
+export function useAccountsPageController(): AccountsPageController {
+  const module = useAccountsModule();
+  const [query, setQuery] = useState("");
+  const [planFilter, setPlanFilter] = useState<AccountPlanFilter>("all");
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+
+  const snapshotPayload =
+    module.snapshotEnvelope?.payload ??
+    (module.snapshotEnvelope ? null : module.snapshotQuery.data);
+
+  const snapshot = useMemo(() => envelopeData(snapshotPayload), [snapshotPayload]);
+  const accounts = useMemo(
+    () =>
+      readArray<AccountRecord>(snapshot, [
+        "accounts",
+        "items",
+        "registry.accounts",
+        "accountList",
+      ]),
+    [snapshot],
+  );
+
+  const filteredAccounts = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return accounts
+      .slice()
+      .sort((left, right) => {
+        const activeDelta =
+          Number(isActiveAccount(right)) - Number(isActiveAccount(left));
+        if (activeDelta !== 0) return activeDelta;
+        return accountEmail(left).localeCompare(accountEmail(right));
+      })
+      .filter((account) => {
+        const plan = accountPlan(account);
+        const matchesPlan = planFilter === "all" || plan === planFilter;
+        if (!matchesPlan) return false;
+        if (!normalizedQuery) return true;
+        return [
+          accountEmail(account),
+          accountKey(account),
+          readString(account, ["alias"], ""),
+          readString(account, ["accountName"], ""),
+          readString(account, ["workspaceName"], ""),
+          readString(account, ["profileName"], ""),
+        ].some((item) => item.toLowerCase().includes(normalizedQuery));
+      });
+  }, [accounts, planFilter, query]);
+
+  const effectiveSelectedKey =
+    selectedKey &&
+    filteredAccounts.some((account) => accountKey(account) === selectedKey)
+      ? selectedKey
+      : accountKey(filteredAccounts[0]);
+  const selectedAccount =
+    filteredAccounts.find(
+      (account) => accountKey(account) === effectiveSelectedKey,
+    ) ?? null;
+  const activeAccount = accounts.find(isActiveAccount) ?? null;
+  const apiReachability = readString(
+    snapshot,
+    [
+      "status.apiConnectivity.usageStatus",
+      "status.api.usageStatus",
+      "apiConnectivity.usageStatus",
+    ],
+    "unknown",
+  );
+  const isFetching = module.snapshotQuery.isFetching;
+  const isRefreshing = module.refreshUsageSnapshotAction.isPending;
+  const loading =
+    !snapshotPayload && (module.snapshotQuery.isLoading || isFetching);
+  const error = module.snapshotQuery.isError ? module.snapshotQuery.error : null;
+
+  return {
+    module,
+    query,
+    setQuery,
+    planFilter,
+    setPlanFilter,
+    planFilters: ACCOUNT_PLAN_FILTERS,
+    accounts,
+    filteredAccounts,
+    selectedKey,
+    effectiveSelectedKey,
+    selectedAccount,
+    activeAccount,
+    apiReachability,
+    loading,
+    error,
+    isFetching,
+    isRefreshing,
+    selectAccount: setSelectedKey,
+    refresh: module.refreshUsageSnapshotAction.run,
   };
 }

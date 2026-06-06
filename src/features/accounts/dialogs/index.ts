@@ -1,4 +1,5 @@
 /**
- * 中文职责说明：accounts 模块弹窗边界；无证据前保持空导出。
+ * 中文职责说明：accounts 模块弹窗边界，集中导出弹窗 owner。
  */
-export {};
+export { AccountActionDialogs } from "./account-action-dialogs";
+export { AddSessionAccountDialog } from "./add-session-account-dialog";

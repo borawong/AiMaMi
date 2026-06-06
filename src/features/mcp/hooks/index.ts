@@ -1,8 +1,11 @@
 /**
  * 中文职责说明：mcp 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
  */
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
+import { useBusyAction } from "@/hooks/use-busy-action";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { mcpService, type UpsertMcpServerInput } from "@/services/mcp";
 import type {
@@ -15,6 +18,17 @@ import {
   McpCache,
   MCP_SERVERS_QUERY_KEY,
 } from "../cache";
+import type {
+  McpEditingTarget,
+  McpPageRequestState,
+  McpServerFormDraft,
+  McpServerFormField,
+} from "../types";
+import {
+  buildMcpServerInput,
+  createMcpServerFormDraft,
+  getMcpPagination,
+} from "../utils";
 
 export type { UpsertMcpServerInput } from "@/services/mcp";
 
@@ -138,6 +152,188 @@ export function useUpsertMcpServerMutation(options?: { onSaved?: () => void }) {
       options?.onSaved?.();
     },
   });
+}
+
+// 中文职责说明：页面 controller owning mcp 页面短生命周期 UI 状态、表单草稿和请求派发。
+export function useMcpPageController() {
+  const { t } = useTranslation();
+  const [editing, setEditing] = useState<McpEditingTarget>(null);
+  const [removing, setRemoving] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [formDraft, setFormDraft] = useState<McpServerFormDraft>(() =>
+    createMcpServerFormDraft(),
+  );
+
+  const refreshAction = useBusyAction({ minVisibleMs: 800 });
+  const { data, refresh, isError, isLoading } = useMcpServers();
+  const { toggleMutation, removeMutation } = useMcpServerMutations({
+    onRemoved: () => setRemoving(null),
+  });
+  const upsertMutation = useUpsertMcpServerMutation({
+    onSaved: () => setEditing(null),
+  });
+
+  const editingServer = editing === "new" ? undefined : editing ?? undefined;
+
+  useEffect(() => {
+    if (editing === null) return;
+    setFormDraft(createMcpServerFormDraft(editingServer));
+  }, [editing, editingServer]);
+
+  const servers = data?.data.items ?? [];
+  const sourcePath = data?.data.sourcePath ?? "";
+  const pagination = useMemo(
+    () => getMcpPagination(servers, currentPage),
+    [servers, currentPage],
+  );
+
+  useEffect(() => {
+    if (currentPage !== pagination.safePage) {
+      setCurrentPage(pagination.safePage);
+    }
+  }, [currentPage, pagination.safePage]);
+
+  const enabledCount = useMemo(
+    () => servers.filter((server) => server.enabled).length,
+    [servers],
+  );
+
+  const requestState = useMemo<McpPageRequestState>(() => ({
+    refresh: refreshAction.busy,
+    save: upsertMutation.isPending,
+    remove: removeMutation.isPending,
+    toggle: toggleMutation.isPending,
+    test: false,
+    import: false,
+    export: false,
+  }), [
+    refreshAction.busy,
+    removeMutation.isPending,
+    toggleMutation.isPending,
+    upsertMutation.isPending,
+  ]);
+
+  const openNewServerDialog = useCallback(() => {
+    setEditing("new");
+  }, []);
+
+  const openEditServerDialog = useCallback((server: McpServerSummary) => {
+    setEditing(server);
+  }, []);
+
+  const closeEditorDialog = useCallback(() => {
+    setEditing(null);
+  }, []);
+
+  const openRemoveDialog = useCallback((name: string) => {
+    setRemoving(name);
+  }, []);
+
+  const closeRemoveDialog = useCallback(() => {
+    setRemoving(null);
+  }, []);
+
+  const setFormField = useCallback(
+    <TField extends McpServerFormField>(
+      field: TField,
+      value: McpServerFormDraft[TField],
+    ) => {
+      setFormDraft((draft) => ({
+        ...draft,
+        [field]: value,
+      }));
+    },
+    [],
+  );
+
+  const refreshServers = useCallback(async () => {
+    await refreshAction.run(async () => {
+      await refresh();
+    });
+  }, [refresh, refreshAction]);
+
+  const copySourcePath = useCallback(async () => {
+    if (!sourcePath) return;
+
+    await navigator.clipboard.writeText(sourcePath);
+    toast({
+      title: t("mcp.pathCopied"),
+      description: t("mcp.pathCopiedDesc"),
+      variant: "default",
+    });
+  }, [sourcePath, t]);
+
+  const saveServer = useCallback(() => {
+    upsertMutation.mutate(buildMcpServerInput(formDraft));
+  }, [formDraft, upsertMutation]);
+
+  const confirmRemoveServer = useCallback(() => {
+    if (!removing) return;
+    removeMutation.mutate(removing);
+  }, [removeMutation, removing]);
+
+  const toggleServerEnabled = useCallback((name: string, enabled: boolean) => {
+    toggleMutation.mutate({ name, enabled });
+  }, [toggleMutation]);
+
+  const goToPage = useCallback((page: number) => {
+    setCurrentPage(page);
+  }, []);
+
+  const goToPreviousPage = useCallback(() => {
+    setCurrentPage((page) => Math.max(1, page - 1));
+  }, []);
+
+  const goToNextPage = useCallback(() => {
+    setCurrentPage((page) => Math.min(pagination.totalPages, page + 1));
+  }, [pagination.totalPages]);
+
+  return {
+    overview: {
+      serverCount: servers.length,
+      enabledCount,
+      sourcePath,
+      onAddServer: openNewServerDialog,
+      onRefresh: refreshServers,
+      onCopySourcePath: copySourcePath,
+    },
+    list: {
+      servers,
+      pagedServers: pagination.pagedItems,
+      isEmpty: servers.length === 0,
+      isError,
+      isLoading,
+      onToggleServer: toggleServerEnabled,
+      onEditServer: openEditServerDialog,
+      onRemoveServer: openRemoveDialog,
+    },
+    pagination: {
+      currentPage: pagination.safePage,
+      totalPages: pagination.totalPages,
+      range: pagination.range,
+      onPageChange: goToPage,
+      onPreviousPage: goToPreviousPage,
+      onNextPage: goToNextPage,
+    },
+    editor: {
+      open: editing !== null,
+      server: editingServer,
+      draft: formDraft,
+      canSave: Boolean(formDraft.name) && !requestState.save,
+      requestState,
+      onFieldChange: setFormField,
+      onSave: saveServer,
+      onClose: closeEditorDialog,
+    },
+    remover: {
+      open: removing !== null,
+      serverName: removing,
+      requestState,
+      onConfirm: confirmRemoveServer,
+      onClose: closeRemoveDialog,
+    },
+    requestState,
+  };
 }
 
 function writeMcpServersMutationPayload(queryClient: QueryClient, payload: unknown) {

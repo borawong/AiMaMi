@@ -507,9 +507,23 @@
     "listTitle": "Account list",
     "noSelection": "No account selected",
     "notAvailable": "Not available",
-    "planFilter": "Plan filter",
-    "planUnknown": "Unknown plan",
-    "profileName": "Profile name",
+  "planFilter": "Plan filter",
+  "planUnknown": "Unknown plan",
+  "planLabels": {
+    "free": "Free",
+    "plus": "Plus",
+    "pro5x": "Pro 5x",
+    "pro20x": "Pro 20x",
+    "team": "Team",
+    "business": "Business",
+    "enterprise": "Enterprise",
+    "edu": "Edu"
+  },
+  "authModes": {
+    "chatgpt": "ChatGPT OAuth",
+    "apikey": "API Key"
+  },
+  "profileName": "Profile name",
     "removeActiveDisabled": "The active account cannot be removed directly",
     "removeConfirmTitle": "Remove account",
     "removeSnapshot": "Remove snapshot",
@@ -577,7 +591,8 @@
     "range": {
       "today": "Today",
       "week": "Week",
-      "month": "Month"
+      "month": "Month",
+      "year": "Year"
     },
     "heatmap": {
       "sessions": "sessions",
@@ -776,6 +791,7 @@
     "newProvider": "New provider",
     "fromPreset": "From preset",
     "test": "Test",
+    "testDraftHint": "Test the current draft provider without saving it.",
     "edit": "Edit",
     "deactivate": "Deactivate",
     "enable": "Enable",

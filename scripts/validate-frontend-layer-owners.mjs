@@ -40,6 +40,19 @@ const modulesWithService = [
   "voice",
 ];
 
+const strictFeaturePageShells = [
+  "accounts",
+  "analytics",
+  "custom-instructions",
+  "maintenance",
+  "mcp",
+  "plugins",
+  "relay",
+  "sessions",
+  "settings",
+  "skills",
+];
+
 const requiredFeatureFiles = [
   "Provider.tsx",
   "StoreUpdater.tsx",
@@ -149,6 +162,36 @@ function validateRouteShells() {
   console.log(`PASS route shell 纯度：${featureModules.length}/${featureModules.length}`);
 }
 
+function validateFeaturePageShells() {
+  for (const moduleId of strictFeaturePageShells) {
+    const pageFile = join(featuresRoot, moduleId, "components", `${moduleId}-page.tsx`);
+    const text = readRequired(pageFile);
+    const label = `src/features/${moduleId}/components/${moduleId}-page.tsx`;
+    const declaredFunctions = [
+      ...text.matchAll(/(?:^|\n)function\s+([A-Z][A-Za-z0-9_]*)\s*\(/g),
+    ].map((match) => match[1]);
+    const expectedPageName = `${moduleId
+      .split("-")
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join("")}Page`;
+    const unexpectedFunctions = declaredFunctions.filter((name) => name !== expectedPageName);
+
+    assertIncludes(label, text, ["../hooks"]);
+    assertNotMatches(label, text, [
+      [/\buse(State|Reducer|Effect|Memo|Callback)\b/, "module page 只能作为 shell，不得 owning 组件私有状态或复杂派生"],
+      [/\buse(Query|Mutation)\b/, "module page 不得直接 owning TanStack query/mutation"],
+      [/@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "module page 不得绕过 hook/service 直接访问 IPC"],
+      [/\b(readString|readNumber|readPath|readArray|envelopeData|selectSessionRecords|selectSessionsEnvelopeData|buildSessionGroups|countOrphans|formatBytes|formatEpoch|formatPlan|quotaPercent|tokenStatusCode|accountEmail|accountKey)\b/, "module page 不得 owning 数据解析、筛选、统计或格式化 helper"],
+    ]);
+
+    if (unexpectedFunctions.length > 0) {
+      failures.push(`${label} 仍声明页面内子组件或 helper：${unexpectedFunctions.join(", ")}`);
+    }
+  }
+
+  console.log(`PASS module page shell 纯度：${strictFeaturePageShells.length}/${strictFeaturePageShells.length}`);
+}
+
 function validateServiceOwners() {
   const serviceIndex = readRequired(join(servicesRoot, "index.ts"));
   for (const moduleId of modulesWithService) {
@@ -216,6 +259,7 @@ function validateNoForbiddenReferenceNames() {
 
 validateFeatureDeepOwners();
 validateRouteShells();
+validateFeaturePageShells();
 validateServiceOwners();
 validateNoBypassIpcInComponents();
 validateNoGlobalApiInFeatureHooks();

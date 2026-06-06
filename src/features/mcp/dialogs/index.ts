@@ -1,4 +1,5 @@
 /**
- * 中文职责说明：mcp 模块弹窗边界；无证据前保持空导出。
+ * 中文职责说明：mcp dialogs 只导出模块弹窗，状态和解析不在弹窗内 owning。
  */
-export {};
+export { McpEditorDialog } from "./mcp-editor-dialog";
+export { McpRemoveDialog } from "./mcp-remove-dialog";

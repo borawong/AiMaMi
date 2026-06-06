@@ -47,3 +47,34 @@ export function readString(value: unknown, paths: string[], fallback = ""): stri
   const current = firstPath(value, paths);
   return typeof current === "string" ? current : fallback;
 }
+
+export function shortDate(value: string) {
+  if (!value) return "";
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return value;
+  return `${date.getMonth() + 1}/${date.getDate()}`;
+}
+
+export function formatTimestamp(value: number) {
+  if (!value) return "";
+  const date = new Date(value * 1000);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+export function formatCompact(value: number) {
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(value >= 10_000 ? 0 : 1)}K`;
+  return String(value);
+}
+
+export function remainingQuota(point: unknown, key: string) {
+  const used = readNumber(point, [key], Number.NaN);
+  return Number.isFinite(used) ? Math.max(0, 100 - used) : 0;
+}

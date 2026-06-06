@@ -411,6 +411,7 @@ function validateKnownInternalFrontendGates() {
   const relayHooksPath = join(repoRoot, "src", "features", "relay", "hooks", "index.ts");
   const relayCachePath = join(repoRoot, "src", "features", "relay", "cache", "index.ts");
   const relayPagePath = join(repoRoot, "src", "features", "relay", "components", "relay-page.tsx");
+  const relayPanelsPath = join(repoRoot, "src", "features", "relay", "panels", "relay-page-panels.tsx");
   const relayServicePath = join(repoRoot, "src", "services", "relay", "index.ts");
   const customInstructionsPagePath = join(
     repoRoot,
@@ -420,14 +421,37 @@ function validateKnownInternalFrontendGates() {
     "components",
     "custom-instructions-page.tsx",
   );
+  const customInstructionsHooksPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "index.ts",
+  );
+  const customInstructionsLoadErrorPanelPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "panels",
+    "load-error-panel.tsx",
+  );
   const skillsPagePath = join(repoRoot, "src", "features", "skills", "components", "skills-page.tsx");
+  const skillsHooksPath = join(repoRoot, "src", "features", "skills", "hooks", "index.ts");
+  const skillsPanelPath = join(repoRoot, "src", "features", "skills", "panels", "skills-page-panel.tsx");
 
   const relayHooks = readRequired(relayHooksPath);
   const relayCache = readRequired(relayCachePath);
   const relayPage = readRequired(relayPagePath);
+  const relayPanels = readRequired(relayPanelsPath);
   const relayService = readRequired(relayServicePath);
   const customInstructionsPage = readRequired(customInstructionsPagePath);
+  const customInstructionsHooks = readRequired(customInstructionsHooksPath);
+  const customInstructionsLoadErrorPanel = readRequired(customInstructionsLoadErrorPanelPath);
   const skillsPage = readRequired(skillsPagePath);
+  const skillsHooks = readRequired(skillsHooksPath);
+  const skillsPanel = readRequired(skillsPanelPath);
 
   const relayEventOk =
     relayService.includes("codex-router-toggle-progress") &&
@@ -436,8 +460,9 @@ function validateKnownInternalFrontendGates() {
     relayHooks.includes("subscribeRouterToggleProgress") &&
     relayCache.includes("RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY") &&
     relayCache.includes("writeRelayRouterToggleProgress") &&
-    relayPage.includes("RelayRouterProgress") &&
-    relayPage.includes("module.routerToggleProgress");
+    relayPage.includes("RelayPagePanels") &&
+    relayPanels.includes("RelayRouterProgress") &&
+    relayPanels.includes("module.routerToggleProgress");
   if (!relayEventOk) {
     failures.push("relay router toggle progress 事件链未覆盖 listen、cleanup、cache key 和页面反馈");
   } else {
@@ -445,10 +470,12 @@ function validateKnownInternalFrontendGates() {
   }
 
   const customInstructionsErrorOk =
-    customInstructionsPage.includes("stateQuery.isError") &&
-    customInstructionsPage.includes("templatesQuery.isError") &&
-    customInstructionsPage.includes('role="alert"') &&
-    customInstructionsPage.includes("customInstructions.loadFailed");
+    customInstructionsHooks.includes("stateQuery.isError") &&
+    customInstructionsHooks.includes("templatesQuery.isError") &&
+    customInstructionsHooks.includes("loadErrorPanel") &&
+    customInstructionsPage.includes("CustomInstructionsLoadErrorPanel") &&
+    customInstructionsLoadErrorPanel.includes('role="alert"') &&
+    customInstructionsLoadErrorPanel.includes("customInstructions.loadFailed");
   if (!customInstructionsErrorOk) {
     failures.push("custom-instructions initial query failure 缺少可见 alert");
   } else {
@@ -456,10 +483,13 @@ function validateKnownInternalFrontendGates() {
   }
 
   const skillsErrorOk =
-    skillsPage.includes("activeQuery.isError") &&
-    skillsPage.includes('role="alert"') &&
-    skillsPage.includes("skills.loadFailed") &&
-    skillsPage.includes("activeQuery.refetch()");
+    skillsHooks.includes("activeQuery.isError") &&
+    skillsHooks.includes("queryFailureAlert") &&
+    skillsHooks.includes("activeQuery.refetch()") &&
+    skillsHooks.includes("skills.loadFailed") &&
+    skillsHooks.includes("skills.loadFailedDesc") &&
+    skillsPage.includes("SkillsPagePanel") &&
+    skillsPanel.includes('role="alert"');
   if (!skillsErrorOk) {
     failures.push("skills installed/backups query failure 缺少可见 alert");
   } else {

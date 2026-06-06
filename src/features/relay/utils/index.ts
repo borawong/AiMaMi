@@ -1,6 +1,8 @@
 /**
  * 中文职责说明：Relay 模块只在本模块内读取 dumped payload，避免把未知证据结构渲染成跨模块通用占位。
  */
+import type { RelayNetworkMode, WireApi } from "../types";
+
 export type RelayUnknownRecord = Record<string, unknown>;
 
 export function isRecord(value: unknown): value is RelayUnknownRecord {
@@ -55,4 +57,36 @@ export function readBoolean(
 ): boolean {
   const current = firstPath(value, paths);
   return typeof current === "boolean" ? current : fallback;
+}
+
+// 中文职责说明：Relay UI 工具只做字段归一化和展示输入校验，不触碰 IPC/service/cache 合同。
+export function normalizeWireApi(value: string): WireApi {
+  if (value === "openai-responses" || value === "anthropic") return value;
+  return "openai-chat";
+}
+
+export function normalizeNetwork(value: string): RelayNetworkMode {
+  return value === "direct" ? "direct" : "system";
+}
+
+export function inferWireApi(model: string): WireApi | null {
+  const normalized = model.trim().toLowerCase();
+  if (normalized.startsWith("gpt")) return "openai-responses";
+  if (normalized.startsWith("claude")) return "anthropic";
+  return null;
+}
+
+export function validateExtraHeaders(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  try {
+    const parsed = JSON.parse(trimmed);
+    if (!isRecord(parsed)) return "invalid";
+    if (Object.values(parsed).some((item) => typeof item !== "string")) {
+      return "invalid";
+    }
+    return null;
+  } catch {
+    return "invalid";
+  }
 }

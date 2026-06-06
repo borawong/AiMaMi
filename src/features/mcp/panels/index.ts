@@ -1,4 +1,5 @@
 /**
- * 中文职责说明：mcp 模块面板边界；无证据前保持空导出。
+ * 中文职责说明：mcp panels 只导出展示面板，状态 owner 位于 controller。
  */
-export {};
+export { McpOverviewPanel } from "./mcp-overview-panel";
+export { McpServersPanel } from "./mcp-servers-panel";

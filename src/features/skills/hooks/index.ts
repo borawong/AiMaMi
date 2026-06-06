@@ -1,6 +1,7 @@
 /**
  * 中文职责说明：skills 模块 hook 拥有 full refresh、active-only refresh、abort 和 replay 防护入口。
  */
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/use-module-cache-controller";
 import { skillsService } from "@/services/skills";
@@ -181,6 +182,89 @@ export function useSkillsPageMutations(options?: {
     deleteBackupMutation,
   };
 }
+
+export function useSkillsPageController() {
+  const [tab, setTab] = useState<SkillsPageTab>("installed");
+  const [removingSkillId, setRemovingSkillId] = useState<string | null>(null);
+  const [deletingBackupId, setDeletingBackupId] = useState<string | null>(null);
+  const { skillsQuery, backupsQuery } = useSkillsPageQueries(tab);
+  const {
+    importMutation,
+    removeMutation,
+    restoreMutation,
+    deleteBackupMutation,
+  } = useSkillsPageMutations({
+    onRemoved: () => setRemovingSkillId(null),
+    onBackupDeleted: () => setDeletingBackupId(null),
+  });
+
+  const skills = skillsQuery.data?.data.items ?? [];
+  const backups = backupsQuery.data?.data.items ?? [];
+  const activeQuery = tab === "installed" ? skillsQuery : backupsQuery;
+
+  const selectTab = (value: string) => {
+    if (value === "installed" || value === "backups") {
+      setTab(value);
+    }
+  };
+
+  return {
+    tab,
+    tabs: [
+      { value: "installed", labelKey: "skills.installed" },
+      { value: "backups", labelKey: "skills.backups" },
+    ] as const,
+    selectTab,
+    skillsSummary: {
+      skillsCount: skills.length,
+      backupsCount: backups.length,
+      skillsRootPath: skillsQuery.data?.data.rootPath ?? "",
+      backupsRootPath: backupsQuery.data?.data.rootPath ?? "",
+    },
+    importAction: {
+      isPending: importMutation.isPending,
+      run: () => importMutation.mutate(),
+    },
+    installedPanel: {
+      skills,
+      requestRemove: (id: string) => setRemovingSkillId(id),
+      isRemovePending: removeMutation.isPending,
+    },
+    backupsPanel: {
+      backups,
+      requestDeleteBackup: (id: string) => setDeletingBackupId(id),
+      restoreBackup: (id: string) => restoreMutation.mutate(id),
+      isRestorePending: restoreMutation.isPending,
+      isDeletePending: deleteBackupMutation.isPending,
+    },
+    queryFailureAlert: activeQuery.isError
+      ? {
+          titleKey: "skills.loadFailed",
+          descriptionKey: "skills.loadFailedDesc",
+          isRetrying: activeQuery.isFetching,
+          retry: () => activeQuery.refetch(),
+        }
+      : null,
+    removeDialog: {
+      open: removingSkillId !== null,
+      isPending: removeMutation.isPending,
+      close: () => setRemovingSkillId(null),
+      confirm: () => {
+        if (removingSkillId) removeMutation.mutate(removingSkillId);
+      },
+    },
+    deleteBackupDialog: {
+      open: deletingBackupId !== null,
+      isPending: deleteBackupMutation.isPending,
+      close: () => setDeletingBackupId(null),
+      confirm: () => {
+        if (deletingBackupId) deleteBackupMutation.mutate(deletingBackupId);
+      },
+    },
+  };
+}
+
+export type SkillsPageController = ReturnType<typeof useSkillsPageController>;
 
 function writeSkillsQueryMutationPayload(queryClient: QueryClient, payload: unknown) {
   const data = readEnvelopeData(payload);

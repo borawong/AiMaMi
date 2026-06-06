@@ -30,3 +30,8 @@ export interface MaintenanceRouterDiagnosticsPayload {
 export interface MaintenanceRouterFixPayload {
   details: string[];
 }
+
+export interface MaintenanceActionResult {
+  type: "success" | "error";
+  message: string;
+}

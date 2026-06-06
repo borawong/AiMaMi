@@ -1,6 +1,8 @@
 /**
  * 中文职责说明：accounts 模块只在本 owner 内安全读取已由 raw/internal 证据确认的快照字段。
  */
+import type { AccountQuotaWindowSlot, AccountRecord } from "../types";
+
 export type AccountsUnknownRecord = Record<string, unknown>;
 
 export function isRecord(value: unknown): value is AccountsUnknownRecord {
@@ -49,4 +51,33 @@ export function readString(value: unknown, paths: string[], fallback = ""): stri
 export function readBoolean(value: unknown, paths: string[], fallback = false): boolean {
   const current = firstPath(value, paths);
   return typeof current === "boolean" ? current : fallback;
+}
+
+export function accountKey(account: unknown | null | undefined) {
+  if (!account) return "";
+  return readString(account, ["accountKey", "key", "id"], "");
+}
+
+export function accountEmail(account: unknown) {
+  return readString(account, ["email", "accountName", "alias", "accountKey"], "");
+}
+
+export function accountPlan(account: AccountRecord) {
+  return readString(account, ["plan"], "unknown");
+}
+
+export function isActiveAccount(account: AccountRecord) {
+  return readBoolean(account, ["isActive", "active"], false);
+}
+
+export function quotaPercent(
+  account: AccountRecord,
+  slot: AccountQuotaWindowSlot,
+) {
+  const value = readNumber(readPath(account, slot), ["remainingPercent"], Number.NaN);
+  return Number.isFinite(value) ? value : null;
+}
+
+export function tokenStatusCode(account: AccountRecord) {
+  return readString(readPath(account, "tokenStatus"), ["code"], "");
 }

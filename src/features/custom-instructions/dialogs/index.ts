@@ -1,4 +1,5 @@
 /**
- * 中文职责说明：custom-instructions 模块弹窗边界；无证据前保持空导出。
+ * 中文职责说明：custom-instructions 模块弹窗边界只导出弹窗组件，不暴露 mutation 细节。
  */
-export {};
+export { CustomInstructionsClearManagedBlockDialog } from "./clear-managed-block-dialog";
+export { CustomInstructionsPreviewApplyDialog } from "./preview-apply-dialog";
