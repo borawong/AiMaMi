@@ -273,6 +273,22 @@ pub(crate) struct SystemInfo {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 #[serde(rename_all = "camelCase")]
+pub(crate) struct NotificationClientStatePayload {
+    #[serde(default)]
+    pub backend_status: BackendSkeletonStatus,
+    pub device_id: String,
+    pub notifications_since: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct MysteryRouteGrant {
+    pub route: String,
+    pub epoch_ms: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+#[serde(rename_all = "camelCase")]
 pub(crate) struct CoreSnapshotPayload {
     #[serde(default)]
     pub backend_status: BackendSkeletonStatus,

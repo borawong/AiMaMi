@@ -72,6 +72,17 @@ export interface SystemInfoPayload {
   hostname: string;
 }
 
+export interface NotificationClientStatePayload {
+  backendStatus: BackendSkeletonStatus;
+  deviceId: string;
+  notificationsSince: number;
+}
+
+export interface MysteryRouteGrant {
+  route: string;
+  epochMs: number;
+}
+
 export interface AppStatusPayload {
   paths: AppPathState;
   lastScanAt: number;

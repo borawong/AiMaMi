@@ -232,6 +232,57 @@ function validateServiceOwners() {
   console.log(`PASS service owner 聚合：${modulesWithService.length}/${modulesWithService.length}`);
 }
 
+function validateSystemServiceFacadeOwners() {
+  const systemCommands = [
+    "check_update_installability",
+    "clean",
+    "configure_auto_switch",
+    "detect_api_proxy_config",
+    "diagnose",
+    "force_kill_codex",
+    "get_hotspot_enabled",
+    "get_image_compat",
+    "get_system_info",
+    "get_usage_refresh_interval",
+    "graceful_restart_for_update",
+    "has_notch",
+    "hotspot_ready",
+    "load_snapshot",
+    "open_path",
+    "rebuild_registry",
+    "reset_codex_config",
+    "restart_codex",
+    "set_api_proxy_config",
+    "set_auto_switch",
+    "set_hotspot_enabled",
+    "set_image_compat",
+    "set_usage_refresh_interval",
+    "test_api_proxy_config",
+  ];
+
+  const systemServiceText = readRequired(join(servicesRoot, "system", "index.ts"));
+  for (const command of systemCommands) {
+    if (!systemServiceText.includes(`"${command}"`)) {
+      failures.push(`src/services/system/index.ts 缺少 system IPC wrapper：${command}`);
+    }
+  }
+
+  for (const moduleId of ["maintenance", "settings"]) {
+    const servicePath = join(servicesRoot, moduleId, "index.ts");
+    const text = readRequired(servicePath);
+    if (!text.includes("@/services/system")) {
+      failures.push(`${repoPath(servicePath)} 必须通过 systemService 承接 system IPC`);
+    }
+    for (const command of systemCommands) {
+      if (text.includes(`"${command}"`) || text.includes(`'${command}'`)) {
+        failures.push(`${repoPath(servicePath)} 不得直接包装 system IPC：${command}`);
+      }
+    }
+  }
+
+  console.log("PASS system service facade owner 收口");
+}
+
 function validateNoBypassIpcInComponents() {
   const componentFiles = walkFiles(featuresRoot, (file) => {
     const normalized = repoPath(file);
@@ -333,6 +384,7 @@ validateFeatureDeepOwners();
 validateRouteShells();
 validateFeaturePageShells();
 validateServiceOwners();
+validateSystemServiceFacadeOwners();
 validateNoBypassIpcInComponents();
 validateNoGlobalApiInFeatureHooks();
 validateTanStackOwners();

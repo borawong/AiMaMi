@@ -1,44 +1,29 @@
 import { invokeIpc, type IpcEvidencePayload } from "@/contracts/ipc";
+import { systemService } from "@/services/system";
 import type {
-  CleanPayload,
   CoreEnvelope,
-  DiagnosePayload,
-  RebuildRegistryPayload,
-  SystemInfoPayload,
 } from "@/types";
-
-async function ignoreEnvelope(promise: Promise<CoreEnvelope<unknown>>): Promise<void> {
-  await promise;
-}
 
 async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T> {
   return (await promise).data;
 }
 
 export const maintenanceService = {
-  clean: () => invokeIpc<CoreEnvelope<CleanPayload>>("clean"),
+  clean: systemService.clean,
 
-  rebuildRegistry: () =>
-    invokeIpc<CoreEnvelope<RebuildRegistryPayload>>("rebuild_registry"),
+  rebuildRegistry: systemService.rebuildRegistry,
 
-  diagnose: () => invokeIpc<CoreEnvelope<DiagnosePayload>>("diagnose"),
+  diagnose: systemService.diagnose,
 
-  restartCodex: () =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("restart_codex")),
+  restartCodex: systemService.restartCodex,
 
-  forceKillCodex: () =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("force_kill_codex")),
+  forceKillCodex: systemService.forceKillCodex,
 
-  resetCodexConfig: () =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("reset_codex_config")),
+  resetCodexConfig: systemService.resetCodexConfig,
 
-  getImageCompat: () =>
-    readEnvelopeData(invokeIpc<CoreEnvelope<boolean>>("get_image_compat")),
+  getImageCompat: systemService.getImageCompat,
 
-  setImageCompat: (enabled: boolean) =>
-    readEnvelopeData(
-      invokeIpc<CoreEnvelope<boolean>>("set_image_compat", { enabled }),
-    ),
+  setImageCompat: systemService.setImageCompat,
 
   runCodexRouterDiagnostics: () =>
     readEnvelopeData(
@@ -52,9 +37,7 @@ export const maintenanceService = {
       }),
     ),
 
-  openPath: (path: string) =>
-    ignoreEnvelope(invokeIpc<CoreEnvelope<unknown>>("open_path", { path })),
+  openPath: systemService.openPath,
 
-  getSystemInfo: () =>
-    readEnvelopeData(invokeIpc<CoreEnvelope<SystemInfoPayload>>("get_system_info")),
+  getSystemInfo: systemService.getSystemInfo,
 };

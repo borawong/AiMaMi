@@ -6,8 +6,8 @@ use crate::contracts::{
     ApiConfigPayload, ApiModePayload, ApiProxyConfigPayload, ApiProxyDetectPayload, ApiProxyMode,
     ApiProxyTestPayload, AutoSwitchConfigPayload, AutoSwitchStatusPayload, BackendSkeletonStatus,
     BootstrapStatePayload, CleanPayload, CoreEnvelope, CoreSnapshotPayload, DaemonRunPayload,
-    DiagnosePayload, DiagnosePlatform, RebuildRegistryPayload, SystemInfo,
-    UpdateInstallabilityPayload,
+    DiagnosePayload, DiagnosePlatform, MysteryRouteGrant, NotificationClientStatePayload,
+    RebuildRegistryPayload, SystemInfo, UpdateInstallabilityPayload,
 };
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
@@ -363,53 +363,48 @@ impl<'a> SystemUseCase<'a> {
 
     pub(crate) fn get_or_create_remote_device_secret(
         &self,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
+    ) -> Result<CoreEnvelope<String>, CoreError> {
         let plan = self.pending_plan("get_or_create_remote_device_secret");
-        Ok(CoreEnvelope::from_backend_plan(
-            json!({ "secret": null, "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
-            &plan,
-        ))
+        Ok(CoreEnvelope::from_backend_plan(String::new(), &plan))
     }
 
     pub(crate) fn import_remote_device_secret_if_empty(
         &self,
         secret: Option<String>,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
-        let secret = clean_optional_text(secret);
+    ) -> Result<CoreEnvelope<()>, CoreError> {
+        let _secret = clean_optional_text(secret);
         let plan = self.no_op_plan("import_remote_device_secret_if_empty");
-        Ok(CoreEnvelope::from_backend_plan(
-            json!({
-                "secretPresent": secret.is_some(),
-                "backendStatus": BackendSkeletonStatus::from_plan(&plan),
-            }),
-            &plan,
-        ))
+        Ok(CoreEnvelope::from_backend_plan((), &plan))
     }
 
-    pub(crate) fn get_notification_client_state(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn get_notification_client_state(
+        &self,
+    ) -> Result<CoreEnvelope<NotificationClientStatePayload>, CoreError> {
         let plan = self.pending_plan("get_notification_client_state");
         Ok(CoreEnvelope::from_backend_plan(
-            json!({ "enabled": false, "backendStatus": BackendSkeletonStatus::from_plan(&plan) }),
+            NotificationClientStatePayload {
+                backend_status: BackendSkeletonStatus::from_plan(&plan),
+                device_id: String::new(),
+                notifications_since: 0,
+            },
             &plan,
         ))
     }
 
-    pub(crate) fn get_mystery_unlock_grants(&self) -> Result<CoreEnvelope<Value>, CoreError> {
+    pub(crate) fn get_mystery_unlock_grants(
+        &self,
+    ) -> Result<CoreEnvelope<Vec<MysteryRouteGrant>>, CoreError> {
         let plan = self.pending_plan("get_mystery_unlock_grants");
-        Ok(CoreEnvelope::from_backend_plan(json!([]), &plan))
+        Ok(CoreEnvelope::from_backend_plan(Vec::new(), &plan))
     }
 
     pub(crate) fn merge_mystery_unlock_grants(
         &self,
         grants: Option<Value>,
-    ) -> Result<CoreEnvelope<Value>, CoreError> {
-        let grants =
-            clean_optional_json(grants, "empty_mystery_unlock_grants", "授权列表不能为空。")?;
+    ) -> Result<CoreEnvelope<Vec<MysteryRouteGrant>>, CoreError> {
+        let grants = parse_mystery_route_grants(grants)?;
         let plan = self.no_op_plan("merge_mystery_unlock_grants");
-        Ok(CoreEnvelope::from_backend_plan(
-            grants.unwrap_or_else(|| json!([])),
-            &plan,
-        ))
+        Ok(CoreEnvelope::from_backend_plan(grants, &plan))
     }
 
     pub(crate) fn open_privacy_pane(
@@ -543,6 +538,51 @@ fn clean_optional_json(
     value
         .map(|value| clean_json_value(value, code, public_message))
         .transpose()
+}
+
+fn parse_mystery_route_grants(value: Option<Value>) -> Result<Vec<MysteryRouteGrant>, CoreError> {
+    let items = match value {
+        None => return Ok(Vec::new()),
+        Some(Value::Array(items)) => items,
+        Some(Value::Null) => {
+            return Err(CoreError::domain(
+                "empty_mystery_unlock_grants",
+                "授权列表不能为空。",
+            ))
+        }
+        Some(_) => {
+            return Err(CoreError::domain(
+                "invalid_mystery_unlock_grants",
+                "授权列表必须是数组。",
+            ))
+        }
+    };
+
+    Ok(items
+        .into_iter()
+        .filter_map(|item| {
+            let Value::Object(object) = item else {
+                return None;
+            };
+            let route = object
+                .get("route")
+                .and_then(Value::as_str)
+                .map(str::trim)
+                .unwrap_or_default();
+            if route.is_empty() {
+                return None;
+            }
+            let epoch_ms = object
+                .get("epochMs")
+                .or_else(|| object.get("epoch_ms"))
+                .and_then(Value::as_u64)
+                .unwrap_or_default();
+            Some(MysteryRouteGrant {
+                route: route.to_owned(),
+                epoch_ms,
+            })
+        })
+        .collect())
 }
 
 fn clean_json_value(
