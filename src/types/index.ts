@@ -669,6 +669,8 @@ export interface PendingAutoSwitchStatePayload {
   dismissedAt: string | null;
 }
 
+export type RelayExtraHeaders = string | Record<string, string> | null;
+
 export interface RelayProviderPayload {
   backendStatus?: BackendSkeletonStatus;
   id: string;
@@ -679,7 +681,7 @@ export interface RelayProviderPayload {
   apiKeyStored: boolean;
   model: string;
   wireApi: string;
-  extraHeaders: string | Record<string, string> | null;
+  extraHeaders: RelayExtraHeaders;
   network: string;
   active: boolean;
   healthScore: number | null;

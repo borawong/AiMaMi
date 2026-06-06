@@ -21,6 +21,7 @@ import type {
   RelayDiagnosticIssuePayload,
   RelayDiagnosticPayload,
   RelayExportPayload,
+  RelayExtraHeaders,
   RelayImportPayload,
   RelayPassthroughAuditEntry,
   RelayProviderPayload,
@@ -960,13 +961,7 @@ function relayProviderFromArgs(
     apiKeyStored: input.apiKeyStored === true,
     model: readRecordString(input, ["model", "defaultModel"], ""),
     wireApi: readRecordString(input, ["wireApi"], "openai-chat"),
-    extraHeaders:
-      typeof input.extraHeaders === "string" ||
-      (input.extraHeaders &&
-        typeof input.extraHeaders === "object" &&
-        !Array.isArray(input.extraHeaders))
-        ? (input.extraHeaders as string | Record<string, string>)
-        : null,
+    extraHeaders: readRelayExtraHeaders(input.extraHeaders),
     network: readRecordString(input, ["network"], "system"),
     active: false,
     healthScore: null,
@@ -977,6 +972,15 @@ function relayProviderFromArgs(
     errorMessage: null,
     modelsSample: [],
   };
+}
+
+function readRelayExtraHeaders(value: unknown): RelayExtraHeaders {
+  if (typeof value === "string") return value;
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const entries = Object.entries(value).filter(
+    (entry): entry is [string, string] => typeof entry[1] === "string",
+  );
+  return Object.fromEntries(entries);
 }
 
 const loadRelayStateHandler: IpcCommandHandler = (context) => {

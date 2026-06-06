@@ -599,6 +599,9 @@ function validateKnownInternalFrontendGates() {
 
   const relayTypedPayloadOk =
     relayService.includes("interface RelayProviderDraftInput") &&
+    relayService.includes("RelayExtraHeaders") &&
+    relayService.includes("toRelayProviderDraftArgs(input)") &&
+    relayService.includes("toRelayExtraHeadersArg(input.extraHeaders)") &&
     relayService.includes('RelayNetworkConfig = "system" | "direct"') &&
     relayService.includes("CoreEnvelope<RelayStatePayload>") &&
     relayService.includes("CoreEnvelope<RelayProviderPayload>") &&
@@ -606,12 +609,16 @@ function validateKnownInternalFrontendGates() {
     relayService.includes("CoreEnvelope<RelayDiagnosticPayload>") &&
     relayService.includes("systemService.restartCodex()") &&
     !relayService.includes("IpcEvidencePayload") &&
+    !relayService.includes("IpcJsonObject") &&
+    !relayService.includes("extends IpcJsonObject") &&
     !relayService.includes('"restart_codex"') &&
     relayHooks.includes("CoreEnvelope<TPayload>") &&
     relayHooks.includes("relayActiveStateQueryKey") &&
     relayHooks.includes("useRelayVoidMutation") &&
     !relayHooks.includes("useMutation<unknown") &&
     !relayHooks.includes("Promise<unknown>") &&
+    !relayHooks.includes("formatExtraHeaders(provider: unknown)") &&
+    relayHooks.includes("formatExtraHeaders(extraHeaders: RelayExtraHeaders | undefined)") &&
     !relayHooks.includes("writeKnownRelayQueryPayload(queryClient: QueryClient, payload: unknown)") &&
     !relayCache.includes("RelayCacheEnvelope<TPayload = unknown>");
   if (!relayTypedPayloadOk) {

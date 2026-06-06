@@ -1,6 +1,6 @@
 import {
   invokeIpc,
-  type IpcJsonObject,
+  type IpcArgValue,
 } from "@/contracts/ipc";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { systemService } from "@/services/system";
@@ -11,6 +11,7 @@ import type {
   RelayExportPayload,
   RelayImportPayload,
   RelayPassthroughAuditEntry,
+  RelayExtraHeaders,
   RelayProviderPayload,
   RelayProxyPayload,
   RelayRouterIssueFixPayload,
@@ -20,7 +21,7 @@ import type {
 } from "@/types";
 
 export type RelayNetworkConfig = "system" | "direct";
-export interface RelayProviderDraftInput extends IpcJsonObject {
+export interface RelayProviderDraftInput {
   id?: string;
   providerId?: string;
   ide?: string;
@@ -33,7 +34,7 @@ export interface RelayProviderDraftInput extends IpcJsonObject {
   model?: string;
   defaultModel?: string;
   wireApi?: string;
-  extraHeaders?: string | Record<string, string> | null;
+  extraHeaders?: RelayExtraHeaders;
   network?: RelayNetworkConfig;
 }
 export type RelayProviderDraft = RelayProviderDraftInput;
@@ -50,6 +51,7 @@ export type RelayImportDialogInput = {
 export type RelayRouterToggleProgressHandler = (payload: unknown) => void;
 
 const CODEX_ROUTER_TOGGLE_PROGRESS_EVENT = "codex-router-toggle-progress";
+type RelayProviderDraftArgs = Record<string, IpcArgValue>;
 
 function subscribeRouterToggleProgress(
   handler: RelayRouterToggleProgressHandler,
@@ -86,7 +88,9 @@ export const relayService = {
 
   loadState: () => invokeIpc<CoreEnvelope<RelayStatePayload>>("load_relay_state"),
   upsert: (input: RelayProviderDraft) =>
-    invokeIpc<CoreEnvelope<RelayProviderPayload>>("upsert_relay_provider", { input }),
+    invokeIpc<CoreEnvelope<RelayProviderPayload>>("upsert_relay_provider", {
+      input: toRelayProviderDraftArgs(input),
+    }),
   delete: (providerId: string) =>
     invokeIpc<CoreEnvelope<RelayStatePayload>>("delete_relay_provider", {
       providerId,
@@ -111,10 +115,12 @@ export const relayService = {
       providerId,
     }),
   testDraft: (input: RelayProviderDraft) =>
-    invokeIpc<CoreEnvelope<RelayTestPayload>>("test_relay_draft", { input }),
+    invokeIpc<CoreEnvelope<RelayTestPayload>>("test_relay_draft", {
+      input: toRelayProviderDraftArgs(input),
+    }),
   fetchModelsDraft: (input: RelayProviderDraft) =>
     invokeIpc<CoreEnvelope<string[]>>("fetch_relay_models_draft", {
-      input,
+      input: toRelayProviderDraftArgs(input),
     }),
   getActive: () =>
     invokeIpc<CoreEnvelope<RelayActivePayload>>("get_relay_active"),
@@ -178,3 +184,29 @@ export const relayService = {
       itemId,
     }),
 };
+
+function toRelayProviderDraftArgs(input: RelayProviderDraft): RelayProviderDraftArgs {
+  return {
+    id: input.id,
+    providerId: input.providerId,
+    ide: input.ide,
+    name: input.name,
+    baseUrl: input.baseUrl,
+    url: input.url,
+    endpoint: input.endpoint,
+    apiKey: input.apiKey,
+    apiKeyStored: input.apiKeyStored,
+    model: input.model,
+    defaultModel: input.defaultModel,
+    wireApi: input.wireApi,
+    extraHeaders: toRelayExtraHeadersArg(input.extraHeaders),
+    network: input.network,
+  };
+}
+
+function toRelayExtraHeadersArg(value: RelayExtraHeaders | undefined): IpcArgValue {
+  if (value === undefined || value === null || typeof value === "string") {
+    return value;
+  }
+  return { ...value };
+}

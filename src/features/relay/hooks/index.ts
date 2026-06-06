@@ -16,7 +16,7 @@ import {
   type RelayImportDialogInput,
   type RelayProviderDraft,
 } from "@/services/relay";
-import type { CoreEnvelope, RelayDiagnosticPayload } from "@/types";
+import type { CoreEnvelope, RelayDiagnosticPayload, RelayExtraHeaders } from "@/types";
 import {
   invalidateRelayContractQueries,
   RelayCache,
@@ -736,7 +736,7 @@ export function useRelayPageController() {
           apiKeyStored: readBoolean(provider, ["apiKeyStored", "hasApiKey"]),
           model,
           wireApi: normalizeWireApi(readString(provider, ["wireApi"], "openai-chat")),
-          extraHeaders: formatExtraHeaders(provider),
+          extraHeaders: formatExtraHeaders(readRelayExtraHeaders(firstPath(provider, ["extraHeaders"]))),
           network,
           active: readBoolean(provider, ["active", "enabled"], activeByState),
           latencyMs: readNumber(provider, ["latencyMs", "latency"]),
@@ -853,7 +853,7 @@ export function useRelayPageController() {
     if (!open && !editingProviderId) resetForm();
   };
 
-  const buildUpsertInput = () => ({
+  const buildUpsertInput = (): RelayProviderDraft => ({
     id: form.id,
     ide: currentIde,
     name: form.name.trim(),
@@ -865,7 +865,7 @@ export function useRelayPageController() {
     network: form.network,
   });
 
-  const buildDraftInput = () => ({
+  const buildDraftInput = (): RelayProviderDraft => ({
     providerId: form.id,
     ide: currentIde,
     name: form.name,
@@ -1271,15 +1271,24 @@ export type RelayPageController = ReturnType<typeof useRelayPageController>;
 
 type RelayTranslator = (key: string, options?: Record<string, unknown>) => string;
 
-function formatExtraHeaders(provider: unknown) {
-  const extraHeaders = firstPath(provider, ["extraHeaders"]);
+function formatExtraHeaders(extraHeaders: RelayExtraHeaders | undefined) {
   if (typeof extraHeaders === "string") return extraHeaders;
-  if (!isRecord(extraHeaders)) return "";
+  if (!extraHeaders) return "";
   try {
     return JSON.stringify(extraHeaders);
   } catch {
     return "";
   }
+}
+
+function readRelayExtraHeaders(value: unknown): RelayExtraHeaders | undefined {
+  if (typeof value === "string") return value;
+  if (!isRecord(value)) return undefined;
+  return Object.fromEntries(
+    Object.entries(value).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  );
 }
 
 function readModelNames(value: unknown) {

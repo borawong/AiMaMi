@@ -304,8 +304,14 @@ function validateRelayMockPayloadHandlers() {
     "relayCommandHandlers[definition.command] ??",
     "relayStateFromStatus",
     "relayProviderFromArgs",
+    "RelayExtraHeaders",
+    "readRelayExtraHeaders(input.extraHeaders)",
     "relayDiagnosticFromStatus",
   ]);
+
+  if (commandFixtureText.includes("input.extraHeaders as string | Record<string, string>")) {
+    failures.push("src/mocks/fixtures/commands.ts relay mock 不得用 inline headers union 回退 typed 合同");
+  }
 
   for (const command of relayCommands) {
     if (!commandFixtureText.includes(`${command}:`)) {

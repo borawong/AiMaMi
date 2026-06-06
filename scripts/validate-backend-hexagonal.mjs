@@ -754,6 +754,7 @@ function validateRelayTypedPayloadContracts() {
   const serviceText = readUtf8(servicePath);
 
   assertContains(contractPath, contractText, [
+    "pub(crate) enum RelayExtraHeaders",
     "pub(crate) struct RelayProviderDraftInput",
     "pub(crate) struct RelayProviderPayload",
     "pub(crate) struct RelayStatePayload",
@@ -783,6 +784,7 @@ function validateRelayTypedPayloadContracts() {
   ], "relay command 寮虹被鍨?envelope");
 
   assertContains(usecasePath, usecaseText, [
+    "RelayExtraHeaders",
     "Result<CoreEnvelope<RelayStatePayload>, CoreError>",
     "Result<CoreEnvelope<RelayProviderPayload>, CoreError>",
     "Result<CoreEnvelope<RelayTestPayload>, CoreError>",
@@ -797,10 +799,14 @@ function validateRelayTypedPayloadContracts() {
     "Result<CoreEnvelope<RelayRouterIssueFixPayload>, CoreError>",
     "fn state_payload(",
     "fn provider_payload(",
+    "fn empty_headers() -> Option<RelayExtraHeaders>",
     "fn diagnostic_payload(",
   ], "relay usecase 寮虹被鍨?payload 缁勮");
 
   assertContains(servicePath, serviceText, [
+    "RelayExtraHeaders",
+    "toRelayProviderDraftArgs(input)",
+    "toRelayExtraHeadersArg(input.extraHeaders)",
     "CoreEnvelope<RelayStatePayload>",
     "CoreEnvelope<RelayProviderPayload>",
     "CoreEnvelope<RelayTestPayload>",
@@ -819,19 +825,26 @@ function validateRelayTypedPayloadContracts() {
   assertNotContainsSnippet(contractPath, contractText, [
     "RelayActionPayload",
     "pub input: Option<Value>",
+    "serde_json::Value",
+    "Option<Value>",
   ], "relay contract 涓嶅緱閫€鍥炲ぇ妗?payload");
   assertNotContainsSnippet(commandPath, commandText, [
     "RelayActionPayload",
     "Option<Value>",
+    "serde_json::Value",
   ], "relay command 涓嶅緱閫€鍥炴垨閫忎紶 generic payload");
   assertNotContainsSnippet(usecasePath, usecaseText, [
     "RelayActionPayload",
     "pub(crate) fn provider_action(",
     "pub(crate) fn empty_action(",
+    "serde_json::Value",
+    "Option<Value>",
   ], "relay usecase 涓嶅緱澶嶇敤 generic action owner");
   assertNotContainsSnippet(servicePath, serviceText, [
     "IpcEvidencePayload",
+    "IpcJsonObject",
     "restart_codex",
+    "extends IpcJsonObject",
   ], "relay service 涓嶅緱閫€鍥?generic evidence payload 鎴栫洿鎺ヨ皟 system command");
 }
 

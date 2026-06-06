@@ -1,14 +1,13 @@
 use crate::contracts::{
     BackendSkeletonStatus, CoreEnvelope, RelayActiveByIdePayload, RelayActivePayload,
-    RelayDiagnosticIssuePayload, RelayDiagnosticPayload, RelayExportPayload, RelayImportPayload,
-    RelayPassthroughAuditEntry, RelayProviderDraftInput, RelayProviderPayload, RelayProxyPayload,
-    RelayRouterIssueFixPayload, RelayRouterMigrationPayload, RelayRouterTogglePayload,
-    RelayStatePayload, RelayTestPayload,
+    RelayDiagnosticIssuePayload, RelayDiagnosticPayload, RelayExportPayload, RelayExtraHeaders,
+    RelayImportPayload, RelayPassthroughAuditEntry, RelayProviderDraftInput, RelayProviderPayload,
+    RelayProxyPayload, RelayRouterIssueFixPayload, RelayRouterMigrationPayload,
+    RelayRouterTogglePayload, RelayStatePayload, RelayTestPayload,
 };
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::repository::RepositoryBundle;
-use serde_json::Value;
 use std::collections::BTreeMap;
 
 const MODULE: &str = "relay";
@@ -519,6 +518,6 @@ fn active_map(active_provider: Option<&(String, String)>) -> RelayActiveByIdePay
     active_by_ide
 }
 
-fn empty_headers() -> Option<Value> {
-    Some(Value::Object(Default::default()))
+fn empty_headers() -> Option<RelayExtraHeaders> {
+    Some(RelayExtraHeaders::Map(BTreeMap::new()))
 }

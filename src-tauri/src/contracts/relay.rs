@@ -1,7 +1,13 @@
 use crate::contracts::BackendSkeletonStatus;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use std::collections::BTreeMap;
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(untagged)]
+pub(crate) enum RelayExtraHeaders {
+    Text(String),
+    Map(BTreeMap<String, String>),
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
 #[serde(rename_all = "camelCase")]
@@ -18,7 +24,7 @@ pub(crate) struct RelayProviderDraftInput {
     pub model: Option<String>,
     pub default_model: Option<String>,
     pub wire_api: Option<String>,
-    pub extra_headers: Option<Value>,
+    pub extra_headers: Option<RelayExtraHeaders>,
     pub network: Option<String>,
 }
 
@@ -35,7 +41,7 @@ pub(crate) struct RelayProviderPayload {
     pub api_key_stored: bool,
     pub model: String,
     pub wire_api: String,
-    pub extra_headers: Option<Value>,
+    pub extra_headers: Option<RelayExtraHeaders>,
     pub network: String,
     pub active: bool,
     pub health_score: Option<i64>,
