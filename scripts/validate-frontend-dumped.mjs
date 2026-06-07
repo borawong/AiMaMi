@@ -723,25 +723,56 @@ function validatePluginsRestorationMatrix(manifest) {
     {
       command: "get_plugin_config",
       source: "assets/index-CL22l5v8.js",
+      status: "contract-service-only",
       service: "src/services/plugins/index.ts",
-      hook: "src/features/plugins/hooks/query.ts",
-      cache: "src/features/plugins/cache/index.ts",
-      panel: "src/features/plugins/panels/page.tsx",
-      hookFragments: ["pluginsService.getConfig", "useQuery"],
-      cacheFragments: ["PluginsConfigEnvelope", "PLUGINS_CONFIG", "writePluginsConfig"],
-      panelFragments: ["config", "settings"],
+      contract: "src/features/plugins/contract.ts",
+      types: "src/features/plugins/types/index.ts",
+      serviceFragments: ['"get_plugin_config"', "PluginsConfigEnvelope", "{ id }"],
+      contractFragments: ['"command": "get_plugin_config"', '"controlFlowCount": 0'],
     },
     {
       command: "update_plugin_config",
       source: "assets/index-CL22l5v8.js",
+      status: "contract-service-only",
       service: "src/services/plugins/index.ts",
-      hook: "src/features/plugins/hooks/mutation.ts",
-      cache: "src/features/plugins/cache/index.ts",
-      panel: "src/features/plugins/panels/page.tsx",
-      hookFragments: ["pluginsService.updateConfig", "useMutation"],
-      cacheFragments: ["PluginsConfigEnvelope", "writePluginsConfig", "mutation-payload"],
-      panelFragments: ["config", "settings"],
+      contract: "src/features/plugins/contract.ts",
+      types: "src/features/plugins/types/index.ts",
+      serviceFragments: [
+        '"update_plugin_config"',
+        "PluginsConfigEnvelope",
+        "{ id, settings }",
+      ],
+      contractFragments: ['"command": "update_plugin_config"', '"controlFlowCount": 0'],
     },
+  ];
+  const pluginsOwnerPaths = [
+    "src/features/plugins/hooks/index.ts",
+    "src/features/plugins/hooks/query.ts",
+    "src/features/plugins/hooks/refresh.ts",
+    "src/features/plugins/hooks/mutation.ts",
+    "src/features/plugins/hooks/page.ts",
+    "src/features/plugins/components/page.tsx",
+    "src/features/plugins/panels/page.tsx",
+    "src/features/plugins/dialogs/index.ts",
+  ];
+  const forbiddenUiConsumptionSignals = [
+    "PluginConfigDialog",
+    "configDialog",
+    "openForPlugin",
+    "loadConfigMutation",
+    "updatePluginConfigMutation",
+    "usePluginConfigQuery",
+    "usePluginsConfigMutation",
+    "pluginsService.getConfig",
+    "pluginsService.updateConfig",
+    "getPluginsConfigQueryKey",
+    "writePluginsConfigQueryPayload",
+    "beginPluginsConfigMutation",
+    "rollbackPluginsConfig",
+    "PluginsConfigSection",
+    "getPluginConfig",
+    "updatePluginConfig",
+    "pluginConfigQueryKey",
   ];
 
   for (const rule of rules) {
@@ -751,7 +782,7 @@ function validatePluginsRestorationMatrix(manifest) {
       continue;
     }
 
-    for (const field of ["source", "service", "hook", "cache", "panel"]) {
+    for (const field of ["source", "status", "service", "contract", "types"]) {
       const actual = extractTsStringField(block, field);
       if (actual !== rule[field]) {
         failures.push(
@@ -761,34 +792,43 @@ function validatePluginsRestorationMatrix(manifest) {
     }
 
     const service = readRequired(resolveRepoPath(rule.service));
-    const hook = readRequired(resolveRepoPath(rule.hook));
-    const cache = readRequired(resolveRepoPath(rule.cache));
-    const panel = readRequired(resolveRepoPath(rule.panel));
+    const contract = readRequired(resolveRepoPath(rule.contract));
+    const types = readRequired(resolveRepoPath(rule.types));
 
-    if (!service.includes(`"${rule.command}"`)) {
-      failures.push(`plugins ${rule.command} 未落到 service wrapper：${rule.service}`);
-    }
-    for (const fragment of rule.hookFragments) {
-      if (!hook.includes(fragment)) {
-        failures.push(`plugins ${rule.command} 未落到具体 hook 文件 ${rule.hook}：缺少 ${fragment}`);
+    for (const fragment of rule.serviceFragments) {
+      if (!service.includes(fragment)) {
+        failures.push(`plugins ${rule.command} service wrapper 缺少：${fragment}`);
       }
     }
-    for (const fragment of rule.cacheFragments) {
-      if (!cache.includes(fragment)) {
-        failures.push(`plugins ${rule.command} 未落到具体 cache 文件 ${rule.cache}：缺少 ${fragment}`);
+    for (const fragment of rule.contractFragments) {
+      if (!contract.includes(fragment)) {
+        failures.push(`plugins ${rule.command} dumped contract 缺少：${fragment}`);
       }
     }
-    if (!hasAnyFragment(panel, rule.panelFragments)) {
-      failures.push(
-        `plugins ${rule.command} 未落到具体 panel 文件 ${rule.panel}：缺少配置 UI 线索`,
-      );
+    if (
+      !types.includes("export type PluginsConfigEnvelope = ServicePluginsConfigEnvelope") ||
+      !types.includes("RuntimeExtensionConfigPayload")
+    ) {
+      failures.push("plugins typed config envelope 必须保留在模块 types 合同层");
     }
+  }
+
+  for (const ownerPath of pluginsOwnerPaths) {
+    const ownerText = readRequired(resolveRepoPath(ownerPath));
+    for (const signal of forbiddenUiConsumptionSignals) {
+      if (ownerText.includes(signal)) {
+        failures.push(`plugins 缺少可见配置 UI caller，${ownerPath} 不得消费 ${signal}`);
+      }
+    }
+  }
+  if (existsSync(resolveRepoPath("src/features/plugins/dialogs/config.tsx"))) {
+    failures.push("plugins 缺少可见配置 UI caller，不得保留 src/features/plugins/dialogs/config.tsx");
   }
 
   if (failures.length === before) {
     logPass("plugins raw asset 到模块还原矩阵", `${rules.length}/${rules.length}`);
   } else {
-    logFail("plugins raw asset 到模块还原矩阵", "存在只覆盖命令但未还原模块 owner 的缺口");
+    logFail("plugins raw asset 到模块还原矩阵", "存在 config 合同缺失或 UI owner 越界");
   }
 }
 

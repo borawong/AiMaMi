@@ -3,7 +3,6 @@ import { createModuleCacheOwner } from "@/features/_shared/cache";
 import type {
   PluginsCacheEnvelope,
   PluginsCachePayload,
-  PluginsConfigEnvelope,
   PluginsListEnvelope,
   PluginsToggleEnvelope,
 } from "../types";
@@ -11,9 +10,6 @@ import type {
 export const PluginsCache = createModuleCacheOwner<PluginsCachePayload>("plugins");
 export const PluginsQueryKeys = PluginsCache.queryKeys;
 export const PLUGINS_LIST_QUERY_KEY = ["plugins-list"] as const;
-export const PLUGINS_CONFIG_QUERY_ROOT = ["plugins-config"] as const;
-export const getPluginsConfigQueryKey = (id: string) =>
-  [...PLUGINS_CONFIG_QUERY_ROOT, id] as const;
 export const writePluginsAuthoritativePayload = (
   queryClient: QueryClient,
   envelope: Omit<PluginsCacheEnvelope, "moduleId">,
@@ -71,28 +67,6 @@ export function writePluginsListQueryPayload(
   return payload;
 }
 
-export function writePluginsConfigQueryPayload(
-  queryClient: QueryClient,
-  id: string,
-  payload: PluginsConfigEnvelope,
-  sequence: number,
-) {
-  const accepted = writePluginsCachePayload(
-    queryClient,
-    payload,
-    "full-refresh",
-    sequence,
-  );
-  const queryKey = getPluginsConfigQueryKey(id);
-
-  if (!accepted) {
-    return queryClient.getQueryData<PluginsConfigEnvelope>(queryKey) ?? payload;
-  }
-
-  queryClient.setQueryData(queryKey, payload);
-  return payload;
-}
-
 export async function writePluginsRefreshPayload(
   queryClient: QueryClient,
   payload: PluginsListEnvelope,
@@ -115,12 +89,6 @@ export interface PluginsToggleCacheContext {
   sequence: number;
 }
 
-export interface PluginsConfigCacheContext {
-  previousConfig?: PluginsConfigEnvelope;
-  pluginId: string;
-  sequence: number;
-}
-
 export async function optimisticallyUpdatePluginsToggle(
   queryClient: QueryClient,
   id: string,
@@ -138,19 +106,6 @@ export async function optimisticallyUpdatePluginsToggle(
   };
 }
 
-export async function beginPluginsConfigMutation(
-  queryClient: QueryClient,
-  id: string,
-): Promise<PluginsConfigCacheContext> {
-  const queryKey = getPluginsConfigQueryKey(id);
-  await queryClient.cancelQueries({ queryKey });
-  return {
-    previousConfig: queryClient.getQueryData<PluginsConfigEnvelope>(queryKey),
-    pluginId: id,
-    sequence: nextPluginsCacheSequence(),
-  };
-}
-
 export function rollbackPluginsToggle(
   queryClient: QueryClient,
   context: PluginsToggleCacheContext | undefined,
@@ -160,22 +115,10 @@ export function rollbackPluginsToggle(
   }
 }
 
-export function rollbackPluginsConfig(
-  queryClient: QueryClient,
-  context: PluginsConfigCacheContext | undefined,
-) {
-  if (context?.previousConfig) {
-    queryClient.setQueryData(
-      getPluginsConfigQueryKey(context.pluginId),
-      context.previousConfig,
-    );
-  }
-}
-
 export async function writePluginsMutationPayload<TPayload extends PluginsCachePayload>(
   queryClient: QueryClient,
   payload: TPayload,
-  context: PluginsToggleCacheContext | PluginsConfigCacheContext | undefined,
+  context: PluginsToggleCacheContext | undefined,
 ) {
   const accepted = writePluginsCachePayload(
     queryClient,
@@ -188,15 +131,6 @@ export async function writePluginsMutationPayload<TPayload extends PluginsCacheP
   if (isPluginsToggleEnvelope(payload)) {
     queryClient.setQueryData(PLUGINS_LIST_QUERY_KEY, toPluginsListEnvelope(payload));
   }
-  if (isPluginsConfigEnvelope(payload)) {
-    let pluginId = payload.data.id;
-    if (!pluginId && context && "pluginId" in context) {
-      pluginId = context.pluginId;
-    }
-    if (pluginId) {
-      queryClient.setQueryData(getPluginsConfigQueryKey(pluginId), payload);
-    }
-  }
   await invalidatePluginsContractQueries(queryClient);
 }
 
@@ -204,7 +138,6 @@ export async function invalidatePluginsContractQueries(queryClient: QueryClient)
   await Promise.all([
     PluginsCache.invalidateContractQueries(queryClient),
     queryClient.invalidateQueries({ queryKey: PLUGINS_LIST_QUERY_KEY }),
-    queryClient.invalidateQueries({ queryKey: PLUGINS_CONFIG_QUERY_ROOT }),
   ]);
 }
 
@@ -229,12 +162,6 @@ function isPluginsToggleEnvelope(
   value: PluginsCachePayload,
 ): value is PluginsToggleEnvelope {
   return "plugin" in value.data && "items" in value.data;
-}
-
-function isPluginsConfigEnvelope(
-  value: PluginsCachePayload,
-): value is PluginsConfigEnvelope {
-  return "settings" in value.data && "id" in value.data;
 }
 
 function toPluginsListEnvelope(envelope: PluginsToggleEnvelope): PluginsListEnvelope {

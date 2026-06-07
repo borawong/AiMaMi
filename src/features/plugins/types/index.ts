@@ -7,9 +7,6 @@ import type {
   RuntimeExtensionTogglePayload,
 } from "@/types";
 import type {
-  RuntimeExtensionSettings,
-} from "@/services/runtime-extensions";
-import type {
   PluginsConfigEnvelope as ServicePluginsConfigEnvelope,
   PluginsListEnvelope as ServicePluginsListEnvelope,
   PluginsMutationEnvelope as ServicePluginsMutationEnvelope,
@@ -27,7 +24,6 @@ export type PluginsCachePayload =
   | PluginsConfigEnvelope;
 export type PluginsPluginRecord = RuntimeExtensionPluginPayload;
 export type PluginsSettingsValue = RuntimeExtensionSettingsValue;
-export type PluginSettingsDraft = RuntimeExtensionSettings;
 export type PluginsListEnvelope = ServicePluginsListEnvelope;
 export type PluginsToggleEnvelope = ServicePluginsToggleEnvelope;
 export type PluginsConfigEnvelope = ServicePluginsConfigEnvelope;
@@ -38,10 +34,6 @@ export type PluginsCacheEnvelope<TPayload = PluginsCachePayload> =
 export interface PluginsQueryViewState {
   isLoading: boolean;
   isFetching: boolean;
-}
-
-export interface PluginsConfigQueryViewState extends PluginsQueryViewState {
-  isError: boolean;
 }
 
 export interface PluginsPageAction {
@@ -56,30 +48,12 @@ export interface PluginsTogglePluginAction {
   run: (id: string, enabled: boolean) => void;
 }
 
-export interface PluginsConfigAction {
-  isPending: boolean;
-  run: () => Promise<void>;
-}
-
-export interface PluginsConfigPanelController {
-  selectedPluginId: string | null;
-  selectedPlugin: PluginsPluginRecord | null;
-  configQuery: PluginsConfigQueryViewState;
-  configDraft: string;
-  configErrorKey: string | null;
-  canSaveConfig: boolean;
-  selectPlugin: (id: string) => void;
-  setConfigDraft: (value: string) => void;
-  saveConfig: PluginsConfigAction;
-}
-
 export interface PluginsPageController {
   plugins: PluginsPluginRecord[];
   enabledCount: number;
   pluginsQuery: PluginsQueryViewState;
   refreshAction: PluginsPageAction;
   togglePlugin: PluginsTogglePluginAction;
-  config: PluginsConfigPanelController;
 }
 
 export interface PluginsPagePanelProps {
