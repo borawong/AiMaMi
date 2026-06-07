@@ -9,13 +9,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert";
-import type { SkillsPageController } from "../hooks";
+import type {
+  SkillsConfirmDialogProps,
+  SkillsConfirmDialogsProps,
+} from "../types";
 
-export function SkillsConfirmDialogs({
-  controller,
-}: {
-  controller: SkillsPageController;
-}) {
+export function SkillsConfirmDialogs({ controller }: SkillsConfirmDialogsProps) {
   return (
     <>
       <RemoveSkillDialog controller={controller.removeDialog} />
@@ -24,11 +23,7 @@ export function SkillsConfirmDialogs({
   );
 }
 
-function RemoveSkillDialog({
-  controller,
-}: {
-  controller: SkillsPageController["removeDialog"];
-}) {
+function RemoveSkillDialog({ controller }: SkillsConfirmDialogProps) {
   const { t } = useTranslation();
 
   return (
@@ -62,11 +57,7 @@ function RemoveSkillDialog({
   );
 }
 
-function DeleteBackupDialog({
-  controller,
-}: {
-  controller: SkillsPageController["deleteBackupDialog"];
-}) {
+function DeleteBackupDialog({ controller }: SkillsConfirmDialogProps) {
   const { t } = useTranslation();
 
   return (

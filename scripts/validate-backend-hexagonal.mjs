@@ -428,6 +428,192 @@ function validateMcpTypedPayloadContracts() {
 validateMcpUpsertArgumentChain();
 validateMcpTypedPayloadContracts();
 
+function validateSkillsTypedPayloadContracts() {
+  const servicePath = join(frontendRoot, "services", "skills", "index.ts");
+  const commandPath = join(backendRoot, "commands", "skills.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "skills.rs");
+  const contractPath = join(backendRoot, "contracts", "skills.rs");
+  const ipcPath = join(frontendRoot, "contracts", "ipc", "commands.ts");
+  const featureTypesPath = join(frontendRoot, "features", "skills", "types", "index.ts");
+  const featureCachePath = join(frontendRoot, "features", "skills", "cache", "index.ts");
+  const featureHooksPath = join(frontendRoot, "features", "skills", "hooks", "index.ts");
+  const featureQueryHookPath = join(frontendRoot, "features", "skills", "hooks", "query.ts");
+  const featureMutationHookPath = join(frontendRoot, "features", "skills", "hooks", "mutation.ts");
+  const featurePageHookPath = join(frontendRoot, "features", "skills", "hooks", "page.ts");
+  const serviceText = readRequiredUtf8(servicePath, "skills service wrapper");
+  const commandText = readRequiredUtf8(commandPath, "skills command adapter");
+  const usecaseText = readRequiredUtf8(usecasePath, "skills usecase");
+  const contractText = readRequiredUtf8(contractPath, "skills backend contract");
+  const ipcText = readRequiredUtf8(ipcPath, "skills IPC contract");
+  const featureTypesText = readRequiredUtf8(featureTypesPath, "skills feature types");
+  const featureCacheText = readRequiredUtf8(featureCachePath, "skills feature cache");
+  const featureHooksText = readRequiredUtf8(featureHooksPath, "skills hooks barrel");
+  const featureQueryHookText = readRequiredUtf8(featureQueryHookPath, "skills query hook");
+  const featureMutationHookText = readRequiredUtf8(featureMutationHookPath, "skills mutation hook");
+  const featurePageHookText = readRequiredUtf8(featurePageHookPath, "skills page hook");
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) struct SkillListPayload",
+    "pub(crate) struct SkillBackupListPayload",
+    "pub(crate) struct SkillImportPayload",
+    "pub(crate) struct SkillRemovePayload",
+    "pub(crate) struct SkillRestorePayload",
+    "pub(crate) struct SkillDeleteBackupPayload",
+  ], "skills backend typed DTO");
+
+  assertContains(commandPath, commandText, [
+    "Result<CoreEnvelope<SkillListPayload>, String>",
+    "Result<CoreEnvelope<SkillBackupListPayload>, String>",
+    "Result<CoreEnvelope<SkillImportPayload>, String>",
+    "Result<CoreEnvelope<SkillRemovePayload>, String>",
+    "Result<CoreEnvelope<SkillRestorePayload>, String>",
+    "Result<CoreEnvelope<SkillDeleteBackupPayload>, String>",
+  ], "skills command typed envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<SkillListPayload>, CoreError>",
+    "Result<CoreEnvelope<SkillBackupListPayload>, CoreError>",
+    "Result<CoreEnvelope<SkillImportPayload>, CoreError>",
+    "Result<CoreEnvelope<SkillRemovePayload>, CoreError>",
+    "Result<CoreEnvelope<SkillRestorePayload>, CoreError>",
+    "Result<CoreEnvelope<SkillDeleteBackupPayload>, CoreError>",
+  ], "skills usecase typed payload");
+
+  assertContains(servicePath, serviceText, [
+    "CoreEnvelope<SkillListPayload>",
+    "CoreEnvelope<SkillBackupListPayload>",
+    "CoreEnvelope<SkillImportPayload>",
+    "CoreEnvelope<SkillRemovePayload>",
+    "CoreEnvelope<SkillRestorePayload>",
+    "CoreEnvelope<SkillDeleteBackupPayload>",
+  ], "skills service typed envelope");
+
+  assertContains(ipcPath, ipcText, [
+    '"load_installed_skills"',
+    '"load_skill_backups"',
+    '"import_skill"',
+    '"remove_skill"',
+    '"restore_skill_backup"',
+    '"delete_skill_backup"',
+  ], "skills IPC command contract");
+
+  assertContains(featureTypesPath, featureTypesText, [
+    "export type SkillsInstalledEnvelope",
+    "export type SkillsBackupsEnvelope",
+    "export type SkillsImportEnvelope",
+    "export type SkillsRemoveEnvelope",
+    "export type SkillsRestoreEnvelope",
+    "export type SkillsDeleteBackupEnvelope",
+    "export type SkillsMutationPayload",
+    "export type SkillsMutationEnvelope",
+    "export type SkillsCachePayload",
+    "export interface SkillsPageController",
+  ], "skills frontend typed cache/controller contract");
+
+  assertContains(featureHooksPath, featureHooksText, [
+    'from "./query"',
+    'from "./mutation"',
+    'from "./page"',
+  ], "skills hooks barrel owner");
+
+  assertNotContainsSnippet(featureHooksPath, featureHooksText, [
+    "useQuery",
+    "useMutation",
+    "writeSkillsAuthoritativePayload",
+    "writeSkillsMutationPayload",
+    "skillsService.",
+  ], "skills hooks/index must not own query, mutation, payload, or service logic");
+
+  assertContains(featureQueryHookPath, featureQueryHookText, [
+    "SKILLS_INSTALLED_QUERY_KEY",
+    "SKILLS_BACKUPS_QUERY_KEY",
+    "skillsService.loadInstalled",
+    "skillsService.loadBackups",
+    "writeSkillsCachePayload",
+  ], "skills query hooks typed authoritative envelope");
+
+  assertContains(featureMutationHookPath, featureMutationHookText, [
+    "skillsService.pickSkillDirectory",
+    "skillsService.importSkill",
+    "skillsService.removeSkill",
+    "skillsService.restoreBackup",
+    "skillsService.deleteBackup",
+    "writeSkillsMutationPayload",
+    "cancelQueries",
+    "return null;",
+    "if (payload) return writeSkillsMutationPayload(queryClient, payload)",
+  ], "skills mutation hooks typed authoritative envelope and import cancel no-op");
+
+  assertContains(featurePageHookPath, featurePageHookText, [
+    "SkillsPageController",
+    "useSkillsPageQueries",
+    "useSkillsPageMutations",
+    "activeQuery.isError",
+    "queryFailureAlert",
+    "activeQuery.refetch()",
+    "skills.loadFailed",
+    "skills.loadFailedDesc",
+  ], "skills page controller query failure contract");
+
+  assertContains(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner<SkillsCachePayload>(\"skills\")",
+    "Omit<SkillsCacheEnvelope, \"moduleId\">",
+    "writeSkillsAuthoritativePayload",
+    "writeSkillsCachePayload",
+    "writeSkillsMutationPayload",
+    "setQueryData<CoreEnvelope<SkillListPayload>>",
+    "setQueryData<CoreEnvelope<SkillBackupListPayload>>",
+    "invalidateSkillsContractQueries",
+  ], "skills cache typed authoritative envelope");
+
+  assertNotContains(commandPath, commandText, [
+    /\bserde_json::Value\b/,
+    /\bCoreEnvelope<IpcEvidencePayload>\b/,
+    /\bCoreEnvelope<unknown>\b/,
+  ], "skills command must not return generic payload");
+
+  assertNotContains(usecasePath, usecaseText, [
+    /\bserde_json::Value\b/,
+    /\bCoreEnvelope<IpcEvidencePayload>\b/,
+    /\bCoreEnvelope<unknown>\b/,
+  ], "skills usecase must not return generic payload");
+
+  assertNotContains(servicePath, serviceText, [
+    /\bIpcEvidencePayload\b/,
+    /\bIpcJsonObject\b/,
+    /\bCoreEnvelope<unknown>\b/,
+  ], "skills service must not return generic evidence payload");
+
+  assertNotContains(featurePageHookPath, featurePageHookText, [
+    /\buse(Query|Mutation|QueryClient)\b/,
+    /@\/services\/skills|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|skillsService\.|invokeIpc|invoke\(/,
+  ], "skills page controller must not call TanStack or service/API/IPC directly");
+
+  assertNotContainsSnippet(featureTypesPath, featureTypesText, [
+    "SkillsCacheEnvelope<TPayload = unknown>",
+    "ModuleCacheEnvelope<unknown>",
+    "ReturnType<typeof useSkillsPageController>",
+  ], "skills feature types must keep explicit typed payloads and controller contracts");
+
+  assertNotContainsSnippet(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner(\"skills\")",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+  ], "skills cache must keep typed authoritative payloads");
+
+  assertNotContainsSnippet(featureQueryHookPath, featureQueryHookText, [
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+  ], "skills query hook must keep typed authoritative payloads");
+
+  assertNotContainsSnippet(featureMutationHookPath, featureMutationHookText, [
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+  ], "skills mutation hook must keep typed authoritative payloads");
+}
+
+validateSkillsTypedPayloadContracts();
+
 function validateSystemEnvelopeServiceTypes() {
   const systemServicePath = join(frontendRoot, "services", "system", "index.ts");
   const commandPath = join(backendRoot, "commands", "system.rs");

@@ -774,6 +774,165 @@ function validateSettingsDeepOwnerBoundaries() {
   console.log("PASS settings deep owner gate executed: hooks/index, query, mutation, action, page, cache, types, panels/dialogs/components");
 }
 
+function validateSkillsDeepOwnerBoundaries() {
+  const skillsRoot = join(featuresRoot, "skills");
+  const hooksIndexPath = join(skillsRoot, "hooks", "index.ts");
+  const queryPath = join(skillsRoot, "hooks", "query.ts");
+  const mutationPath = join(skillsRoot, "hooks", "mutation.ts");
+  const pagePath = join(skillsRoot, "hooks", "page.ts");
+  const cachePath = join(skillsRoot, "cache", "index.ts");
+  const sequencePath = join(skillsRoot, "cache", "sequence.ts");
+  const typesPath = join(skillsRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    ...walkFiles(join(skillsRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(skillsRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(skillsRoot, "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const cacheSequence = existsSync(sequencePath) ? readRequired(sequencePath) : "";
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
+  const cacheOwnerText = `${cache}\n${cacheSequence}`;
+
+  assertOnlyBarrelReExports("src/features/skills/hooks/index.ts", hooksIndex, [
+    "query",
+    "mutation",
+    "page",
+  ]);
+  assertNotMatches("src/features/skills/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "skills hooks/index can only re-export split owners"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|nextSkillsCacheSequence|writeSkills)/, "skills hooks/index must not own cache writes or sequence"],
+    [/@\/services\/skills|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|skillsService\.|invokeIpc|invoke\(/, "skills hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/skills/hooks/query.ts", query, [
+    "useSkillsCacheController",
+    "useModuleCacheController(SkillsCache)",
+    "useQuery",
+    "useQueryClient",
+    "SKILLS_INSTALLED_QUERY_KEY",
+    "SKILLS_BACKUPS_QUERY_KEY",
+    "skillsService.loadInstalled",
+    "skillsService.loadBackups",
+    "writeSkillsCachePayload",
+  ]);
+  assertNotMatches("src/features/skills/hooks/query.ts", query, [
+    [/\buseMutation\b/, "skills query owner must not own mutation"],
+    [/\buse(State|Reducer)\b/, "skills query owner must not own page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|writeSkillsMutationPayload)\b/, "skills query owner must delegate cache writes, invalidation, and mutation payloads"],
+    [/toast\(|navigator\.clipboard/, "skills query owner must not own toast or clipboard UI"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "skills query owner must use skills service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "skills query owner must keep typed authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/skills/hooks/mutation.ts", mutation, [
+    "useMutation",
+    "useQueryClient",
+    "skillsService.pickSkillDirectory",
+    "skillsService.importSkill",
+    "skillsService.removeSkill",
+    "skillsService.restoreBackup",
+    "skillsService.deleteBackup",
+    "writeSkillsMutationPayload",
+    "cancelQueries",
+  ]);
+  if (!/skillsService\.pickSkillDirectory\(\)[\s\S]*return null;[\s\S]*if \(payload\) return writeSkillsMutationPayload\(queryClient, payload\)/.test(mutation)) {
+    failures.push("src/features/skills/hooks/mutation.ts must keep import cancel as silent null no-op before writeSkillsMutationPayload");
+  }
+  assertNotMatches("src/features/skills/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "skills mutation owner must not own query"],
+    [/\buse(State|Reducer|Effect|Memo)\b/, "skills mutation owner must not own page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries)\b/, "skills mutation owner must delegate cache writes and invalidation to cache helper"],
+    [/toast\(|navigator\.clipboard/, "skills mutation owner must not own toast or clipboard UI"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "skills mutation owner must use skills service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "skills mutation owner must keep typed mutation payloads"],
+  ]);
+
+  assertIncludes("src/features/skills/hooks/page.ts", page, [
+    "useSkillsPageController",
+    "SkillsPageController",
+    "useState",
+    "useSkillsPageQueries",
+    "useSkillsPageMutations",
+    "activeQuery.isError",
+    "queryFailureAlert",
+    "activeQuery.refetch()",
+    "skills.loadFailed",
+    "skills.loadFailedDesc",
+  ]);
+  assertNotMatches("src/features/skills/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "skills page/controller may compose query/mutation hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|nextSkillsCacheSequence|writeSkills|SKILLS_[A-Z0-9_]+_QUERY_KEY)\b/, "skills page/controller must not write cache, invalidate, cancel, allocate sequence, or consume query keys"],
+    [/@\/services\/skills|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|skillsService\.|invokeIpc|invoke\(/, "skills page/controller must not access service/API/IPC directly"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "skills page/controller must not use generic authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/skills/types/index.ts", types, [
+    "export type SkillsInstalledEnvelope",
+    "export type SkillsBackupsEnvelope",
+    "export type SkillsMutationPayload",
+    "export type SkillsMutationEnvelope",
+    "export type SkillsCachePayload",
+    "export interface SkillsPageController",
+  ]);
+  if (!/export interface Skills[A-Za-z]*(Panel|Dialogs?|Dialog|Controller)Props\b/.test(types)) {
+    failures.push("src/features/skills/types/index.ts must declare explicit panel/dialog/controller props types");
+  }
+  assertNotMatches("src/features/skills/types/index.ts", types, [
+    [/SkillsPageController\s*=\s*ReturnType|ReturnType<typeof useSkillsPageController>/, "skills controller contract must be explicit, not ReturnType"],
+    [/SkillsCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "skills types owner must keep typed cache payloads"],
+  ]);
+
+  assertIncludes("src/features/skills/cache/index.ts", cache, [
+    "createModuleCacheOwner<SkillsCachePayload>(\"skills\")",
+    "Omit<SkillsCacheEnvelope, \"moduleId\">",
+    "SKILLS_INSTALLED_QUERY_KEY",
+    "SKILLS_BACKUPS_QUERY_KEY",
+    "writeSkillsAuthoritativePayload",
+    "writeSkillsCachePayload",
+    "writeSkillsMutationPayload",
+    "invalidateSkillsContractQueries",
+    "setQueryData<CoreEnvelope<SkillListPayload>>",
+    "setQueryData<CoreEnvelope<SkillBackupListPayload>>",
+    "invalidateQueries({ queryKey: SKILLS_INSTALLED_QUERY_KEY })",
+    "invalidateQueries({ queryKey: SKILLS_BACKUPS_QUERY_KEY })",
+  ]);
+  if (
+    !cacheOwnerText.includes("nextSkillsCacheSequence") ||
+    !(
+      cacheOwnerText.includes("acceptSkillsCacheSequence") ||
+      cacheOwnerText.includes("skillsLatestAcceptedSequence") ||
+      cacheOwnerText.includes("sequence <")
+    )
+  ) {
+    failures.push("src/features/skills/cache/index.ts or cache/sequence.ts must own sequence/stale/delayed response protection");
+  }
+  assertNotMatches("src/features/skills/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "skills cache owner must not own React hooks"],
+    [/@\/services\/skills|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|skillsService\.|invokeIpc|invoke\(/, "skills cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("skills"\)|SkillsCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "skills cache owner must keep typed payloads"],
+  ]);
+
+  if (controllerConsumerText.includes("ReturnType<typeof useSkillsPageController>")) {
+    failures.push("src/features/skills panels/dialogs/components must consume explicit Skills controller types, not hook ReturnType");
+  }
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+Skills[A-Za-z]*(?:Controller|Props)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/skills panels/dialogs/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS skills deep owner gate executed: hooks/index, query, mutation, page, cache, types, panels/dialogs/components");
+}
+
 function validateFeatureDeepOwners() {
   for (const moduleId of featureModules) {
     const moduleRoot = join(featuresRoot, moduleId);
@@ -1038,6 +1197,7 @@ validateMcpDeepOwnerBoundaries();
 validatePluginsDeepOwnerBoundaries();
 validateTrayShellDeepOwnerBoundaries();
 validateSettingsDeepOwnerBoundaries();
+validateSkillsDeepOwnerBoundaries();
 validateRouteShells();
 validateFeaturePageShells();
 validateServiceOwners();

@@ -480,6 +480,9 @@ function validateKnownInternalFrontendGates() {
   const skillsPagePath = join(repoRoot, "src", "features", "skills", "components", "page.tsx");
   const skillsContentPath = join(repoRoot, "src", "features", "skills", "Content.tsx");
   const skillsHooksPath = join(repoRoot, "src", "features", "skills", "hooks", "index.ts");
+  const skillsQueryPath = join(repoRoot, "src", "features", "skills", "hooks", "query.ts");
+  const skillsMutationPath = join(repoRoot, "src", "features", "skills", "hooks", "mutation.ts");
+  const skillsPageHookPath = join(repoRoot, "src", "features", "skills", "hooks", "page.ts");
   const skillsCachePath = join(repoRoot, "src", "features", "skills", "cache", "index.ts");
   const skillsTypesPath = join(repoRoot, "src", "features", "skills", "types", "index.ts");
   const skillsPanelPath = join(repoRoot, "src", "features", "skills", "panels", "page.tsx");
@@ -509,6 +512,9 @@ function validateKnownInternalFrontendGates() {
   const skillsPage = readRequired(skillsPagePath);
   const skillsContent = readRequired(skillsContentPath);
   const skillsHooks = readRequired(skillsHooksPath);
+  const skillsQuery = readRequired(skillsQueryPath);
+  const skillsMutation = readRequired(skillsMutationPath);
+  const skillsPageHook = readRequired(skillsPageHookPath);
   const skillsCache = readRequired(skillsCachePath);
   const skillsTypes = readRequired(skillsTypesPath);
   const skillsPanel = readRequired(skillsPanelPath);
@@ -682,11 +688,11 @@ function validateKnownInternalFrontendGates() {
   }
 
   const skillsErrorOk =
-    skillsHooks.includes("activeQuery.isError") &&
-    skillsHooks.includes("queryFailureAlert") &&
-    skillsHooks.includes("activeQuery.refetch()") &&
-    skillsHooks.includes("skills.loadFailed") &&
-    skillsHooks.includes("skills.loadFailedDesc") &&
+    skillsPageHook.includes("activeQuery.isError") &&
+    skillsPageHook.includes("queryFailureAlert") &&
+    skillsPageHook.includes("activeQuery.refetch()") &&
+    skillsPageHook.includes("skills.loadFailed") &&
+    skillsPageHook.includes("skills.loadFailedDesc") &&
     skillsPage.includes("SkillsProvider") &&
     skillsPage.includes("SkillsContent") &&
     skillsContent.includes("SkillsPagePanel") &&
@@ -699,14 +705,40 @@ function validateKnownInternalFrontendGates() {
   }
 
   const skillsImportCancelOk =
-    skillsHooks.includes("skillsService.pickSkillDirectory()") &&
-    skillsHooks.includes("return null;") &&
-    skillsHooks.includes("if (payload) return writeSkillsMutationPayload(queryClient, payload)");
+    skillsMutation.includes("skillsService.pickSkillDirectory()") &&
+    skillsMutation.includes("return null;") &&
+    skillsMutation.includes("if (payload) return writeSkillsMutationPayload(queryClient, payload)");
   if (!skillsImportCancelOk) {
     failures.push("skills import 取消必须保持静默 no-op，不得进入 mutation error");
   } else {
     console.log("PASS skills import 取消语义：silent no-op");
   }
+  const skillsHooksIndexBarrelOk =
+    (skillsHooks.includes('from "./query"') || skillsHooks.includes("from './query'")) &&
+    (skillsHooks.includes('from "./mutation"') || skillsHooks.includes("from './mutation'")) &&
+    (skillsHooks.includes('from "./page"') || skillsHooks.includes("from './page'")) &&
+    !/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/.test(skillsHooks) &&
+    !/\b(setQueryData|invalidateQueries|cancelQueries|nextSkillsCacheSequence|writeSkills)\b/.test(skillsHooks) &&
+    !skillsHooks.includes("skillsService.");
+  const skillsSplitOwnerOk =
+    skillsQuery.includes("useQuery") &&
+    skillsQuery.includes("useQueryClient") &&
+    skillsQuery.includes("skillsService.loadInstalled") &&
+    skillsQuery.includes("skillsService.loadBackups") &&
+    skillsQuery.includes("writeSkillsCachePayload") &&
+    skillsMutation.includes("useMutation") &&
+    skillsMutation.includes("useQueryClient") &&
+    skillsMutation.includes("skillsService.importSkill") &&
+    skillsMutation.includes("skillsService.removeSkill") &&
+    skillsMutation.includes("skillsService.restoreBackup") &&
+    skillsMutation.includes("skillsService.deleteBackup") &&
+    skillsMutation.includes("writeSkillsMutationPayload") &&
+    skillsPageHook.includes("useSkillsPageController") &&
+    skillsPageHook.includes("SkillsPageController") &&
+    skillsPageHook.includes("useSkillsPageQueries") &&
+    skillsPageHook.includes("useSkillsPageMutations") &&
+    !/\buse(Query|Mutation|QueryClient)\b/.test(skillsPageHook) &&
+    !/@\/services\/skills|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|skillsService\.|invokeIpc|invoke\(/.test(skillsPageHook);
   const skillsTypedPayloadOk =
     skillsService.includes("CoreEnvelope<SkillListPayload>") &&
     skillsService.includes("CoreEnvelope<SkillBackupListPayload>") &&
@@ -719,16 +751,27 @@ function validateKnownInternalFrontendGates() {
     skillsTypes.includes("export type SkillsMutationPayload") &&
     skillsTypes.includes("export type SkillsMutationEnvelope") &&
     skillsTypes.includes("export type SkillsCachePayload") &&
+    skillsTypes.includes("export interface SkillsPageController") &&
     skillsCache.includes("createModuleCacheOwner<SkillsCachePayload>(\"skills\")") &&
     skillsCache.includes("Omit<SkillsCacheEnvelope, \"moduleId\">") &&
-    skillsHooks.includes("SkillsCachePayload") &&
-    skillsHooks.includes("SkillsMutationPayload") &&
-    skillsHooks.includes("SkillsMutationEnvelope") &&
-    skillsHooks.includes("writeSkillsAuthoritativePayload") &&
+    skillsCache.includes("writeSkillsAuthoritativePayload") &&
+    skillsCache.includes("writeSkillsCachePayload") &&
+    skillsCache.includes("writeSkillsMutationPayload") &&
+    skillsCache.includes("setQueryData<CoreEnvelope<SkillListPayload>>") &&
+    skillsCache.includes("setQueryData<CoreEnvelope<SkillBackupListPayload>>") &&
+    skillsQuery.includes("SKILLS_INSTALLED_QUERY_KEY") &&
+    skillsQuery.includes("SKILLS_BACKUPS_QUERY_KEY") &&
+    skillsHooksIndexBarrelOk &&
+    skillsSplitOwnerOk &&
     !skillsTypes.includes("SkillsCacheEnvelope<TPayload = unknown>") &&
+    !skillsTypes.includes("ModuleCacheEnvelope<unknown>") &&
     !skillsCache.includes("createModuleCacheOwner(\"skills\")") &&
-    !skillsHooks.includes("writeSkillsQueryMutationPayload(queryClient: QueryClient, payload: unknown)") &&
-    !skillsHooks.includes("async function writeSkillsMutationPayload<TPayload>");
+    !skillsCache.includes("ModuleCacheEnvelope<unknown>") &&
+    !skillsCache.includes("payload: unknown") &&
+    !skillsQuery.includes("ModuleCacheEnvelope<unknown>") &&
+    !skillsQuery.includes("payload: unknown") &&
+    !skillsMutation.includes("ModuleCacheEnvelope<unknown>") &&
+    !skillsMutation.includes("payload: unknown");
   if (!skillsTypedPayloadOk) {
     failures.push("skills IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
   } else {

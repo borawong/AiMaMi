@@ -13,13 +13,16 @@ import { Button } from "@/components/ui/button";
 import { SegmentedOptions } from "@/components/ui/options";
 import { toast } from "@/hooks/toast";
 import { formatDateTime } from "@/lib/time";
-import type { SkillsPageController } from "../hooks";
+import type {
+  InstalledSkillsPanelProps,
+  SkillBackupsPanelProps,
+  SkillsMetricsPanelProps,
+  SkillsPagePanelProps,
+  SkillsPathMetricProps,
+  SkillsQueryFailureAlertProps,
+} from "../types";
 
-export function SkillsPagePanel({
-  controller,
-}: {
-  controller: SkillsPageController;
-}) {
+export function SkillsPagePanel({ controller }: SkillsPagePanelProps) {
   const { t } = useTranslation();
 
   const copyPath = (path: string) => {
@@ -73,10 +76,7 @@ export function SkillsPagePanel({
 function SkillsMetricsPanel({
   controller,
   onCopyPath,
-}: {
-  controller: SkillsPageController;
-  onCopyPath: (path: string) => void;
-}) {
+}: SkillsMetricsPanelProps) {
   const { t } = useTranslation();
   const { skillsSummary } = controller;
 
@@ -116,11 +116,7 @@ function SkillsPathMetric({
   labelKey,
   path,
   onCopyPath,
-}: {
-  labelKey: string;
-  path: string;
-  onCopyPath: (path: string) => void;
-}) {
+}: SkillsPathMetricProps) {
   const { t } = useTranslation();
 
   return (
@@ -140,11 +136,7 @@ function SkillsPathMetric({
   );
 }
 
-function SkillsQueryFailureAlert({
-  alert,
-}: {
-  alert: NonNullable<SkillsPageController["queryFailureAlert"]>;
-}) {
+function SkillsQueryFailureAlert({ alert }: SkillsQueryFailureAlertProps) {
   const { t } = useTranslation();
 
   return (
@@ -178,11 +170,7 @@ function SkillsQueryFailureAlert({
   );
 }
 
-function InstalledSkillsPanel({
-  panel,
-}: {
-  panel: SkillsPageController["installedPanel"];
-}) {
+function InstalledSkillsPanel({ panel }: InstalledSkillsPanelProps) {
   const { t } = useTranslation();
 
   if (panel.skills.length === 0) {
@@ -235,11 +223,7 @@ function InstalledSkillsPanel({
   );
 }
 
-function SkillBackupsPanel({
-  panel,
-}: {
-  panel: SkillsPageController["backupsPanel"];
-}) {
+function SkillBackupsPanel({ panel }: SkillBackupsPanelProps) {
   const { t } = useTranslation();
 
   if (panel.backups.length === 0) {
