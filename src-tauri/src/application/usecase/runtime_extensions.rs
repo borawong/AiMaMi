@@ -30,7 +30,7 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
 
     pub(crate) fn toggle_plugin(
         &self,
-        id: String,
+        id: Option<String>,
         enabled: bool,
     ) -> Result<CoreEnvelope<RuntimeExtensionTogglePayload>, CoreError> {
         let id = required_text(id, "empty_runtime_extension_id", "运行时扩展标识不能为空。")?;
@@ -58,7 +58,7 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
 
     pub(crate) fn get_plugin_config(
         &self,
-        id: String,
+        id: Option<String>,
     ) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, CoreError> {
         let id = required_text(id, "empty_runtime_extension_id", "运行时扩展标识不能为空。")?;
         let plan = self.no_op_plan("get_plugin_config");
@@ -70,7 +70,7 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
 
     pub(crate) fn update_plugin_config(
         &self,
-        id: String,
+        id: Option<String>,
         settings: Option<RuntimeExtensionSettingsValue>,
     ) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, CoreError> {
         let id = required_text(id, "empty_runtime_extension_id", "运行时扩展标识不能为空。")?;
@@ -128,15 +128,20 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
 }
 
 fn required_text(
-    value: String,
+    value: Option<String>,
     code: &'static str,
     public_message: &'static str,
 ) -> Result<String, CoreError> {
-    let value = value.trim().to_owned();
-    if value.is_empty() {
-        Err(CoreError::domain(code, public_message))
-    } else {
-        Ok(value)
+    match value {
+        Some(value) => {
+            let value = value.trim().to_owned();
+            if value.is_empty() {
+                Err(CoreError::domain(code, public_message))
+            } else {
+                Ok(value)
+            }
+        }
+        None => Err(CoreError::domain(code, public_message)),
     }
 }
 

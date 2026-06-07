@@ -16,7 +16,7 @@ pub(crate) fn list_plugins(
 #[tauri::command]
 pub(crate) fn toggle_plugin(
     state: State<'_, TauriAppState>,
-    id: String,
+    id: Option<String>,
     enabled: bool,
 ) -> Result<CoreEnvelope<RuntimeExtensionTogglePayload>, String> {
     respond(
@@ -30,7 +30,7 @@ pub(crate) fn toggle_plugin(
 #[tauri::command]
 pub(crate) fn get_plugin_config(
     state: State<'_, TauriAppState>,
-    id: String,
+    id: Option<String>,
 ) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, String> {
     respond(state.services().runtime_extensions().get_plugin_config(id))
 }
@@ -38,7 +38,7 @@ pub(crate) fn get_plugin_config(
 #[tauri::command]
 pub(crate) fn update_plugin_config(
     state: State<'_, TauriAppState>,
-    id: String,
+    id: Option<String>,
     settings: Option<RuntimeExtensionSettingsValue>,
 ) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, String> {
     respond(

@@ -2523,6 +2523,7 @@ function validateRuntimeExtensionsTypedPayloadContracts() {
     "Result<CoreEnvelope<RuntimeExtensionListPayload>, String>",
     "Result<CoreEnvelope<RuntimeExtensionTogglePayload>, String>",
     "Result<CoreEnvelope<RuntimeExtensionConfigPayload>, String>",
+    "id: Option<String>",
     "settings: Option<RuntimeExtensionSettingsValue>",
   ], "runtime-extensions command typed envelope");
 
@@ -2534,7 +2535,52 @@ function validateRuntimeExtensionsTypedPayloadContracts() {
     "BackendOperationPlan::pending",
     "BackendOperationPlan::no_op",
     "BackendBoundaryProbe::from_repository_source",
+    "id: Option<String>",
+    "fn required_text(",
+    "value: Option<String>",
+    "None => Err(CoreError::domain(code, public_message))",
+    "value.trim().to_owned()",
+    "value.is_empty()",
+    "CoreError::domain(code, public_message)",
+    "运行时扩展标识不能为空。",
   ], "runtime-extensions usecase typed 骨架");
+
+  for (const functionName of ["toggle_plugin", "get_plugin_config", "update_plugin_config"]) {
+    const commandBody = extractFunctionBody(commandText, functionName);
+    const commandSignature = new RegExp(
+      `fn\\s+${functionName}\\s*\\([\\s\\S]*?\\bid\\s*:\\s*Option\\s*<\\s*String\\s*>[\\s\\S]*?\\)\\s*->`,
+    );
+    const usecaseSignature = new RegExp(
+      `fn\\s+${functionName}\\s*\\([\\s\\S]*?\\bid\\s*:\\s*Option\\s*<\\s*String\\s*>[\\s\\S]*?\\)\\s*->`,
+    );
+
+    assertMatches(commandPath, commandText, [
+      commandSignature,
+    ], `runtime-extensions ${functionName} command id 必须是 Option<String>`);
+    assertMatches(usecasePath, usecaseText, [
+      usecaseSignature,
+    ], `runtime-extensions ${functionName} usecase id 必须是 Option<String>`);
+    assertNotContainsSnippet(commandPath, commandBody, [
+      "unwrap_or_default()",
+      "id.unwrap_or(",
+      "id.unwrap_or_else(",
+      "id.unwrap_or_default()",
+      "id.map_or(",
+      "id.map_or_else(",
+    ], `runtime-extensions ${functionName} command 不得补默认业务值`);
+  }
+
+  const requiredTextBody = extractFunctionBody(usecaseText, "required_text");
+  assertMatches(usecasePath, usecaseText, [
+    /fn\s+required_text\s*\(\s*value\s*:\s*Option\s*<\s*String\s*>/,
+  ], "runtime-extensions required_text 签名必须接收 Option<String>");
+  assertContains(usecasePath, requiredTextBody, [
+    "Some(value)",
+    "value.trim().to_owned()",
+    "value.is_empty()",
+    "CoreError::domain(code, public_message)",
+    "None => Err(CoreError::domain(code, public_message))",
+  ], "runtime-extensions required_text 必须处理 None、trim、空字符串和 domain error");
 
   assertContains(servicePath, serviceText, [
     "CoreEnvelope<RuntimeExtensionListPayload>",
