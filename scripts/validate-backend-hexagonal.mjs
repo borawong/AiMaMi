@@ -453,6 +453,7 @@ function validateMcpTypedPayloadContracts() {
   const servicePath = join(frontendRoot, "services", "mcp", "index.ts");
   const commandPath = join(backendRoot, "commands", "mcp.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "mcp.rs");
+  const repositoryPath = join(backendRoot, "repository", "mcp.rs");
   const contractPath = join(backendRoot, "contracts", "mcp.rs");
   const featureTypesPath = join(frontendRoot, "features", "mcp", "types", "index.ts");
   const featureCachePath = join(frontendRoot, "features", "mcp", "cache", "index.ts");
@@ -463,6 +464,7 @@ function validateMcpTypedPayloadContracts() {
   const serviceText = readUtf8(servicePath);
   const commandText = readUtf8(commandPath);
   const usecaseText = readUtf8(usecasePath);
+  const repositoryText = readUtf8(repositoryPath);
   const contractText = readUtf8(contractPath);
   const featureTypesText = readUtf8(featureTypesPath);
   const featureCacheText = readUtf8(featureCachePath);
@@ -491,6 +493,61 @@ function validateMcpTypedPayloadContracts() {
     "Result<CoreEnvelope<McpServerMutationPayload>, CoreError>",
     "Result<CoreEnvelope<McpServerRemovePayload>, CoreError>",
   ], "MCP usecase typed payload");
+
+  assertContains(repositoryPath, repositoryText, [
+    "list_servers",
+    "self.fs.exists",
+    "self.fs.read_to_string",
+    "RepositoryPath::McpSource",
+    "McpServerSummary",
+    "toml",
+    "serde_json",
+    "mcpServers",
+  ], "MCP repository readonly server list owner");
+
+  assertNotContains(
+    repositoryPath,
+    repositoryText,
+    [
+      /\bstd::fs\b/,
+      /\btokio::fs\b/,
+      /\bread_dir\b/,
+    ],
+    "MCP repository must use repository filesystem adapter",
+  );
+
+  const loadServersBody = extractFunctionBody(usecaseText, "load_servers");
+  if (!loadServersBody) {
+    failures.push(`${toRelative(usecasePath)} missing MCP load_servers function body`);
+  } else {
+    assertContains(usecasePath, loadServersBody, [
+      "list_servers",
+      "items",
+      "list_payload",
+    ], "MCP load_servers repository readonly call chain");
+  }
+
+  const listPayloadBody = extractFunctionBody(usecaseText, "list_payload");
+  const listPayloadSignatureMatch = /fn\s+list_payload\s*\([\s\S]*?\)\s*->/.exec(usecaseText);
+  const listPayloadContractText = `${listPayloadSignatureMatch?.[0] ?? ""}\n${listPayloadBody}`;
+  if (!listPayloadBody) {
+    failures.push(`${toRelative(usecasePath)} missing MCP list_payload function body`);
+  } else {
+    assertContains(usecasePath, listPayloadContractText, [
+      "items: Vec<McpServerSummary>",
+      "let total = items.len()",
+      "items",
+      "total",
+      "last_scan_at",
+    ], "MCP list_payload readonly payload");
+  }
+
+  assertNotContainsSnippet(usecasePath, `${loadServersBody}\n${listPayloadContractText}`, [
+    "..McpServerListPayload::default()",
+    "items: Vec::new()",
+    "total: 0",
+    "last_scan_at: 0",
+  ], "MCP load_servers/list_payload must not return empty readonly skeleton");
 
   assertContains(servicePath, serviceText, [
     "McpServerConfigInput",

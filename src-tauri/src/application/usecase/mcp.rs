@@ -7,6 +7,7 @@ use crate::core::error::CoreError;
 use crate::core::parser;
 use crate::repository::RepositoryBundle;
 use std::collections::HashMap;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 const MODULE: &str = "mcp";
 
@@ -34,8 +35,9 @@ impl<'a> McpUseCase<'a> {
 
     pub(crate) fn load_servers(&self) -> Result<CoreEnvelope<McpServerListPayload>, CoreError> {
         let plan = self.pending_plan("load_mcp_servers");
+        let items = self.repositories.mcp().list_servers()?;
         Ok(CoreEnvelope::from_backend_plan(
-            self.list_payload(&plan),
+            self.list_payload(&plan, items),
             &plan,
         ))
     }
@@ -101,11 +103,18 @@ impl<'a> McpUseCase<'a> {
         BackendBoundaryProbe::from_repository_source(self.repositories.mcp().source_path())
     }
 
-    fn list_payload(&self, plan: &BackendOperationPlan) -> McpServerListPayload {
+    fn list_payload(
+        &self,
+        plan: &BackendOperationPlan,
+        items: Vec<McpServerSummary>,
+    ) -> McpServerListPayload {
+        let total = items.len() as i32;
         McpServerListPayload {
             status: BackendSkeletonStatus::from_plan(plan),
+            items,
+            total,
             source_path: self.repositories.mcp().source_path(),
-            ..McpServerListPayload::default()
+            last_scan_at: current_unix_seconds(),
         }
     }
 
@@ -209,4 +218,11 @@ fn server_from_input(input: McpUpsertInput, name: String) -> McpServerSummary {
             .or_else(|| config.and_then(|value| value.environment.clone()))
             .unwrap_or_default(),
     }
+}
+
+fn current_unix_seconds() -> i64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs() as i64
 }
