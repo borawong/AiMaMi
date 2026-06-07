@@ -41,6 +41,7 @@ const featuresRoot = join(repoRoot, "src", "features");
 const routesRoot = join(repoRoot, "src", "routes");
 const localesRoot = join(repoRoot, "src", "locales");
 const backendRoot = join(repoRoot, "src-tauri", "src");
+const frontendManifestPath = join(repoRoot, "src", "restoration", "frontend-manifest", "index.ts");
 
 const failures = [];
 
@@ -398,10 +399,64 @@ function validatePluginsDumpedContract() {
   }
 }
 
+function validateVoiceManifestBoundary(expectedCommands) {
+  const before = failures.length;
+  const manifest = readRequired(frontendManifestPath);
+  const voiceBlocks = [...manifest.matchAll(/  \{\s+module: "voice",[\s\S]*?\n  \},/g)].map(
+    (match) => match[0],
+  );
+  const manifestCommands = unique(
+    voiceBlocks
+      .map((block) => block.match(/command: "([^"]+)"/)?.[1])
+      .filter(Boolean),
+  );
+  const diff = diffValues(expectedCommands, manifestCommands);
+  const forbiddenFragments = [
+    "已覆盖",
+    "读取",
+    "保存",
+    "开始捕获",
+    "停止捕获",
+    "文本注入",
+    "动作已覆盖",
+  ];
+
+  if (diff.missing.length > 0 || diff.extra.length > 0) {
+    failures.push(
+      `voice manifest 命令集合必须只登记空骨架边界：missing=${diff.missing.join(", ")} extra=${diff.extra.join(", ")}`,
+    );
+  }
+
+  for (const block of voiceBlocks) {
+    const command = block.match(/command: "([^"]+)"/)?.[1] ?? "未知命令";
+    if (/status: "covered"/.test(block)) {
+      failures.push(`voice manifest 不得将命令标记为 covered：${command}`);
+    }
+    if (block.includes("voice-page")) {
+      failures.push(`voice manifest 不得指向旧业务页面 voice-page：${command}`);
+    }
+    if (block.includes("src/features/voice/hooks")) {
+      failures.push(`voice manifest 不得指向旧 Hook：${command}`);
+    }
+    for (const fragment of forbiddenFragments) {
+      if (block.includes(fragment)) {
+        failures.push(`voice manifest 不得包含业务完成语义“${fragment}”：${command}`);
+      }
+    }
+  }
+
+  if (failures.length === before) {
+    logPass("voice manifest 空骨架公开清单", `${voiceBlocks.length}/${expectedCommands.length}`);
+  } else {
+    logFail("voice manifest 空骨架公开清单", "存在越界语义");
+  }
+}
+
 function validateVoiceReopenedContract() {
   {
     const before = failures.length;
     const expectedCommands = extractVoiceGapCommands();
+    validateVoiceManifestBoundary(expectedCommands);
     const voiceContractPath = join(featuresRoot, "voice", "contract.ts");
     const voiceServicePath = join(servicesRoot, "voice", "index.ts");
     const voiceContentPath = join(featuresRoot, "voice", "Content.tsx");
@@ -446,6 +501,12 @@ function validateVoiceReopenedContract() {
     for (const snippet of ["invokeIpc", "load_voice_", "upsert_voice_", "start_voice_capture"]) {
       if (service.includes(snippet)) {
         failures.push(`voice service 空骨架不得包含真实 IPC wrapper：${snippet}`);
+      }
+    }
+
+    for (const command of expectedCommands) {
+      if (service.includes(command)) {
+        failures.push(`voice service 空骨架不得包含真实 IPC 命令字符串：${command}`);
       }
     }
 
