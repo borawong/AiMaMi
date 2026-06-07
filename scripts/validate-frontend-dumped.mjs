@@ -480,13 +480,14 @@ function validateVoiceReopenedContract() {
       );
     }
 
-    for (const command of expectedCommands) {
-      if (!commandFile.includes(`fn ${command}`)) {
-        failures.push(`voice 空骨架 Rust command 缺少 handler：${command}`);
+    for (const snippet of ["#[tauri::command]", "state.services().voice()", "respond("]) {
+      if (commandFile.includes(snippet)) {
+        failures.push(`voice Rust command 空骨架不得注册真实 IPC 语义：${snippet}`);
       }
-      if (!lifecycle.includes(`commands::voice::${command}`)) {
-        failures.push(`voice 空骨架 Tauri lifecycle 未注册 handler：${command}`);
-      }
+    }
+
+    if (lifecycle.includes("commands::voice::")) {
+      failures.push("voice Tauri lifecycle 不得注册 commands::voice:: handler");
     }
 
     if (

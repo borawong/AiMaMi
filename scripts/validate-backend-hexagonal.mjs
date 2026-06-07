@@ -133,7 +133,9 @@ for (const directory of requiredDirectories) {
   assertExists(join(backendRoot, directory), "后端六边形目录");
 }
 
-const commandFiles = rustFiles("commands").filter((file) => !file.endsWith("mod.rs"));
+const commandFiles = rustFiles("commands").filter(
+  (file) => !file.endsWith("mod.rs") && !file.endsWith(`${join("commands", "voice.rs")}`),
+);
 const usecaseFiles = rustFiles("application/usecase").filter((file) => !file.endsWith("mod.rs"));
 const coreFiles = rustFiles("core");
 const platformFiles = rustFiles("platform").filter((file) => !file.endsWith("mod.rs"));
@@ -2828,17 +2830,28 @@ function validateVoiceMutationPayloadContracts() {
   {
     const commandPath = join(backendRoot, "commands", "voice.rs");
     const usecasePath = join(backendRoot, "application", "usecase", "voice.rs");
+    const lifecyclePath = join(backendRoot, "adapters", "tauri", "lifecycle.rs");
     const servicePath = join(frontendRoot, "services", "voice", "index.ts");
     const commandText = readUtf8(commandPath);
     const usecaseText = readUtf8(usecasePath);
+    const lifecycleText = readUtf8(lifecyclePath);
     const serviceText = readUtf8(servicePath);
 
-    assertContains(commandPath, commandText, [
-      "pub(crate) fn load_voice_workspace",
-      "pub(crate) fn generate_voice_prompt",
-      "pub(crate) fn start_voice_capture",
-      "pub(crate) fn stop_voice_capture",
-    ], "voice command 空骨架 adapter");
+    assertNotContainsSnippet(commandPath, commandText, [
+      "#[tauri::command]",
+      "state.services().voice()",
+      "respond(",
+      "generate_prompt",
+      "start_capture",
+      "load_voice_workspace",
+      "generate_voice_prompt",
+      "start_voice_capture",
+      "stop_voice_capture",
+    ], "voice command 只允许空骨架，不得注册真实 IPC 或 handler 语义");
+
+    assertNotContainsSnippet(lifecyclePath, lifecycleText, [
+      "commands::voice::",
+    ], "voice lifecycle 不得注册真实 IPC handler");
 
     assertContains(usecasePath, usecaseText, [
       "BackendOperationPlan::unsupported",
