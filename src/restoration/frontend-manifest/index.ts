@@ -97,6 +97,19 @@ export interface FrontendDumpedModuleRestorationRequirement {
   note: string;
 }
 
+export interface FrontendDumpedAppShellRemoteSecretRestorationRequirement {
+  module: "app-shell";
+  command:
+    | "import_remote_device_secret_if_empty"
+    | "get_or_create_remote_device_secret";
+  source: string;
+  status: "covered";
+  service: string;
+  runtimeOwner: string;
+  initializer: string;
+  note: string;
+}
+
 export interface FrontendDumpedBoundaryException {
   module: "voice";
   status: "boundary-only";
@@ -127,6 +140,8 @@ export const FRONTEND_DUMPED_INDEX_ASSET_SOURCES = [
       "open_path",
       "get_mystery_unlock_grants",
       "merge_mystery_unlock_grants",
+      "import_remote_device_secret_if_empty",
+      "get_or_create_remote_device_secret",
     ],
     feature: "src/entry/root.tsx",
     cache: "src/app/runtime/events.ts",
@@ -218,6 +233,31 @@ export const FRONTEND_DUMPED_INDEX_ASSET_SOURCES = [
       "用户要求的空骨架例外：voice 来源只登记 boundary-only，不要求真实 hooks/panels/cache 业务还原，也不得误报为 covered 或 restored。",
   },
 ] as const satisfies readonly FrontendDumpedIndexAssetSource[];
+
+export const FRONTEND_DUMPED_APP_SHELL_REMOTE_SECRET_RESTORATION_MATRIX = [
+  {
+    module: "app-shell",
+    command: "import_remote_device_secret_if_empty",
+    source: "assets/index-CL22l5v8.js",
+    status: "covered",
+    service: "src/services/system/index.ts",
+    runtimeOwner: "src/app/runtime/secret.ts",
+    initializer: "src/app/runtime/initializer.tsx",
+    note:
+      "app-shell 启动迁移链路必须先读取 localStorage 旧 remote device secret，调用 system service 导入后移除旧值，并由 runtime owner 写入启动缓存。",
+  },
+  {
+    module: "app-shell",
+    command: "get_or_create_remote_device_secret",
+    source: "assets/index-CL22l5v8.js",
+    status: "covered",
+    service: "src/services/system/index.ts",
+    runtimeOwner: "src/app/runtime/secret.ts",
+    initializer: "src/app/runtime/initializer.tsx",
+    note:
+      "app-shell 启动迁移链路必须在导入旧值后获取或创建 remote device secret，并由 initializer 挂载 runtime owner 完成缓存写入。",
+  },
+] as const satisfies readonly FrontendDumpedAppShellRemoteSecretRestorationRequirement[];
 
 export const FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX = [
   {

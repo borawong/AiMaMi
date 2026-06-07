@@ -670,6 +670,162 @@ function validatePluginsRestorationMatrix(manifest) {
   }
 }
 
+function validateAppShellRemoteSecretRestorationMatrix(raw, manifest) {
+  const before = failures.length;
+  const source = "assets/index-CL22l5v8.js";
+  const servicePath = "src/services/system/index.ts";
+  const runtimeOwnerPath = "src/app/runtime/secret.ts";
+  const initializerPath = "src/app/runtime/initializer.tsx";
+  const rules = [
+    {
+      command: "import_remote_device_secret_if_empty",
+      serviceWrapper: "importRemoteDeviceSecretIfEmpty",
+    },
+    {
+      command: "get_or_create_remote_device_secret",
+      serviceWrapper: "getOrCreateRemoteDeviceSecret",
+    },
+  ];
+  const blocks = extractTsConstArrayBlocks(
+    manifest,
+    "FRONTEND_DUMPED_APP_SHELL_REMOTE_SECRET_RESTORATION_MATRIX",
+  );
+  const matrixByCommand = new Map(
+    blocks.map((block) => [extractTsStringField(block, "command"), block]),
+  );
+  const indexCommands = collectIndexAssetCommands(raw).get(source) ?? [];
+
+  for (const rule of rules) {
+    const hasIndexIpcContract = raw.ipcContracts.some(
+      (row) => normalizePath(String(row.file ?? "")) === source && row.command === rule.command,
+    );
+    const hasIndexControlFlow = raw.controlFlow.some(
+      (row) =>
+        normalizePath(String(row.component_file ?? "")) === source &&
+        row.terminal_call?.command === rule.command,
+    );
+
+    if (!indexCommands.includes(rule.command)) {
+      failures.push(`app-shell remote secret 命令必须来自 index chunk：${rule.command}`);
+    }
+    if (!hasIndexIpcContract) {
+      failures.push(`ipc-contracts 缺少来自 ${source} 的 app-shell remote secret 命令：${rule.command}`);
+    }
+    if (!hasIndexControlFlow) {
+      failures.push(`frontend-control-flow 缺少来自 ${source} 的 app-shell remote secret 命令：${rule.command}`);
+    }
+
+    const block = matrixByCommand.get(rule.command);
+    if (!block) {
+      failures.push(`app-shell remote secret 还原矩阵缺少命令：${rule.command}`);
+      continue;
+    }
+
+    const expectedFields = {
+      module: "app-shell",
+      source,
+      status: "covered",
+      service: servicePath,
+      runtimeOwner: runtimeOwnerPath,
+      initializer: initializerPath,
+    };
+    for (const [field, expected] of Object.entries(expectedFields)) {
+      const actual = extractTsStringField(block, field);
+      if (actual !== expected) {
+        failures.push(
+          `app-shell remote secret 还原矩阵 ${rule.command} 的 ${field} 必须为 ${expected}，当前为 ${actual || "空"}`,
+        );
+      }
+    }
+  }
+
+  for (const repoPath of [servicePath, runtimeOwnerPath, initializerPath]) {
+    if (!existsSync(resolveRepoPath(repoPath))) {
+      failures.push(`app-shell remote secret 还原落点不存在：${repoPath}`);
+    }
+  }
+
+  const service = readRequired(resolveRepoPath(servicePath));
+  if (service.trim()) {
+    for (const rule of rules) {
+      if (!service.includes(`"${rule.command}"`)) {
+        failures.push(`system service 缺少 app-shell remote secret IPC 命令：${rule.command}`);
+      }
+      if (!service.includes(rule.serviceWrapper)) {
+        failures.push(`system service 缺少 app-shell remote secret wrapper：${rule.serviceWrapper}`);
+      }
+    }
+  }
+
+  const runtimeOwner = readRequired(resolveRepoPath(runtimeOwnerPath));
+  if (runtimeOwner.trim()) {
+    const runtimeRequirements = [
+      {
+        name: "localStorage 读取旧 secret",
+        ok: runtimeOwner.includes("localStorage") && /\bgetItem\s*\(/.test(runtimeOwner),
+      },
+      {
+        name: "导入后移除旧 secret",
+        ok: runtimeOwner.includes("localStorage") && /\bremoveItem\s*\(/.test(runtimeOwner),
+      },
+      {
+        name: "调用 importRemoteDeviceSecretIfEmpty",
+        ok: runtimeOwner.includes("systemService.importRemoteDeviceSecretIfEmpty"),
+      },
+      {
+        name: "调用 getOrCreateRemoteDeviceSecret",
+        ok: runtimeOwner.includes("systemService.getOrCreateRemoteDeviceSecret"),
+      },
+      {
+        name: "写入 QueryClient 缓存",
+        ok: /\.setQueryData(?:<[^>]+>)?\s*\(/.test(runtimeOwner),
+      },
+    ];
+
+    for (const requirement of runtimeRequirements) {
+      if (!requirement.ok) {
+        failures.push(`app-shell remote secret runtime owner 缺少：${requirement.name}`);
+      }
+    }
+  }
+
+  const initializer = readRequired(resolveRepoPath(initializerPath));
+  if (initializer.trim() && runtimeOwner.trim()) {
+    const importsRuntimeOwner = hasAnyFragment(initializer, [
+      "@/app/runtime/secret",
+      "./secret",
+    ]);
+    const exportedOwnerNames = unique([
+      ...[...runtimeOwner.matchAll(/export\s+(?:async\s+)?function\s+([A-Za-z_$][\w$]*)/g)].map(
+        (match) => match[1],
+      ),
+      ...[...runtimeOwner.matchAll(/export\s+const\s+([A-Za-z_$][\w$]*)\s*=/g)].map(
+        (match) => match[1],
+      ),
+    ]);
+    const callsRuntimeOwner = exportedOwnerNames.some((name) =>
+      new RegExp(`\\b${name}\\s*\\(`).test(initializer),
+    );
+
+    if (!importsRuntimeOwner) {
+      failures.push("RuntimeInitializer 必须导入 app-shell remote secret runtime owner");
+    }
+    if (exportedOwnerNames.length === 0) {
+      failures.push("app-shell remote secret runtime owner 必须导出 initializer 可调用的函数");
+    } else if (!callsRuntimeOwner) {
+      failures.push(
+        `RuntimeInitializer 必须调用 app-shell remote secret runtime owner 导出函数：${exportedOwnerNames.join(", ")}`,
+      );
+    }
+  }
+
+  if (failures.length === before) {
+    logPass("app-shell remote secret index chunk 还原矩阵", `${rules.length}/${rules.length}`);
+  } else {
+    logFail("app-shell remote secret index chunk 还原矩阵", "存在 raw、落点或启动链路缺失");
+  }
+}
+
 function validateVoiceManifestBoundary(expectedCommands) {
   const before = failures.length;
   const manifest = readRequired(frontendManifestPath);
@@ -1118,6 +1274,7 @@ assertCommandsMentioned("service wrapper 覆盖 raw dumped 命令", serviceRequi
 assertFeatureContracts(rawCommands);
 validatePluginsDumpedContract();
 validatePluginsRestorationMatrix(frontendManifest);
+validateAppShellRemoteSecretRestorationMatrix(raw, frontendManifest);
 validateIndexAssetSourceManifest(raw, frontendManifest);
 validateVoiceReopenedContract();
 validateRawPageRouteAndContent(rawModules);
