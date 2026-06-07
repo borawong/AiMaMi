@@ -4,6 +4,7 @@ import type {
   OverviewQuotaWindow,
   OverviewSkillRecord,
 } from "../types";
+import type { InstalledSkillSummary } from "@/types";
 
 export type UnknownRecord = Record<string, unknown>;
 
@@ -140,15 +141,17 @@ export function readOverviewActiveAccount(
   };
 }
 
-export function readOverviewSkillRecords(items: unknown[]): OverviewSkillRecord[] {
+export function readOverviewSkillRecords(
+  items: InstalledSkillSummary[],
+): OverviewSkillRecord[] {
   return items.map((item, index) => ({
-    id: readString(item, ["id", "name", "title"], String(index)),
-    title: readString(item, ["title", "name", "id"], ""),
-    updatedAtLabel: formatOverviewOptionalEpoch(readNumber(item, ["updatedAt"])),
+    id: item.id || item.name || String(index),
+    title: item.title || item.name || item.id,
+    updatedAtLabel: formatOverviewOptionalEpoch(item.updatedAt),
   }));
 }
 
-export function formatOverviewOptionalEpoch(value: number): string {
+export function formatOverviewOptionalEpoch(value: number | null): string {
   return value ? formatOverviewEpoch(value) : "";
 }
 

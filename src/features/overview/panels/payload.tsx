@@ -1,6 +1,11 @@
 import { previewText, recordEntries } from "../utils";
+import type { OverviewPayloadSummaryValue } from "../types";
 
-export function SafePayloadSummary({ value }: { value: unknown }) {
+export function SafePayloadSummary({
+  value,
+}: {
+  value: OverviewPayloadSummaryValue;
+}) {
   const entries = recordEntries(value).slice(0, 4);
 
   if (entries.length === 0) {

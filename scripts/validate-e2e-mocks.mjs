@@ -518,6 +518,38 @@ function validateSystemActionMockPayloadHandlers() {
   }
 }
 
+function validateOverviewMockPayloadHandlers() {
+  const commandFixturePath = path.join(
+    repoRoot,
+    "src",
+    "mocks",
+    "fixtures",
+    "commands.ts",
+  );
+  const commandFixtureText = readRequired(commandFixturePath);
+  const overviewHandlers = [
+    ["get_device_id", "deviceIdHandler"],
+    ["get_mystery_unlock_grants", "mysteryUnlockGrantsHandler"],
+    ["get_notification_client_state", "notificationClientStateHandler"],
+    ["load_snapshot", "coreSnapshotHandler"],
+    ["refresh_usage_snapshot", "coreSnapshotHandler"],
+  ];
+
+  assertIncludes("src/mocks/fixtures/commands.ts", commandFixtureText, [
+    "CoreSnapshotPayload",
+    "NotificationClientStatePayload",
+    "MysteryRouteGrant[]",
+    "const coreSnapshotHandler",
+    "const deviceIdHandler",
+  ]);
+
+  for (const [command, handler] of overviewHandlers) {
+    if (!commandFixtureText.includes(`${command}: ${handler}`)) {
+      failures.push(`src/mocks/fixtures/commands.ts 缺少 overview 专用 handler：${command}`);
+    }
+  }
+}
+
 function validateSessionsMockPayloadHandlers() {
   const commandFixturePath = path.join(
     repoRoot,
@@ -568,6 +600,7 @@ validatePluginsMockPayloadHandlers();
 validateSessionsMockPayloadHandlers();
 validateRelayMockPayloadHandlers();
 validateSystemActionMockPayloadHandlers();
+validateOverviewMockPayloadHandlers();
 validateIpcMockBridge();
 
 if (failures.length > 0) {

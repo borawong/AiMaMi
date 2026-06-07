@@ -1,7 +1,41 @@
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
+import type {
+  CoreEnvelope,
+  CoreSnapshotPayload,
+  DailyActivity,
+  McpServerListPayload,
+  McpServerSummary,
+  MysteryRouteGrant,
+  NotificationClientStatePayload,
+  SkillListPayload,
+  UsageAnalyticsPayload,
+} from "@/types";
 
 export type OverviewModuleId = "overview";
-export type OverviewCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
+export type OverviewSnapshotEnvelope = CoreEnvelope<CoreSnapshotPayload>;
+export type OverviewUsageEnvelope = CoreEnvelope<UsageAnalyticsPayload>;
+export type OverviewMcpEnvelope = CoreEnvelope<McpServerListPayload>;
+export type OverviewSkillsEnvelope = CoreEnvelope<SkillListPayload>;
+export type OverviewNotificationEnvelope =
+  CoreEnvelope<NotificationClientStatePayload>;
+export type OverviewMysteryGrantsEnvelope = CoreEnvelope<MysteryRouteGrant[]>;
+export type OverviewCachePayload =
+  | OverviewSnapshotEnvelope
+  | OverviewUsageEnvelope
+  | OverviewMcpEnvelope
+  | OverviewSkillsEnvelope
+  | OverviewNotificationEnvelope
+  | OverviewMysteryGrantsEnvelope;
+export type OverviewCacheEnvelope<
+  TPayload extends OverviewCachePayload = OverviewCachePayload,
+> = ModuleCacheEnvelope<TPayload>;
+export type OverviewRecordPayload = DailyActivity | McpServerSummary;
+export type OverviewPayloadSummaryValue =
+  | OverviewRecordPayload
+  | OverviewSkillRecord
+  | NotificationClientStatePayload
+  | MysteryRouteGrant[]
+  | null;
 
 export interface OverviewAction {
   id: string;
@@ -104,11 +138,19 @@ export type OverviewDataPanelModel =
       rows: OverviewInfoRow[];
     }
   | {
-      id: "usage" | "mcp";
+      id: "usage";
       titleKey: string;
       state: OverviewQueryState;
       kind: "records";
-      items: unknown[];
+      items: DailyActivity[];
+      emptyKey: string;
+    }
+  | {
+      id: "mcp";
+      titleKey: string;
+      state: OverviewQueryState;
+      kind: "records";
+      items: McpServerSummary[];
       emptyKey: string;
     }
   | {
@@ -124,14 +166,14 @@ export type OverviewDataPanelModel =
       titleKey: string;
       state: OverviewQueryState;
       kind: "payload";
-      payload: unknown;
+      payload: NotificationClientStatePayload | null;
     }
   | {
       id: "mystery-grants";
       titleKey: string;
       state: OverviewQueryState;
       kind: "mystery";
-      payload: unknown;
+      payload: MysteryRouteGrant[] | null;
       boundaryActions: OverviewBoundaryAction[];
     };
 

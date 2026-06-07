@@ -5,12 +5,26 @@ import { analyticsService } from "@/services/analytics";
 import { mcpService } from "@/services/mcp";
 import { skillsService } from "@/services/skills";
 import { systemService } from "@/services/system";
-import { OverviewCache } from "../cache";
+import {
+  OverviewCache,
+  writeOverviewAuthoritativePayload,
+} from "../cache";
 import type {
   OverviewDataPanelModel,
   OverviewMetricModel,
   OverviewPageController,
 } from "../types";
+import type {
+  CoreSnapshotPayload,
+  DailyActivity,
+  InstalledSkillSummary,
+  McpServerListPayload,
+  McpServerSummary,
+  MysteryRouteGrant,
+  NotificationClientStatePayload,
+  SkillListPayload,
+  UsageAnalyticsPayload,
+} from "@/types";
 import {
   envelopeData,
   readArray,
@@ -67,7 +81,7 @@ export function useOverviewModule() {
   const refreshUsageMutation = useMutation({
     mutationFn: () => accountsService.refreshUsageSnapshot(),
     onSuccess: (payload) => {
-      OverviewCache.writeAuthoritativePayload(queryClient, {
+      writeOverviewAuthoritativePayload(queryClient, {
         payload,
         source: "mutation-payload",
         sequence: Date.now(),
@@ -111,14 +125,23 @@ export function useOverviewModule() {
 
 export function useOverviewPageController(): OverviewPageController {
   const module = useOverviewModule();
-  const snapshot = envelopeData(module.snapshotQuery.data);
-  const usage = envelopeData(module.usageQuery.data);
-  const mcp = envelopeData(module.mcpQuery.data);
-  const skills = envelopeData(module.skillsQuery.data);
-  const notificationState = envelopeData(module.notificationStateQuery.data);
-  const mysteryUnlockGrants = envelopeData(module.mysteryUnlockGrantsQuery.data);
-  const mcpItems = readArray(mcp, ["items", "servers"]);
-  const skillItems = readArray(skills, ["items", "skills"]);
+  const snapshot = envelopeData<CoreSnapshotPayload>(
+    module.snapshotQuery.data,
+  );
+  const usage = envelopeData<UsageAnalyticsPayload>(module.usageQuery.data);
+  const mcp = envelopeData<McpServerListPayload>(module.mcpQuery.data);
+  const skills = envelopeData<SkillListPayload>(module.skillsQuery.data);
+  const notificationState = envelopeData<NotificationClientStatePayload>(
+    module.notificationStateQuery.data,
+  );
+  const mysteryUnlockGrants = envelopeData<MysteryRouteGrant[]>(
+    module.mysteryUnlockGrantsQuery.data,
+  );
+  const mcpItems = readArray<McpServerSummary>(mcp, ["items", "servers"]);
+  const skillItems = readArray<InstalledSkillSummary>(skills, [
+    "items",
+    "skills",
+  ]);
   const health = readOverviewHealth(snapshot, module.snapshotQuery.isLoading);
   const activeAccount = readOverviewActiveAccount(snapshot, module.snapshotQuery.isLoading);
   const todaySessions = readNumber(usage, ["today.sessionCount"]);
@@ -208,7 +231,7 @@ export function useOverviewPageController(): OverviewPageController {
       titleKey: "overview.usage",
       state: module.usageQuery,
       kind: "records",
-      items: readArray(usage, ["dailyActivity"]),
+      items: readArray<DailyActivity>(usage, ["dailyActivity"]),
       emptyKey: "analytics.emptySeries",
     },
     {

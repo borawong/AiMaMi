@@ -770,6 +770,59 @@ function validateSharedCacheTypedGate() {
   }
 }
 
+function validateOverviewTypedPayloadGate() {
+  const typesPath = join(repoRoot, "src", "features", "overview", "types", "index.ts");
+  const cachePath = join(repoRoot, "src", "features", "overview", "cache", "index.ts");
+  const hooksPath = join(repoRoot, "src", "features", "overview", "hooks", "index.ts");
+  const utilsPath = join(repoRoot, "src", "features", "overview", "utils", "index.ts");
+  const payloadPanelPath = join(repoRoot, "src", "features", "overview", "panels", "payload.tsx");
+  const recordsPanelPath = join(repoRoot, "src", "features", "overview", "panels", "records.tsx");
+  const types = readRequired(typesPath);
+  const cache = readRequired(cachePath);
+  const hooks = readRequired(hooksPath);
+  const utils = readRequired(utilsPath);
+  const payloadPanel = readRequired(payloadPanelPath);
+  const recordsPanel = readRequired(recordsPanelPath);
+
+  const typedPayloadOk =
+    types.includes("export type OverviewCachePayload") &&
+    types.includes("export type OverviewCacheEnvelope") &&
+    types.includes("export type OverviewRecordPayload") &&
+    types.includes("export type OverviewPayloadSummaryValue") &&
+    types.includes("items: DailyActivity[]") &&
+    types.includes("items: McpServerSummary[]") &&
+    types.includes("payload: NotificationClientStatePayload | null") &&
+    types.includes("payload: MysteryRouteGrant[] | null") &&
+    types.includes("ModuleCacheEnvelope<TPayload>") &&
+    cache.includes("createModuleCacheOwner<OverviewCachePayload>(\"overview\")") &&
+    cache.includes("Omit<OverviewCacheEnvelope<TPayload>, \"moduleId\">") &&
+    hooks.includes("writeOverviewAuthoritativePayload") &&
+    hooks.includes("envelopeData<CoreSnapshotPayload>") &&
+    hooks.includes("envelopeData<UsageAnalyticsPayload>") &&
+    hooks.includes("envelopeData<McpServerListPayload>") &&
+    hooks.includes("envelopeData<SkillListPayload>") &&
+    hooks.includes("envelopeData<NotificationClientStatePayload>") &&
+    hooks.includes("envelopeData<MysteryRouteGrant[]>") &&
+    hooks.includes("readArray<DailyActivity>") &&
+    hooks.includes("readArray<McpServerSummary>") &&
+    hooks.includes("readArray<InstalledSkillSummary>") &&
+    utils.includes("items: InstalledSkillSummary[]") &&
+    payloadPanel.includes("OverviewPayloadSummaryValue") &&
+    recordsPanel.includes("TItem extends OverviewPayloadSummaryValue") &&
+    !types.includes("OverviewCacheEnvelope<TPayload = unknown>") &&
+    !types.includes("items: unknown[]") &&
+    !types.includes("payload: unknown") &&
+    !cache.includes("createModuleCacheOwner(\"overview\")") &&
+    !cache.includes("ModuleCacheEnvelope<unknown>") &&
+    !payloadPanel.includes("value: unknown");
+
+  if (!typedPayloadOk) {
+    failures.push("overview IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
+  } else {
+    console.log("PASS overview typed IPC payload owner：service/hook/cache");
+  }
+}
+
 function validateDaemonAutoswitchTypedPayloadGate() {
   const typesPath = join(repoRoot, "src", "features", "daemon-autoswitch", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "daemon-autoswitch", "cache", "index.ts");
@@ -1050,6 +1103,7 @@ validatePageChunks(raw.frontendFiles);
 validateRoutesAndLocales(raw.controlFlow);
 validateKnownInternalFrontendGates();
 validateSharedCacheTypedGate();
+validateOverviewTypedPayloadGate();
 validateDaemonAutoswitchTypedPayloadGate();
 validateMcpTypedPayloadGate();
 validatePluginsFrontendNoPromotionGate();

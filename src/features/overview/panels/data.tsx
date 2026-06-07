@@ -8,6 +8,7 @@ import type {
   OverviewDataPanelModel,
   OverviewInfoRow,
   OverviewQueryState,
+  OverviewRecordPayload,
   OverviewSkillRecord,
 } from "../types";
 import { BoundaryButton } from "./boundary";
@@ -84,7 +85,12 @@ function OverviewDataPanelBody({ panel }: { panel: OverviewDataPanelModel }) {
   }
 
   if (panel.kind === "records") {
-    return <OverviewRecordList items={panel.items} emptyKey={panel.emptyKey} />;
+    return (
+      <OverviewRecordList<OverviewRecordPayload>
+        items={panel.items}
+        emptyKey={panel.emptyKey}
+      />
+    );
   }
 
   if (panel.kind === "skills") {

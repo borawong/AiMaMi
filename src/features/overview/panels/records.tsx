@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import type { OverviewPayloadSummaryValue } from "../types";
 import { SafePayloadSummary } from "./payload";
 
-export function OverviewRecordList<TItem>({
+export function OverviewRecordList<TItem extends OverviewPayloadSummaryValue>({
   items,
   emptyKey,
   renderItem,

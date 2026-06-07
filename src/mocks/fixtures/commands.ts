@@ -11,11 +11,14 @@ import type {
   AccountMonitorPayload,
   AccountSessionImportPayload,
   ChangeAnalyticsPayload,
+  CoreSnapshotPayload,
   McpServerListPayload,
   McpServerMutationPayload,
   McpServerRemovePayload,
   McpServerSummary,
   McpTransport,
+  MysteryRouteGrant,
+  NotificationClientStatePayload,
   QuotaHistoryPayload,
   RelayActivePayload,
   RelayDiagnosticIssuePayload,
@@ -76,10 +79,13 @@ export type IpcCommandMockData =
   | AccountMonitorPayload
   | AccountSessionImportPayload
   | ChangeAnalyticsPayload
+  | CoreSnapshotPayload
   | LogoutPayload
   | McpServerListPayload
   | McpServerMutationPayload
   | McpServerRemovePayload
+  | MysteryRouteGrant[]
+  | NotificationClientStatePayload
   | RemovePayload
   | RelayActivePayload
   | RelayDiagnosticPayload
@@ -866,6 +872,51 @@ const systemInfoHandler: IpcCommandHandler = (context) => {
   };
 };
 
+const coreSnapshotHandler: IpcCommandHandler = (context) => {
+  const envelope = createEvidenceBackedIpcFixture(
+    context.command,
+    context.args,
+    context.steps,
+  );
+  const data: CoreSnapshotPayload = {
+    backendStatus: envelope.data.status,
+    status: {
+      paths: {
+        codexHome: "",
+        accountsPath: "",
+        authPath: "",
+        registryPath: "",
+        sessionsPath: "",
+        launchAgentPath: "",
+        autoSwitchLogPath: "",
+        authExists: false,
+        registryExists: false,
+        sessionsExists: false,
+      },
+      lastScanAt: 0,
+      usageSource: "local",
+      autoSwitch: {
+        enabled: false,
+        threshold5hPercent: 80,
+        thresholdWeeklyPercent: 80,
+        serviceState: "unknown",
+        serviceLabel: "",
+      },
+      api: {
+        proxy: {
+          mode: "direct",
+          url: null,
+        },
+      },
+      apiConnectivity: {
+        usageStatus: "unknown",
+        usageLastError: null,
+      },
+    },
+  };
+  return { ...envelope, data };
+};
+
 const notificationClientStateHandler: IpcCommandHandler = (context) => {
   const envelope = createEvidenceBackedIpcFixture(
     context.command,
@@ -892,6 +943,9 @@ const remoteDeviceSecretHandler: IpcCommandHandler = (context) =>
     context,
     "00000000-0000-4000-8000-000000000000-00000000-0000-4000-8000-000000000001",
   );
+
+const deviceIdHandler: IpcCommandHandler = (context) =>
+  withMockData(context, "00000000-0000-4000-8000-000000000000");
 
 const unitHandler: IpcCommandHandler = (context) => withMockData(context, null);
 
@@ -1221,6 +1275,7 @@ const systemCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> 
   dismiss_pending_auto_switch: unitHandler,
   focus_main_window: systemActionHandler,
   force_kill_codex: systemActionHandler,
+  get_device_id: deviceIdHandler,
   get_mystery_unlock_grants: mysteryUnlockGrantsHandler,
   get_notification_client_state: notificationClientStateHandler,
   get_or_create_remote_device_secret: remoteDeviceSecretHandler,
@@ -1234,8 +1289,10 @@ const systemCommandHandlers: Partial<Record<IpcCommandName, IpcCommandHandler>> 
   import_remote_device_secret_if_empty: unitHandler,
   load_bootstrap_state: bootstrapStateHandler,
   load_pending_auto_switch: pendingAutoSwitchStateHandler,
+  load_snapshot: coreSnapshotHandler,
   merge_mystery_unlock_grants: mysteryUnlockGrantsHandler,
   open_path: systemActionHandler,
+  refresh_usage_snapshot: coreSnapshotHandler,
   reset_codex_config: systemActionHandler,
   restart_codex: systemActionHandler,
   set_hotspot_enabled: writeBooleanArgHandler,
