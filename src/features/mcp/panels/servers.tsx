@@ -15,10 +15,8 @@ import {
 } from "@/components/ui/pagination";
 import { Switch } from "@/components/ui/switch";
 import type { McpServerSummary } from "@/types";
-import type { useMcpPageController } from "../hooks";
+import type { McpPaginationController, McpServersController } from "../types";
 import { getMcpServerCommandLine } from "../utils";
-
-type McpPageController = ReturnType<typeof useMcpPageController>;
 
 const transportStyles: Record<string, { dot: string; text: string }> = {
   stdio: { dot: "bg-blue-500 shadow-[0_0_0_2px_rgba(59,130,246,0.2)]", text: "text-blue-500" },
@@ -27,8 +25,8 @@ const transportStyles: Record<string, { dot: string; text: string }> = {
 };
 
 interface McpServersPanelProps {
-  list: McpPageController["list"];
-  pagination: McpPageController["pagination"];
+  list: McpServersController;
+  pagination: McpPaginationController;
 }
 
 export function McpServersPanel({

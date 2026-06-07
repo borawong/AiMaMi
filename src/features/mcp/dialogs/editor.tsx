@@ -10,13 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { useMcpPageController } from "../hooks";
+import type { McpEditorController } from "../types";
 import { MCP_TRANSPORTS } from "../utils";
 
-type McpPageController = ReturnType<typeof useMcpPageController>;
-
 interface McpEditorDialogProps {
-  editor: McpPageController["editor"];
+  editor: McpEditorController;
 }
 
 export function McpEditorDialog({

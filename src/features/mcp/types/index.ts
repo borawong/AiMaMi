@@ -43,3 +43,63 @@ export interface McpPageRequestState {
   import: boolean;
   export: boolean;
 }
+
+export interface McpOverviewController {
+  serverCount: number;
+  enabledCount: number;
+  sourcePath: string;
+  onAddServer: () => void;
+  onRefresh: () => Promise<void>;
+  onCopySourcePath: () => Promise<void>;
+}
+
+export interface McpServersController {
+  servers: McpServerSummary[];
+  pagedServers: McpServerSummary[];
+  isEmpty: boolean;
+  isError: boolean;
+  isLoading: boolean;
+  onToggleServer: (name: string, enabled: boolean) => void;
+  onEditServer: (server: McpServerSummary) => void;
+  onRemoveServer: (name: string) => void;
+}
+
+export interface McpPaginationController {
+  currentPage: number;
+  totalPages: number;
+  range: McpPaginationItem[];
+  onPageChange: (page: number) => void;
+  onPreviousPage: () => void;
+  onNextPage: () => void;
+}
+
+export interface McpEditorController {
+  open: boolean;
+  server?: McpServerSummary;
+  draft: McpServerFormDraft;
+  canSave: boolean;
+  requestState: McpPageRequestState;
+  onFieldChange: <TField extends McpServerFormField>(
+    field: TField,
+    value: McpServerFormDraft[TField],
+  ) => void;
+  onSave: () => void;
+  onClose: () => void;
+}
+
+export interface McpRemoveController {
+  open: boolean;
+  serverName: string | null;
+  requestState: McpPageRequestState;
+  onConfirm: () => void;
+  onClose: () => void;
+}
+
+export interface McpPageController {
+  overview: McpOverviewController;
+  list: McpServersController;
+  pagination: McpPaginationController;
+  editor: McpEditorController;
+  remover: McpRemoveController;
+  requestState: McpPageRequestState;
+}

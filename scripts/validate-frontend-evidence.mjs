@@ -739,12 +739,70 @@ function validateKnownInternalFrontendGates() {
 function validateMcpTypedPayloadGate() {
   const servicePath = join(repoRoot, "src", "services", "mcp", "index.ts");
   const hooksPath = join(repoRoot, "src", "features", "mcp", "hooks", "index.ts");
+  const queryPath = join(repoRoot, "src", "features", "mcp", "hooks", "query.ts");
+  const mutationPath = join(repoRoot, "src", "features", "mcp", "hooks", "mutation.ts");
+  const pagePath = join(repoRoot, "src", "features", "mcp", "hooks", "page.ts");
   const cachePath = join(repoRoot, "src", "features", "mcp", "cache", "index.ts");
+  const sequencePath = join(repoRoot, "src", "features", "mcp", "cache", "sequence.ts");
   const typesPath = join(repoRoot, "src", "features", "mcp", "types", "index.ts");
   const service = readRequired(servicePath);
-  const hooks = readRequired(hooksPath);
+  const hooksIndex = readRequired(hooksPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
   const cache = readRequired(cachePath);
+  const cacheSequence = existsSync(sequencePath) ? readRequired(sequencePath) : "";
   const types = readRequired(typesPath);
+  const cacheOwnerText = `${cache}\n${cacheSequence}`;
+
+  const hooksIndexBarrelOk =
+    (hooksIndex.includes('from "./query"') || hooksIndex.includes("from './query'")) &&
+    (hooksIndex.includes('from "./mutation"') || hooksIndex.includes("from './mutation'")) &&
+    (hooksIndex.includes('from "./page"') || hooksIndex.includes("from './page'")) &&
+    !/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/.test(hooksIndex) &&
+    !/\b(setQueryData|invalidateQueries|cancelQueries)\b/.test(hooksIndex) &&
+    !hooksIndex.includes("writeMcpAuthoritativePayload") &&
+    !hooksIndex.includes("writeMcpCachePayload") &&
+    !hooksIndex.includes("writeMcpMutationPayload") &&
+    !hooksIndex.includes("mcpService.");
+
+  const splitOwnerOk =
+    query.includes("useQuery") &&
+    query.includes("MCP_SERVERS_QUERY_KEY") &&
+    query.includes("mcpService.loadServers") &&
+    query.includes("writeMcpCachePayload") &&
+    mutation.includes("useMutation") &&
+    mutation.includes("mcpService.setServerEnabled") &&
+    mutation.includes("mcpService.removeServer") &&
+    mutation.includes("mcpService.upsertServer") &&
+    mutation.includes("writeMcpMutationPayload") &&
+    page.includes("useMcpPageController") &&
+    page.includes("useMcpServers") &&
+    page.includes("useMcpServerMutations") &&
+    page.includes("useUpsertMcpServerMutation");
+
+  const cacheOwnerOk =
+    cache.includes("createModuleCacheOwner<McpCachePayload>(\"mcp\")") &&
+    cache.includes("MCP_SERVERS_QUERY_KEY") &&
+    cache.includes("writeMcpAuthoritativePayload") &&
+    cache.includes("writeMcpCachePayload") &&
+    cache.includes("writeMcpMutationPayload") &&
+    cache.includes("setQueryData<McpListEnvelope>") &&
+    cache.includes("invalidateMcpContractQueries") &&
+    cacheOwnerText.includes("nextMcpCacheSequence") &&
+    (cacheOwnerText.includes("acceptMcpCacheSequence") ||
+      cacheOwnerText.includes("mcpLatestAcceptedSequence") ||
+      cacheOwnerText.includes("sequence <")) &&
+    !cache.includes("ModuleCacheEnvelope<unknown>");
+
+  const pageControllerBoundaryOk =
+    page.includes("useState") &&
+    page.includes("createMcpServerFormDraft") &&
+    page.includes("getMcpPagination") &&
+    page.includes("toast") &&
+    !/\buse(Query|Mutation|QueryClient)\b/.test(page) &&
+    !/\b(setQueryData|invalidateQueries|cancelQueries)\b/.test(page) &&
+    !/@\/services\/mcp|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/.test(page);
 
   const typedPayloadOk =
     service.includes("McpServerConfigInput") &&
@@ -757,18 +815,25 @@ function validateMcpTypedPayloadGate() {
     types.includes("export type McpMutationEnvelope") &&
     types.includes("export type McpRemoveEnvelope") &&
     types.includes("export type McpCachePayload") &&
-    hooks.includes("McpListEnvelope") &&
-    hooks.includes("McpMutationEnvelope") &&
-    hooks.includes("McpRemoveEnvelope") &&
-    hooks.includes("writeMcpAuthoritativePayload") &&
-    !hooks.includes("payload: unknown") &&
+    types.includes("export interface McpPageController") &&
+    types.includes("export interface McpEditorController") &&
+    query.includes("McpListEnvelope") &&
+    cache.includes("McpMutationEnvelope") &&
+    cache.includes("McpRemoveEnvelope") &&
+    cache.includes("writeMcpAuthoritativePayload") &&
+    !query.includes("payload: unknown") &&
+    !mutation.includes("payload: unknown") &&
+    !cache.includes("payload: unknown") &&
     cache.includes("Omit<McpCacheEnvelope, \"moduleId\">") &&
-    !cache.includes("ModuleCacheEnvelope<unknown>");
+    hooksIndexBarrelOk &&
+    splitOwnerOk &&
+    cacheOwnerOk &&
+    pageControllerBoundaryOk;
 
   if (!typedPayloadOk) {
-    failures.push("mcp IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
+    failures.push("mcp IPC payload owner 必须收口到 typed envelope、hooks/query、hooks/mutation、hooks/page 和 cache helper");
   } else {
-    console.log("PASS mcp typed IPC payload owner：service/hook/cache");
+    console.log("PASS mcp typed IPC payload owner：service/query/mutation/page/cache");
   }
 }
 

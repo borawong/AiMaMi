@@ -145,6 +145,140 @@ function assertNotMatches(file, content, patterns) {
   }
 }
 
+function validateMcpDeepOwnerBoundaries() {
+  const mcpRoot = join(featuresRoot, "mcp");
+  const hooksIndexPath = join(mcpRoot, "hooks", "index.ts");
+  const queryPath = join(mcpRoot, "hooks", "query.ts");
+  const mutationPath = join(mcpRoot, "hooks", "mutation.ts");
+  const pagePath = join(mcpRoot, "hooks", "page.ts");
+  const cachePath = join(mcpRoot, "cache", "index.ts");
+  const sequencePath = join(mcpRoot, "cache", "sequence.ts");
+  const typesPath = join(mcpRoot, "types", "index.ts");
+  const panelPaths = [
+    join(mcpRoot, "panels", "overview.tsx"),
+    join(mcpRoot, "panels", "servers.tsx"),
+    join(mcpRoot, "dialogs", "editor.tsx"),
+    join(mcpRoot, "dialogs", "remove.tsx"),
+  ];
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const cacheSequence = existsSync(sequencePath) ? readRequired(sequencePath) : "";
+  const types = readRequired(typesPath);
+  const panelOwnerText = panelPaths.map((file) => readRequired(file)).join("\n");
+  const cacheOwnerText = `${cache}\n${cacheSequence}`;
+
+  const barrelRemainder = hooksIndex
+    .replace(/export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["'][^"']+["'];?/g, "")
+    .replace(/\/\/.*$/gm, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .trim();
+
+  if (barrelRemainder) {
+    failures.push("src/features/mcp/hooks/index.ts 只能作为 re-export barrel，不得包含 hook 实现、cache 写入或 page controller");
+  }
+  for (const ownerFile of ["query", "mutation", "page"]) {
+    if (!hooksIndex.includes(`from "./${ownerFile}"`) && !hooksIndex.includes(`from './${ownerFile}'`)) {
+      failures.push(`src/features/mcp/hooks/index.ts 必须 re-export ./${ownerFile} owner`);
+    }
+  }
+  assertNotMatches("src/features/mcp/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "mcp hooks/index 只能聚合 re-export，不得 owning query/mutation/controller"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "mcp hooks/index 不得 owning TanStack cache 操作"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "mcp hooks/index 不得直接拼底层 IPC transport"],
+  ]);
+
+  assertIncludes("src/features/mcp/hooks/query.ts", query, [
+    "useQuery",
+    "useQueryClient",
+    "MCP_SERVERS_QUERY_KEY",
+    "mcpService.loadServers",
+    "writeMcpCachePayload",
+  ]);
+  assertNotMatches("src/features/mcp/hooks/query.ts", query, [
+    [/\buseMutation\b/, "mcp query owner 不得 owning mutation"],
+    [/\buse(State|Reducer)\b/, "mcp query owner 不得 owning 页面短生命周期 UI state"],
+    [/\b(setQueryData|cancelQueries)\b/, "mcp query owner 不得 owning mutation cache 写入或取消"],
+    [/toast\(|navigator\.clipboard/, "mcp query owner 不得 owning toast 或剪贴板 UI 组合"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "mcp query owner 必须经 mcp service wrapper，不得直接拼 IPC"],
+  ]);
+
+  assertIncludes("src/features/mcp/hooks/mutation.ts", mutation, [
+    "useMutation",
+    "useQueryClient",
+    "mcpService.setServerEnabled",
+    "mcpService.removeServer",
+    "mcpService.upsertServer",
+    "writeMcpMutationPayload",
+    "cancelQueries",
+  ]);
+  assertNotMatches("src/features/mcp/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "mcp mutation owner 不得 owning query"],
+    [/\buse(State|Reducer|Effect|Memo)\b/, "mcp mutation owner 不得 owning page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries)\b/, "mcp mutation owner 必须把 cache 写入和失效交给 cache helper"],
+    [/toast\(|navigator\.clipboard/, "mcp mutation owner 不得 owning toast 或剪贴板 UI 组合"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "mcp mutation owner 必须经 mcp service wrapper，不得直接拼 IPC"],
+  ]);
+
+  assertIncludes("src/features/mcp/hooks/page.ts", page, [
+    "useMcpPageController",
+    "McpPageController",
+    "useState",
+    "createMcpServerFormDraft",
+    "getMcpPagination",
+    "useMcpServers",
+    "useMcpServerMutations",
+    "useUpsertMcpServerMutation",
+    "toast",
+  ]);
+  assertNotMatches("src/features/mcp/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "mcp page/controller 只能组合 query/mutation hook，不得直接 owning TanStack"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "mcp page/controller 不得直接写 cache、失效 query 或取消 query"],
+    [/@\/services\/mcp|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "mcp page/controller 不得直接拼底层 IPC transport 或 service wrapper"],
+  ]);
+  assertIncludes("src/features/mcp/types/index.ts", types, [
+    "export interface McpPageController",
+    "export interface McpOverviewController",
+    "export interface McpServersController",
+    "export interface McpPaginationController",
+    "export interface McpEditorController",
+    "export interface McpRemoveController",
+  ]);
+  if (panelOwnerText.includes("ReturnType<typeof useMcpPageController>") || panelOwnerText.includes("../hooks")) {
+    failures.push("src/features/mcp/panels 和 dialogs 必须消费 types controller 合同，不得反向依赖 hooks ReturnType");
+  }
+
+  assertIncludes("src/features/mcp/cache/index.ts", cache, [
+    "createModuleCacheOwner<McpCachePayload>(\"mcp\")",
+    "MCP_SERVERS_QUERY_KEY",
+    "writeMcpAuthoritativePayload",
+    "writeMcpCachePayload",
+    "writeMcpMutationPayload",
+    "setQueryData<McpListEnvelope>",
+    "invalidateMcpContractQueries",
+    "invalidateQueries({ queryKey: MCP_SERVERS_QUERY_KEY })",
+  ]);
+  if (
+    !cacheOwnerText.includes("nextMcpCacheSequence") ||
+    !(
+      cacheOwnerText.includes("acceptMcpCacheSequence") ||
+      cacheOwnerText.includes("mcpLatestAcceptedSequence") ||
+      cacheOwnerText.includes("sequence <")
+    )
+  ) {
+    failures.push("src/features/mcp/cache/index.ts 必须托管 mutation payload sequence 或等价 stale/delayed response 防护");
+  }
+  assertNotMatches("src/features/mcp/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "mcp cache owner 不得 owning React hook"],
+    [/@\/services\/mcp|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "mcp cache owner 不得直接拼 IPC 或调用 service"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "mcp cache owner 必须保留 typed payload"],
+  ]);
+
+  console.log("PASS mcp 深层 owner 边界门禁已执行：hooks/index、query、mutation、page、cache");
+}
+
 function validateFeatureDeepOwners() {
   for (const moduleId of featureModules) {
     const moduleRoot = join(featuresRoot, moduleId);
@@ -405,6 +539,7 @@ validateSourceFileNames();
 validateNoDuplicatePublicCommonRoots();
 validateNoFeaturePublicCommonOwnerRoots();
 validateFeatureDeepOwners();
+validateMcpDeepOwnerBoundaries();
 validateRouteShells();
 validateFeaturePageShells();
 validateServiceOwners();

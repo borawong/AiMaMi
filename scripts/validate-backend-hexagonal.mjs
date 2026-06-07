@@ -279,14 +279,20 @@ function validateMcpTypedPayloadContracts() {
   const contractPath = join(backendRoot, "contracts", "mcp.rs");
   const featureTypesPath = join(frontendRoot, "features", "mcp", "types", "index.ts");
   const featureCachePath = join(frontendRoot, "features", "mcp", "cache", "index.ts");
+  const featureCacheSequencePath = join(frontendRoot, "features", "mcp", "cache", "sequence.ts");
   const featureHooksPath = join(frontendRoot, "features", "mcp", "hooks", "index.ts");
+  const featureQueryHookPath = join(frontendRoot, "features", "mcp", "hooks", "query.ts");
+  const featureMutationHookPath = join(frontendRoot, "features", "mcp", "hooks", "mutation.ts");
   const serviceText = readUtf8(servicePath);
   const commandText = readUtf8(commandPath);
   const usecaseText = readUtf8(usecasePath);
   const contractText = readUtf8(contractPath);
   const featureTypesText = readUtf8(featureTypesPath);
   const featureCacheText = readUtf8(featureCachePath);
+  const featureCacheSequenceText = readUtf8(featureCacheSequencePath);
   const featureHooksText = readUtf8(featureHooksPath);
+  const featureQueryHookText = readUtf8(featureQueryHookPath);
+  const featureMutationHookText = readUtf8(featureMutationHookPath);
 
   assertContains(contractPath, contractText, [
     "pub(crate) struct McpServerConfigInput",
@@ -324,12 +330,46 @@ function validateMcpTypedPayloadContracts() {
   ], "MCP 前端模块 typed cache payload");
 
   assertContains(featureHooksPath, featureHooksText, [
+    'from "./query"',
+    'from "./mutation"',
+    'from "./page"',
+  ], "MCP hooks barrel owner");
+
+  assertNotContainsSnippet(featureHooksPath, featureHooksText, [
+    "useQuery",
+    "useMutation",
+    "writeMcpAuthoritativePayload",
+    "writeMcpMutationPayload",
+    "mcpService.",
+  ], "MCP hooks/index 不得继续承载 typed payload 或 service 逻辑");
+
+  assertContains(featureQueryHookPath, featureQueryHookText, [
     "McpListEnvelope",
+    "mcpService.loadServers",
+    "writeMcpCachePayload",
+  ], "MCP query hooks typed authoritative envelope");
+
+  assertContains(featureMutationHookPath, featureMutationHookText, [
+    "mcpService.setServerEnabled",
+    "mcpService.removeServer",
+    "mcpService.upsertServer",
+    "writeMcpMutationPayload",
+    "cancelQueries",
+  ], "MCP mutation hooks typed authoritative envelope");
+
+  assertContains(featureCachePath, featureCacheText, [
     "McpMutationEnvelope",
     "McpRemoveEnvelope",
     "writeMcpAuthoritativePayload",
     "writeMcpServersMutationPayload",
-  ], "MCP hooks typed authoritative envelope");
+    "setQueryData<McpListEnvelope>",
+  ], "MCP cache typed authoritative envelope");
+
+  assertContains(featureCacheSequencePath, featureCacheSequenceText, [
+    "nextMcpCacheSequence",
+    "acceptMcpCacheSequence",
+    "sequence < mcpLatestAcceptedSequence",
+  ], "MCP cache sequence stale/delayed 防护");
 
   assertContains(featureCachePath, featureCacheText, [
     "Omit<McpCacheEnvelope, \"moduleId\">",
@@ -360,6 +400,20 @@ function validateMcpTypedPayloadContracts() {
     "payload: unknown",
     "ModuleCacheEnvelope<unknown>",
   ], "MCP hooks 不得用 unknown authoritative payload");
+  assertNotContainsSnippet(featureQueryHookPath, featureQueryHookText, [
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+  ], "MCP query hooks 不得用 unknown authoritative payload");
+
+  assertNotContainsSnippet(featureMutationHookPath, featureMutationHookText, [
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+  ], "MCP mutation hooks 不得用 unknown authoritative payload");
+
+  assertNotContainsSnippet(featureCachePath, featureCacheText, [
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+  ], "MCP cache 不得用 unknown authoritative payload");
 }
 
 validateMcpUpsertArgumentChain();

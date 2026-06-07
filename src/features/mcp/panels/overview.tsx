@@ -3,13 +3,11 @@ import { Copy, Plus, RotateCw } from "lucide-react";
 import { BentoCard } from "@/components/ui/bento";
 import { Button } from "@/components/ui/button";
 import { ButtonBusyContent } from "@/components/ui/busy";
-import type { useMcpPageController } from "../hooks";
-
-type McpPageController = ReturnType<typeof useMcpPageController>;
+import type { McpOverviewController, McpPageRequestState } from "../types";
 
 interface McpOverviewPanelProps {
-  overview: McpPageController["overview"];
-  requestState: McpPageController["requestState"];
+  overview: McpOverviewController;
+  requestState: McpPageRequestState;
 }
 
 export function McpOverviewPanel({

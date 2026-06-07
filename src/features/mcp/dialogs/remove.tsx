@@ -9,12 +9,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert";
-import type { useMcpPageController } from "../hooks";
-
-type McpPageController = ReturnType<typeof useMcpPageController>;
+import type { McpRemoveController } from "../types";
 
 interface McpRemoveDialogProps {
-  remover: McpPageController["remover"];
+  remover: McpRemoveController;
 }
 
 export function McpRemoveDialog({
