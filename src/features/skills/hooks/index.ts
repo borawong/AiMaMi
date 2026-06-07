@@ -14,7 +14,13 @@ import {
   SkillsCache,
   SKILLS_BACKUPS_QUERY_KEY,
   SKILLS_INSTALLED_QUERY_KEY,
+  writeSkillsAuthoritativePayload,
 } from "../cache";
+import type {
+  SkillsCachePayload,
+  SkillsMutationEnvelope,
+  SkillsMutationPayload,
+} from "../types";
 
 let skillsCacheSequence = 0;
 let skillsLatestAcceptedSequence = 0;
@@ -24,7 +30,7 @@ function nextSkillsCacheSequence() {
   return skillsCacheSequence;
 }
 
-function writeSkillsCachePayload<TPayload>(
+function writeSkillsCachePayload<TPayload extends SkillsCachePayload>(
   queryClient: QueryClient,
   payload: TPayload,
   source: "full-refresh" | "mutation-payload",
@@ -35,7 +41,7 @@ function writeSkillsCachePayload<TPayload>(
   }
 
   skillsLatestAcceptedSequence = sequence;
-  SkillsCache.writeAuthoritativePayload(queryClient, {
+  writeSkillsAuthoritativePayload(queryClient, {
     payload,
     source,
     sequence,
@@ -44,7 +50,7 @@ function writeSkillsCachePayload<TPayload>(
   return true;
 }
 
-async function writeSkillsMutationPayload<TPayload>(
+async function writeSkillsMutationPayload<TPayload extends SkillsMutationEnvelope>(
   queryClient: QueryClient,
   payload: TPayload,
 ) {
@@ -265,16 +271,19 @@ export function useSkillsPageController() {
 
 export type SkillsPageController = ReturnType<typeof useSkillsPageController>;
 
-function writeSkillsQueryMutationPayload(queryClient: QueryClient, payload: unknown) {
-  const data = readEnvelopeData(payload);
-  if (!isRecord(data)) return;
-
-  const importedSkill = data.skill;
-  const restoredSkill = data.restoredSkill;
-  const removedSkillID = readString(data.removedSkillID);
-  const backup = data.backup;
-  const rollbackBackup = data.rollbackBackup;
-  const deletedBackupID = readString(data.deletedBackupID);
+function writeSkillsQueryMutationPayload(
+  queryClient: QueryClient,
+  payload: SkillsMutationEnvelope,
+) {
+  const data: SkillsMutationPayload = payload.data;
+  const importedSkill = "skill" in data ? data.skill : null;
+  const restoredSkill = "restoredSkill" in data ? data.restoredSkill : null;
+  const removedSkillID = "removedSkillID" in data ? data.removedSkillID : null;
+  const backup = "backup" in data ? data.backup : null;
+  const rollbackBackup =
+    "rollbackBackup" in data ? data.rollbackBackup : null;
+  const deletedBackupID =
+    "deletedBackupID" in data ? data.deletedBackupID : null;
 
   if (isInstalledSkillSummary(importedSkill)) {
     upsertInstalledSkill(queryClient, importedSkill);
@@ -283,7 +292,11 @@ function writeSkillsQueryMutationPayload(queryClient: QueryClient, payload: unkn
     upsertInstalledSkill(queryClient, restoredSkill);
   }
   if (removedSkillID) {
-    removeInstalledSkill(queryClient, removedSkillID, readNumber(data.remainingInstalledCount));
+    removeInstalledSkill(
+      queryClient,
+      removedSkillID,
+      "remainingInstalledCount" in data ? data.remainingInstalledCount : null,
+    );
   }
 
   if (isSkillBackupSummary(backup)) {
@@ -297,7 +310,11 @@ function writeSkillsQueryMutationPayload(queryClient: QueryClient, payload: unkn
     upsertSkillBackup(queryClient, rollbackBackup);
   }
   if (deletedBackupID) {
-    removeSkillBackup(queryClient, deletedBackupID, readNumber(data.remainingBackupCount));
+    removeSkillBackup(
+      queryClient,
+      deletedBackupID,
+      "remainingBackupCount" in data ? data.remainingBackupCount : null,
+    );
   }
 }
 
@@ -392,13 +409,6 @@ function upsertById<TItem extends { id: string }>(items: TItem[], item: TItem) {
   );
 }
 
-function readEnvelopeData(value: unknown) {
-  if (isRecord(value) && "data" in value) {
-    return value.data ?? null;
-  }
-  return null;
-}
-
 function isSkillListEnvelope(value: unknown): value is CoreEnvelope<SkillListPayload> {
   return isRecord(value) && isRecord(value.data) && Array.isArray(value.data.items);
 }
@@ -415,14 +425,6 @@ function isInstalledSkillSummary(value: unknown): value is InstalledSkillSummary
 
 function isSkillBackupSummary(value: unknown): value is SkillBackupSummary {
   return isRecord(value) && typeof value.id === "string";
-}
-
-function readString(value: unknown) {
-  return typeof value === "string" ? value : null;
-}
-
-function readNumber(value: unknown) {
-  return typeof value === "number" ? value : null;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

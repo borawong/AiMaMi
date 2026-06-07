@@ -38,6 +38,12 @@ import type {
   SessionAnalyticsPayload,
   SessionsDeletePayload,
   SessionsListPayload,
+  SkillBackupListPayload,
+  SkillDeleteBackupPayload,
+  SkillImportPayload,
+  SkillListPayload,
+  SkillRemovePayload,
+  SkillRestorePayload,
   SystemActionPayload,
   TokenAnalyticsPayload,
   ToolAnalyticsPayload,
@@ -92,6 +98,12 @@ export type IpcCommandMockData =
   | SessionAnalyticsPayload
   | SessionsDeletePayload
   | SessionsListPayload
+  | SkillBackupListPayload
+  | SkillDeleteBackupPayload
+  | SkillImportPayload
+  | SkillListPayload
+  | SkillRemovePayload
+  | SkillRestorePayload
   | SystemActionPayload
   | SwitchPayload
   | TokenAnalyticsPayload

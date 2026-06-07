@@ -451,6 +451,7 @@ function validateKnownInternalFrontendGates() {
   const relayPagePath = join(repoRoot, "src", "features", "relay", "components", "page.tsx");
   const relayPanelsPath = join(repoRoot, "src", "features", "relay", "panels", "panels.tsx");
   const relayServicePath = join(repoRoot, "src", "services", "relay", "index.ts");
+  const skillsServicePath = join(repoRoot, "src", "services", "skills", "index.ts");
   const customInstructionsPagePath = join(
     repoRoot,
     "src",
@@ -478,6 +479,8 @@ function validateKnownInternalFrontendGates() {
   const skillsPagePath = join(repoRoot, "src", "features", "skills", "components", "page.tsx");
   const skillsContentPath = join(repoRoot, "src", "features", "skills", "Content.tsx");
   const skillsHooksPath = join(repoRoot, "src", "features", "skills", "hooks", "index.ts");
+  const skillsCachePath = join(repoRoot, "src", "features", "skills", "cache", "index.ts");
+  const skillsTypesPath = join(repoRoot, "src", "features", "skills", "types", "index.ts");
   const skillsPanelPath = join(repoRoot, "src", "features", "skills", "panels", "page.tsx");
 
   const accountsHooks = readRequired(accountsHooksPath);
@@ -500,9 +503,12 @@ function validateKnownInternalFrontendGates() {
   const customInstructionsPage = readRequired(customInstructionsPagePath);
   const customInstructionsHooks = readRequired(customInstructionsHooksPath);
   const customInstructionsLoadErrorPanel = readRequired(customInstructionsLoadErrorPanelPath);
+  const skillsService = readRequired(skillsServicePath);
   const skillsPage = readRequired(skillsPagePath);
   const skillsContent = readRequired(skillsContentPath);
   const skillsHooks = readRequired(skillsHooksPath);
+  const skillsCache = readRequired(skillsCachePath);
+  const skillsTypes = readRequired(skillsTypesPath);
   const skillsPanel = readRequired(skillsPanelPath);
 
   const accountsTypedPayloadOk =
@@ -665,6 +671,33 @@ function validateKnownInternalFrontendGates() {
     failures.push("skills import 取消必须保持静默 no-op，不得进入 mutation error");
   } else {
     console.log("PASS skills import 取消语义：silent no-op");
+  }
+  const skillsTypedPayloadOk =
+    skillsService.includes("CoreEnvelope<SkillListPayload>") &&
+    skillsService.includes("CoreEnvelope<SkillBackupListPayload>") &&
+    skillsService.includes("CoreEnvelope<SkillImportPayload>") &&
+    skillsService.includes("CoreEnvelope<SkillRemovePayload>") &&
+    skillsService.includes("CoreEnvelope<SkillRestorePayload>") &&
+    skillsService.includes("CoreEnvelope<SkillDeleteBackupPayload>") &&
+    skillsTypes.includes("export type SkillsInstalledEnvelope") &&
+    skillsTypes.includes("export type SkillsBackupsEnvelope") &&
+    skillsTypes.includes("export type SkillsMutationPayload") &&
+    skillsTypes.includes("export type SkillsMutationEnvelope") &&
+    skillsTypes.includes("export type SkillsCachePayload") &&
+    skillsCache.includes("createModuleCacheOwner<SkillsCachePayload>(\"skills\")") &&
+    skillsCache.includes("Omit<SkillsCacheEnvelope, \"moduleId\">") &&
+    skillsHooks.includes("SkillsCachePayload") &&
+    skillsHooks.includes("SkillsMutationPayload") &&
+    skillsHooks.includes("SkillsMutationEnvelope") &&
+    skillsHooks.includes("writeSkillsAuthoritativePayload") &&
+    !skillsTypes.includes("SkillsCacheEnvelope<TPayload = unknown>") &&
+    !skillsCache.includes("createModuleCacheOwner(\"skills\")") &&
+    !skillsHooks.includes("writeSkillsQueryMutationPayload(queryClient: QueryClient, payload: unknown)") &&
+    !skillsHooks.includes("async function writeSkillsMutationPayload<TPayload>");
+  if (!skillsTypedPayloadOk) {
+    failures.push("skills IPC payload owner 蹇呴』鏀跺彛鍒?typed envelope銆佹ā鍧?types 鍜?cache helper");
+  } else {
+    console.log("PASS skills typed IPC payload owner锛歴ervice/hook/cache");
   }
 }
 

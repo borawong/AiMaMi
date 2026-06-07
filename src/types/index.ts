@@ -350,6 +350,7 @@ export interface InstalledSkillSummary {
 }
 
 export interface SkillListPayload {
+  status: BackendSkeletonStatus;
   items: InstalledSkillSummary[];
   total: number;
   rootPath: string;
@@ -367,6 +368,7 @@ export interface SkillBackupSummary {
 }
 
 export interface SkillBackupListPayload {
+  status: BackendSkeletonStatus;
   items: SkillBackupSummary[];
   total: number;
   rootPath: string;
@@ -374,24 +376,28 @@ export interface SkillBackupListPayload {
 }
 
 export interface SkillImportPayload {
+  status: BackendSkeletonStatus;
   skill: InstalledSkillSummary;
   replacedExisting: boolean;
   backup: SkillBackupSummary | null;
 }
 
 export interface SkillRemovePayload {
+  status: BackendSkeletonStatus;
   removedSkillID: string;
   backup: SkillBackupSummary;
   remainingInstalledCount: number;
 }
 
 export interface SkillRestorePayload {
+  status: BackendSkeletonStatus;
   restoredSkill: InstalledSkillSummary;
   backup: SkillBackupSummary;
   rollbackBackup: SkillBackupSummary | null;
 }
 
 export interface SkillDeleteBackupPayload {
+  status: BackendSkeletonStatus;
   deletedBackupID: string;
   remainingBackupCount: number;
 }
