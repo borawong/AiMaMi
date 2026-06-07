@@ -606,6 +606,174 @@ function validateTrayShellDeepOwnerBoundaries() {
   console.log("PASS tray-shell 深层 owner 边界门禁已执行：hooks/index、query、mutation、page、cache、types、panels");
 }
 
+function validateSettingsDeepOwnerBoundaries() {
+  const settingsRoot = join(featuresRoot, "settings");
+  const hooksIndexPath = join(settingsRoot, "hooks", "index.ts");
+  const queryPath = join(settingsRoot, "hooks", "query.ts");
+  const mutationPath = join(settingsRoot, "hooks", "mutation.ts");
+  const actionPath = join(settingsRoot, "hooks", "action.ts");
+  const pagePath = join(settingsRoot, "hooks", "page.ts");
+  const cachePath = join(settingsRoot, "cache", "index.ts");
+  const typesPath = join(settingsRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    ...walkFiles(join(settingsRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(settingsRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(settingsRoot, "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const action = readRequired(actionPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
+
+  assertOnlyBarrelReExports("src/features/settings/hooks/index.ts", hooksIndex, [
+    "query",
+    "mutation",
+    "action",
+    "page",
+  ]);
+  assertNotMatches("src/features/settings/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "settings hooks/index can only re-export split owners"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|beginSettingsMutation|writeSettings)/, "settings hooks/index must not own cache writes"],
+    [/@\/services\/settings|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "settings hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/settings/hooks/query.ts", query, [
+    "useSettingsCacheController",
+    "useModuleCacheController(SettingsCache)",
+    "useQuery",
+    "useQueryClient",
+    "runSettingsQuery",
+    "settingsService.loadSnapshot",
+    "settingsService.hasNotch",
+    "settingsService.getHotspotEnabled",
+    "settingsService.getImageCompat",
+    "settingsService.getUsageRefreshInterval",
+    "settingsService.getAppVersion",
+    "SETTINGS_RUNTIME_STATE_DISPLAY_QUERY_KEY",
+    "SETTINGS_HAS_NOTCH_QUERY_KEY",
+    "SETTINGS_HOTSPOT_ENABLED_QUERY_KEY",
+    "SETTINGS_IMAGE_COMPAT_QUERY_KEY",
+    "SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY",
+  ]);
+  assertNotMatches("src/features/settings/hooks/query.ts", query, [
+    [/\buseMutation\b/, "settings query owner must not own mutation"],
+    [/\buseReducer\b/, "settings query owner must not own page/controller reducer state"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|beginSettingsMutation|writeSettingsMutationPayload)\b/, "settings query owner must delegate cache writes and mutation fences"],
+    [/toast\(|useBusyAction/, "settings query owner must not own toast or busy UI actions"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "settings query owner must use settings service wrapper, not IPC/API transport"],
+  ]);
+
+  assertIncludes("src/features/settings/hooks/mutation.ts", mutation, [
+    "useMutation",
+    "useQueryClient",
+    "settingsService.setAutoSwitch",
+    "settingsService.configureAutoSwitch",
+    "settingsService.setHotspotEnabled",
+    "settingsService.hotspotReady",
+    "settingsService.setImageCompat",
+    "setUsageRefreshInterval",
+    "settingsService.setApiProxyConfig",
+    "settingsService.testApiProxyConfig",
+    "settingsService.detectApiProxyConfig",
+    "settingsService.checkUpdateInstallability",
+    "beginSettingsMutation",
+    "writeSettingsMutationPayload",
+  ]);
+  assertNotMatches("src/features/settings/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "settings mutation owner must not own query"],
+    [/\buse(State|Reducer|Effect|Memo)\b/, "settings mutation owner must not own page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries)\b/, "settings mutation owner must delegate cache writes and invalidation to cache helper"],
+    [/toast\(|useBusyAction/, "settings mutation owner must not own toast or busy UI actions"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "settings mutation owner must use settings service wrapper, not IPC/API transport"],
+  ]);
+
+  assertIncludes("src/features/settings/hooks/action.ts", action, [
+    "useSettingsBusyActions",
+    "useBusyAction",
+    "updateCheckAction",
+    "detectProxyAction",
+    "testProxyAction",
+    "saveProxyAction",
+  ]);
+  assertNotMatches("src/features/settings/hooks/action.ts", action, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "settings action owner may compose module hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|beginSettingsMutation|writeSettings|SETTINGS_[A-Z0-9_]+_QUERY_KEY)\b/, "settings action owner must not write cache or consume query keys"],
+    [/@\/services\/settings|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|settingsService\.|systemService\.|invokeIpc|invoke\(/, "settings action owner must not access service/API/IPC directly"],
+  ]);
+
+  assertIncludes("src/features/settings/hooks/page.ts", page, [
+    "useSettingsPageController",
+    "SettingsPageController",
+    "SettingsPageProps",
+    "useState",
+  ]);
+  assertNotMatches("src/features/settings/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "settings page/controller may compose query/mutation/action hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|beginSettingsMutation|writeSettings|SETTINGS_[A-Z0-9_]+_QUERY_KEY)\b/, "settings page/controller must not write cache or consume query keys"],
+    [/@\/services\/settings|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|settingsService\.|systemService\.|invokeIpc|invoke\(/, "settings page/controller must not access service/API/IPC directly"],
+  ]);
+
+  assertIncludes("src/features/settings/types/index.ts", types, [
+    "export interface SettingsPageController",
+    "export interface SettingsStatusController",
+    "export interface SettingsAppearanceController",
+    "export interface SettingsModeSwitchController",
+    "export interface SettingsAboutController",
+    "export interface SettingsThresholdDialogController",
+    "export interface SettingsProxyDialogController",
+    "export interface SettingsPageActions",
+    "export interface SettingsControllerProps",
+    "export type SettingsCachePayload",
+    "export type SettingsCacheEnvelope",
+  ]);
+  assertNotMatches("src/features/settings/types/index.ts", types, [
+    [/SettingsPageController\s*=\s*ReturnType|ReturnType<typeof useSettingsPageController>/, "settings controller contract must be explicit, not ReturnType"],
+    [/SettingsCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "settings types owner must keep typed cache payloads"],
+  ]);
+
+  assertIncludes("src/features/settings/cache/index.ts", cache, [
+    "createModuleCacheOwner<SettingsCachePayload>(\"settings\")",
+    "Omit<SettingsCacheEnvelope<TPayload>, \"moduleId\">",
+    "TKey extends SettingsWritableQueryKey",
+    "SettingsQueryPayloadForKey<TKey>",
+    "writeSettingsAuthoritativePayload",
+    "writeSettingsQueryPayload",
+    "runSettingsQuery",
+    "beginSettingsMutation",
+    "writeSettingsMutationPayload",
+    "invalidateSettingsContractQueries",
+    "queryClient.setQueryData<SettingsQueryPayloadForKey<TKey>>",
+    "SettingsCache.invalidateContractQueries(queryClient)",
+  ]);
+  if (!cache.includes("settingsMutationFences") || !cache.includes("canAcceptSettingsPayload")) {
+    failures.push("src/features/settings/cache/index.ts must own mutation fences and stale/delayed response acceptance");
+  }
+  assertNotMatches("src/features/settings/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "settings cache owner must not own React hooks"],
+    [/@\/services\/settings|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "settings cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("settings"\)|SettingsCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "settings cache owner must keep typed payloads"],
+  ]);
+
+  if (controllerConsumerText.includes("ReturnType<typeof useSettingsPageController>")) {
+    failures.push("src/features/settings panels/dialogs/components must consume explicit Settings controller types, not hook ReturnType");
+  }
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+Settings[A-Za-z]*(?:Controller|Props)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/settings panels/dialogs/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS settings deep owner gate executed: hooks/index, query, mutation, action, page, cache, types, panels/dialogs/components");
+}
+
 function validateFeatureDeepOwners() {
   for (const moduleId of featureModules) {
     const moduleRoot = join(featuresRoot, moduleId);
@@ -869,6 +1037,7 @@ validateFeatureDeepOwners();
 validateMcpDeepOwnerBoundaries();
 validatePluginsDeepOwnerBoundaries();
 validateTrayShellDeepOwnerBoundaries();
+validateSettingsDeepOwnerBoundaries();
 validateRouteShells();
 validateFeaturePageShells();
 validateServiceOwners();

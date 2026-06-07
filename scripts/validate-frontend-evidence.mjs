@@ -1059,14 +1059,65 @@ function validateTrayShellTypedPayloadGate() {
 function validateSettingsTypedPayloadGate() {
   const typesPath = join(repoRoot, "src", "features", "settings", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "settings", "cache", "index.ts");
-  const hooksPath = join(repoRoot, "src", "features", "settings", "hooks", "index.ts");
+  const hooksIndexPath = join(repoRoot, "src", "features", "settings", "hooks", "index.ts");
+  const queryHookPath = join(repoRoot, "src", "features", "settings", "hooks", "query.ts");
+  const mutationHookPath = join(repoRoot, "src", "features", "settings", "hooks", "mutation.ts");
+  const actionHookPath = join(repoRoot, "src", "features", "settings", "hooks", "action.ts");
+  const pageHookPath = join(repoRoot, "src", "features", "settings", "hooks", "page.ts");
   const proxyComponentPath = join(repoRoot, "src", "features", "settings", "components", "proxy.tsx");
+  const panelAndDialogText = [
+    ...walkFiles(join(repoRoot, "src", "features", "settings", "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(repoRoot, "src", "features", "settings", "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(repoRoot, "src", "features", "settings", "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ]
+    .map((file) => readRequired(file))
+    .join("\n");
   const types = readRequired(typesPath);
   const cache = readRequired(cachePath);
-  const hooks = readRequired(hooksPath);
+  const hooksIndex = readRequired(hooksIndexPath);
+  const queryHook = readRequired(queryHookPath);
+  const mutationHook = readRequired(mutationHookPath);
+  const actionHook = readRequired(actionHookPath);
+  const pageHook = readRequired(pageHookPath);
+  const hookOwners = [queryHook, mutationHook, actionHook, pageHook].join("\n");
   const proxyComponent = readRequired(proxyComponentPath);
+  const hooksIndexReExportPattern =
+    /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const hooksIndexReExports = [...hooksIndex.matchAll(hooksIndexReExportPattern)].map(
+    (match) => match[1],
+  );
+  const hooksIndexAllowedReExports = new Set([
+    "./query",
+    "./mutation",
+    "./action",
+    "./page",
+  ]);
+  const hooksIndexOnlyReExports =
+    hooksIndex
+      .replace(hooksIndexReExportPattern, "")
+      .replace(/\/\/.*$/gm, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .trim() === "" &&
+    ["query", "mutation", "action", "page"].every(
+      (owner) =>
+        hooksIndex.includes(`from "./${owner}"`) ||
+        hooksIndex.includes(`from './${owner}'`),
+    ) &&
+    hooksIndexReExports.every((reExport) =>
+      hooksIndexAllowedReExports.has(reExport),
+    );
+  if (!hooksIndexOnlyReExports) {
+    const extraReExports = hooksIndexReExports.filter(
+      (reExport) => !hooksIndexAllowedReExports.has(reExport),
+    );
+    failures.push(
+      `src/features/settings/hooks/index.ts must only re-export ./query, ./mutation, ./action, ./page${
+        extraReExports.length > 0 ? `; extra: ${extraReExports.join(", ")}` : ""
+      }`,
+    );
+  }
 
-  const typedPayloadOk =
+  const settingsTypedPayloadOk =
     types.includes("export type SettingsQueryPayload = boolean | RefreshInterval") &&
     types.includes("export type SettingsWritableQueryKey") &&
     types.includes("export type SettingsQueryPayloadForKey") &&
@@ -1076,24 +1127,53 @@ function validateSettingsTypedPayloadGate() {
     types.includes("value: RefreshInterval") &&
     types.includes("ModuleCacheEnvelope<TPayload>") &&
     types.includes("onRefreshUsageStatus?: () => Promise<void> | void") &&
+    types.includes("export interface SettingsPageController") &&
+    types.includes("export interface SettingsAppearanceController") &&
+    types.includes("export interface SettingsStatusController") &&
+    types.includes("export interface SettingsModeSwitchController") &&
+    types.includes("export interface SettingsAboutController") &&
+    types.includes("export interface SettingsThresholdDialogController") &&
+    types.includes("export interface SettingsProxyDialogController") &&
+    types.includes("export interface SettingsPageActions") &&
+    types.includes("export interface SettingsControllerProps") &&
     cache.includes("createModuleCacheOwner<SettingsCachePayload>(\"settings\")") &&
     cache.includes("Omit<SettingsCacheEnvelope<TPayload>, \"moduleId\">") &&
     cache.includes("TKey extends SettingsWritableQueryKey") &&
     cache.includes("SettingsQueryPayloadForKey<TKey>") &&
     cache.includes("toSettingsCachePayload") &&
     cache.includes("writeSettingsAuthoritativePayload(queryClient") &&
-    hooks.includes("Promise<void> | void") &&
+    cache.includes("writeSettingsMutationPayload") &&
+    cache.includes("invalidateSettingsContractQueries") &&
+    queryHook.includes("runSettingsQuery") &&
+    queryHook.includes("settingsService.loadSnapshot") &&
+    queryHook.includes("settingsService.getUsageRefreshInterval") &&
+    mutationHook.includes("beginSettingsMutation") &&
+    mutationHook.includes("writeSettingsMutationPayload") &&
+    mutationHook.includes("setUsageRefreshInterval") &&
+    mutationHook.includes("settingsService.setApiProxyConfig") &&
+    actionHook.includes("useSettingsBusyActions") &&
+    hookOwners.includes("Promise<void> | void") &&
+    pageHook.includes("SettingsPageController") &&
     proxyComponent.includes("onSaved?: () => Promise<void> | void") &&
     !types.includes("SettingsCacheEnvelope<TPayload = unknown>") &&
+    !types.includes("SettingsPageController = ReturnType") &&
     !cache.includes("createModuleCacheOwner(\"settings\")") &&
     !cache.includes("ModuleCacheEnvelope<unknown>") &&
-    !hooks.includes("Promise<unknown> | void") &&
+    !hookOwners.includes("Promise<unknown> | void") &&
+    !hookOwners.includes("ModuleCacheEnvelope<unknown>") &&
+    !hookOwners.includes("payload: unknown") &&
+    !pageHook.match(/\buse(Query|Mutation|QueryClient)\b/) &&
+    !pageHook.match(/@\/services\/settings|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|settingsService\.|systemService\.|invokeIpc|invoke\(/) &&
+    !panelAndDialogText.includes("ReturnType<typeof useSettingsPageController>") &&
+    !/(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(panelAndDialogText) &&
     !proxyComponent.includes("Promise<unknown> | void");
 
-  if (!typedPayloadOk) {
-    failures.push("settings IPC payload owner 必须收口到 typed query payload、模块 types 和 cache helper");
-  } else {
-    console.log("PASS settings typed IPC payload owner：service/hook/cache");
+  const typedPayloadOk = hooksIndexOnlyReExports && settingsTypedPayloadOk;
+
+  if (!settingsTypedPayloadOk) {
+    failures.push("settings split owner gate must keep typed query payload, explicit controller props, cache helper writes, and no unknown fallback");
+  } else if (typedPayloadOk) {
+    console.log("PASS settings typed IPC payload owner: split hooks/types/cache");
   }
 }
 

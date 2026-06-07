@@ -10,6 +10,14 @@ export function isSettingsRefreshInterval(value: unknown): value is RefreshInter
   );
 }
 
+export function normalizeSettingsRefreshInterval(value: string): RefreshInterval {
+  return isSettingsRefreshInterval(value) ? value : "1m";
+}
+
+export function normalizeSettingsProxyUrl(mode: ApiProxyMode, url: string) {
+  return mode === "manual" ? url.trim() : undefined;
+}
+
 export function settingsProxyModeBadgeLabel(t: TranslateFn, mode: ApiProxyMode) {
   return mode === "manual"
     ? t("settings.apiProxyModeManual")

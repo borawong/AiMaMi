@@ -10,14 +10,12 @@ import {
   type HeatmapPreset,
 } from "@/hooks/accent";
 import { cn } from "@/lib/utils";
-import type { SettingsPageController } from "../hooks";
+import type { SettingsControllerProps } from "../types";
 import { SettingsRow, SettingsSection, SettingsSegmentedControl } from "./primitives";
 
 export function SettingsAppearancePanel({
   controller,
-}: {
-  controller: SettingsPageController;
-}) {
+}: SettingsControllerProps) {
   const { t } = useTranslation();
   const appearance = controller.appearance;
 

@@ -10,13 +10,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import type { SettingsPageController } from "../hooks";
+import type { SettingsControllerProps } from "../types";
 
 export function SettingsThresholdDialog({
   controller,
-}: {
-  controller: SettingsPageController;
-}) {
+}: SettingsControllerProps) {
   const { t } = useTranslation();
   const dialog = controller.thresholdDialog;
 

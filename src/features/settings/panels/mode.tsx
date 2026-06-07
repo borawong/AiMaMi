@@ -3,15 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { REFRESH_OPTIONS } from "@/hooks/refresh";
-import type { SettingsPageController } from "../hooks";
+import type { SettingsControllerProps } from "../types";
 import { settingsProxyModeBadgeLabel } from "../utils";
 import { SettingsRow, SettingsSection, SettingsSegmentedControl } from "./primitives";
 
 export function SettingsModeSwitchPanel({
   controller,
-}: {
-  controller: SettingsPageController;
-}) {
+}: SettingsControllerProps) {
   const { t } = useTranslation();
   const modeSwitch = controller.modeSwitch;
   const autoSwitch = modeSwitch.autoSwitch;

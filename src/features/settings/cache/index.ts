@@ -5,6 +5,12 @@ import {
   type ModuleCacheSource,
 } from "@/features/_shared/cache";
 import type {
+  ApiModePayload,
+  AutoSwitchConfigPayload,
+  CoreEnvelope,
+  CoreSnapshotPayload,
+} from "@/types";
+import type {
   SettingsCacheEnvelope,
   SettingsCachePayload,
   SettingsHasNotchQueryKey,
@@ -15,6 +21,8 @@ import type {
   SettingsUsageRefreshIntervalQueryKey,
   SettingsWritableQueryKey,
 } from "../types";
+
+export type SettingsRuntimeSnapshotEnvelope = CoreEnvelope<CoreSnapshotPayload>;
 
 export const SettingsCache =
   createModuleCacheOwner<SettingsCachePayload>("settings");
@@ -35,6 +43,101 @@ export const writeSettingsAuthoritativePayload = <
   queryClient: QueryClient,
   envelope: Omit<SettingsCacheEnvelope<TPayload>, "moduleId">,
 ) => SettingsCache.writeAuthoritativePayload(queryClient, envelope);
+
+// cache owner 统一封装 runtime snapshot 写回，mutation hook 不直接写 QueryClient。
+type SettingsRuntimeSnapshotUpdater = (
+  old: SettingsRuntimeSnapshotEnvelope | undefined,
+) => SettingsRuntimeSnapshotEnvelope | undefined;
+
+function writeSettingsRuntimeSnapshot(
+  queryClient: QueryClient,
+  updater: SettingsRuntimeSnapshotUpdater,
+) {
+  queryClient.setQueryData<SettingsRuntimeSnapshotEnvelope>(
+    SETTINGS_RUNTIME_STATE_DISPLAY_QUERY_KEY,
+    updater,
+  );
+}
+
+export async function beginSettingsRuntimeSnapshotMutation(
+  queryClient: QueryClient,
+) {
+  await queryClient.cancelQueries({
+    queryKey: SETTINGS_RUNTIME_STATE_DISPLAY_QUERY_KEY,
+  });
+  return queryClient.getQueryData<SettingsRuntimeSnapshotEnvelope>(
+    SETTINGS_RUNTIME_STATE_DISPLAY_QUERY_KEY,
+  );
+}
+
+export function restoreSettingsRuntimeSnapshot(
+  queryClient: QueryClient,
+  previous: SettingsRuntimeSnapshotEnvelope | undefined,
+) {
+  if (!previous) return;
+  queryClient.setQueryData<SettingsRuntimeSnapshotEnvelope>(
+    SETTINGS_RUNTIME_STATE_DISPLAY_QUERY_KEY,
+    previous,
+  );
+}
+
+export function writeSettingsAutoSwitchOptimisticPayload(
+  queryClient: QueryClient,
+  enabled: boolean,
+) {
+  writeSettingsRuntimeSnapshot(queryClient, (old) => {
+    if (!old) return old;
+    const { autoSwitch } = old.data.status;
+    return {
+      ...old,
+      data: {
+        ...old.data,
+        status: {
+          ...old.data.status,
+          autoSwitch: { ...autoSwitch, enabled },
+        },
+      },
+    };
+  });
+}
+
+export function writeSettingsAutoSwitchMutationPayload(
+  queryClient: QueryClient,
+  payload: AutoSwitchConfigPayload,
+) {
+  writeSettingsRuntimeSnapshot(queryClient, (old) => {
+    if (!old) return old;
+    return {
+      ...old,
+      data: {
+        ...old.data,
+        status: {
+          ...old.data.status,
+          autoSwitch: payload.autoSwitch,
+        },
+      },
+    };
+  });
+}
+
+export function writeSettingsApiProxyMutationPayload(
+  queryClient: QueryClient,
+  payload: ApiModePayload,
+) {
+  writeSettingsRuntimeSnapshot(queryClient, (old) => {
+    if (!old) return old;
+    return {
+      ...old,
+      data: {
+        ...old.data,
+        status: {
+          ...old.data.status,
+          api: payload.api,
+        },
+      },
+    };
+  });
+}
 
 let settingsModuleSequence = 0;
 const settingsQuerySequences = new Map<string, number>();

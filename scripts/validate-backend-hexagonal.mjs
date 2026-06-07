@@ -56,6 +56,15 @@ function readUtf8(path) {
   return readFileSync(path, "utf8");
 }
 
+function readRequiredUtf8(path, description) {
+  if (!existsSync(path)) {
+    failures.push(`missing ${description}: ${toRelative(path)}`);
+    return "";
+  }
+
+  return readUtf8(path);
+}
+
 function walkFiles(root, predicate) {
   const pending = [root];
   const files = [];
@@ -518,6 +527,237 @@ function validateSystemEnvelopeServiceTypes() {
 }
 
 validateSystemEnvelopeServiceTypes();
+
+function validateSettingsTypedPayloadContracts() {
+  const systemCommandPath = join(backendRoot, "commands", "system.rs");
+  const hotspotCommandPath = join(backendRoot, "commands", "hotspot.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "system.rs");
+  const contractPath = join(backendRoot, "contracts", "system.rs");
+  const systemServicePath = join(frontendRoot, "services", "system", "index.ts");
+  const settingsServicePath = join(frontendRoot, "services", "settings", "index.ts");
+  const ipcPath = join(frontendRoot, "contracts", "ipc", "commands.ts");
+  const featureTypesPath = join(frontendRoot, "features", "settings", "types", "index.ts");
+  const featureCachePath = join(frontendRoot, "features", "settings", "cache", "index.ts");
+  const hooksIndexPath = join(frontendRoot, "features", "settings", "hooks", "index.ts");
+  const queryHookPath = join(frontendRoot, "features", "settings", "hooks", "query.ts");
+  const mutationHookPath = join(frontendRoot, "features", "settings", "hooks", "mutation.ts");
+  const actionHookPath = join(frontendRoot, "features", "settings", "hooks", "action.ts");
+  const pageHookPath = join(frontendRoot, "features", "settings", "hooks", "page.ts");
+
+  const systemCommandText = readRequiredUtf8(systemCommandPath, "settings system command contract");
+  const hotspotCommandText = readRequiredUtf8(hotspotCommandPath, "settings hotspot command contract");
+  const usecaseText = readRequiredUtf8(usecasePath, "settings system usecase contract");
+  const contractText = readRequiredUtf8(contractPath, "settings system DTO contract");
+  const systemServiceText = readRequiredUtf8(systemServicePath, "settings system service facade");
+  const settingsServiceText = readRequiredUtf8(settingsServicePath, "settings service facade");
+  const ipcText = readRequiredUtf8(ipcPath, "settings IPC command map");
+  const featureTypesText = readRequiredUtf8(featureTypesPath, "settings feature types owner");
+  const featureCacheText = readRequiredUtf8(featureCachePath, "settings feature cache owner");
+  const hooksIndexText = readRequiredUtf8(hooksIndexPath, "settings hooks barrel owner");
+  const queryHookText = readRequiredUtf8(queryHookPath, "settings query hook owner");
+  const mutationHookText = readRequiredUtf8(mutationHookPath, "settings mutation hook owner");
+  const actionHookText = readRequiredUtf8(actionHookPath, "settings action hook owner");
+  const pageHookText = readRequiredUtf8(pageHookPath, "settings page hook owner");
+  const splitHookText = [
+    hooksIndexText,
+    queryHookText,
+    mutationHookText,
+    actionHookText,
+    pageHookText,
+  ].join("\n");
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) struct ApiProxyConfigPayload",
+    "pub(crate) struct ApiProxyTestPayload",
+    "pub(crate) struct ApiProxyDetectPayload",
+    "pub(crate) struct AutoSwitchConfigPayload",
+    "pub(crate) struct UpdateInstallabilityPayload",
+    "pub(crate) struct SystemActionPayload",
+  ], "settings system DTO typed payload");
+
+  assertContains(systemCommandPath, systemCommandText, [
+    "Result<CoreEnvelope<CoreSnapshotPayload>, String>",
+    "Result<CoreEnvelope<AutoSwitchConfigPayload>, String>",
+    "Result<CoreEnvelope<ApiModePayload>, String>",
+    "Result<CoreEnvelope<ApiProxyTestPayload>, String>",
+    "Result<CoreEnvelope<ApiProxyDetectPayload>, String>",
+    "Result<CoreEnvelope<String>, String>",
+    "Result<CoreEnvelope<UpdateInstallabilityPayload>, String>",
+  ], "settings system command typed envelope");
+
+  assertContains(hotspotCommandPath, hotspotCommandText, [
+    "Result<CoreEnvelope<bool>, String>",
+    "Result<CoreEnvelope<SystemActionPayload>, String>",
+  ], "settings hotspot command typed envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<CoreSnapshotPayload>, CoreError>",
+    "Result<CoreEnvelope<AutoSwitchConfigPayload>, CoreError>",
+    "Result<CoreEnvelope<ApiModePayload>, CoreError>",
+    "Result<CoreEnvelope<ApiProxyTestPayload>, CoreError>",
+    "Result<CoreEnvelope<ApiProxyDetectPayload>, CoreError>",
+    "Result<CoreEnvelope<String>, CoreError>",
+    "Result<CoreEnvelope<UpdateInstallabilityPayload>, CoreError>",
+    "Result<CoreEnvelope<bool>, CoreError>",
+  ], "settings system usecase typed envelope");
+
+  assertContains(systemServicePath, systemServiceText, [
+    "CoreEnvelope<CoreSnapshotPayload>",
+    "CoreEnvelope<AutoSwitchConfigPayload>",
+    "CoreEnvelope<ApiModePayload>",
+    "CoreEnvelope<ApiProxyTestPayload>",
+    "CoreEnvelope<ApiProxyDetectPayload>",
+    "CoreEnvelope<UpdateInstallabilityPayload>",
+    "CoreEnvelope<boolean>",
+  ], "settings frontend system service typed envelope");
+
+  assertContains(settingsServicePath, settingsServiceText, [
+    "loadSnapshot: systemService.loadSnapshot",
+    "setAutoSwitch: systemService.setAutoSwitch",
+    "configureAutoSwitch: systemService.configureAutoSwitch",
+    "setApiProxyConfig: systemService.setApiProxyConfig",
+    "testApiProxyConfig: systemService.testApiProxyConfig",
+    "detectApiProxyConfig: systemService.detectApiProxyConfig",
+    "getUsageRefreshInterval: systemService.getUsageRefreshInterval",
+    "setUsageRefreshInterval: systemService.setUsageRefreshInterval",
+    "checkUpdateInstallability: systemService.checkUpdateInstallability",
+    "hasNotch: systemService.hasNotch",
+    "getHotspotEnabled: systemService.getHotspotEnabled",
+    "setHotspotEnabled: systemService.setHotspotEnabled",
+    "hotspotReady: systemService.hotspotReady",
+    "getImageCompat: systemService.getImageCompat",
+    "setImageCompat: systemService.setImageCompat",
+  ], "settings service must stay a systemService facade");
+
+  for (const command of [
+    "load_snapshot",
+    "set_auto_switch",
+    "configure_auto_switch",
+    "set_api_proxy_config",
+    "test_api_proxy_config",
+    "detect_api_proxy_config",
+    "get_usage_refresh_interval",
+    "set_usage_refresh_interval",
+    "check_update_installability",
+    "has_notch",
+    "get_hotspot_enabled",
+    "set_hotspot_enabled",
+    "hotspot_ready",
+    "get_image_compat",
+    "set_image_compat",
+  ]) {
+    assertContains(ipcPath, ipcText, [`"command": "${command}"`], "settings IPC command map");
+    assertNotContainsSnippet(settingsServicePath, settingsServiceText, [
+      `"${command}"`,
+      `'${command}'`,
+    ], "settings service must not wrap raw system IPC commands");
+  }
+
+  assertContains(hooksIndexPath, hooksIndexText, [
+    'from "./query"',
+    'from "./mutation"',
+    'from "./action"',
+    'from "./page"',
+  ], "settings hooks barrel owner");
+  assertNotContainsSnippet(hooksIndexPath, hooksIndexText, [
+    'from "../types"',
+    "from '../types'",
+  ], "settings hooks barrel must only re-export split hook owners");
+
+  assertContains(queryHookPath, queryHookText, [
+    "settingsService.loadSnapshot",
+    "settingsService.getUsageRefreshInterval",
+    "settingsService.getImageCompat",
+    "runSettingsQuery",
+  ], "settings query hook typed system facade consumption");
+
+  assertContains(mutationHookPath, mutationHookText, [
+    "setUsageRefreshInterval",
+    "settingsService.setApiProxyConfig",
+    "settingsService.setHotspotEnabled",
+    "beginSettingsMutation",
+    "writeSettingsMutationPayload",
+  ], "settings mutation hook typed payload writeback");
+
+  assertContains(actionHookPath, actionHookText, [
+    "useSettingsBusyActions",
+    "useBusyAction",
+    "updateCheckAction",
+    "detectProxyAction",
+    "testProxyAction",
+    "saveProxyAction",
+  ], "settings action hook UI effect owner");
+
+  assertContains(pageHookPath, pageHookText, [
+    "useSettingsPageController",
+    "SettingsPageController",
+  ], "settings page controller contract");
+
+  assertContains(featureTypesPath, featureTypesText, [
+    "export interface SettingsPageController",
+    "export interface SettingsAppearanceController",
+    "export interface SettingsStatusController",
+    "export interface SettingsModeSwitchController",
+    "export interface SettingsAboutController",
+    "export interface SettingsThresholdDialogController",
+    "export interface SettingsProxyDialogController",
+    "export interface SettingsPageActions",
+    "export interface SettingsControllerProps",
+    "export type SettingsCachePayload",
+    "export type SettingsCacheEnvelope",
+  ], "settings feature explicit controller/cache types");
+
+  assertContains(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner<SettingsCachePayload>(\"settings\")",
+    "Omit<SettingsCacheEnvelope<TPayload>, \"moduleId\">",
+    "writeSettingsMutationPayload",
+    "invalidateSettingsContractQueries",
+    "SettingsQueryPayloadForKey<TKey>",
+  ], "settings cache typed authoritative payload");
+
+  assertNotContainsSnippet(systemServicePath, systemServiceText, [
+    "CoreEnvelope<unknown>",
+    "CoreEnvelope<IpcEvidencePayload>",
+    "IpcJsonObject",
+  ], "settings system service must not return generic payload");
+
+  assertNotContainsSnippet(settingsServicePath, settingsServiceText, [
+    "invokeIpc",
+    "CoreEnvelope<unknown>",
+    "CoreEnvelope<IpcEvidencePayload>",
+    "IpcJsonObject",
+  ], "settings service facade must not bypass system service or use generic payload");
+
+  assertNotContainsSnippet(featureTypesPath, featureTypesText, [
+    "SettingsCacheEnvelope<TPayload = unknown>",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "SettingsPageController = ReturnType",
+  ], "settings feature types must not return unknown or ReturnType controller");
+
+  assertNotContainsSnippet(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner(\"settings\")",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+  ], "settings cache must not return unknown authoritative payload");
+
+  assertNotContainsSnippet(pageHookPath, pageHookText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "settingsService.",
+    "systemService.",
+    "invokeIpc",
+  ], "settings page hook must not own TanStack or service/API/IPC");
+
+  assertNotContainsSnippet(hooksIndexPath, splitHookText, [
+    "Promise<unknown> | void",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+  ], "settings split hooks must not loosen typed payloads");
+}
+
+validateSettingsTypedPayloadContracts();
 
 function validateAccountsTypedPayloadContracts() {
   const commandPath = join(backendRoot, "commands", "accounts.rs");

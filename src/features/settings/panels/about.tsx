@@ -2,14 +2,12 @@ import { useTranslation } from "react-i18next";
 import { Download, Power } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ButtonBusyContent } from "@/components/ui/busy";
-import type { SettingsPageController } from "../hooks";
+import type { SettingsControllerProps } from "../types";
 import { SettingsRow, SettingsSection } from "./primitives";
 
 export function SettingsAboutPanel({
   controller,
-}: {
-  controller: SettingsPageController;
-}) {
+}: SettingsControllerProps) {
   const { t } = useTranslation();
   const about = controller.about;
   const checkingUpdate = about.checkingUpdate || about.updateInstallabilityPending;

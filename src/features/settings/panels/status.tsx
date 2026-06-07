@@ -1,12 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { AlertCircle, Loader2 } from "lucide-react";
-import type { SettingsPageController } from "../hooks";
+import type { SettingsControllerProps } from "../types";
 
 export function SettingsStatusPanel({
   controller,
-}: {
-  controller: SettingsPageController;
-}) {
+}: SettingsControllerProps) {
   const { t } = useTranslation();
   const { statusQuery } = controller.status;
 

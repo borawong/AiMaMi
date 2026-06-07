@@ -12,14 +12,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import type { SettingsPageController } from "../hooks";
+import type { SettingsControllerProps } from "../types";
 import { formatSettingsProxyTestResult } from "../utils";
 
 export function SettingsApiProxyDialog({
   controller,
-}: {
-  controller: SettingsPageController;
-}) {
+}: SettingsControllerProps) {
   const { t } = useTranslation();
   const dialog = controller.proxyDialog;
   const proxyTestMessage = dialog.proxyTestResult
