@@ -3,10 +3,12 @@ import {
   Download,
   ExternalLink,
   FileSearch,
+  FolderOpen,
   Import,
   LogOut,
   MonitorUp,
   RotateCcw,
+  Save,
   Trash2,
   Upload,
   UserCheck,
@@ -19,7 +21,18 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { AccountsModuleController } from "../types";
+import { toast } from "@/hooks/toast";
+import type {
+  AccountExportDialogResult,
+  AccountPreviewImportDialogResult,
+  AccountsModuleController,
+} from "../types";
+import {
+  envelopeData,
+  readArray,
+  readNumber,
+  readString,
+} from "../utils";
 
 function splitAccountKeys(value: string): string[] {
   return value
@@ -50,6 +63,46 @@ export function AccountActionsPanel({
   const canUseImportFile = importFilePath.trim().length > 0;
   const canUseExportTarget = exportTargetPath.trim().length > 0;
   const canUseSessionJson = sessionJson.trim().length > 0;
+
+  const previewImportWithDialog = async () => {
+    try {
+      const result = await module.previewAccountImportWithDialog.run({
+        title: t("accounts.io.openDialogTitle"),
+        filterName: t("accounts.io.filterName"),
+      });
+      setImportFilePath(result.filePath);
+      showPreviewToast(t, result);
+    } catch (error) {
+      if (!isCancelled(error)) {
+        toast({
+          title: t("accounts.io.previewFailed"),
+          description: toErrorMessage(error),
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const exportAccountsWithDialog = async () => {
+    try {
+      const result = await module.exportAccountsToFileWithDialog.run({
+        title: t("accounts.io.saveDialogTitle"),
+        defaultPath: exportTargetPath.trim() || makeAccountsBackupPath(),
+        filterName: t("accounts.io.filterName"),
+        accountKeys: canUseAccountKeys ? selectedAccountKeys : null,
+      });
+      setExportTargetPath(result.filePath);
+      showExportToast(t, result, selectedAccountKeys.length);
+    } catch (error) {
+      if (!isCancelled(error)) {
+        toast({
+          title: t("accounts.io.exportFailed"),
+          description: toErrorMessage(error),
+          variant: "destructive",
+        });
+      }
+    }
+  };
 
   return (
     <BentoCard className="min-w-0">
@@ -197,6 +250,21 @@ export function AccountActionsPanel({
               type="button"
               size="sm"
               variant="outline"
+              disabled={module.previewAccountImportWithDialog.isPending}
+              aria-label={t("accounts.io.chooseImportFile")}
+              onClick={() => void previewImportWithDialog()}
+            >
+              <ButtonBusyContent
+                busy={module.previewAccountImportWithDialog.isPending}
+                idleIcon={<FolderOpen className="h-3.5 w-3.5" />}
+                idleLabel={t("accounts.io.chooseImportFile")}
+                busyLabel={t("common.refreshing")}
+              />
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
               disabled={!canUseImportFile || module.openPath.isPending}
               aria-label={t("accounts.openImportPath")}
               onClick={() =>
@@ -308,6 +376,21 @@ export function AccountActionsPanel({
               type="button"
               size="sm"
               variant="outline"
+              disabled={module.exportAccountsToFileWithDialog.isPending}
+              aria-label={t("accounts.io.saveAs")}
+              onClick={() => void exportAccountsWithDialog()}
+            >
+              <ButtonBusyContent
+                busy={module.exportAccountsToFileWithDialog.isPending}
+                idleIcon={<Save className="h-3.5 w-3.5" />}
+                idleLabel={t("accounts.io.saveAs")}
+                busyLabel={t("common.refreshing")}
+              />
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
               disabled={!canUseExportTarget || module.openPath.isPending}
               aria-label={t("accounts.openExportPath")}
               onClick={() =>
@@ -365,4 +448,72 @@ export function AccountActionsPanel({
       </div>
     </BentoCard>
   );
+}
+
+type AccountsTranslator = (key: string, options?: Record<string, unknown>) => string;
+
+function showPreviewToast(
+  t: AccountsTranslator,
+  result: AccountPreviewImportDialogResult,
+) {
+  const data = envelopeData(result.envelope);
+  const accountRows = readArray(data, ["accounts", "items", "candidates", "entries"]);
+  const count = readNumber(
+    data,
+    ["accountCount", "importableCount", "previewCount", "count"],
+    accountRows.length,
+  );
+  toast({
+    title: t("accounts.io.previewSuccess"),
+    description:
+      count > 0
+        ? t("accounts.io.previewSuccessDescWithCount", {
+            count,
+            path: result.filePath,
+          })
+        : t("accounts.io.previewSuccessDesc", { path: result.filePath }),
+    variant: "success",
+  });
+}
+
+function showExportToast(
+  t: AccountsTranslator,
+  result: AccountExportDialogResult,
+  selectedCount: number,
+) {
+  const data = envelopeData(result.envelope);
+  const count = readNumber(
+    data,
+    ["exportedCount", "accountCount", "count"],
+    selectedCount,
+  );
+  const filePath =
+    readString(data, ["filePath", "targetPath", "path"], result.filePath) ||
+    result.filePath;
+  toast({
+    title: t("accounts.io.exportSuccess"),
+    description: t("accounts.io.exportSuccessDesc", {
+      count,
+      path: filePath,
+    }),
+    variant: "success",
+  });
+}
+
+function isCancelled(error: unknown) {
+  return error instanceof Error && error.message === "CANCELLED";
+}
+
+function toErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  return String(error);
+}
+
+function makeAccountsBackupPath() {
+  const now = new Date();
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `accounts-${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
+    now.getDate(),
+  )}-${pad(now.getHours())}${pad(now.getMinutes())}.json`;
 }

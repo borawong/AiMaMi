@@ -13,6 +13,28 @@ import type {
 import { maintenanceService } from "../maintenance";
 import { systemService } from "../system";
 
+export type AccountExportDialogInput = {
+  title: string;
+  defaultPath: string;
+  filterName: string;
+  accountKeys?: string[] | null;
+};
+
+export type AccountExportDialogResult = {
+  filePath: string;
+  envelope: CoreEnvelope<AccountExportPayload>;
+};
+
+export type AccountPreviewImportDialogInput = {
+  title: string;
+  filterName: string;
+};
+
+export type AccountPreviewImportDialogResult = {
+  filePath: string;
+  envelope: CoreEnvelope<AccountImportPreviewPayload>;
+};
+
 export const accountsService = {
   loadSnapshot: (localOnly = true) => systemService.loadSnapshot(localOnly),
 
@@ -49,10 +71,48 @@ export const accountsService = {
       accountKeys: accountKeys ?? null,
     }),
 
+  exportAccountsToFileWithDialog: async (
+    input: AccountExportDialogInput,
+  ): Promise<AccountExportDialogResult> => {
+    const { save } = await import("@tauri-apps/plugin-dialog");
+    const filePath = await save({
+      title: input.title,
+      defaultPath: input.defaultPath,
+      filters: [{ name: input.filterName, extensions: ["json"] }],
+    });
+    if (!filePath) throw new Error("CANCELLED");
+    return {
+      filePath,
+      envelope: await accountsService.exportAccountsToFile(
+        filePath,
+        input.accountKeys,
+      ),
+    };
+  },
+
   previewAccountImport: (filePath: string) =>
     invokeIpc<CoreEnvelope<AccountImportPreviewPayload>>("preview_account_import", {
       filePath,
     }),
+
+  previewAccountImportWithDialog: async (
+    input: AccountPreviewImportDialogInput,
+  ): Promise<AccountPreviewImportDialogResult> => {
+    const { open } = await import("@tauri-apps/plugin-dialog");
+    const filePath = await open({
+      title: input.title,
+      multiple: false,
+      directory: false,
+      filters: [{ name: input.filterName, extensions: ["json"] }],
+    });
+    if (!filePath || typeof filePath !== "string") {
+      throw new Error("CANCELLED");
+    }
+    return {
+      filePath,
+      envelope: await accountsService.previewAccountImport(filePath),
+    };
+  },
 
   importAccountsFromFile: (
     filePath: string,

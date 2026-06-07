@@ -732,6 +732,50 @@ function validateKnownInternalFrontendGates() {
     console.log("PASS accounts typed IPC payload owner：split hooks/types/cache");
   }
 
+  const accountsDialogIoOk =
+    accountsService.includes("export type AccountExportDialogInput") &&
+    accountsService.includes("export type AccountExportDialogResult") &&
+    accountsService.includes("export type AccountPreviewImportDialogInput") &&
+    accountsService.includes("export type AccountPreviewImportDialogResult") &&
+    accountsService.includes("exportAccountsToFileWithDialog") &&
+    accountsService.includes("previewAccountImportWithDialog") &&
+    accountsService.includes('await import("@tauri-apps/plugin-dialog")') &&
+    accountsService.includes("const { save }") &&
+    accountsService.includes("const { open }") &&
+    accountsService.includes('throw new Error("CANCELLED")') &&
+    accountsService.includes("accountsService.exportAccountsToFile(") &&
+    accountsService.includes("accountsService.previewAccountImport(filePath)") &&
+    accountsTypes.includes("export type AccountExportDialogInput") &&
+    accountsTypes.includes("export type AccountExportDialogResult") &&
+    accountsTypes.includes("export type AccountPreviewImportDialogInput") &&
+    accountsTypes.includes("export type AccountPreviewImportDialogResult") &&
+    accountsTypes.includes("exportAccountsToFileWithDialog: AccountsInputAction") &&
+    accountsTypes.includes("previewAccountImportWithDialog: AccountsInputAction") &&
+    accountsMutation.includes("exportAccountsDialogMutation") &&
+    accountsMutation.includes("previewImportDialogMutation") &&
+    accountsMutation.includes("accountsService.exportAccountsToFileWithDialog(input)") &&
+    accountsMutation.includes("accountsService.previewAccountImportWithDialog(input)") &&
+    accountsMutation.includes("writeMutationPayload(queryClient, result.envelope, context") &&
+    accountsMutation.includes("invalidateDumpedQueries: false") &&
+    accountsControllerConsumerText.includes("module.previewAccountImportWithDialog.run") &&
+    accountsControllerConsumerText.includes("module.exportAccountsToFileWithDialog.run") &&
+    accountsControllerConsumerText.includes("setImportFilePath(result.filePath)") &&
+    accountsControllerConsumerText.includes("setExportTargetPath(result.filePath)") &&
+    accountsControllerConsumerText.includes("accounts.io.openDialogTitle") &&
+    accountsControllerConsumerText.includes("accounts.io.saveDialogTitle") &&
+    accountsControllerConsumerText.includes("accounts.io.filterName") &&
+    accountsControllerConsumerText.includes("isCancelled(error)") &&
+    !/@tauri-apps\/plugin-dialog|@\/contracts\/ipc|invokeIpc|invoke\(|accountsService\./.test(
+      accountsControllerConsumerText,
+    );
+  if (!accountsDialogIoOk) {
+    failures.push(
+      "accounts dialog IO gate 必须由 service wrapper 执行 open/save dialog，hook 写 envelope cache，panel 只消费 controller action",
+    );
+  } else {
+    console.log("PASS accounts dialog IO owner：service dialog wrapper + hook cache + panel controller");
+  }
+
   const sessionsHooksIndexReExportPattern =
     /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
   const sessionsHooksIndexReExports = [...sessionsHooksIndex.matchAll(sessionsHooksIndexReExportPattern)].map(

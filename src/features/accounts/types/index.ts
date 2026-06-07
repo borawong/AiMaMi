@@ -1,5 +1,11 @@
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import type {
+  AccountExportDialogInput as AccountExportDialogServiceInput,
+  AccountExportDialogResult as AccountExportDialogServiceResult,
+  AccountPreviewImportDialogInput as AccountPreviewImportDialogServiceInput,
+  AccountPreviewImportDialogResult as AccountPreviewImportDialogServiceResult,
+} from "@/services/accounts";
+import type {
   AccountExportPayload,
   AccountImportPayload,
   AccountImportPreviewPayload,
@@ -66,9 +72,17 @@ export interface AccountExportFileInput {
   accountKeys?: string[] | null;
 }
 
+export type AccountExportDialogInput = AccountExportDialogServiceInput;
+export type AccountExportDialogResult = AccountExportDialogServiceResult;
+
 export interface AccountPreviewImportInput {
   filePath: string;
 }
+
+export type AccountPreviewImportDialogInput =
+  AccountPreviewImportDialogServiceInput;
+export type AccountPreviewImportDialogResult =
+  AccountPreviewImportDialogServiceResult;
 
 export interface AccountImportFileInput {
   filePath: string;
@@ -129,9 +143,17 @@ export interface AccountsPageMutations {
     AccountExportFileInput,
     AccountsMutationEnvelope
   >;
+  exportAccountsToFileWithDialog: AccountsInputAction<
+    AccountExportDialogInput,
+    AccountExportDialogResult
+  >;
   previewAccountImport: AccountsInputAction<
     AccountPreviewImportInput,
     AccountsMutationEnvelope
+  >;
+  previewAccountImportWithDialog: AccountsInputAction<
+    AccountPreviewImportDialogInput,
+    AccountPreviewImportDialogResult
   >;
   importAccountsFromFile: AccountsInputAction<
     AccountImportFileInput,

@@ -9,9 +9,11 @@ import {
 } from "../cache";
 import type {
   AccountExportFileInput,
+  AccountExportDialogInput,
   AccountImportFileInput,
   AccountImportSessionInput,
   AccountKeysInput,
+  AccountPreviewImportDialogInput,
   AccountPreviewImportInput,
   AccountsMutationEnvelope,
   AccountsPageMutations,
@@ -113,12 +115,32 @@ export function useAccountsPageMutations({
       }),
   });
 
+  const exportAccountsDialogMutation = useMutation({
+    mutationFn: (input: AccountExportDialogInput) =>
+      accountsService.exportAccountsToFileWithDialog(input),
+    onMutate: prepareAccountsMutation,
+    onSuccess: (result, _variables, context) =>
+      writeMutationPayload(queryClient, result.envelope, context, {
+        invalidateDumpedQueries: false,
+      }),
+  });
+
   const previewImportMutation = useMutation({
     mutationFn: ({ filePath }: AccountPreviewImportInput) =>
       accountsService.previewAccountImport(filePath),
     onMutate: prepareAccountsMutation,
     onSuccess: (payload, _variables, context) =>
       writeMutationPayload(queryClient, payload, context, {
+        invalidateDumpedQueries: false,
+      }),
+  });
+
+  const previewImportDialogMutation = useMutation({
+    mutationFn: (input: AccountPreviewImportDialogInput) =>
+      accountsService.previewAccountImportWithDialog(input),
+    onMutate: prepareAccountsMutation,
+    onSuccess: (result, _variables, context) =>
+      writeMutationPayload(queryClient, result.envelope, context, {
         invalidateDumpedQueries: false,
       }),
   });
@@ -193,10 +215,20 @@ export function useAccountsPageMutations({
         exportAccountsMutation.mutateAsync(input),
       isPending: exportAccountsMutation.isPending,
     },
+    exportAccountsToFileWithDialog: {
+      run: (input: AccountExportDialogInput) =>
+        exportAccountsDialogMutation.mutateAsync(input),
+      isPending: exportAccountsDialogMutation.isPending,
+    },
     previewAccountImport: {
       run: (input: AccountPreviewImportInput) =>
         previewImportMutation.mutateAsync(input),
       isPending: previewImportMutation.isPending,
+    },
+    previewAccountImportWithDialog: {
+      run: (input: AccountPreviewImportDialogInput) =>
+        previewImportDialogMutation.mutateAsync(input),
+      isPending: previewImportDialogMutation.isPending,
     },
     importAccountsFromFile: {
       run: (input: AccountImportFileInput) => importFileMutation.mutateAsync(input),

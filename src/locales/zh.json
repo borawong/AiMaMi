@@ -461,7 +461,17 @@
     "empty": "没有找到账号",
     "io": {
       "saveDialogTitle": "保存账号备份",
-      "openDialogTitle": "打开账号备份"
+      "openDialogTitle": "打开账号备份",
+      "filterName": "账号备份",
+      "chooseImportFile": "选择备份",
+      "saveAs": "另存备份",
+      "previewSuccess": "已读取备份预览",
+      "previewSuccessDesc": "已选择 {{path}}，可以继续导入。",
+      "previewSuccessDescWithCount": "已选择 {{path}}，检测到 {{count}} 个账号。",
+      "previewFailed": "预览导入失败",
+      "exportSuccess": "导出成功",
+      "exportSuccessDesc": "已导出 {{count}} 个账号到 {{path}}。",
+      "exportFailed": "导出失败"
     },
     "addAccountSessionFailedDesc": "会话账号导入失败，请检查会话 JSON 后重试。",
     "addAccountSessionFailedTitle": "导入失败",

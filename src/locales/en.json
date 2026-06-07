@@ -461,7 +461,17 @@
     "empty": "No accounts were found",
     "io": {
       "saveDialogTitle": "Save account backup",
-      "openDialogTitle": "Open account backup"
+      "openDialogTitle": "Open account backup",
+      "filterName": "Account Backup",
+      "chooseImportFile": "Choose backup",
+      "saveAs": "Save backup as",
+      "previewSuccess": "Backup preview loaded",
+      "previewSuccessDesc": "Selected {{path}}. You can continue the import.",
+      "previewSuccessDescWithCount": "Selected {{path}} with {{count}} accounts.",
+      "previewFailed": "Failed to preview import",
+      "exportSuccess": "Export succeeded",
+      "exportSuccessDesc": "Exported {{count}} accounts to {{path}}.",
+      "exportFailed": "Export failed"
     },
     "addAccountSessionFailedDesc": "Failed to import the session account. Check the session JSON and try again.",
     "addAccountSessionFailedTitle": "Import failed",
