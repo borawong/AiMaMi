@@ -1,4 +1,6 @@
-use crate::application::ports::WindowPort;
+use crate::application::ports::{
+    HotspotRuntimePort, PermissionsPort, ProcessPort, ShellPort, WindowPort,
+};
 use crate::application::usecase::{
     accounts::AccountsUseCase, analytics::AnalyticsUseCase,
     custom_instructions::CustomInstructionsUseCase, daemon::DaemonUseCase, mcp::McpUseCase,
@@ -7,8 +9,8 @@ use crate::application::usecase::{
 };
 use crate::core::single_flight::SingleFlight;
 use crate::platform::{
-    hotspot::NoopHotspotRuntime, permissions::NoopPermissions, process::NoopProcess,
-    shell::NoopShell, system::CurrentSystem, window::NoopWindow,
+    hotspot::SystemHotspotRuntime, permissions::SystemPermissions, process::SystemProcess,
+    shell::SystemShell, system::CurrentSystem, window::NoopWindow,
 };
 use crate::repository::RepositoryBundle;
 
@@ -18,11 +20,11 @@ use crate::core::error::CoreError;
 pub(crate) struct BackendServices {
     repositories: RepositoryBundle,
     single_flight: SingleFlight,
-    process: NoopProcess,
-    shell: NoopShell,
-    permissions: NoopPermissions,
+    process: Box<dyn ProcessPort>,
+    shell: Box<dyn ShellPort>,
+    permissions: Box<dyn PermissionsPort>,
     system_info: CurrentSystem,
-    hotspot: NoopHotspotRuntime,
+    hotspot: Box<dyn HotspotRuntimePort>,
     window: Box<dyn WindowPort>,
 }
 
@@ -34,14 +36,30 @@ impl Default for BackendServices {
 
 impl BackendServices {
     pub(crate) fn with_window(window: Box<dyn WindowPort>) -> Self {
+        Self::with_platform_adapters(
+            window,
+            Box::new(SystemProcess),
+            Box::new(SystemShell),
+            Box::new(SystemPermissions),
+            Box::new(SystemHotspotRuntime),
+        )
+    }
+
+    pub(crate) fn with_platform_adapters(
+        window: Box<dyn WindowPort>,
+        process: Box<dyn ProcessPort>,
+        shell: Box<dyn ShellPort>,
+        permissions: Box<dyn PermissionsPort>,
+        hotspot: Box<dyn HotspotRuntimePort>,
+    ) -> Self {
         Self {
             repositories: RepositoryBundle::real(),
             single_flight: SingleFlight::default(),
-            process: NoopProcess::default(),
-            shell: NoopShell::default(),
-            permissions: NoopPermissions::default(),
+            process,
+            shell,
+            permissions,
             system_info: CurrentSystem,
-            hotspot: NoopHotspotRuntime,
+            hotspot,
             window,
         }
     }
@@ -93,27 +111,29 @@ impl BackendServices {
     pub(crate) fn restart_application(
         &self,
     ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
-        self.system().restart_application(&self.process)
+        self.system().restart_application(self.process.as_ref())
     }
 
     pub(crate) fn graceful_restart_for_update(
         &self,
     ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
-        self.system().graceful_restart_for_update(&self.process)
+        self.system()
+            .graceful_restart_for_update(self.process.as_ref())
     }
 
     pub(crate) fn open_path(
         &self,
         path: String,
     ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
-        self.system().open_path(&self.shell, path)
+        self.system().open_path(self.shell.as_ref(), path)
     }
 
     pub(crate) fn open_privacy_pane(
         &self,
         pane: String,
     ) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
-        self.system().open_privacy_pane(&self.permissions, pane)
+        self.system()
+            .open_privacy_pane(self.permissions.as_ref(), pane)
     }
 
     pub(crate) fn focus_main_window(&self) -> Result<CoreEnvelope<SystemActionPayload>, CoreError> {
@@ -121,6 +141,6 @@ impl BackendServices {
     }
 
     pub(crate) fn hotspot_ready(&self) -> Result<CoreEnvelope<bool>, CoreError> {
-        self.system().hotspot_ready(&self.hotspot)
+        self.system().hotspot_ready(self.hotspot.as_ref())
     }
 }

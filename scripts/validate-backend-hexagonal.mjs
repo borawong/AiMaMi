@@ -235,6 +235,144 @@ assertContains(
   "application service 聚合 usecase 依赖",
 );
 
+function findMatchingBrace(content, openBraceIndex) {
+  let depth = 0;
+  for (let index = openBraceIndex; index < content.length; index += 1) {
+    const char = content[index];
+    if (char === "{") {
+      depth += 1;
+    } else if (char === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        return index;
+      }
+    }
+  }
+
+  return -1;
+}
+
+function extractFunctionBody(content, functionName) {
+  const match = new RegExp(`fn\\s+${functionName}\\s*\\([^)]*\\)\\s*(?:->\\s*[^\\{]+)?\\{`, "m").exec(content);
+  if (!match) {
+    return "";
+  }
+
+  const openBraceIndex = match.index + match[0].lastIndexOf("{");
+  const closeBraceIndex = findMatchingBrace(content, openBraceIndex);
+  if (closeBraceIndex === -1) {
+    return content.slice(openBraceIndex);
+  }
+
+  return content.slice(openBraceIndex, closeBraceIndex + 1);
+}
+
+function extractPortImpls(content, portName) {
+  const implPattern = new RegExp(`impl\\s+${portName}\\s+for\\s+([A-Za-z0-9_]+)\\s*\\{`, "g");
+  const impls = [];
+  let match;
+
+  while ((match = implPattern.exec(content)) !== null) {
+    const openBraceIndex = match.index + match[0].lastIndexOf("{");
+    const closeBraceIndex = findMatchingBrace(content, openBraceIndex);
+    impls.push({
+      typeName: match[1],
+      body: closeBraceIndex === -1 ? content.slice(openBraceIndex) : content.slice(openBraceIndex, closeBraceIndex + 1),
+    });
+  }
+
+  return impls;
+}
+
+function validateSystemPlatformPorts() {
+  const portsPath = join(backendRoot, "application", "ports.rs");
+  const servicePath = join(backendRoot, "application", "service.rs");
+  const portsText = readRequiredUtf8(portsPath, "system/platform port contract");
+  const serviceText = readRequiredUtf8(servicePath, "BackendServices platform injection contract");
+  const platformContracts = [
+    {
+      field: "shell",
+      port: "ShellPort",
+      noop: "NoopShell",
+      file: join(backendRoot, "platform", "shell.rs"),
+      description: "shell",
+    },
+    {
+      field: "process",
+      port: "ProcessPort",
+      noop: "NoopProcess",
+      file: join(backendRoot, "platform", "process.rs"),
+      description: "process",
+    },
+    {
+      field: "permissions",
+      port: "PermissionsPort",
+      noop: "NoopPermissions",
+      file: join(backendRoot, "platform", "permissions.rs"),
+      description: "permissions",
+    },
+    {
+      field: "hotspot",
+      port: "HotspotRuntimePort",
+      noop: "NoopHotspotRuntime",
+      file: join(backendRoot, "platform", "hotspot.rs"),
+      description: "hotspot",
+    },
+  ];
+
+  for (const contract of platformContracts) {
+    const traitPattern = new RegExp(`trait\\s+${contract.port}\\s*:\\s*Send\\s*\\+\\s*Sync\\b`);
+    if (!traitPattern.test(portsText)) {
+      failures.push(`${toRelative(portsPath)} 缺少 system/platform port 线程安全边界：${contract.port}: Send + Sync`);
+    }
+
+    const fixedNoopFieldPattern = new RegExp(`\\b${contract.field}\\s*:\\s*${contract.noop}\\b`);
+    if (fixedNoopFieldPattern.test(serviceText)) {
+      failures.push(`${toRelative(servicePath)} 违反 BackendServices platform 注入边界：${contract.field} 字段不得固定为 ${contract.noop}`);
+    }
+
+    const portFieldPattern = new RegExp(`\\b${contract.field}\\s*:\\s*Box\\s*<\\s*dyn\\s+${contract.port}\\s*>`);
+    if (!portFieldPattern.test(serviceText)) {
+      failures.push(`${toRelative(servicePath)} 缺少 BackendServices platform port 注入：${contract.field}: Box<dyn ${contract.port}>`);
+    }
+
+    const defaultInjectionSnippets = [
+      `${contract.noop}::default()`,
+      `${contract.noop}::new()`,
+      `Box::new(${contract.noop}`,
+      `${contract.field}: ${contract.noop}`,
+    ];
+    const defaultBodies = `${extractFunctionBody(serviceText, "default")}\n${extractFunctionBody(serviceText, "with_window")}`;
+    for (const snippet of defaultInjectionSnippets) {
+      if (defaultBodies.includes(snippet)) {
+        failures.push(`${toRelative(servicePath)} 违反 BackendServices runtime 注入边界：default/with_window 不得默认注入 ${contract.noop}`);
+      }
+    }
+
+    const platformText = readRequiredUtf8(contract.file, `${contract.description} platform adapter`);
+    assertContains(contract.file, platformText, [`struct ${contract.noop}`, `impl ${contract.port} for ${contract.noop}`], `${contract.description} Noop adapter 仅作 fallback/test 骨架`);
+
+    const impls = extractPortImpls(platformText, contract.port);
+    const realImpls = impls.filter((impl) => impl.typeName !== contract.noop);
+    if (realImpls.length === 0) {
+      failures.push(`${toRelative(contract.file)} 缺少真实 system/platform adapter：需要非 ${contract.noop} 的 ${contract.port} 实现`);
+    }
+
+    for (const impl of realImpls) {
+      const structPattern = new RegExp(`\\bstruct\\s+${impl.typeName}\\b`);
+      if (!structPattern.test(platformText)) {
+        failures.push(`${toRelative(contract.file)} 缺少真实 adapter struct 声明：${impl.typeName}`);
+      }
+
+      if (/Ok\s*\(\s*\(\s*\)\s*\)/.test(impl.body) || /Ok\s*\(\s*None\s*\)/.test(impl.body)) {
+        failures.push(`${toRelative(contract.file)} 违反真实 adapter 结果语义：${impl.typeName} 不得静默 Ok(())/Ok(None) 伪成功，应调用平台能力或返回明确“不支持”的平台错误`);
+      }
+    }
+  }
+}
+
+validateSystemPlatformPorts();
+
 function validateMcpUpsertArgumentChain() {
   const servicePath = join(frontendRoot, "services", "mcp", "index.ts");
   const ipcPath = join(frontendRoot, "contracts", "ipc", "commands.ts");
