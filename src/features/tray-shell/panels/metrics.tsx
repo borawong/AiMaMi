@@ -2,13 +2,12 @@ import type { ReactNode } from "react";
 import { Bell } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
-import type { TrayShellMetricModel } from "../types";
+import type {
+  TrayShellMetricProps,
+  TrayShellMetricsProps,
+} from "../types";
 
-export function TrayShellMetrics({
-  metrics,
-}: {
-  metrics: TrayShellMetricModel[];
-}) {
+export function TrayShellMetrics({ metrics }: TrayShellMetricsProps) {
   return (
     <div className="grid gap-3 md:grid-cols-2">
       {metrics.map((metric) => (
@@ -18,7 +17,7 @@ export function TrayShellMetrics({
   );
 }
 
-function TrayShellMetric({ metric }: { metric: TrayShellMetricModel }) {
+function TrayShellMetric({ metric }: TrayShellMetricProps) {
   const { t } = useTranslation();
 
   return (
@@ -28,7 +27,7 @@ function TrayShellMetric({ metric }: { metric: TrayShellMetricModel }) {
   );
 }
 
-function TrayShellMetricValue({ metric }: { metric: TrayShellMetricModel }) {
+function TrayShellMetricValue({ metric }: TrayShellMetricProps) {
   const { t } = useTranslation();
 
   if (metric.kind === "ready") {

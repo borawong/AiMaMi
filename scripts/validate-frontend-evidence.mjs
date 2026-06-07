@@ -953,11 +953,18 @@ function validateOverviewTypedPayloadGate() {
 function validateTrayShellTypedPayloadGate() {
   const typesPath = join(repoRoot, "src", "features", "tray-shell", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "tray-shell", "cache", "index.ts");
-  const hooksPath = join(repoRoot, "src", "features", "tray-shell", "hooks", "index.ts");
+  const hooksIndexPath = join(repoRoot, "src", "features", "tray-shell", "hooks", "index.ts");
+  const queryPath = join(repoRoot, "src", "features", "tray-shell", "hooks", "query.ts");
+  const mutationPath = join(repoRoot, "src", "features", "tray-shell", "hooks", "mutation.ts");
+  const pagePath = join(repoRoot, "src", "features", "tray-shell", "hooks", "page.ts");
+  const actionPath = join(repoRoot, "src", "features", "tray-shell", "hooks", "action.ts");
   const utilsPath = join(repoRoot, "src", "features", "tray-shell", "utils", "index.ts");
   const types = readRequired(typesPath);
   const cache = readRequired(cachePath);
-  const hooks = readRequired(hooksPath);
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
   const utils = readRequired(utilsPath);
 
   const typedPayloadOk =
@@ -965,6 +972,11 @@ function validateTrayShellTypedPayloadGate() {
     types.includes("export type TrayShellCachePayload") &&
     types.includes("CoreEnvelope<NotificationClientStatePayload>") &&
     types.includes("ModuleCacheEnvelope<TPayload>") &&
+    types.includes("export interface TrayShellPageController") &&
+    types.includes("export type TrayShellMetricModel") &&
+    types.includes("export type TrayShellRuntimeRowModel") &&
+    types.includes("export interface TrayShellRuntimePanelModel") &&
+    types.includes("export interface TrayShellActionModel") &&
     types.includes('id: "focus-main-window"') &&
     types.includes('labelKey: "trayShell.focusMainWindow"') &&
     types.includes("run: () => Promise<void> | void") &&
@@ -974,30 +986,72 @@ function validateTrayShellTypedPayloadGate() {
     types.includes('labelKey: "trayShell.ready"') &&
     types.includes('valueKey: "common.success" | "common.error"') &&
     types.includes('titleKey: "trayShell.notificationClient"') &&
+    !types.includes("TrayShellCacheEnvelope<TPayload = unknown>") &&
+    !types.includes("id: string") &&
+    !types.includes("labelKey: string");
+  const cacheOk =
     cache.includes("createModuleCacheOwner<TrayShellCachePayload>(\"tray-shell\")") &&
     cache.includes("Omit<TrayShellCacheEnvelope<TPayload>, \"moduleId\">") &&
-    hooks.includes("module.notificationQuery.data?.data ?? null") &&
-    hooks.includes("selectTrayShellClient(notification)") &&
-    hooks.includes("selectTrayShellReady(notification)") &&
-    hooks.includes("onSuccess: () =>") &&
-    !hooks.includes("writeAuthoritativePayload(queryClient") &&
-    !hooks.includes("readString(") &&
-    !hooks.includes("readBoolean(") &&
+    !cache.includes("createModuleCacheOwner(\"tray-shell\")") &&
+    !cache.includes("ModuleCacheEnvelope<unknown>");
+  const hooksIndexOk =
+    hooksIndex.includes("from \"./query\"") &&
+    hooksIndex.includes("from \"./mutation\"") &&
+    hooksIndex.includes("from \"./page\"") &&
+    !hooksIndex.includes("from \"./action\"");
+  const actionOwnerOk = !existsSync(actionPath);
+  const queryOk =
+    query.includes("useTrayShellCacheController") &&
+    query.includes("useModuleCacheController(TrayShellCache)") &&
+    query.includes("useTrayShellNotificationQuery") &&
+    query.includes("useQuery<TrayShellNotificationEnvelope>") &&
+    query.includes("TRAY_SHELL_NOTIFICATION_CLIENT_QUERY_KEY") &&
+    query.includes("systemService.getNotificationClientState()") &&
+    !query.includes("useMutation") &&
+    !query.includes("systemService.focusMainWindow");
+  const mutationOk =
+    mutation.includes("useTrayShellFocusMainWindowMutation") &&
+    mutation.includes("useTrayShellFocusMainWindowAction") &&
+    mutation.includes("TrayShellActionModel") &&
+    mutation.includes("useMutation") &&
+    mutation.includes("useQueryClient") &&
+    mutation.includes("systemService.focusMainWindow()") &&
+    mutation.includes("invalidateTrayShellContractQueries(queryClient)") &&
+    mutation.includes("focusMutation.mutateAsync()") &&
+    mutation.includes("isPending: focusMutation.isPending") &&
+    !mutation.includes("useQuery<") &&
+    !mutation.includes("systemService.getNotificationClientState");
+  const pageOk =
+    page.includes("useTrayShellPageController") &&
+    page.includes("TrayShellPageController") &&
+    page.includes("useTrayShellNotificationQuery") &&
+    page.includes("useTrayShellFocusMainWindowAction") &&
+    page.includes("selectTrayShellClient(notification)") &&
+    page.includes("selectTrayShellReady(notification)") &&
+    !page.includes("@tanstack/react-query") &&
+    !page.includes("useQuery(") &&
+    !page.includes("useMutation(") &&
+    !page.includes("useQueryClient") &&
+    !page.includes("@/services/system") &&
+    !page.includes("systemService.");
+  const utilsOk =
     utils.includes("export function selectTrayShellClient(") &&
     utils.includes("export function selectTrayShellReady(") &&
     utils.includes("NotificationClientStatePayload | null") &&
-    !types.includes("TrayShellCacheEnvelope<TPayload = unknown>") &&
-    !types.includes("id: string") &&
-    !types.includes("labelKey: string") &&
-    !cache.includes("createModuleCacheOwner(\"tray-shell\")") &&
-    !cache.includes("ModuleCacheEnvelope<unknown>") &&
     !utils.includes("export function readString(") &&
     !utils.includes("export function readBoolean(") &&
     !utils.includes("function readPath(value: unknown");
 
-  if (!typedPayloadOk) {
-    failures.push("tray-shell IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
-  } else {
+  if (!typedPayloadOk) failures.push("tray-shell types owner 必须保留 typed payload、TrayShellPageController、metric/runtime/action model");
+  if (!cacheOk) failures.push("tray-shell cache owner 必须保留 typed createModuleCacheOwner 和 Omit<TrayShellCacheEnvelope<TPayload>, \"moduleId\">");
+  if (!hooksIndexOk) failures.push("tray-shell hooks/index.ts 只能 re-export query、mutation、page");
+  if (!actionOwnerOk) failures.push("tray-shell hooks/action.ts 不得保留独立 action owner；focus main window action 必须归 hooks/mutation.ts");
+  if (!queryOk) failures.push("tray-shell hooks/query.ts 必须 owning cache controller、notification query 和 getNotificationClientState");
+  if (!mutationOk) failures.push("tray-shell hooks/mutation.ts 必须 owning focus main window mutation/action、focusMainWindow 和 cache invalidation");
+  if (!pageOk) failures.push("tray-shell hooks/page.ts 必须只组合 query/mutation 与 selectTrayShellClient/Ready，不得直接 TanStack 或 service");
+  if (!utilsOk) failures.push("tray-shell utils owner 必须保留 typed selector，且不得回退 unknown reader");
+
+  if (typedPayloadOk && cacheOk && hooksIndexOk && actionOwnerOk && queryOk && mutationOk && pageOk && utilsOk) {
     console.log("PASS tray-shell typed IPC payload owner：service/hook/cache");
   }
 }

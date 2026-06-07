@@ -1,13 +1,9 @@
 import { MonitorUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import type { TrayShellActionModel } from "../types";
+import type { TrayShellHeaderProps } from "../types";
 
-export function TrayShellHeader({
-  focusAction,
-}: {
-  focusAction: TrayShellActionModel;
-}) {
+export function TrayShellHeader({ focusAction }: TrayShellHeaderProps) {
   const { t } = useTranslation();
 
   return (

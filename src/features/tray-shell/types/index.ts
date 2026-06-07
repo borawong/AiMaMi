@@ -59,3 +59,27 @@ export interface TrayShellPageController {
   metrics: TrayShellMetricModel[];
   runtimePanel: TrayShellRuntimePanelModel;
 }
+
+export interface TrayShellViewProps {
+  controller: TrayShellPageController;
+}
+
+export interface TrayShellHeaderProps {
+  focusAction: TrayShellActionModel;
+}
+
+export interface TrayShellMetricsProps {
+  metrics: TrayShellMetricModel[];
+}
+
+export interface TrayShellMetricProps {
+  metric: TrayShellMetricModel;
+}
+
+export interface TrayShellRuntimePanelProps {
+  panel: TrayShellRuntimePanelModel;
+}
+
+export interface TrayShellRuntimeRowProps {
+  row: TrayShellRuntimeRowModel;
+}

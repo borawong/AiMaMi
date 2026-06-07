@@ -495,6 +495,117 @@ function validatePluginsDeepOwnerBoundaries() {
   console.log("PASS plugins 深层 owner 边界门禁已执行：hooks/index、query、refresh、mutation、page、cache、types、panels");
 }
 
+function validateTrayShellDeepOwnerBoundaries() {
+  const trayShellRoot = join(featuresRoot, "tray-shell");
+  const hooksIndexPath = join(trayShellRoot, "hooks", "index.ts");
+  const queryPath = join(trayShellRoot, "hooks", "query.ts");
+  const mutationPath = join(trayShellRoot, "hooks", "mutation.ts");
+  const pagePath = join(trayShellRoot, "hooks", "page.ts");
+  const actionPath = join(trayShellRoot, "hooks", "action.ts");
+  const cachePath = join(trayShellRoot, "cache", "index.ts");
+  const typesPath = join(trayShellRoot, "types", "index.ts");
+  const panelPaths = walkFiles(join(trayShellRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file));
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+  const panelOwnerText = panelPaths.map((file) => readRequired(file)).join("\n");
+
+  assertOnlyBarrelReExports("src/features/tray-shell/hooks/index.ts", hooksIndex, [
+    "query",
+    "mutation",
+    "page",
+  ]);
+  if (existsSync(actionPath)) {
+    failures.push("src/features/tray-shell/hooks/action.ts 不得保留独立 action owner；focus main window action 必须归 hooks/mutation.ts");
+  }
+  assertNotMatches("src/features/tray-shell/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "tray-shell hooks/index 只能聚合 re-export，不得 owning query/mutation/controller"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "tray-shell hooks/index 不得 owning TanStack cache 操作"],
+    [/@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "tray-shell hooks/index 不得直接访问 service、API 或 IPC"],
+  ]);
+
+  assertIncludes("src/features/tray-shell/hooks/query.ts", query, [
+    "useTrayShellCacheController",
+    "useModuleCacheController(TrayShellCache)",
+    "useTrayShellNotificationQuery",
+    "useQuery<TrayShellNotificationEnvelope>",
+    "TRAY_SHELL_NOTIFICATION_CLIENT_QUERY_KEY",
+    "systemService.getNotificationClientState()",
+  ]);
+  assertNotMatches("src/features/tray-shell/hooks/query.ts", query, [
+    [/\buse(QueryClient|Mutation)\b/, "tray-shell query owner 只能 owning cache controller 和 notification query"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "tray-shell query owner 不得 owning mutation cache 写入、失效或取消"],
+    [/systemService\.focusMainWindow|focus-main-window|TrayShellActionModel/, "tray-shell query owner 不得 owning focus main window action"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "tray-shell query owner 必须经 system service wrapper，不得直接拼 IPC"],
+  ]);
+
+  assertIncludes("src/features/tray-shell/hooks/mutation.ts", mutation, [
+    "useTrayShellFocusMainWindowMutation",
+    "useTrayShellFocusMainWindowAction",
+    "TrayShellActionModel",
+    "useMutation",
+    "useQueryClient",
+    "systemService.focusMainWindow()",
+    "invalidateTrayShellContractQueries(queryClient)",
+  ]);
+  assertNotMatches("src/features/tray-shell/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "tray-shell mutation owner 不得 owning notification query"],
+    [/\buse(State|Reducer|Effect|Memo)\b/, "tray-shell mutation owner 不得 owning page/controller UI state"],
+    [/systemService\.getNotificationClientState|TRAY_SHELL_NOTIFICATION_CLIENT_QUERY_KEY/, "tray-shell mutation owner 不得 owning notification query service 或 query key"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "tray-shell mutation owner 必须经 system service wrapper，不得直接拼 IPC"],
+  ]);
+
+  assertIncludes("src/features/tray-shell/hooks/page.ts", page, [
+    "useTrayShellPageController",
+    "TrayShellPageController",
+    "useTrayShellNotificationQuery",
+    "useTrayShellFocusMainWindowAction",
+    "selectTrayShellClient",
+    "selectTrayShellReady",
+  ]);
+  assertNotMatches("src/features/tray-shell/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "tray-shell page/controller 只能组合 query/mutation hook，不得直接 owning TanStack"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|TRAY_SHELL_NOTIFICATION_CLIENT_QUERY_KEY|TrayShellCache)\b/, "tray-shell page/controller 不得直接写 cache、失效 query 或消费 query key/cache owner"],
+    [/@\/services\/system|systemService\.|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "tray-shell page/controller 不得直接访问 service、API 或 IPC"],
+  ]);
+
+  assertIncludes("src/features/tray-shell/types/index.ts", types, [
+    "export interface TrayShellPageController",
+    "export type TrayShellMetricModel",
+    "export type TrayShellRuntimeRowModel",
+    "export interface TrayShellRuntimePanelModel",
+    "export interface TrayShellActionModel",
+    "export type TrayShellCachePayload",
+    "export type TrayShellCacheEnvelope",
+  ]);
+  assertNotMatches("src/features/tray-shell/types/index.ts", types, [
+    [/TrayShellCacheEnvelope<TPayload = unknown>|payload:\s*unknown/, "tray-shell types owner 必须保留 typed payload"],
+    [/id:\s*string|labelKey:\s*string/, "tray-shell action/metric/runtime model 不得回退宽泛 string contract"],
+  ]);
+
+  assertIncludes("src/features/tray-shell/cache/index.ts", cache, [
+    "createModuleCacheOwner<TrayShellCachePayload>(\"tray-shell\")",
+    "Omit<TrayShellCacheEnvelope<TPayload>, \"moduleId\">",
+    "TRAY_SHELL_NOTIFICATION_CLIENT_QUERY_KEY",
+    "invalidateTrayShellContractQueries",
+  ]);
+  assertNotMatches("src/features/tray-shell/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "tray-shell cache owner 不得 owning React hook"],
+    [/@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "tray-shell cache owner 不得直接访问 service、API 或 IPC"],
+    [/createModuleCacheOwner\("tray-shell"\)|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "tray-shell cache owner 必须保留 typed payload"],
+  ]);
+
+  if (panelOwnerText.includes("ReturnType<typeof useTrayShellPageController>") || panelOwnerText.includes("../hooks")) {
+    failures.push("src/features/tray-shell/panels 必须消费 types controller 合同，不得反向依赖 hooks ReturnType");
+  }
+
+  console.log("PASS tray-shell 深层 owner 边界门禁已执行：hooks/index、query、mutation、page、cache、types、panels");
+}
+
 function validateFeatureDeepOwners() {
   for (const moduleId of featureModules) {
     const moduleRoot = join(featuresRoot, moduleId);
@@ -757,6 +868,7 @@ validateNoFeaturePublicCommonOwnerRoots();
 validateFeatureDeepOwners();
 validateMcpDeepOwnerBoundaries();
 validatePluginsDeepOwnerBoundaries();
+validateTrayShellDeepOwnerBoundaries();
 validateRouteShells();
 validateFeaturePageShells();
 validateServiceOwners();

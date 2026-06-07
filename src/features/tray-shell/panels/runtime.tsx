@@ -1,14 +1,10 @@
 import { useTranslation } from "react-i18next";
 import type {
-  TrayShellRuntimePanelModel,
-  TrayShellRuntimeRowModel,
+  TrayShellRuntimePanelProps,
+  TrayShellRuntimeRowProps,
 } from "../types";
 
-export function TrayShellRuntimePanel({
-  panel,
-}: {
-  panel: TrayShellRuntimePanelModel;
-}) {
+export function TrayShellRuntimePanel({ panel }: TrayShellRuntimePanelProps) {
   const { t } = useTranslation();
 
   return (
@@ -32,7 +28,7 @@ export function TrayShellRuntimePanel({
   );
 }
 
-function TrayShellRuntimeRow({ row }: { row: TrayShellRuntimeRowModel }) {
+function TrayShellRuntimeRow({ row }: TrayShellRuntimeRowProps) {
   const { t } = useTranslation();
   const value = row.valueKey ? t(row.valueKey) : row.value;
 
