@@ -1,19 +1,7 @@
-use crate::repository::adapter::FileSystemAdapter;
-use crate::repository::paths::{RepositoryPath, RepositoryPathContext};
-use std::sync::Arc;
+﻿// 这个文件只保留配置仓储边界，配置来源和错误语义等待证据补齐。
 
-#[derive(Clone)]
-pub(crate) struct ConfigRepository {
-    _fs: Arc<dyn FileSystemAdapter>,
-    paths: RepositoryPathContext,
-}
+pub(crate) struct ConfigRepository;
 
-impl ConfigRepository {
-    pub(crate) fn new(fs: Arc<dyn FileSystemAdapter>, paths: RepositoryPathContext) -> Self {
-        Self { _fs: fs, paths }
-    }
+pub(crate) trait ConfigRepositoryBoundary {}
 
-    pub(crate) fn source_path(&self) -> String {
-        self.paths.contract_string(RepositoryPath::ConfigSource)
-    }
-}
+impl ConfigRepositoryBoundary for ConfigRepository {}

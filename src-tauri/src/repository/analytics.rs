@@ -1,19 +1,7 @@
-use crate::repository::adapter::FileSystemAdapter;
-use crate::repository::paths::{RepositoryPath, RepositoryPathContext};
-use std::sync::Arc;
+﻿// 这个文件只保留分析数据仓储边界，当前骨架不读取任何本地内容。
 
-#[derive(Clone)]
-pub(crate) struct AnalyticsRepository {
-    _fs: Arc<dyn FileSystemAdapter>,
-    paths: RepositoryPathContext,
-}
+pub(crate) struct AnalyticsRepository;
 
-impl AnalyticsRepository {
-    pub(crate) fn new(fs: Arc<dyn FileSystemAdapter>, paths: RepositoryPathContext) -> Self {
-        Self { _fs: fs, paths }
-    }
+pub(crate) trait AnalyticsRepositoryBoundary {}
 
-    pub(crate) fn source_path(&self) -> String {
-        self.paths.contract_string(RepositoryPath::AnalyticsSource)
-    }
-}
+impl AnalyticsRepositoryBoundary for AnalyticsRepository {}

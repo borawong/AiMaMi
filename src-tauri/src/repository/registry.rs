@@ -1,19 +1,7 @@
-use crate::repository::adapter::FileSystemAdapter;
-use crate::repository::paths::{RepositoryPath, RepositoryPathContext};
-use std::sync::Arc;
+﻿// 这个文件只保留注册表仓储边界，不保存跨命令业务状态。
 
-#[derive(Clone)]
-pub(crate) struct RegistryRepository {
-    _fs: Arc<dyn FileSystemAdapter>,
-    paths: RepositoryPathContext,
-}
+pub(crate) struct RegistryRepository;
 
-impl RegistryRepository {
-    pub(crate) fn new(fs: Arc<dyn FileSystemAdapter>, paths: RepositoryPathContext) -> Self {
-        Self { _fs: fs, paths }
-    }
+pub(crate) trait RegistryRepositoryBoundary {}
 
-    pub(crate) fn source_path(&self) -> String {
-        self.paths.contract_string(RepositoryPath::RegistrySource)
-    }
-}
+impl RegistryRepositoryBoundary for RegistryRepository {}

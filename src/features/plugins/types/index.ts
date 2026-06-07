@@ -40,6 +40,10 @@ export interface PluginsQueryViewState {
   isFetching: boolean;
 }
 
+export interface PluginsConfigQueryViewState extends PluginsQueryViewState {
+  isError: boolean;
+}
+
 export interface PluginsPageAction {
   id: string;
   labelKey: string;
@@ -52,12 +56,30 @@ export interface PluginsTogglePluginAction {
   run: (id: string, enabled: boolean) => void;
 }
 
+export interface PluginsConfigAction {
+  isPending: boolean;
+  run: () => Promise<void>;
+}
+
+export interface PluginsConfigPanelController {
+  selectedPluginId: string | null;
+  selectedPlugin: PluginsPluginRecord | null;
+  configQuery: PluginsConfigQueryViewState;
+  configDraft: string;
+  configErrorKey: string | null;
+  canSaveConfig: boolean;
+  selectPlugin: (id: string) => void;
+  setConfigDraft: (value: string) => void;
+  saveConfig: PluginsConfigAction;
+}
+
 export interface PluginsPageController {
   plugins: PluginsPluginRecord[];
   enabledCount: number;
   pluginsQuery: PluginsQueryViewState;
   refreshAction: PluginsPageAction;
   togglePlugin: PluginsTogglePluginAction;
+  config: PluginsConfigPanelController;
 }
 
 export interface PluginsPagePanelProps {

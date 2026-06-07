@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
-import { Puzzle } from "lucide-react";
+import { Puzzle, Save } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import type {
   PluginsPageController,
   PluginsPagePanelProps,
@@ -54,6 +56,8 @@ export function PluginsPagePanel({
           controller={controller}
         />
       </PluginsListSection>
+
+      <PluginsConfigSection controller={controller} />
     </>
   );
 }
@@ -175,25 +179,37 @@ function PluginRows({
       {items.map((plugin, index) => {
         const id = plugin.id;
         const enabled = plugin.enabled;
+        const selected = Boolean(id && controller.config.selectedPluginId === id);
         return (
           <div
             key={id || String(index)}
-            className="px-4 py-3.5"
+            className={cn(
+              "px-4 py-3.5",
+              selected && "bg-background",
+            )}
           >
             <div className="flex min-w-0 items-center justify-between gap-3">
-              <div className="min-w-0">
+              <button
+                type="button"
+                className="min-w-0 flex-1 text-left"
+                disabled={!id}
+                aria-pressed={selected}
+                onClick={() => {
+                  if (id) controller.config.selectPlugin(id);
+                }}
+              >
                 <p className="truncate text-sm font-medium text-foreground">
                   {readPluginTitle(plugin, t("plugins.unknown"))}
                 </p>
                 <p className="mt-1 truncate text-xs text-muted-foreground">
                   {readPluginDescription(plugin)}
                 </p>
-              </div>
+              </button>
               <Switch
                 checked={enabled}
                 disabled={!id || controller.togglePlugin.isPending}
                 onCheckedChange={(checked) =>
-                  controller.togglePlugin.run(id, checked)
+                  id ? controller.togglePlugin.run(id, checked) : undefined
                 }
               />
             </div>
@@ -201,5 +217,84 @@ function PluginRows({
         );
       })}
     </div>
+  );
+}
+
+function PluginsConfigSection({
+  controller,
+}: {
+  controller: PluginsPageController;
+}) {
+  const { t } = useTranslation();
+  const selectedPlugin = controller.config.selectedPlugin;
+
+  if (!selectedPlugin) {
+    return null;
+  }
+
+  const state = controller.config.configQuery;
+  const errorKey =
+    controller.config.configErrorKey ??
+    (state.isError ? "plugins.configLoadFailed" : null);
+
+  return (
+    <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="flex items-center justify-between gap-3 border-b border-border/60 px-4 py-3">
+        <h2 className="truncate text-sm font-semibold text-foreground">
+          {t("plugins.config")}
+        </h2>
+        {state.isFetching ? (
+          <span className="shrink-0 text-xs text-muted-foreground">
+            {t("common.refreshing")}
+          </span>
+        ) : null}
+      </div>
+      <div className="space-y-3 p-4">
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium text-foreground">
+            {readPluginTitle(selectedPlugin, t("plugins.unknown"))}
+          </p>
+          <p className="mt-1 truncate text-xs text-muted-foreground">
+            {readPluginDescription(selectedPlugin)}
+          </p>
+        </div>
+
+        <label
+          htmlFor="plugins-config-json"
+          className="block text-xs font-medium text-muted-foreground"
+        >
+          {t("plugins.configJson")}
+        </label>
+        <Textarea
+          id="plugins-config-json"
+          value={controller.config.configDraft}
+          placeholder={t(state.isLoading ? "common.loading" : "plugins.configJson")}
+          disabled={state.isLoading || controller.config.saveConfig.isPending}
+          spellCheck={false}
+          className="min-h-[260px] resize-y font-mono text-xs leading-5"
+          onChange={(event) =>
+            controller.config.setConfigDraft(event.target.value)
+          }
+        />
+
+        {errorKey ? (
+          <p className="text-xs text-destructive" role="alert">
+            {t(errorKey)}
+          </p>
+        ) : null}
+
+        <div className="flex justify-end">
+          <Button
+            type="button"
+            size="sm"
+            disabled={!controller.config.canSaveConfig}
+            onClick={() => void controller.config.saveConfig.run()}
+          >
+            <Save className="h-3.5 w-3.5" />
+            {t("plugins.saveConfig")}
+          </Button>
+        </div>
+      </div>
+    </section>
   );
 }

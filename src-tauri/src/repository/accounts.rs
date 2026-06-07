@@ -1,19 +1,7 @@
-use crate::repository::adapter::FileSystemAdapter;
-use crate::repository::paths::{RepositoryPath, RepositoryPathContext};
-use std::sync::Arc;
+﻿// 这个文件只保留账号仓储边界，后续实现必须先补充仓库内证据和契约。
 
-#[derive(Clone)]
-pub(crate) struct AccountsRepository {
-    _fs: Arc<dyn FileSystemAdapter>,
-    paths: RepositoryPathContext,
-}
+pub(crate) struct AccountsRepository;
 
-impl AccountsRepository {
-    pub(crate) fn new(fs: Arc<dyn FileSystemAdapter>, paths: RepositoryPathContext) -> Self {
-        Self { _fs: fs, paths }
-    }
+pub(crate) trait AccountsRepositoryBoundary {}
 
-    pub(crate) fn source_path(&self) -> String {
-        self.paths.contract_string(RepositoryPath::AccountsSource)
-    }
-}
+impl AccountsRepositoryBoundary for AccountsRepository {}

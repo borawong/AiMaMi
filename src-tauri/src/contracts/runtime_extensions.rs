@@ -1,63 +1,6 @@
-use crate::contracts::BackendSkeletonStatus;
-use serde::{Deserialize, Serialize};
-use serde_json::Number;
-use std::collections::BTreeMap;
+// runtime_extensions 合同文件只保留跨层数据边界，当前不承诺具体字段。
+// 对外形状需要和前端类型、命令入口及测试替身同步后再补齐。
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-#[serde(untagged)]
-pub(crate) enum RuntimeExtensionSettingsValue {
-    Null,
-    Bool(bool),
-    Number(Number),
-    String(String),
-    Array(Vec<RuntimeExtensionSettingsValue>),
-    Object(BTreeMap<String, RuntimeExtensionSettingsValue>),
-}
+pub(crate) struct RuntimeExtensionsContractBoundary;
 
-impl Default for RuntimeExtensionSettingsValue {
-    fn default() -> Self {
-        Self::Object(BTreeMap::new())
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct RuntimeExtensionPluginPayload {
-    pub id: String,
-    pub name: String,
-    pub title: Option<String>,
-    pub description: Option<String>,
-    pub path: Option<String>,
-    pub enabled: bool,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct RuntimeExtensionListPayload {
-    pub backend_status: BackendSkeletonStatus,
-    pub items: Vec<RuntimeExtensionPluginPayload>,
-    pub total: usize,
-    pub source_path: String,
-    pub last_scan_at: i64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct RuntimeExtensionTogglePayload {
-    pub backend_status: BackendSkeletonStatus,
-    pub plugin: RuntimeExtensionPluginPayload,
-    pub items: Vec<RuntimeExtensionPluginPayload>,
-    pub total: usize,
-    pub source_path: String,
-    pub last_scan_at: i64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct RuntimeExtensionConfigPayload {
-    pub backend_status: BackendSkeletonStatus,
-    pub id: String,
-    pub settings: RuntimeExtensionSettingsValue,
-    pub source_path: String,
-    pub updated: bool,
-}
+pub(crate) type RuntimeExtensionsContractBoundaryPlaceholder = ();

@@ -1,23 +1,5 @@
-use crate::application::ports::HotspotRuntimePort;
-use crate::core::error::CoreError;
+// 热区运行时文件只保留平台边界，不检测、不写入、不订阅系统状态。
+pub(crate) struct HotspotRuntimeBoundary;
 
-#[derive(Default)]
-pub(crate) struct SystemHotspotRuntime;
-
-impl HotspotRuntimePort for SystemHotspotRuntime {
-    fn hotspot_ready(&self) -> Result<Option<bool>, CoreError> {
-        Err(CoreError::platform(
-            "hotspot_runtime_unsupported",
-            "当前平台骨架尚未提供热点运行时检测能力。",
-        ))
-    }
-}
-
-#[derive(Default)]
-pub(crate) struct NoopHotspotRuntime;
-
-impl HotspotRuntimePort for NoopHotspotRuntime {
-    fn hotspot_ready(&self) -> Result<Option<bool>, CoreError> {
-        Ok(None)
-    }
-}
+// 后续恢复热区能力时，只允许通过应用层端口接入。
+pub(crate) trait HotspotRuntimeBoundaryPort {}

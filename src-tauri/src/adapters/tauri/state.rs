@@ -1,18 +1,2 @@
-use crate::application::service::BackendServices;
-use crate::platform::window::TauriWindow;
-
-pub(crate) struct TauriAppState {
-    services: BackendServices,
-}
-
-impl TauriAppState {
-    pub(crate) fn new(app: tauri::AppHandle) -> Self {
-        Self {
-            services: BackendServices::with_window(Box::new(TauriWindow::new(app))),
-        }
-    }
-
-    pub(crate) fn services(&self) -> &BackendServices {
-        &self.services
-    }
-}
+// 桌面状态只保留类型占位，避免在适配层持有业务服务或平台对象。
+pub(crate) struct TauriAppState;
