@@ -6,6 +6,7 @@ use crate::contracts::{
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::repository::RepositoryBundle;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 const MODULE: &str = "runtime_extensions";
 
@@ -22,8 +23,9 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
         &self,
     ) -> Result<CoreEnvelope<RuntimeExtensionListPayload>, CoreError> {
         let plan = self.pending_plan("list_plugins");
+        let items = self.repositories.runtime_extensions().list_plugins()?;
         Ok(CoreEnvelope::from_backend_plan(
-            self.list_payload(&plan),
+            self.list_payload(&plan, items),
             &plan,
         ))
     }
@@ -82,13 +84,18 @@ impl<'a> RuntimeExtensionsUseCase<'a> {
         ))
     }
 
-    fn list_payload(&self, plan: &BackendOperationPlan) -> RuntimeExtensionListPayload {
+    fn list_payload(
+        &self,
+        plan: &BackendOperationPlan,
+        items: Vec<RuntimeExtensionPluginPayload>,
+    ) -> RuntimeExtensionListPayload {
+        let total = items.len();
         RuntimeExtensionListPayload {
             backend_status: BackendSkeletonStatus::from_plan(plan),
-            items: Vec::new(),
-            total: 0,
+            items,
+            total,
             source_path: self.source_path(),
-            last_scan_at: 0,
+            last_scan_at: current_unix_seconds(),
         }
     }
 
@@ -156,4 +163,11 @@ fn optional_settings(
         Some(value) => Ok(value),
         None => Ok(RuntimeExtensionSettingsValue::default()),
     }
+}
+
+fn current_unix_seconds() -> i64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs() as i64
 }

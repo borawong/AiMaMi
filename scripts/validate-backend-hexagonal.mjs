@@ -2522,6 +2522,7 @@ validateRelayTypedPayloadContracts();
 function validateRuntimeExtensionsTypedPayloadContracts() {
   const commandPath = join(backendRoot, "commands", "runtime_extensions.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "runtime_extensions.rs");
+  const repositoryPath = join(backendRoot, "repository", "runtime_extensions.rs");
   const contractPath = join(backendRoot, "contracts", "runtime_extensions.rs");
   const servicePath = join(frontendRoot, "services", "runtime-extensions", "index.ts");
   const pluginsServicePath = join(frontendRoot, "services", "plugins", "index.ts");
@@ -2534,6 +2535,7 @@ function validateRuntimeExtensionsTypedPayloadContracts() {
   const featurePageHookPath = join(frontendRoot, "features", "plugins", "hooks", "page.ts");
   const commandText = readUtf8(commandPath);
   const usecaseText = readUtf8(usecasePath);
+  const repositoryText = readUtf8(repositoryPath);
   const contractText = readUtf8(contractPath);
   const serviceText = readUtf8(servicePath);
   const pluginsServiceText = readUtf8(pluginsServicePath);
@@ -2579,6 +2581,53 @@ function validateRuntimeExtensionsTypedPayloadContracts() {
     "CoreError::domain(code, public_message)",
     "运行时扩展标识不能为空。",
   ], "runtime-extensions usecase typed 骨架");
+
+  assertContains(repositoryPath, repositoryText, [
+    "list_plugins",
+    "self.fs.exists",
+    "self.fs.read_to_string",
+    "RepositoryPath::RuntimeExtensionsSource",
+    "RuntimeExtensionPluginPayload",
+    "serde_json",
+  ], "runtime-extensions repository readonly list owner");
+
+  assertNotContains(repositoryPath, repositoryText, [
+    /\bstd::fs\b/,
+    /\btokio::fs\b/,
+    /\bread_dir\b/,
+  ], "runtime-extensions repository must use repository filesystem adapter");
+
+  const listPluginsBody = extractFunctionBody(usecaseText, "list_plugins");
+  if (!listPluginsBody) {
+    failures.push(`${toRelative(usecasePath)} missing runtime-extensions list_plugins function body`);
+  } else {
+    assertContains(usecasePath, listPluginsBody, [
+      "list_plugins",
+      "items",
+      "list_payload",
+    ], "runtime-extensions list_plugins repository readonly call chain");
+  }
+
+  const listPayloadBody = extractFunctionBody(usecaseText, "list_payload");
+  const listPayloadSignatureMatch = /fn\s+list_payload\s*\([\s\S]*?\)\s*->/.exec(usecaseText);
+  const listPayloadContractText = `${listPayloadSignatureMatch?.[0] ?? ""}\n${listPayloadBody}`;
+  if (!listPayloadBody) {
+    failures.push(`${toRelative(usecasePath)} missing runtime-extensions list_payload function body`);
+  } else {
+    assertContains(usecasePath, listPayloadContractText, [
+      "items: Vec<RuntimeExtensionPluginPayload>",
+      "let total = items.len()",
+      "items",
+      "total",
+      "last_scan_at",
+    ], "runtime-extensions list_payload readonly payload");
+  }
+
+  assertNotContainsSnippet(usecasePath, `${listPluginsBody}\n${listPayloadBody}`, [
+    "items: Vec::new()",
+    "total: 0",
+    "last_scan_at: 0",
+  ], "runtime-extensions list_plugins must not return empty readonly skeleton");
 
   for (const functionName of ["toggle_plugin", "get_plugin_config", "update_plugin_config"]) {
     const commandBody = extractFunctionBody(commandText, functionName);
