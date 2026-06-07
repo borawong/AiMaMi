@@ -106,6 +106,14 @@ function assertContains(file, content, snippets, rule) {
   }
 }
 
+function assertMatches(file, content, patterns, rule) {
+  for (const pattern of patterns) {
+    if (!pattern.test(content)) {
+      failures.push(`${toRelative(file)} missing ${rule}: ${pattern}`);
+    }
+  }
+}
+
 function assertNotContainsSnippet(file, content, snippets, rule) {
   for (const snippet of snippets) {
     if (content.includes(snippet)) {
@@ -253,7 +261,7 @@ function findMatchingBrace(content, openBraceIndex) {
 }
 
 function extractFunctionBody(content, functionName) {
-  const match = new RegExp(`fn\\s+${functionName}\\s*\\([^)]*\\)\\s*(?:->\\s*[^\\{]+)?\\{`, "m").exec(content);
+  const match = new RegExp(`fn\\s+${functionName}(?:\\s*<[^>]+>)?\\s*\\([^)]*\\)\\s*(?:->\\s*[^\\{]+)?\\{`, "m").exec(content);
   if (!match) {
     return "";
   }
@@ -265,6 +273,28 @@ function extractFunctionBody(content, functionName) {
   }
 
   return content.slice(openBraceIndex, closeBraceIndex + 1);
+}
+
+function assertCommandRequiredEnvelope(commandPath, commandText, functionName, argumentName) {
+  const body = extractFunctionBody(commandText, functionName);
+  if (!body) {
+    failures.push(`${toRelative(commandPath)} missing skills command required boundary function: ${functionName}`);
+    return;
+  }
+  const requiredHelperBody = extractFunctionBody(commandText, "required_command_text");
+  const boundaryText = `${body}\n${requiredHelperBody}`;
+
+  assertNotContainsSnippet(commandPath, body, [
+    "unwrap_or_default()",
+  ], `skills ${functionName} command must not swallow missing ${argumentName}`);
+
+  assertMatches(commandPath, boundaryText, [
+    new RegExp(`(?:required_command_text::<[\\s\\S]*?\\(\\s*${argumentName}\\s*,|\\b${argumentName}\\b[\\s\\S]*\\.trim\\s*\\()`),
+    /\.trim\s*\(/,
+    /CoreError::domain\s*\(/,
+    /CoreEnvelope::failure\s*\(|failure_envelope\s*\(/,
+    /[\u4e00-\u9fff]|\\u\{[0-9a-fA-F]+\}/,
+  ], `skills ${functionName} command required/trim/CoreError::domain/failure envelope Chinese missing-argument boundary`);
 }
 
 function extractPortImpls(content, portName) {
@@ -828,6 +858,15 @@ function validateSkillsTypedPayloadContracts() {
     "Result<CoreEnvelope<SkillRestorePayload>, String>",
     "Result<CoreEnvelope<SkillDeleteBackupPayload>, String>",
   ], "skills command typed envelope");
+
+  assertNotContainsSnippet(commandPath, commandText, [
+    "unwrap_or_default()",
+  ], "skills command 不得用 unwrap_or_default() 吞掉必填 IPC 参数");
+
+  assertCommandRequiredEnvelope(commandPath, commandText, "import_skill", "path");
+  assertCommandRequiredEnvelope(commandPath, commandText, "remove_skill", "id");
+  assertCommandRequiredEnvelope(commandPath, commandText, "restore_skill_backup", "id");
+  assertCommandRequiredEnvelope(commandPath, commandText, "delete_skill_backup", "id");
 
   assertContains(usecasePath, usecaseText, [
     "Result<CoreEnvelope<SkillListPayload>, CoreError>",
