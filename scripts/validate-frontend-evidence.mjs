@@ -446,11 +446,16 @@ function validateKnownInternalFrontendGates() {
   const analyticsCachePath = join(repoRoot, "src", "features", "analytics", "cache", "index.ts");
   const analyticsTypesPath = join(repoRoot, "src", "features", "analytics", "types", "index.ts");
   const analyticsServicePath = join(repoRoot, "src", "services", "analytics", "index.ts");
-  const relayHooksPath = join(repoRoot, "src", "features", "relay", "hooks", "index.ts");
+  const relayHooksIndexPath = join(repoRoot, "src", "features", "relay", "hooks", "index.ts");
+  const relayQueryPath = join(repoRoot, "src", "features", "relay", "hooks", "query.ts");
+  const relayMutationPath = join(repoRoot, "src", "features", "relay", "hooks", "mutation.ts");
+  const relayRuntimePath = join(repoRoot, "src", "features", "relay", "hooks", "runtime.ts");
+  const relayPageHookPath = join(repoRoot, "src", "features", "relay", "hooks", "page.ts");
   const relayCachePath = join(repoRoot, "src", "features", "relay", "cache", "index.ts");
   const relayTypesPath = join(repoRoot, "src", "features", "relay", "types", "index.ts");
   const relayPagePath = join(repoRoot, "src", "features", "relay", "components", "page.tsx");
   const relayPanelsPath = join(repoRoot, "src", "features", "relay", "panels", "panels.tsx");
+  const relayDialogsPath = join(repoRoot, "src", "features", "relay", "dialogs", "dialogs.tsx");
   const relayServicePath = join(repoRoot, "src", "services", "relay", "index.ts");
   const skillsServicePath = join(repoRoot, "src", "services", "skills", "index.ts");
   const customInstructionsPagePath = join(
@@ -499,11 +504,16 @@ function validateKnownInternalFrontendGates() {
   const analyticsCache = readRequired(analyticsCachePath);
   const analyticsTypes = readRequired(analyticsTypesPath);
   const analyticsService = readRequired(analyticsServicePath);
-  const relayHooks = readRequired(relayHooksPath);
+  const relayHooksIndex = readRequired(relayHooksIndexPath);
+  const relayQuery = readRequired(relayQueryPath);
+  const relayMutation = readRequired(relayMutationPath);
+  const relayRuntime = readRequired(relayRuntimePath);
+  const relayPageHook = readRequired(relayPageHookPath);
   const relayCache = readRequired(relayCachePath);
   const relayTypes = readRequired(relayTypesPath);
   const relayPage = readRequired(relayPagePath);
   const relayPanels = readRequired(relayPanelsPath);
+  const relayDialogs = readRequired(relayDialogsPath);
   const relayService = readRequired(relayServicePath);
   const customInstructionsPage = readRequired(customInstructionsPagePath);
   const customInstructionsHooks = readRequired(customInstructionsHooksPath);
@@ -599,9 +609,14 @@ function validateKnownInternalFrontendGates() {
     relayService.includes("codex-router-toggle-progress") &&
     relayService.includes("listen<unknown>") &&
     relayService.includes("unlisten?.()") &&
-    relayHooks.includes("subscribeRouterToggleProgress") &&
+    relayRuntime.includes("useRelayRuntimeEvents") &&
+    relayRuntime.includes("subscribeRouterToggleProgress") &&
+    relayRuntime.includes("return relayService.subscribeRouterToggleProgress") &&
+    relayRuntime.includes("parseRelayRouterToggleProgress") &&
+    relayRuntime.includes("writeRelayRouterToggleProgress") &&
     relayCache.includes("RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY") &&
     relayCache.includes("writeRelayRouterToggleProgress") &&
+    relayPageHook.includes("useRelayRuntimeEvents") &&
     relayPage.includes("RelayPagePanels") &&
     relayPanels.includes("RelayRouterProgress") &&
     relayPanels.includes("module.routerToggleProgress");
@@ -650,24 +665,61 @@ function validateKnownInternalFrontendGates() {
     relayCache.includes("Omit<RelayCacheEnvelope<TPayload>, \"moduleId\">") &&
     !relayCache.includes("createModuleCacheOwner(\"relay\")") &&
     !relayCache.includes("ModuleCacheEnvelope<unknown>") &&
-    relayHooks.includes("CoreEnvelope<TPayload>") &&
-    relayHooks.includes("TPayload extends RelayCachePayload") &&
-    relayHooks.includes("TPayload extends RelayMutationDataPayload") &&
-    relayHooks.includes("writeQueryPayload<TPayload extends RelayKnownQueryPayload>") &&
-    relayHooks.includes("writeRelayAuthoritativePayload(queryClient") &&
-    relayHooks.includes("writeRelayStateQueryPayload") &&
-    relayHooks.includes("writeRelayRouterToggleQueryPayload") &&
-    relayHooks.includes("relayActiveStateQueryKey") &&
-    relayHooks.includes("useRelayVoidMutation") &&
-    !relayHooks.includes("useMutation<unknown") &&
-    !relayHooks.includes("Promise<unknown>") &&
-    !relayHooks.includes("formatExtraHeaders(provider: unknown)") &&
-    relayHooks.includes("formatExtraHeaders(extraHeaders: RelayExtraHeaders | undefined)") &&
-    !relayHooks.includes("writeKnownRelayQueryPayload(queryClient: QueryClient, payload: unknown)") &&
-    !relayHooks.includes("RelayCache.writeAuthoritativePayload(queryClient") &&
-    !relayHooks.includes("setQueryData<unknown>") &&
-    !relayHooks.includes("sourcePayload: unknown") &&
-    !relayHooks.includes("data: unknown");
+    relayHooksIndex.includes("from \"./query\"") &&
+    relayHooksIndex.includes("from \"./mutation\"") &&
+    relayHooksIndex.includes("from \"./runtime\"") &&
+    relayHooksIndex.includes("from \"./page\"") &&
+    !/\b(useQuery|useMutation|useQueryClient|setQueryData|invalidateQueries|cancelQueries)\b/.test(relayHooksIndex) &&
+    relayQuery.includes("TPayload extends RelayCachePayload") &&
+    relayQuery.includes("relayActiveStateQueryKey") &&
+    relayQuery.includes("runRelayQuery") &&
+    relayQuery.includes("relayService.loadState") &&
+    relayQuery.includes("relayService.getActive") &&
+    relayQuery.includes("relayService.getProxyStatus") &&
+    relayQuery.includes("relayService.getPassthroughAuditLog") &&
+    relayQuery.includes("full-refresh") &&
+    !relayQuery.includes("useMutation") &&
+    !relayQuery.includes("payload: unknown") &&
+    relayMutation.includes("CoreEnvelope<TPayload>") &&
+    relayMutation.includes("TPayload extends RelayMutationDataPayload") &&
+    relayMutation.includes("writeRelayMutationPayload") &&
+    relayMutation.includes("queryClient") &&
+    relayMutation.includes("invalidateRelayContractQueries(queryClient)") &&
+    relayMutation.includes("cancelQueries") &&
+    relayMutation.includes("useRelayVoidMutation") &&
+    !relayMutation.includes("useQuery(") &&
+    !relayMutation.includes("useMutation<unknown") &&
+    !relayMutation.includes("Promise<unknown>") &&
+    !relayMutation.includes("payload: unknown") &&
+    relayRuntime.includes("relayService.subscribeRouterToggleProgress") &&
+    relayRuntime.includes("writeRelayRouterToggleProgress(queryClient") &&
+    relayRuntime.includes("parseRelayRouterToggleProgress") &&
+    !relayRuntime.includes("setQueryData(") &&
+    relayPageHook.includes("useRelayPageController") &&
+    relayPageHook.includes("useRelayPageQueries") &&
+    relayPageHook.includes("useRelayPageMutations") &&
+    relayPageHook.includes("useRelayRuntimeEvents") &&
+    relayPageHook.includes("formatExtraHeaders(extraHeaders: RelayExtraHeaders | undefined)") &&
+    !relayPageHook.includes("formatExtraHeaders(provider: unknown)") &&
+    !/\b(useQuery|useMutation|useQueryClient|setQueryData|invalidateQueries|cancelQueries|relayService\.|invokeIpc|invoke\()\b/.test(relayPageHook) &&
+    relayCache.includes("writeRelayQueryPayload") &&
+    relayCache.includes("writeRelayMutationPayload") &&
+    relayCache.includes("writeQueryPayload<TPayload extends RelayKnownQueryPayload>") &&
+    relayCache.includes("setQueryData<CoreEnvelope<TPayload>>") &&
+    relayCache.includes("writeRelayStateQueryPayload") &&
+    relayCache.includes("writeRelayRouterToggleQueryPayload") &&
+    relayCache.includes("setQueryData<CoreEnvelope<RelayStatePayload>>") &&
+    relayCache.includes("nextRelayCacheSequence") &&
+    (relayCache.includes("acceptRelayCacheSequence") ||
+      relayCache.includes("relayLatestAcceptedSequence") ||
+      relayCache.includes("sequence <")) &&
+    !relayCache.includes("setQueryData<unknown>") &&
+    !relayCache.includes("sourcePayload: unknown") &&
+    !relayCache.includes("data: unknown") &&
+    relayPage.includes("useRelayPageController") &&
+    !relayPanels.includes("ReturnType<typeof useRelayPageController>") &&
+    !relayDialogs.includes("ReturnType<typeof useRelayPageController>") &&
+    !/import\s+type\s+\{[\s\S]*RelayPageController[\s\S]*\}\s+from\s+["']\.\.\/hooks["']/.test(`${relayPanels}\n${relayDialogs}`);
   if (!relayTypedPayloadOk) {
     failures.push("relay IPC payload owner 未收口到 typed envelope、独立 active query key 和 system restart facade");
   } else {

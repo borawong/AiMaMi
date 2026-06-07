@@ -1228,10 +1228,24 @@ function validateRelayTypedPayloadContracts() {
   const usecasePath = join(backendRoot, "application", "usecase", "relay.rs");
   const contractPath = join(backendRoot, "contracts", "relay.rs");
   const servicePath = join(frontendRoot, "services", "relay", "index.ts");
+  const hooksIndexPath = join(frontendRoot, "features", "relay", "hooks", "index.ts");
+  const queryPath = join(frontendRoot, "features", "relay", "hooks", "query.ts");
+  const mutationPath = join(frontendRoot, "features", "relay", "hooks", "mutation.ts");
+  const runtimePath = join(frontendRoot, "features", "relay", "hooks", "runtime.ts");
+  const pagePath = join(frontendRoot, "features", "relay", "hooks", "page.ts");
+  const cachePath = join(frontendRoot, "features", "relay", "cache", "index.ts");
+  const typesPath = join(frontendRoot, "features", "relay", "types", "index.ts");
   const commandText = readUtf8(commandPath);
   const usecaseText = readUtf8(usecasePath);
   const contractText = readUtf8(contractPath);
   const serviceText = readUtf8(servicePath);
+  const hooksIndexText = readRequiredUtf8(hooksIndexPath, "relay split hooks barrel");
+  const queryText = readRequiredUtf8(queryPath, "relay query owner");
+  const mutationText = readRequiredUtf8(mutationPath, "relay mutation owner");
+  const runtimeText = readRequiredUtf8(runtimePath, "relay runtime owner");
+  const pageText = readRequiredUtf8(pagePath, "relay page controller owner");
+  const cacheText = readRequiredUtf8(cachePath, "relay cache owner");
+  const typesText = readRequiredUtf8(typesPath, "relay types owner");
 
   assertContains(contractPath, contractText, [
     "pub(crate) enum RelayExtraHeaders",
@@ -1302,6 +1316,71 @@ function validateRelayTypedPayloadContracts() {
     "systemService.restartCodex()",
   ], "relay service 寮虹被鍨?envelope");
 
+  assertContains(hooksIndexPath, hooksIndexText, [
+    "from \"./query\"",
+    "from \"./mutation\"",
+    "from \"./runtime\"",
+    "from \"./page\"",
+  ], "relay split hooks barrel");
+
+  assertContains(typesPath, typesText, [
+    "export type RelayQueryDataPayload",
+    "export type RelayMutationDataPayload",
+    "export type RelayCachePayload",
+    "export type RelayCacheDataPayload",
+    "export type RelayKnownQueryPayload",
+    "export interface RelayPageController",
+  ], "relay frontend split typed payload contracts");
+
+  assertContains(cachePath, cacheText, [
+    "createModuleCacheOwner<RelayCachePayload>(\"relay\")",
+    "Omit<RelayCacheEnvelope<TPayload>, \"moduleId\">",
+    "writeRelayQueryPayload",
+    "writeRelayMutationPayload",
+    "writeRelayStateQueryPayload",
+    "writeRelayRouterToggleQueryPayload",
+    "invalidateRelayContractQueries",
+    "nextRelayCacheSequence",
+  ], "relay frontend split cache payload owner");
+
+  assertContains(queryPath, queryText, [
+    "TPayload extends RelayCachePayload",
+    "relayActiveStateQueryKey",
+    "relayService.loadState",
+    "relayService.getActive",
+    "relayService.getProxyStatus",
+    "relayService.getPassthroughAuditLog",
+    "runRelayQuery",
+  ], "relay frontend split query typed payload owner");
+
+  assertContains(mutationPath, mutationText, [
+    "CoreEnvelope<TPayload>",
+    "TPayload extends RelayMutationDataPayload",
+    "writeRelayMutationPayload",
+    "queryClient",
+    "invalidateRelayContractQueries(queryClient)",
+    "cancelQueries",
+    "relayService.setCodexRouterEnabled",
+    "useRelayVoidMutation",
+  ], "relay frontend split mutation typed payload owner");
+
+  assertContains(runtimePath, runtimeText, [
+    "useRelayRuntimeEvents",
+    "relayService.subscribeRouterToggleProgress",
+    "return relayService.subscribeRouterToggleProgress",
+    "parseRelayRouterToggleProgress",
+    "writeRelayRouterToggleProgress",
+  ], "relay frontend split runtime event owner");
+
+  assertContains(pagePath, pageText, [
+    "useRelayPageController",
+    "useRelayPageQueries",
+    "useRelayPageMutations",
+    "useRelayRuntimeEvents",
+    "RelayPageController",
+    "formatExtraHeaders(extraHeaders: RelayExtraHeaders | undefined)",
+  ], "relay frontend split page controller owner");
+
   assertNotContainsSnippet(contractPath, contractText, [
     "RelayActionPayload",
     "pub input: Option<Value>",
@@ -1326,6 +1405,73 @@ function validateRelayTypedPayloadContracts() {
     "restart_codex",
     "extends IpcJsonObject",
   ], "relay service 涓嶅緱閫€鍥?generic evidence payload 鎴栫洿鎺ヨ皟 system command");
+  assertNotContainsSnippet(hooksIndexPath, hooksIndexText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "setQueryData",
+    "invalidateQueries",
+    "cancelQueries",
+    "relayService.",
+    "invokeIpc",
+  ], "relay hooks/index must stay split barrel");
+  assertNotContainsSnippet(typesPath, typesText, [
+    "RelayCacheEnvelope<TPayload = unknown>",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "ReturnType<typeof useRelayPageController>",
+  ], "relay frontend split types must not loosen typed payloads");
+  assertNotContainsSnippet(cachePath, cacheText, [
+    "createModuleCacheOwner(\"relay\")",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "relayService.",
+    "invokeIpc",
+  ], "relay frontend cache owner must not loosen typed payloads or call services");
+  assertNotContainsSnippet(queryPath, queryText, [
+    "useMutation",
+    "payload: unknown",
+    "setQueryData<unknown>",
+    "invalidateQueries",
+    "invokeIpc",
+  ], "relay frontend query owner must not mix mutation or generic payloads");
+  assertNotContainsSnippet(mutationPath, mutationText, [
+    "useQuery(",
+    "payload: unknown",
+    "useMutation<unknown",
+    "Promise<unknown>",
+    "setQueryData",
+    "invokeIpc",
+  ], "relay frontend mutation owner must not mix query or direct cache writes");
+  assertNotContainsSnippet(runtimePath, runtimeText, [
+    "useQuery(",
+    "useMutation",
+    "useState",
+    "setQueryData(",
+    "relayService.loadState",
+    "relayService.getActive",
+    "relayService.getProxyStatus",
+    "relayService.getPassthroughAuditLog",
+    "relayService.upsert",
+    "relayService.delete",
+    "relayService.activate",
+    "relayService.deactivate",
+    "relayService.setCodexRouterEnabled",
+    "invokeIpc",
+  ], "relay frontend runtime owner must only bridge event facade to cache helper");
+  assertNotContainsSnippet(pagePath, pageText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "relayService.",
+    "systemService.",
+    "setQueryData",
+    "invalidateQueries",
+    "cancelQueries",
+    "RELAY_STATE_QUERY_KEY",
+    "RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY",
+    "invokeIpc",
+  ], "relay page controller must not own TanStack, cache keys, or service/API access");
 }
 
 validateRelayTypedPayloadContracts();

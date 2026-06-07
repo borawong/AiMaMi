@@ -933,6 +933,186 @@ function validateSkillsDeepOwnerBoundaries() {
   console.log("PASS skills deep owner gate executed: hooks/index, query, mutation, page, cache, types, panels/dialogs/components");
 }
 
+function validateRelayDeepOwnerBoundaries() {
+  const relayRoot = join(featuresRoot, "relay");
+  const hooksIndexPath = join(relayRoot, "hooks", "index.ts");
+  const queryPath = join(relayRoot, "hooks", "query.ts");
+  const mutationPath = join(relayRoot, "hooks", "mutation.ts");
+  const runtimePath = join(relayRoot, "hooks", "runtime.ts");
+  const pagePath = join(relayRoot, "hooks", "page.ts");
+  const cachePath = join(relayRoot, "cache", "index.ts");
+  const sequencePath = join(relayRoot, "cache", "sequence.ts");
+  const typesPath = join(relayRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    ...walkFiles(join(relayRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(relayRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(relayRoot, "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const runtime = readRequired(runtimePath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const cacheSequence = existsSync(sequencePath) ? readRequired(sequencePath) : "";
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
+  const cacheOwnerText = `${cache}\n${cacheSequence}`;
+
+  assertOnlyBarrelReExports("src/features/relay/hooks/index.ts", hooksIndex, [
+    "query",
+    "mutation",
+    "runtime",
+    "page",
+  ]);
+  assertNotMatches("src/features/relay/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "relay hooks/index can only re-export split owners"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|nextRelayCacheSequence|writeRelay)/, "relay hooks/index must not own cache writes, invalidation, cancellation, or sequence"],
+    [/@\/services\/relay|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|relayService\.|systemService\.|invokeIpc|invoke\(/, "relay hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/relay/hooks/query.ts", query, [
+    "useRelayCacheController",
+    "useModuleCacheController(RelayCache)",
+    "useQuery",
+    "useQueryClient",
+    "RELAY_STATE_QUERY_KEY",
+    "relayActiveStateQueryKey",
+    "relayService.loadState",
+    "relayService.getActive",
+    "relayService.getProxyStatus",
+    "relayService.getPassthroughAuditLog",
+    "runRelayQuery",
+    "full-refresh",
+  ]);
+  assertNotMatches("src/features/relay/hooks/query.ts", query, [
+    [/\buseMutation\b/, "relay query owner must not own mutation"],
+    [/\buse(State|Reducer)\b/, "relay query owner must not own page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|writeRelayMutationPayload)\b/, "relay query owner must delegate cache writes, invalidation, cancellation, and mutation payloads"],
+    [/toast\(|navigator\.clipboard/, "relay query owner must not own toast or browser UI"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "relay query owner must use relay service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "relay query owner must keep typed authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/relay/hooks/mutation.ts", mutation, [
+    "useMutation",
+    "useQueryClient",
+    "relayService.upsert",
+    "relayService.delete",
+    "relayService.activate",
+    "relayService.deactivate",
+    "relayService.setCodexRouterEnabled",
+    "writeRelayMutationPayload",
+    "invalidateRelayContractQueries",
+    "cancelQueries",
+  ]);
+  assertNotMatches("src/features/relay/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "relay mutation owner must not own query"],
+    [/\buse(State|Reducer|Effect|Memo)\b/, "relay mutation owner must not own page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries)\b/, "relay mutation owner must delegate cache writes and invalidation to cache helper"],
+    [/toast\(|navigator\.clipboard/, "relay mutation owner must not own toast or browser UI"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "relay mutation owner must use relay service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|useMutation<unknown|Promise<unknown>/, "relay mutation owner must keep typed mutation payloads"],
+  ]);
+
+  assertIncludes("src/features/relay/hooks/runtime.ts", runtime, [
+    "useRelayRuntimeEvents",
+    "useEffect",
+    "useQueryClient",
+    "relayService.subscribeRouterToggleProgress",
+    "return relayService.subscribeRouterToggleProgress",
+    "parseRelayRouterToggleProgress",
+    "writeRelayRouterToggleProgress",
+    "RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY",
+  ]);
+  assertNotMatches("src/features/relay/hooks/runtime.ts", runtime, [
+    [/\buse(Query|Mutation)\b/, "relay runtime owner must not own query or mutation"],
+    [/\buse(State|Reducer|Memo|Callback)\b/, "relay runtime owner must not own page/controller UI state"],
+    [/\bsetQueryData\b/, "relay runtime owner must write router progress through cache helper only"],
+    [/relayService\.(?!subscribeRouterToggleProgress\b)\w+/, "relay runtime owner must not call relay service commands beyond router progress subscription"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "relay runtime owner must use relay service event facade, not IPC/API transport"],
+  ]);
+
+  assertIncludes("src/features/relay/hooks/page.ts", page, [
+    "useRelayPageController",
+    "RelayPageController",
+    "useState",
+    "useMemo",
+    "useRelayPageQueries",
+    "useRelayPageMutations",
+    "useRelayRuntimeEvents",
+    "toast",
+    "formatExtraHeaders(extraHeaders: RelayExtraHeaders | undefined)",
+  ]);
+  assertNotMatches("src/features/relay/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "relay page/controller may compose split owner hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|nextRelayCacheSequence|writeRelay|RELAY_[A-Z0-9_]+_QUERY_KEY|relay[A-Za-z]*QueryKey)\b/, "relay page/controller must not write cache, invalidate, cancel, allocate sequence, or consume query keys"],
+    [/@\/services\/relay|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|relayService\.|systemService\.|invokeIpc|invoke\(/, "relay page/controller must not access service/API/IPC directly"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|formatExtraHeaders\(provider:\s*unknown\)/, "relay page/controller must not use generic authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/relay/types/index.ts", types, [
+    "export type RelayQueryDataPayload",
+    "export type RelayMutationDataPayload",
+    "export type RelayCachePayload",
+    "export type RelayCacheDataPayload",
+    "export type RelayKnownQueryPayload",
+    "export interface RelayPageController",
+  ]);
+  if (!/export interface Relay[A-Za-z]*(Panel|Panels|Dialogs?|Dialog|Controller)Props\b/.test(types)) {
+    failures.push("src/features/relay/types/index.ts must declare explicit panel/dialog/controller props types");
+  }
+  assertNotMatches("src/features/relay/types/index.ts", types, [
+    [/RelayPageController\s*=\s*ReturnType|ReturnType<typeof useRelayPageController>/, "relay controller contract must be explicit, not ReturnType"],
+    [/RelayCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "relay types owner must keep typed cache payloads"],
+  ]);
+
+  assertIncludes("src/features/relay/cache/index.ts", cache, [
+    "createModuleCacheOwner<RelayCachePayload>(\"relay\")",
+    "Omit<RelayCacheEnvelope<TPayload>, \"moduleId\">",
+    "RELAY_STATE_QUERY_KEY",
+    "RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY",
+    "writeRelayAuthoritativePayload",
+    "writeRelayQueryPayload",
+    "writeRelayMutationPayload",
+    "writeRelayStateQueryPayload",
+    "writeRelayRouterToggleQueryPayload",
+    "writeRelayRouterToggleProgress",
+    "invalidateRelayContractQueries",
+    "setQueryData<CoreEnvelope<RelayStatePayload>>",
+  ]);
+  if (
+    !cacheOwnerText.includes("nextRelayCacheSequence") ||
+    !(
+      cacheOwnerText.includes("acceptRelayCacheSequence") ||
+      cacheOwnerText.includes("relayLatestAcceptedSequence") ||
+      cacheOwnerText.includes("sequence <")
+    )
+  ) {
+    failures.push("src/features/relay/cache/index.ts or cache/sequence.ts must own full-refresh/mutation sequence and stale/delayed response protection");
+  }
+  assertNotMatches("src/features/relay/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "relay cache owner must not own React hooks"],
+    [/@\/services\/relay|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|relayService\.|systemService\.|invokeIpc|invoke\(/, "relay cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("relay"\)|RelayCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "relay cache owner must keep typed payloads"],
+  ]);
+
+  if (controllerConsumerText.includes("ReturnType<typeof useRelayPageController>")) {
+    failures.push("src/features/relay panels/dialogs/components must consume explicit Relay controller types, not hook ReturnType");
+  }
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+Relay[A-Za-z]*(?:Controller|Props)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/relay panels/dialogs/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS relay deep owner gate executed: hooks/index, query, mutation, runtime, page, cache, types, panels/dialogs/components");
+}
+
 function validateFeatureDeepOwners() {
   for (const moduleId of featureModules) {
     const moduleRoot = join(featuresRoot, moduleId);
@@ -1198,6 +1378,7 @@ validatePluginsDeepOwnerBoundaries();
 validateTrayShellDeepOwnerBoundaries();
 validateSettingsDeepOwnerBoundaries();
 validateSkillsDeepOwnerBoundaries();
+validateRelayDeepOwnerBoundaries();
 validateRouteShells();
 validateFeaturePageShells();
 validateServiceOwners();

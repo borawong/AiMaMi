@@ -11,10 +11,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import type { RelayPageController } from "../hooks";
 import { ProviderFormFields } from "../panels/panels";
 import type {
   RelayNetworkMode,
+  RelayPageController,
   RelayProviderForm,
   RelayProviderPreset,
   RelayProviderRow,

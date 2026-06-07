@@ -53,9 +53,9 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { RelayRouterToggleProgress } from "../cache";
-import type { RelayPageController } from "../hooks";
 import type {
   RelayNetworkMode,
+  RelayPageController,
   RelayProviderForm,
   RelayProviderRow,
 } from "../types";
