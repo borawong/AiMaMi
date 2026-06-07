@@ -126,7 +126,24 @@ export interface OverviewSkillRecord {
 export interface OverviewBoundaryAction {
   id: string;
   labelKey: string;
+  descriptionKey?: string;
+  disabled?: boolean;
   icon: "key" | "bell" | "merge" | "user";
+  isPending?: boolean;
+  run?: () => Promise<unknown> | unknown;
+}
+
+export interface OverviewImportRemoteSecretDialog {
+  draft: string;
+  isOpen: boolean;
+  isPending: boolean;
+  onDraftChange: (value: string) => void;
+  onOpenChange: (open: boolean) => void;
+  onSubmit: () => void;
+}
+
+export interface OverviewDialogController {
+  importRemoteSecret: OverviewImportRemoteSecretDialog;
 }
 
 export type OverviewDataPanelModel =
@@ -174,6 +191,8 @@ export type OverviewDataPanelModel =
       state: OverviewQueryState;
       kind: "mystery";
       payload: MysteryRouteGrant[] | null;
+      remoteDeviceSecret: string | null;
+      remoteSecretLabelKey: string;
       boundaryActions: OverviewBoundaryAction[];
     };
 
@@ -183,5 +202,6 @@ export interface OverviewPageController {
   health: OverviewHealthModel;
   metrics: OverviewMetricModel[];
   dataPanels: OverviewDataPanelModel[];
+  dialogs: OverviewDialogController;
   accountBoundaryAction: OverviewBoundaryAction;
 }

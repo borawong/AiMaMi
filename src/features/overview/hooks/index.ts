@@ -1,13 +1,18 @@
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { useModuleCacheController } from "@/features/_shared/controller";
+import { toast } from "@/hooks/toast";
 import { accountsService } from "@/services/accounts";
 import { analyticsService } from "@/services/analytics";
 import { mcpService } from "@/services/mcp";
 import { skillsService } from "@/services/skills";
 import { systemService } from "@/services/system";
 import {
+  OVERVIEW_MYSTERY_GRANTS_QUERY_KEY,
   OverviewCache,
   writeOverviewAuthoritativePayload,
+  writeOverviewMysteryGrantsPayload,
 } from "../cache";
 import type {
   OverviewDataPanelModel,
@@ -41,6 +46,10 @@ export function useOverviewCacheController() {
 
 export function useOverviewModule() {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
+  const [remoteDeviceSecret, setRemoteDeviceSecret] = useState<string | null>(null);
+  const [importRemoteSecretOpen, setImportRemoteSecretOpen] = useState(false);
+  const [importRemoteSecretDraft, setImportRemoteSecretDraft] = useState("");
 
   const snapshotQuery = useQuery({
     queryKey: [...OverviewCache.queryKeys.root, "snapshot"],
@@ -73,7 +82,7 @@ export function useOverviewModule() {
     staleTime: 30_000,
   });
   const mysteryUnlockGrantsQuery = useQuery({
-    queryKey: [...OverviewCache.queryKeys.root, "mystery-unlock-grants"],
+    queryKey: OVERVIEW_MYSTERY_GRANTS_QUERY_KEY,
     queryFn: () => systemService.getMysteryUnlockGrants(),
     staleTime: 30_000,
   });
@@ -94,6 +103,56 @@ export function useOverviewModule() {
   });
   const focusMainWindowMutation = useMutation({
     mutationFn: () => systemService.focusMainWindow(),
+  });
+  const remoteDeviceSecretMutation = useMutation({
+    mutationFn: () => systemService.getOrCreateRemoteDeviceSecret(),
+    onSuccess: (secret) => {
+      setRemoteDeviceSecret(secret);
+      toast({
+        title: t("overview.remoteSecretGeneratedTitle"),
+        description: t("overview.remoteSecretGeneratedDesc"),
+      });
+    },
+    onError: (error) => {
+      toastOverviewError(t, error);
+    },
+  });
+  const importRemoteSecretMutation = useMutation({
+    mutationFn: (secret: string) =>
+      systemService.importRemoteDeviceSecretIfEmpty(secret.trim()),
+    onSuccess: () => {
+      setImportRemoteSecretOpen(false);
+      setImportRemoteSecretDraft("");
+      void queryClient.invalidateQueries({
+        queryKey: OVERVIEW_MYSTERY_GRANTS_QUERY_KEY,
+      });
+      toast({
+        title: t("overview.remoteSecretImportedTitle"),
+        description: t("overview.remoteSecretImportedDesc"),
+      });
+    },
+    onError: (error) => {
+      toastOverviewError(t, error);
+    },
+  });
+  const mergeMysteryGrantsMutation = useMutation({
+    mutationFn: () =>
+      systemService.mergeMysteryUnlockGrants(
+        envelopeData<MysteryRouteGrant[]>(mysteryUnlockGrantsQuery.data) ?? [],
+      ),
+    onSuccess: (payload) => {
+      writeOverviewMysteryGrantsPayload(queryClient, payload);
+      void queryClient.invalidateQueries({
+        queryKey: OVERVIEW_MYSTERY_GRANTS_QUERY_KEY,
+      });
+      toast({
+        title: t("overview.mysteryGrantsMergedTitle"),
+        description: t("overview.mysteryGrantsMergedDesc"),
+      });
+    },
+    onError: (error) => {
+      toastOverviewError(t, error);
+    },
   });
 
   const refreshUsageAction = {
@@ -118,6 +177,24 @@ export function useOverviewModule() {
     notificationStateQuery,
     mysteryUnlockGrantsQuery,
     refreshUsageMutation,
+    remoteDeviceSecretMutation,
+    importRemoteSecretMutation,
+    mergeMysteryGrantsMutation,
+    remoteDeviceSecret,
+    importRemoteSecretDialog: {
+      draft: importRemoteSecretDraft,
+      isOpen: importRemoteSecretOpen,
+      isPending: importRemoteSecretMutation.isPending,
+      onDraftChange: setImportRemoteSecretDraft,
+      onOpenChange: (open: boolean) => {
+        setImportRemoteSecretOpen(open);
+        if (!open) setImportRemoteSecretDraft("");
+      },
+      onSubmit: () => {
+        const secret = importRemoteSecretDraft.trim();
+        if (secret) void importRemoteSecretMutation.mutateAsync(secret);
+      },
+    },
     refreshUsageAction,
     focusMainWindowAction,
   };
@@ -137,6 +214,7 @@ export function useOverviewPageController(): OverviewPageController {
   const mysteryUnlockGrants = envelopeData<MysteryRouteGrant[]>(
     module.mysteryUnlockGrantsQuery.data,
   );
+  const mysteryGrantItems = mysteryUnlockGrants ?? [];
   const mcpItems = readArray<McpServerSummary>(mcp, ["items", "servers"]);
   const skillItems = readArray<InstalledSkillSummary>(skills, [
     "items",
@@ -263,21 +341,34 @@ export function useOverviewPageController(): OverviewPageController {
       state: module.mysteryUnlockGrantsQuery,
       kind: "mystery",
       payload: mysteryUnlockGrants,
+      remoteDeviceSecret: module.remoteDeviceSecret,
+      remoteSecretLabelKey: "overview.remoteSecretValue",
       boundaryActions: [
         {
           id: "remote-secret",
-          labelKey: "overview.remoteSecretBoundary",
+          labelKey: "overview.remoteSecretAction",
           icon: "key",
+          isPending: module.remoteDeviceSecretMutation.isPending,
+          run: () => module.remoteDeviceSecretMutation.mutateAsync(),
         },
         {
           id: "import-remote-secret",
-          labelKey: "overview.importRemoteSecretBoundary",
+          labelKey: "overview.importRemoteSecretAction",
           icon: "bell",
+          isPending: module.importRemoteSecretMutation.isPending,
+          run: () => module.importRemoteSecretDialog.onOpenChange(true),
         },
         {
           id: "merge-mystery-grants",
-          labelKey: "overview.mergeMysteryGrantsBoundary",
+          labelKey: "overview.mergeMysteryGrantsAction",
+          descriptionKey:
+            mysteryGrantItems.length === 0
+              ? "overview.mergeMysteryGrantsEmpty"
+              : undefined,
+          disabled: mysteryGrantItems.length === 0,
           icon: "merge",
+          isPending: module.mergeMysteryGrantsMutation.isPending,
+          run: () => module.mergeMysteryGrantsMutation.mutateAsync(),
         },
       ],
     },
@@ -289,6 +380,9 @@ export function useOverviewPageController(): OverviewPageController {
     health,
     metrics,
     dataPanels,
+    dialogs: {
+      importRemoteSecret: module.importRemoteSecretDialog,
+    },
     accountBoundaryAction: {
       id: activeAccount.hasAccount ? "switch-account" : "add-account",
       labelKey: activeAccount.hasAccount
@@ -297,4 +391,20 @@ export function useOverviewPageController(): OverviewPageController {
       icon: "user",
     },
   };
+}
+
+function toastOverviewError(
+  t: (key: string, options?: Record<string, unknown>) => string,
+  error: unknown,
+) {
+  toast({
+    title: t("overview.mysteryActionFailed"),
+    description:
+      error instanceof Error
+        ? error.message
+        : typeof error === "string"
+          ? error
+          : t("common.toastErrorGenericDesc"),
+    variant: "destructive",
+  });
 }

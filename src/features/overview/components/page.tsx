@@ -8,7 +8,7 @@ export function OverviewPage() {
   return (
     <>
       <OverviewShell controller={controller} />
-      <OverviewDialogsHost />
+      <OverviewDialogsHost dialogs={controller.dialogs} />
     </>
   );
 }

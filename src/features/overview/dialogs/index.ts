@@ -1,3 +1,1 @@
-export function OverviewDialogsHost() {
-  return null;
-}
+export { OverviewDialogsHost } from "./host";

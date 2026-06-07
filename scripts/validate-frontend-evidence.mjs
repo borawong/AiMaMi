@@ -810,12 +810,20 @@ function validateOverviewTypedPayloadGate() {
   const cachePath = join(repoRoot, "src", "features", "overview", "cache", "index.ts");
   const hooksPath = join(repoRoot, "src", "features", "overview", "hooks", "index.ts");
   const utilsPath = join(repoRoot, "src", "features", "overview", "utils", "index.ts");
+  const boundaryPanelPath = join(repoRoot, "src", "features", "overview", "panels", "boundary.tsx");
+  const dataPanelPath = join(repoRoot, "src", "features", "overview", "panels", "data.tsx");
+  const dialogsPath = join(repoRoot, "src", "features", "overview", "dialogs", "host.tsx");
+  const systemServicePath = join(repoRoot, "src", "services", "system", "index.ts");
   const payloadPanelPath = join(repoRoot, "src", "features", "overview", "panels", "payload.tsx");
   const recordsPanelPath = join(repoRoot, "src", "features", "overview", "panels", "records.tsx");
   const types = readRequired(typesPath);
   const cache = readRequired(cachePath);
   const hooks = readRequired(hooksPath);
   const utils = readRequired(utilsPath);
+  const boundaryPanel = readRequired(boundaryPanelPath);
+  const dataPanel = readRequired(dataPanelPath);
+  const dialogs = readRequired(dialogsPath);
+  const systemService = readRequired(systemServicePath);
   const payloadPanel = readRequired(payloadPanelPath);
   const recordsPanel = readRequired(recordsPanelPath);
 
@@ -828,10 +836,20 @@ function validateOverviewTypedPayloadGate() {
     types.includes("items: McpServerSummary[]") &&
     types.includes("payload: NotificationClientStatePayload | null") &&
     types.includes("payload: MysteryRouteGrant[] | null") &&
+    types.includes("OverviewImportRemoteSecretDialog") &&
+    types.includes("OverviewDialogController") &&
+    types.includes("run?: () => Promise<unknown> | unknown") &&
     types.includes("ModuleCacheEnvelope<TPayload>") &&
     cache.includes("createModuleCacheOwner<OverviewCachePayload>(\"overview\")") &&
+    cache.includes("OVERVIEW_MYSTERY_GRANTS_QUERY_KEY") &&
+    cache.includes("writeOverviewMysteryGrantsPayload") &&
     cache.includes("Omit<OverviewCacheEnvelope<TPayload>, \"moduleId\">") &&
     hooks.includes("writeOverviewAuthoritativePayload") &&
+    hooks.includes("systemService.getOrCreateRemoteDeviceSecret()") &&
+    hooks.includes("systemService.importRemoteDeviceSecretIfEmpty(secret.trim())") &&
+    hooks.includes("systemService.mergeMysteryUnlockGrants(") &&
+    hooks.includes("writeOverviewMysteryGrantsPayload(queryClient, payload)") &&
+    hooks.includes("queryKey: OVERVIEW_MYSTERY_GRANTS_QUERY_KEY") &&
     hooks.includes("envelopeData<CoreSnapshotPayload>") &&
     hooks.includes("envelopeData<UsageAnalyticsPayload>") &&
     hooks.includes("envelopeData<McpServerListPayload>") &&
@@ -842,6 +860,15 @@ function validateOverviewTypedPayloadGate() {
     hooks.includes("readArray<McpServerSummary>") &&
     hooks.includes("readArray<InstalledSkillSummary>") &&
     utils.includes("items: InstalledSkillSummary[]") &&
+    boundaryPanel.includes("onClick={() => void action.run?.()}") &&
+    boundaryPanel.includes("disabled={action.disabled || action.isPending}") &&
+    !boundaryPanel.includes("variant=\"outline\" disabled aria-label") &&
+    dataPanel.includes("remoteDeviceSecret") &&
+    dataPanel.includes("t(panel.remoteSecretLabelKey)") &&
+    dialogs.includes("OverviewDialogsHost({") &&
+    dialogs.includes("ImportRemoteSecretDialog") &&
+    dialogs.includes("dialog.onSubmit()") &&
+    systemService.includes("epoch_ms: grant.epochMs") &&
     payloadPanel.includes("OverviewPayloadSummaryValue") &&
     recordsPanel.includes("TItem extends OverviewPayloadSummaryValue") &&
     !types.includes("OverviewCacheEnvelope<TPayload = unknown>") &&

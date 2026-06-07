@@ -31,7 +31,7 @@ async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T
 function toMysteryRouteGrantArgs(grants: MysteryRouteGrant[]) {
   return grants.map((grant) => ({
     route: grant.route,
-    epochMs: grant.epochMs,
+    epoch_ms: grant.epochMs,
   }));
 }
 

@@ -80,6 +80,8 @@ function OverviewDataPanelFrame({
 }
 
 function OverviewDataPanelBody({ panel }: { panel: OverviewDataPanelModel }) {
+  const { t } = useTranslation();
+
   if (panel.kind === "rows") {
     return <OverviewInfoRows rows={panel.rows} />;
   }
@@ -107,8 +109,12 @@ function OverviewDataPanelBody({ panel }: { panel: OverviewDataPanelModel }) {
     return (
       <>
         <SafePayloadSummary value={panel.payload} />
+        {panel.remoteDeviceSecret ? (
+          <p className="mt-3 rounded-[8px] border border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
+            {t(panel.remoteSecretLabelKey)}
+          </p>
+        ) : null}
         <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border pt-3">
-          {/* 远端密钥和授权合并需要完整安全流程证据，当前只保留禁用边界入口。 */}
           {panel.boundaryActions.map((action) => (
             <BoundaryButton key={action.id} action={action} />
           ))}

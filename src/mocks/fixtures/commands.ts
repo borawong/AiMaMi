@@ -935,8 +935,25 @@ const notificationClientStateHandler: IpcCommandHandler = (context) => {
 
 const mysteryUnlockGrantsHandler: IpcCommandHandler = (context) => {
   const grants = context.args?.grants;
-  return withMockData(context, Array.isArray(grants) ? grants : []);
+  return withMockData(
+    context,
+    Array.isArray(grants) ? normalizeMysteryRouteGrants(grants) : [],
+  );
 };
+
+function normalizeMysteryRouteGrants(value: unknown[]): MysteryRouteGrant[] {
+  return value.flatMap((item) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) return [];
+    const record = item as Record<string, unknown>;
+    const route = typeof record.route === "string" ? record.route : "";
+    const epochValue = record.epochMs ?? record.epoch_ms;
+    const epochMs =
+      typeof epochValue === "number" && Number.isFinite(epochValue)
+        ? epochValue
+        : 0;
+    return route ? [{ route, epochMs }] : [];
+  });
+}
 
 const remoteDeviceSecretHandler: IpcCommandHandler = (context) =>
   withMockData(

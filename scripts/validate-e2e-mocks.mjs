@@ -531,7 +531,10 @@ function validateOverviewMockPayloadHandlers() {
     ["get_device_id", "deviceIdHandler"],
     ["get_mystery_unlock_grants", "mysteryUnlockGrantsHandler"],
     ["get_notification_client_state", "notificationClientStateHandler"],
+    ["get_or_create_remote_device_secret", "remoteDeviceSecretHandler"],
+    ["import_remote_device_secret_if_empty", "unitHandler"],
     ["load_snapshot", "coreSnapshotHandler"],
+    ["merge_mystery_unlock_grants", "mysteryUnlockGrantsHandler"],
     ["refresh_usage_snapshot", "coreSnapshotHandler"],
   ];
 
@@ -541,6 +544,9 @@ function validateOverviewMockPayloadHandlers() {
     "MysteryRouteGrant[]",
     "const coreSnapshotHandler",
     "const deviceIdHandler",
+    "const remoteDeviceSecretHandler",
+    "normalizeMysteryRouteGrants",
+    "record.epoch_ms",
   ]);
 
   for (const [command, handler] of overviewHandlers) {
