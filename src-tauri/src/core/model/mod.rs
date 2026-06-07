@@ -1,14 +1,6 @@
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct OperationIntent {
-    pub action: String,
-    pub implemented: bool,
-}
+// model 模块只保留领域模型和值对象的边界。
+// 当前没有证据支撑的业务字段不写入模型。
 
-impl OperationIntent {
-    pub(crate) fn pending(action: impl Into<String>) -> Self {
-        Self {
-            action: action.into(),
-            implemented: false,
-        }
-    }
-}
+pub(crate) struct DomainModelBoundary;
+
+pub(crate) trait DomainModelPort {}

@@ -1,23 +1,7 @@
-use crate::repository::adapter::FileSystemAdapter;
-use crate::repository::paths::{RepositoryPath, RepositoryPathContext};
-use std::sync::Arc;
+﻿// 这个文件只保留技能仓储边界，技能目录和备份目录不在骨架阶段解析。
 
-#[derive(Clone)]
-pub(crate) struct SkillsRepository {
-    _fs: Arc<dyn FileSystemAdapter>,
-    paths: RepositoryPathContext,
-}
+pub(crate) struct SkillsRepository;
 
-impl SkillsRepository {
-    pub(crate) fn new(fs: Arc<dyn FileSystemAdapter>, paths: RepositoryPathContext) -> Self {
-        Self { _fs: fs, paths }
-    }
+pub(crate) trait SkillsRepositoryBoundary {}
 
-    pub(crate) fn root_path(&self) -> String {
-        self.paths.contract_string(RepositoryPath::SkillsRoot)
-    }
-
-    pub(crate) fn backup_root_path(&self) -> String {
-        self.paths.contract_string(RepositoryPath::SkillBackupsRoot)
-    }
-}
+impl SkillsRepositoryBoundary for SkillsRepository {}

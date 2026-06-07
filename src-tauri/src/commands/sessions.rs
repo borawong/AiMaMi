@@ -1,19 +1,6 @@
-use crate::adapters::tauri::state::TauriAppState;
-use crate::commands::respond;
-use crate::contracts::{CoreEnvelope, SessionsDeletePayload, SessionsListPayload};
-use tauri::State;
+// sessions 命令文件只保留后端入口边界，当前不注册可调用命令。
+// 这一层以后只接收参数、取得应用状态并把请求转交给用例层。
 
-#[tauri::command]
-pub(crate) fn load_sessions(
-    state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<SessionsListPayload>, String> {
-    respond(state.services().sessions().load_sessions())
-}
+pub(crate) struct SessionsCommandBoundary;
 
-#[tauri::command]
-pub(crate) fn delete_sessions(
-    state: State<'_, TauriAppState>,
-    ids: Vec<String>,
-) -> Result<CoreEnvelope<SessionsDeletePayload>, String> {
-    respond(state.services().sessions().delete_sessions(ids))
-}
+pub(crate) trait SessionsCommandBoundaryPort {}

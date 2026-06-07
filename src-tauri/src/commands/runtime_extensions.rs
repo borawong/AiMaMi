@@ -1,50 +1,6 @@
-use crate::adapters::tauri::state::TauriAppState;
-use crate::commands::respond;
-use crate::contracts::{
-    CoreEnvelope, RuntimeExtensionConfigPayload, RuntimeExtensionListPayload,
-    RuntimeExtensionSettingsValue, RuntimeExtensionTogglePayload,
-};
-use tauri::State;
+// runtime_extensions 命令文件只保留后端入口边界，当前不注册可调用命令。
+// 这一层以后只接收参数、取得应用状态并把请求转交给用例层。
 
-#[tauri::command]
-pub(crate) fn list_plugins(
-    state: State<'_, TauriAppState>,
-) -> Result<CoreEnvelope<RuntimeExtensionListPayload>, String> {
-    respond(state.services().runtime_extensions().list_plugins())
-}
+pub(crate) struct RuntimeExtensionsCommandBoundary;
 
-#[tauri::command]
-pub(crate) fn toggle_plugin(
-    state: State<'_, TauriAppState>,
-    id: Option<String>,
-    enabled: bool,
-) -> Result<CoreEnvelope<RuntimeExtensionTogglePayload>, String> {
-    respond(
-        state
-            .services()
-            .runtime_extensions()
-            .toggle_plugin(id, enabled),
-    )
-}
-
-#[tauri::command]
-pub(crate) fn get_plugin_config(
-    state: State<'_, TauriAppState>,
-    id: Option<String>,
-) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, String> {
-    respond(state.services().runtime_extensions().get_plugin_config(id))
-}
-
-#[tauri::command]
-pub(crate) fn update_plugin_config(
-    state: State<'_, TauriAppState>,
-    id: Option<String>,
-    settings: Option<RuntimeExtensionSettingsValue>,
-) -> Result<CoreEnvelope<RuntimeExtensionConfigPayload>, String> {
-    respond(
-        state
-            .services()
-            .runtime_extensions()
-            .update_plugin_config(id, settings),
-    )
-}
+pub(crate) trait RuntimeExtensionsCommandBoundaryPort {}

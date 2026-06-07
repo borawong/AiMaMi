@@ -1,19 +1,7 @@
-use crate::repository::adapter::FileSystemAdapter;
-use crate::repository::paths::{RepositoryPath, RepositoryPathContext};
-use std::sync::Arc;
+﻿// 这个文件只保留配额仓储边界，历史记录来源和聚合规则等待证据补齐。
 
-#[derive(Clone)]
-pub(crate) struct QuotaRepository {
-    _fs: Arc<dyn FileSystemAdapter>,
-    paths: RepositoryPathContext,
-}
+pub(crate) struct QuotaRepository;
 
-impl QuotaRepository {
-    pub(crate) fn new(fs: Arc<dyn FileSystemAdapter>, paths: RepositoryPathContext) -> Self {
-        Self { _fs: fs, paths }
-    }
+pub(crate) trait QuotaRepositoryBoundary {}
 
-    pub(crate) fn source_path(&self) -> String {
-        self.paths.contract_string(RepositoryPath::QuotaSource)
-    }
-}
+impl QuotaRepositoryBoundary for QuotaRepository {}

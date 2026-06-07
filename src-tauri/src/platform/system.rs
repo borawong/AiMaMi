@@ -1,14 +1,5 @@
-use crate::application::ports::{PlatformInfoSnapshot, SystemInfoPort};
+// 系统信息文件只保留平台边界，不读取设备、主机名或操作系统细节。
+pub(crate) struct SystemInfoBoundary;
 
-pub(crate) struct CurrentSystem;
-
-impl SystemInfoPort for CurrentSystem {
-    fn system_info(&self) -> PlatformInfoSnapshot {
-        PlatformInfoSnapshot {
-            os: std::env::consts::OS.into(),
-            os_version: String::new(),
-            arch: std::env::consts::ARCH.into(),
-            hostname: String::new(),
-        }
-    }
-}
+// 后续恢复系统快照时，需要先定义脱敏字段和前端消费合同。
+pub(crate) trait SystemInfoBoundaryPort {}

@@ -20,6 +20,7 @@ const evidenceFiles = {
   routerHits: join(evidenceRoot, "router-hits.jsonl"),
   queryHits: join(evidenceRoot, "query-hits.jsonl"),
   controlFlow: join(evidenceRoot, "frontend-control-flow.jsonl"),
+  ipcContracts: join(evidenceRoot, "ipc-contracts.jsonl"),
   contractReport: join(evidenceRoot, "frontend-contract-report.md"),
 };
 
@@ -201,12 +202,13 @@ function assertEvidenceInputs(raw) {
   if (raw.routerHits.length === 0) failures.push("router-hits.jsonl 为空，无法读取 dumped router 证据");
   if (raw.queryHits.length === 0) failures.push("query-hits.jsonl 为空，无法读取 dumped queryKey 证据");
   if (raw.controlFlow.length === 0) failures.push("frontend-control-flow.jsonl 为空，无法读取 dumped UI 控制流证据");
+  if (raw.ipcContracts.length === 0) failures.push("ipc-contracts.jsonl 为空，无法校验 assets/index 命令来源登记");
   if (!contractReport.trim()) failures.push("frontend-contract-report.md 为空，无法读取 dumped IPC 合同");
 
   if (failures.length === before) {
     logPass(
       "raw frontend evidence 输入",
-      `frontend-files ${raw.frontendFiles.length}，router-hits ${raw.routerHits.length}，query-hits ${raw.queryHits.length}，control-flow ${raw.controlFlow.length}`,
+      `frontend-files ${raw.frontendFiles.length}，router-hits ${raw.routerHits.length}，query-hits ${raw.queryHits.length}，control-flow ${raw.controlFlow.length}，ipc-contracts ${raw.ipcContracts.length}`,
     );
   } else {
     logFail("raw frontend evidence 输入", "存在缺失或空文件");
@@ -299,6 +301,85 @@ function extractStringArray(block, field) {
   const match = block.match(new RegExp(`"${field}"\\s*:\\s*\\[([\\s\\S]*?)\\]`));
   if (!match) return [];
   return [...match[1].matchAll(/"([^"]+)"/g)].map((item) => item[1]).sort();
+}
+
+function extractTsConstArrayBlocks(source, constName) {
+  const marker = `export const ${constName} = [`;
+  const start = source.indexOf(marker);
+  if (start === -1) {
+    failures.push(`frontend manifest 缺少 ${constName} 显式清单`);
+    return [];
+  }
+
+  const arrayStart = source.indexOf("[", start);
+  const arrayEnd = source.indexOf("] as const", arrayStart);
+  if (arrayStart === -1 || arrayEnd === -1) {
+    failures.push(`frontend manifest ${constName} 清单边界无法解析`);
+    return [];
+  }
+
+  const blocks = [];
+  const body = source.slice(arrayStart + 1, arrayEnd);
+  let depth = 0;
+  let blockStart = -1;
+  let inString = false;
+  let escaping = false;
+
+  for (let index = 0; index < body.length; index += 1) {
+    const char = body[index];
+    if (inString) {
+      if (escaping) {
+        escaping = false;
+      } else if (char === "\\") {
+        escaping = true;
+      } else if (char === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === '"') {
+      inString = true;
+      continue;
+    }
+    if (char === "{") {
+      if (depth === 0) blockStart = index;
+      depth += 1;
+      continue;
+    }
+    if (char === "}") {
+      depth -= 1;
+      if (depth === 0 && blockStart !== -1) {
+        blocks.push(body.slice(blockStart, index + 1));
+        blockStart = -1;
+      }
+    }
+  }
+
+  if (depth !== 0) {
+    failures.push(`frontend manifest ${constName} 清单对象括号不闭合`);
+  }
+
+  return blocks;
+}
+
+function extractTsStringField(block, field) {
+  return block.match(new RegExp(`${field}:\\s*"([^"]*)"`))?.[1] ?? "";
+}
+
+function extractTsStringArrayField(block, field) {
+  const match = block.match(new RegExp(`${field}:\\s*\\[([\\s\\S]*?)\\]`));
+  if (!match) return [];
+  return [...match[1].matchAll(/"([^"]+)"/g)].map((item) => item[1]).sort();
+}
+
+function resolveRepoPath(repoPath) {
+  return join(repoRoot, ...repoPath.split("/"));
+}
+
+function hasAnyFragment(text, fragments) {
+  const lowerText = text.toLowerCase();
+  return fragments.some((fragment) => lowerText.includes(fragment.toLowerCase()));
 }
 
 function extractArgKeysForCommand(source, command) {
@@ -399,12 +480,203 @@ function validatePluginsDumpedContract() {
   }
 }
 
+function collectIndexAssetCommands(raw) {
+  const result = new Map();
+
+  const add = (file, command) => {
+    const normalizedFile = normalizePath(String(file ?? ""));
+    if (!/^assets\/index-[^/]+\.js$/.test(normalizedFile)) return;
+    if (typeof command !== "string" || command.length === 0) return;
+    const commands = result.get(normalizedFile) ?? new Set();
+    commands.add(command);
+    result.set(normalizedFile, commands);
+  };
+
+  for (const row of raw.ipcContracts) {
+    add(row.file, row.command);
+  }
+  for (const row of raw.controlFlow) {
+    add(row.component_file, row.terminal_call?.command);
+  }
+
+  return new Map(
+    [...result.entries()].map(([file, commands]) => [file, [...commands].sort()]),
+  );
+}
+
+function validateIndexAssetSourceManifest(raw, manifest) {
+  const before = failures.length;
+  const indexFiles = raw.frontendFiles
+    .map(normalizePath)
+    .filter((file) => /^assets\/index-[^/]+\.js$/.test(file));
+  const indexCommandsByFile = collectIndexAssetCommands(raw);
+  const blocks = extractTsConstArrayBlocks(
+    manifest,
+    "FRONTEND_DUMPED_INDEX_ASSET_SOURCES",
+  );
+  const requiredOwners = [
+    { owner: "app-shell", status: "source-only" },
+    { owner: "overview", status: "covered" },
+    { owner: "custom-instructions", status: "covered" },
+    { owner: "daemon-autoswitch", status: "covered" },
+    { owner: "tray-shell", status: "covered" },
+    { owner: "voice", status: "boundary-only" },
+  ];
+  const entries = blocks.map((block) => ({
+    owner: extractTsStringField(block, "owner"),
+    source: extractTsStringField(block, "source"),
+    status: extractTsStringField(block, "status"),
+    commands: extractTsStringArrayField(block, "commands"),
+    feature: extractTsStringField(block, "feature"),
+    cache: extractTsStringField(block, "cache"),
+    surface: extractTsStringField(block, "surface"),
+    note: extractTsStringField(block, "note"),
+  }));
+
+  for (const expected of requiredOwners) {
+    const entry = entries.find((item) => item.owner === expected.owner);
+    if (!entry) {
+      failures.push(`assets/index 来源登记缺少归属项：${expected.owner}`);
+      continue;
+    }
+    if (entry.status !== expected.status) {
+      failures.push(
+        `assets/index 来源登记 ${expected.owner} 状态必须为 ${expected.status}，当前为 ${entry.status || "空"}`,
+      );
+    }
+  }
+
+  for (const entry of entries) {
+    if (!/^assets\/index-[^/]+\.js$/.test(entry.source)) {
+      failures.push(`assets/index 来源登记 ${entry.owner || "未知归属"} 来源不是 index chunk：${entry.source || "空"}`);
+    }
+    if (!indexFiles.includes(entry.source)) {
+      failures.push(`assets/index 来源登记 ${entry.owner || "未知归属"} 来源不在 frontend-files：${entry.source || "空"}`);
+    }
+    if (entry.commands.length === 0) {
+      failures.push(`assets/index 来源登记 ${entry.owner || "未知归属"} 缺少命令清单`);
+    }
+
+    const rawCommands = indexCommandsByFile.get(entry.source) ?? [];
+    const missingCommands = entry.commands.filter((command) => !rawCommands.includes(command));
+    if (missingCommands.length > 0) {
+      failures.push(
+        `assets/index 来源登记 ${entry.owner || "未知归属"} 包含 raw 未命中的命令：${missingCommands.join(", ")}`,
+      );
+    }
+
+    for (const repoPath of [entry.feature, entry.cache, entry.surface].filter(Boolean)) {
+      if (!existsSync(resolveRepoPath(repoPath))) {
+        failures.push(`assets/index 来源登记 ${entry.owner || "未知归属"} 指向的归属文件不存在：${repoPath}`);
+      }
+    }
+
+    if (entry.owner === "voice") {
+      if (entry.status !== "boundary-only") {
+        failures.push("voice assets/index 来源登记必须是 boundary-only");
+      }
+      if (!entry.note.includes("用户要求的空骨架例外")) {
+        failures.push("voice assets/index 来源登记必须写明用户要求的空骨架例外");
+      }
+    }
+  }
+
+  if (failures.length === before) {
+    logPass("assets/index 来源显式登记", `${entries.length}/${requiredOwners.length}`);
+  } else {
+    logFail("assets/index 来源显式登记", "存在缺失或越界登记");
+  }
+}
+
+function validatePluginsRestorationMatrix(manifest) {
+  const before = failures.length;
+  const blocks = extractTsConstArrayBlocks(
+    manifest,
+    "FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX",
+  );
+  const matrixByCommand = new Map(
+    blocks.map((block) => [extractTsStringField(block, "command"), block]),
+  );
+  const rules = [
+    {
+      command: "get_plugin_config",
+      source: "assets/index-CL22l5v8.js",
+      service: "src/services/plugins/index.ts",
+      hook: "src/features/plugins/hooks/query.ts",
+      cache: "src/features/plugins/cache/index.ts",
+      panel: "src/features/plugins/panels/page.tsx",
+      hookFragments: ["pluginsService.getConfig", "useQuery"],
+      cacheFragments: ["PluginsConfigEnvelope", "PLUGINS_CONFIG", "writePluginsConfig"],
+      panelFragments: ["config", "settings"],
+    },
+    {
+      command: "update_plugin_config",
+      source: "assets/index-CL22l5v8.js",
+      service: "src/services/plugins/index.ts",
+      hook: "src/features/plugins/hooks/mutation.ts",
+      cache: "src/features/plugins/cache/index.ts",
+      panel: "src/features/plugins/panels/page.tsx",
+      hookFragments: ["pluginsService.updateConfig", "useMutation"],
+      cacheFragments: ["PluginsConfigEnvelope", "writePluginsConfig", "mutation-payload"],
+      panelFragments: ["config", "settings"],
+    },
+  ];
+
+  for (const rule of rules) {
+    const block = matrixByCommand.get(rule.command);
+    if (!block) {
+      failures.push(`plugins 模块还原矩阵缺少命令：${rule.command}`);
+      continue;
+    }
+
+    for (const field of ["source", "service", "hook", "cache", "panel"]) {
+      const actual = extractTsStringField(block, field);
+      if (actual !== rule[field]) {
+        failures.push(
+          `plugins 模块还原矩阵 ${rule.command} 的 ${field} 必须为 ${rule[field]}，当前为 ${actual || "空"}`,
+        );
+      }
+    }
+
+    const service = readRequired(resolveRepoPath(rule.service));
+    const hook = readRequired(resolveRepoPath(rule.hook));
+    const cache = readRequired(resolveRepoPath(rule.cache));
+    const panel = readRequired(resolveRepoPath(rule.panel));
+
+    if (!service.includes(`"${rule.command}"`)) {
+      failures.push(`plugins ${rule.command} 未落到 service wrapper：${rule.service}`);
+    }
+    for (const fragment of rule.hookFragments) {
+      if (!hook.includes(fragment)) {
+        failures.push(`plugins ${rule.command} 未落到具体 hook 文件 ${rule.hook}：缺少 ${fragment}`);
+      }
+    }
+    for (const fragment of rule.cacheFragments) {
+      if (!cache.includes(fragment)) {
+        failures.push(`plugins ${rule.command} 未落到具体 cache 文件 ${rule.cache}：缺少 ${fragment}`);
+      }
+    }
+    if (!hasAnyFragment(panel, rule.panelFragments)) {
+      failures.push(
+        `plugins ${rule.command} 未落到具体 panel 文件 ${rule.panel}：缺少配置 UI 线索`,
+      );
+    }
+  }
+
+  if (failures.length === before) {
+    logPass("plugins raw asset 到模块还原矩阵", `${rules.length}/${rules.length}`);
+  } else {
+    logFail("plugins raw asset 到模块还原矩阵", "存在只覆盖命令但未还原模块 owner 的缺口");
+  }
+}
+
 function validateVoiceManifestBoundary(expectedCommands) {
   const before = failures.length;
   const manifest = readRequired(frontendManifestPath);
-  const voiceBlocks = [...manifest.matchAll(/  \{\s+module: "voice",[\s\S]*?\n  \},/g)].map(
+  const allVoiceBlocks = [...manifest.matchAll(/  \{\s+module: "voice",[\s\S]*?\n  \},/g)].map(
     (match) => match[0],
   );
+  const voiceBlocks = allVoiceBlocks.filter((block) => /command: "[^"]+"/.test(block));
   const manifestCommands = unique(
     voiceBlocks
       .map((block) => block.match(/command: "([^"]+)"/)?.[1])
@@ -420,11 +692,33 @@ function validateVoiceManifestBoundary(expectedCommands) {
     "文本注入",
     "动作已覆盖",
   ];
+  const exceptionBlocks = extractTsConstArrayBlocks(
+    manifest,
+    "FRONTEND_DUMPED_BOUNDARY_EXCEPTIONS",
+  );
+  const voiceException = exceptionBlocks.find((block) => extractTsStringField(block, "module") === "voice");
 
   if (diff.missing.length > 0 || diff.extra.length > 0) {
     failures.push(
       `voice manifest 命令集合必须只登记空骨架边界：missing=${diff.missing.join(", ")} extra=${diff.extra.join(", ")}`,
     );
+  }
+
+  if (!voiceException) {
+    failures.push("voice manifest 缺少用户要求的 boundary-only 空骨架例外登记");
+  } else {
+    const status = extractTsStringField(voiceException, "status");
+    const source = extractTsStringField(voiceException, "source");
+    const reason = extractTsStringField(voiceException, "reason");
+    if (status !== "boundary-only") {
+      failures.push(`voice boundary-only 例外状态必须为 boundary-only，当前为 ${status || "空"}`);
+    }
+    if (source !== "用户要求") {
+      failures.push(`voice boundary-only 例外来源必须标为用户要求，当前为 ${source || "空"}`);
+    }
+    if (!reason.includes("空骨架") || !reason.includes("不得标为")) {
+      failures.push("voice boundary-only 例外原因必须说明空骨架且不得标为已还原");
+    }
   }
 
   for (const block of voiceBlocks) {
@@ -801,10 +1095,12 @@ const raw = {
   routerHits: parseJsonlFile(evidenceFiles.routerHits),
   queryHits: parseJsonlFile(evidenceFiles.queryHits),
   controlFlow: parseJsonlFile(evidenceFiles.controlFlow),
+  ipcContracts: parseJsonlFile(evidenceFiles.ipcContracts),
 };
 
 assertEvidenceInputs(raw);
 
+const frontendManifest = readRequired(frontendManifestPath);
 const contractReport = readRequired(evidenceFiles.contractReport);
 const rawCommands = extractRawCommands(contractReport);
 const contractCommands = extractContractCommands(readRequired(ipcContractPath));
@@ -821,6 +1117,8 @@ assertExactSet("IPC 合同覆盖 raw dumped 命令", rawCommands, contractComman
 assertCommandsMentioned("service wrapper 覆盖 raw dumped 命令", serviceRequiredCommands, serviceText);
 assertFeatureContracts(rawCommands);
 validatePluginsDumpedContract();
+validatePluginsRestorationMatrix(frontendManifest);
+validateIndexAssetSourceManifest(raw, frontendManifest);
 validateVoiceReopenedContract();
 validateRawPageRouteAndContent(rawModules);
 validateRouterEvidence(rawModules, raw.routerHits);

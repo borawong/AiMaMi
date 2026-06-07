@@ -6,14 +6,6 @@ mod core;
 mod platform;
 mod repository;
 
-pub fn run() {
-    adapters::tauri::run();
-}
-
-pub fn run_daemon_once_cli() -> Result<(), String> {
-    application::service::BackendServices::default()
-        .daemon()
-        .run_once_cli()
-        .map(|_| ())
-        .map_err(|error| error.public_message().to_owned())
-}
+// 库入口只保留后端六边形装配边界，当前不启动运行时或注册命令。
+// 后续入口恢复必须通过 commands、application、core、platform 和 repository 的边界协作。
+pub struct BackendLibraryBoundary;

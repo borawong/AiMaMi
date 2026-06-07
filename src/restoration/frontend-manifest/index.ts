@@ -61,6 +61,191 @@ export interface SliceDDumpedCommandCoverage {
   note: string;
 }
 
+export type FrontendDumpedIndexAssetOwner =
+  | "app-shell"
+  | "overview"
+  | "custom-instructions"
+  | "daemon-autoswitch"
+  | "tray-shell"
+  | "voice";
+
+export type FrontendDumpedIndexAssetStatus =
+  | "covered"
+  | "boundary-only"
+  | "source-only";
+
+export interface FrontendDumpedIndexAssetSource {
+  owner: FrontendDumpedIndexAssetOwner;
+  source: string;
+  status: FrontendDumpedIndexAssetStatus;
+  commands: readonly string[];
+  feature: string;
+  cache: string;
+  surface: string;
+  note: string;
+}
+
+export interface FrontendDumpedModuleRestorationRequirement {
+  module: "plugins";
+  command: string;
+  source: string;
+  status: "covered";
+  service: string;
+  hook: string;
+  cache: string;
+  panel: string;
+  note: string;
+}
+
+export interface FrontendDumpedBoundaryException {
+  module: "voice";
+  status: "boundary-only";
+  source: string;
+  commandSource: string;
+  reason: string;
+}
+
+export const FRONTEND_DUMPED_BOUNDARY_EXCEPTIONS = [
+  {
+    module: "voice",
+    status: "boundary-only",
+    source: "用户要求",
+    commandSource: "internal voice gap 34 commands",
+    reason:
+      "用户要求 voice 仅保留空骨架边界，不按 dumped mock 业务做真实还原，也不得标为 covered 或 restored。",
+  },
+] as const satisfies readonly FrontendDumpedBoundaryException[];
+
+export const FRONTEND_DUMPED_INDEX_ASSET_SOURCES = [
+  {
+    owner: "app-shell",
+    source: "assets/index-CL22l5v8.js",
+    status: "source-only",
+    commands: [
+      "check_update_installability",
+      "graceful_restart_for_update",
+      "open_path",
+      "get_mystery_unlock_grants",
+      "merge_mystery_unlock_grants",
+    ],
+    feature: "src/entry/root.tsx",
+    cache: "src/app/runtime/events.ts",
+    surface: "src/app/providers/prompt.tsx",
+    note:
+      "登记 app shell 在 index chunk 中的启动、更新、提示和全局授权入口；它不是模块还原完成证明，需由入口和 runtime owner 承接。",
+  },
+  {
+    owner: "overview",
+    source: "assets/index-CL22l5v8.js",
+    status: "covered",
+    commands: [
+      "load_snapshot",
+      "refresh_usage_snapshot",
+      "load_usage_analytics",
+    ],
+    feature: "src/features/overview/hooks/index.ts",
+    cache: "src/features/overview/cache/index.ts",
+    surface: "src/features/overview/panels/index.ts",
+    note:
+      "overview 不是独立 page chunk，而是 index chunk 内的仪表盘来源，必须由 overview hooks/cache/panels 承接。",
+  },
+  {
+    owner: "custom-instructions",
+    source: "assets/index-CL22l5v8.js",
+    status: "covered",
+    commands: [
+      "load_custom_instruction_state",
+      "preview_custom_instruction_apply",
+      "apply_custom_instruction",
+      "clear_custom_instruction_block",
+      "rollback_custom_instruction",
+    ],
+    feature: "src/features/custom-instructions/hooks/index.ts",
+    cache: "src/features/custom-instructions/cache/index.ts",
+    surface: "src/features/custom-instructions/panels/index.ts",
+    note:
+      "custom-instructions 来源在 index chunk，门禁必须检查模块 hooks/cache/panels，而不是只看 IPC 字符串。",
+  },
+  {
+    owner: "daemon-autoswitch",
+    source: "assets/index-CL22l5v8.js",
+    status: "covered",
+    commands: [
+      "load_bootstrap_state",
+      "load_pending_auto_switch",
+      "dismiss_pending_auto_switch",
+      "confirm_pending_auto_switch",
+      "confirm_pending_auto_switch_and_restart_codex",
+      "run_daemon_once",
+      "set_auto_switch",
+      "configure_auto_switch",
+    ],
+    feature: "src/features/daemon-autoswitch/hooks/index.ts",
+    cache: "src/features/daemon-autoswitch/cache/index.ts",
+    surface: "src/features/daemon-autoswitch/panels/index.ts",
+    note:
+      "daemon-autoswitch 的 bootstrap、pending 和 runner 来源在 index chunk，需显式连接模块 state/cache/UI owner。",
+  },
+  {
+    owner: "tray-shell",
+    source: "assets/index-CL22l5v8.js",
+    status: "covered",
+    commands: [
+      "get_notification_client_state",
+      "focus_main_window",
+    ],
+    feature: "src/features/tray-shell/hooks/index.ts",
+    cache: "src/features/tray-shell/cache/index.ts",
+    surface: "src/features/tray-shell/panels/index.ts",
+    note:
+      "tray shell 来源在 index chunk，必须落到托盘外壳 hooks/cache/panels owner。",
+  },
+  {
+    owner: "voice",
+    source: "assets/index-CL22l5v8.js",
+    status: "boundary-only",
+    commands: [
+      "load_voice_workspace",
+      "load_voice_runtime_status",
+      "start_voice_capture",
+      "stop_voice_capture",
+      "inject_voice_text",
+    ],
+    feature: "src/features/voice/contract.ts",
+    cache: "src/features/voice/cache/index.ts",
+    surface: "src/features/voice/Content.tsx",
+    note:
+      "用户要求的空骨架例外：voice 来源只登记 boundary-only，不要求真实 hooks/panels/cache 业务还原，也不得误报为 covered 或 restored。",
+  },
+] as const satisfies readonly FrontendDumpedIndexAssetSource[];
+
+export const FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX = [
+  {
+    module: "plugins",
+    command: "get_plugin_config",
+    source: "assets/index-CL22l5v8.js",
+    status: "covered",
+    service: "src/services/plugins/index.ts",
+    hook: "src/features/plugins/hooks/query.ts",
+    cache: "src/features/plugins/cache/index.ts",
+    panel: "src/features/plugins/panels/page.tsx",
+    note:
+      "get_plugin_config 必须落到 plugins query hook、config cache 和具体 panel；只在 service/type/contract 出现不算还原。",
+  },
+  {
+    module: "plugins",
+    command: "update_plugin_config",
+    source: "assets/index-CL22l5v8.js",
+    status: "covered",
+    service: "src/services/plugins/index.ts",
+    hook: "src/features/plugins/hooks/mutation.ts",
+    cache: "src/features/plugins/cache/index.ts",
+    panel: "src/features/plugins/panels/page.tsx",
+    note:
+      "update_plugin_config 必须落到 plugins mutation hook、mutation payload cache 和具体 panel；只覆盖命令字符串不算还原。",
+  },
+] as const satisfies readonly FrontendDumpedModuleRestorationRequirement[];
+
 export const FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE = [
   {
     module: "accounts",

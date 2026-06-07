@@ -1,11 +1,6 @@
-mod backend_skeleton;
+// dto 模块只保留领域内部数据转换边界。
+// 这里不是对外合同，字段需要由领域证据或明确占位来驱动。
 
-pub(crate) use backend_skeleton::*;
+pub(crate) mod backend_skeleton;
 
-pub(crate) fn name_from_path(path: &str) -> Option<String> {
-    path.rsplit(['/', '\\'])
-        .next()
-        .map(str::trim)
-        .filter(|value| !value.is_empty())
-        .map(ToOwned::to_owned)
-}
+pub(crate) struct CoreDtoBoundary;

@@ -1,3 +1,6 @@
+// commands 聚合后端入口边界，当前只声明空骨架模块。
+// 具体命令注册需要等待合同、用例和前端调用契约同时补齐。
+
 pub(crate) mod accounts;
 pub(crate) mod analytics;
 pub(crate) mod custom_instructions;
@@ -9,14 +12,3 @@ pub(crate) mod sessions;
 pub(crate) mod skills;
 pub(crate) mod system;
 pub(crate) mod voice;
-
-use crate::contracts::CoreEnvelope;
-use crate::core::error::CoreError;
-use serde::Serialize;
-
-fn respond<T>(result: Result<CoreEnvelope<T>, CoreError>) -> Result<CoreEnvelope<T>, String>
-where
-    T: Serialize + Default,
-{
-    Ok(result.unwrap_or_else(|error| CoreEnvelope::failure(T::default(), &error)))
-}

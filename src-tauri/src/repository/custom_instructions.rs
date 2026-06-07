@@ -1,20 +1,7 @@
-use crate::repository::adapter::FileSystemAdapter;
-use crate::repository::paths::{RepositoryPath, RepositoryPathContext};
-use std::sync::Arc;
+﻿// 这个文件只保留自定义指令仓储边界，不承载解析、读取或写入行为。
 
-#[derive(Clone)]
-pub(crate) struct CustomInstructionsRepository {
-    _fs: Arc<dyn FileSystemAdapter>,
-    paths: RepositoryPathContext,
-}
+pub(crate) struct CustomInstructionsRepository;
 
-impl CustomInstructionsRepository {
-    pub(crate) fn new(fs: Arc<dyn FileSystemAdapter>, paths: RepositoryPathContext) -> Self {
-        Self { _fs: fs, paths }
-    }
+pub(crate) trait CustomInstructionsRepositoryBoundary {}
 
-    pub(crate) fn source_path(&self) -> String {
-        self.paths
-            .contract_string(RepositoryPath::CustomInstructionsSource)
-    }
-}
+impl CustomInstructionsRepositoryBoundary for CustomInstructionsRepository {}

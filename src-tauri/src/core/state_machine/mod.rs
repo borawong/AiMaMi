@@ -1,23 +1,6 @@
-use crate::core::error::CoreError;
+// state_machine 模块只保留领域状态转换的边界。
+// 状态事实、转移条件和并发保护语义需要证据补齐后再落地。
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum OperationState {
-    Idle,
-    Running,
-    Completed,
-}
+pub(crate) struct StateMachineBoundary;
 
-pub(crate) fn transition(
-    current: OperationState,
-    next: OperationState,
-) -> Result<OperationState, CoreError> {
-    match (current, next) {
-        (OperationState::Idle, OperationState::Running)
-        | (OperationState::Running, OperationState::Completed)
-        | (OperationState::Completed, OperationState::Idle) => Ok(next),
-        _ => Err(CoreError::domain(
-            "invalid_state_transition",
-            "状态转换不合法。",
-        )),
-    }
-}
+pub(crate) trait StateMachinePort {}

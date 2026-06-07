@@ -977,8 +977,8 @@ function validatePluginsDeepOwnerBoundaries() {
   const sequencePath = join(pluginsRoot, "cache", "sequence.ts");
   const typesPath = join(pluginsRoot, "types", "index.ts");
   const componentPagePath = join(pluginsRoot, "components", "page.tsx");
+  const panelPagePath = join(pluginsRoot, "panels", "page.tsx");
   const dialogsIndexPath = join(pluginsRoot, "dialogs", "index.ts");
-  const configDialogPath = join(pluginsRoot, "dialogs", "config.tsx");
   const panelPaths = [
     ...walkFiles(join(pluginsRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
     ...walkFiles(join(pluginsRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
@@ -993,30 +993,10 @@ function validatePluginsDeepOwnerBoundaries() {
   const cacheSequence = existsSync(sequencePath) ? readRequired(sequencePath) : "";
   const types = readRequired(typesPath);
   const componentPage = readRequired(componentPagePath);
+  const panelPage = readRequired(panelPagePath);
   const dialogsIndex = readRequired(dialogsIndexPath);
   const panelOwnerText = panelPaths.map((file) => readRequired(file)).join("\n");
   const cacheOwnerText = `${cache}\n${cacheSequence}`;
-  const visibleOwnerText = [
-    query,
-    refresh,
-    mutation,
-    page,
-    componentPage,
-    panelOwnerText,
-    dialogsIndex,
-  ].join("\n");
-  const configUiSignals = [
-    "PluginConfigDialog",
-    "configDialog",
-    "openForPlugin",
-    "loadConfigMutation",
-    "updatePluginConfigMutation",
-    "pluginsService.getConfig",
-    "pluginsService.updateConfig",
-    "getPluginConfig",
-    "updatePluginConfig",
-    "pluginConfigQueryKey",
-  ];
 
   assertOnlyBarrelReExports("src/features/plugins/hooks/index.ts", hooksIndex, [
     "query",
@@ -1038,13 +1018,16 @@ function validatePluginsDeepOwnerBoundaries() {
     "PLUGINS_LIST_QUERY_KEY",
     "pluginsService.list",
     "writePluginsListQueryPayload",
+    "usePluginConfigQuery",
+    "pluginsService.getConfig",
+    "getPluginsConfigQueryKey",
+    "writePluginsConfigQueryPayload",
   ]);
   assertNotMatches("src/features/plugins/hooks/query.ts", query, [
     [/\buseMutation\b/, "plugins query owner 不得 owning mutation 或 refresh mutation"],
     [/\buse(State|Reducer)\b/, "plugins query owner 不得 owning 页面短生命周期 UI state"],
     [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "plugins query owner 不得 owning cache 写入、失效或取消"],
     [/toast\(|useToast|navigator\.clipboard/, "plugins query owner 不得 owning toast 或 UI 组合"],
-    [/pluginsService\.(getConfig|updateConfig)|getPluginConfig|updatePluginConfig|PluginConfigDialog|configDialog|pluginConfigQueryKey/, "plugins query owner 不得消费缺少可见证据的 config UI/service"],
     [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "plugins query owner 必须经 plugins service wrapper，不得直接拼 IPC"],
   ]);
 
@@ -1063,7 +1046,7 @@ function validatePluginsDeepOwnerBoundaries() {
     [/\buse(State|Reducer|Effect|Memo)\b/, "plugins refresh owner 不得 owning page/controller UI state"],
     [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "plugins refresh owner 必须把 cache 写入、失效和取消交给 cache helper"],
     [/writePluginsMutationPayload|optimisticallyUpdatePluginsToggle|rollbackPluginsToggle/, "plugins refresh owner 不得 owning toggle mutation payload、optimistic update 或 rollback"],
-    [/pluginsService\.(getConfig|updateConfig)|getPluginConfig|updatePluginConfig|PluginConfigDialog|configDialog|pluginConfigQueryKey/, "plugins refresh owner 不得消费缺少可见证据的 config UI/service"],
+    [/pluginsService\.(getConfig|updateConfig)|getPluginConfig|updatePluginConfig/, "plugins refresh owner 不得消费 config service"],
     [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "plugins refresh owner 必须经 plugins service wrapper，不得直接拼 IPC"],
   ]);
 
@@ -1074,13 +1057,16 @@ function validatePluginsDeepOwnerBoundaries() {
     "optimisticallyUpdatePluginsToggle",
     "rollbackPluginsToggle",
     "writePluginsMutationPayload",
+    "usePluginsConfigMutation",
+    "pluginsService.updateConfig",
+    "beginPluginsConfigMutation",
+    "rollbackPluginsConfig",
   ]);
   assertNotMatches("src/features/plugins/hooks/mutation.ts", mutation, [
     [/\buseQuery\b/, "plugins mutation owner 不得 owning query"],
     [/\buse(State|Reducer|Effect|Memo)\b/, "plugins mutation owner 不得 owning page/controller UI state"],
     [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "plugins mutation owner 必须把 optimistic update、rollback、cache 写入和失效交给 cache helper"],
     [/writePluginsRefreshPayload|pluginsService\.list/, "plugins mutation owner 不得 owning refresh/list 请求"],
-    [/pluginsService\.(getConfig|updateConfig)|getPluginConfig|updatePluginConfig|PluginConfigDialog|configDialog|pluginConfigQueryKey/, "plugins mutation owner 不得消费缺少可见证据的 config UI/service"],
     [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "plugins mutation owner 必须经 plugins service wrapper，不得直接拼 IPC"],
   ]);
 
@@ -1090,6 +1076,14 @@ function validatePluginsDeepOwnerBoundaries() {
     "usePluginsListQuery",
     "usePluginsRefreshMutation",
     "usePluginsToggleMutation",
+    "usePluginConfigQuery",
+    "usePluginsConfigMutation",
+    "selectedPluginId",
+    "selectedPlugin",
+    "configDraft",
+    "configErrorKey",
+    "setConfigDraft",
+    "saveConfig",
   ]);
   assertNotMatches("src/features/plugins/hooks/page.ts", page, [
     [/\buse(Query|Mutation|QueryClient)\b/, "plugins page/controller 只能组合 query/refresh/mutation hook，不得直接 owning TanStack"],
@@ -1102,6 +1096,15 @@ function validatePluginsDeepOwnerBoundaries() {
     "export interface PluginsPageAction",
     "export interface PluginsTogglePluginAction",
     "export interface PluginsPagePanelProps",
+    "export interface PluginsConfigPanelController",
+    "selectedPluginId",
+    "selectedPlugin",
+    "configQuery",
+    "configDraft",
+    "configErrorKey",
+    "canSaveConfig",
+    "setConfigDraft",
+    "saveConfig",
   ]);
   if (
     panelOwnerText.includes("ReturnType<typeof usePluginsPageController>") ||
@@ -1121,6 +1124,14 @@ function validatePluginsDeepOwnerBoundaries() {
     "writePluginsMutationPayload",
     "invalidatePluginsContractQueries",
     "invalidateQueries({ queryKey: PLUGINS_LIST_QUERY_KEY })",
+    "PLUGINS_CONFIG_QUERY_ROOT",
+    "getPluginsConfigQueryKey",
+    "writePluginsConfigQueryPayload",
+    "beginPluginsConfigMutation",
+    "rollbackPluginsConfig",
+    "isPluginsConfigEnvelope",
+    "queryClient.setQueryData(getPluginsConfigQueryKey",
+    "invalidateQueries({ queryKey: PLUGINS_CONFIG_QUERY_ROOT })",
   ]);
   if (
     !cacheOwnerText.includes("nextPluginsCacheSequence") ||
@@ -1138,14 +1149,18 @@ function validatePluginsDeepOwnerBoundaries() {
     [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "plugins cache owner 必须保留 typed payload"],
   ]);
 
-  for (const signal of configUiSignals) {
-    if (visibleOwnerText.includes(signal)) {
-      failures.push(`plugins 缺少可见配置 UI 证据，hook/page/panel/dialog 不得消费 ${signal}`);
-    }
-  }
-  if (existsSync(configDialogPath)) {
-    failures.push("plugins 缺少可见配置 UI 证据，不得保留 dialogs/config.tsx");
-  }
+  assertIncludes("src/features/plugins/panels/page.tsx", panelPage, [
+    "PluginsConfigSection",
+    "Textarea",
+    "Button",
+    "selectedPlugin",
+    "configDraft",
+    "configErrorKey",
+    "setConfigDraft",
+    "saveConfig",
+    "plugins.configJson",
+    "plugins.saveConfig",
+  ]);
 
   console.log("PASS plugins 深层 owner 边界门禁已执行：hooks/index、query、refresh、mutation、page、cache、types、panels");
 }
