@@ -435,9 +435,18 @@ function validateRoutesAndLocales(controlFlowRows) {
 
 function validateKnownInternalFrontendGates() {
   const accountsHooksPath = join(repoRoot, "src", "features", "accounts", "hooks", "index.ts");
+  const accountsQueryPath = join(repoRoot, "src", "features", "accounts", "hooks", "query.ts");
+  const accountsMutationPath = join(repoRoot, "src", "features", "accounts", "hooks", "mutation.ts");
+  const accountsActionPath = join(repoRoot, "src", "features", "accounts", "hooks", "action.ts");
+  const accountsPageHookPath = join(repoRoot, "src", "features", "accounts", "hooks", "page.ts");
   const accountsCachePath = join(repoRoot, "src", "features", "accounts", "cache", "index.ts");
   const accountsTypesPath = join(repoRoot, "src", "features", "accounts", "types", "index.ts");
   const accountsServicePath = join(repoRoot, "src", "services", "accounts", "index.ts");
+  const accountsControllerConsumerPaths = [
+    ...walkFiles(join(repoRoot, "src", "features", "accounts", "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(repoRoot, "src", "features", "accounts", "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(repoRoot, "src", "features", "accounts", "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
   const sessionsHooksPath = join(repoRoot, "src", "features", "sessions", "hooks", "index.ts");
   const sessionsCachePath = join(repoRoot, "src", "features", "sessions", "cache", "index.ts");
   const sessionsTypesPath = join(repoRoot, "src", "features", "sessions", "types", "index.ts");
@@ -526,10 +535,17 @@ function validateKnownInternalFrontendGates() {
   const skillsTypesPath = join(repoRoot, "src", "features", "skills", "types", "index.ts");
   const skillsPanelPath = join(repoRoot, "src", "features", "skills", "panels", "page.tsx");
 
-  const accountsHooks = readRequired(accountsHooksPath);
+  const accountsHooksIndex = readRequired(accountsHooksPath);
+  const accountsQuery = readRequired(accountsQueryPath);
+  const accountsMutation = readRequired(accountsMutationPath);
+  const accountsAction = readRequired(accountsActionPath);
+  const accountsPageHook = readRequired(accountsPageHookPath);
   const accountsCache = readRequired(accountsCachePath);
   const accountsTypes = readRequired(accountsTypesPath);
   const accountsService = readRequired(accountsServicePath);
+  const accountsControllerConsumerText = accountsControllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
   const sessionsHooks = readRequired(sessionsHooksPath);
   const sessionsCache = readRequired(sessionsCachePath);
   const sessionsTypes = readRequired(sessionsTypesPath);
@@ -569,7 +585,43 @@ function validateKnownInternalFrontendGates() {
   const skillsTypes = readRequired(skillsTypesPath);
   const skillsPanel = readRequired(skillsPanelPath);
 
-  const accountsTypedPayloadOk =
+  const accountsHooksIndexReExportPattern =
+    /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const accountsHooksIndexReExports = [...accountsHooksIndex.matchAll(accountsHooksIndexReExportPattern)].map(
+    (match) => match[1],
+  );
+  const accountsHooksIndexAllowedReExports = new Set([
+    "./query",
+    "./mutation",
+    "./action",
+    "./page",
+  ]);
+  const accountsHooksIndexOnlyReExports =
+    accountsHooksIndex
+      .replace(accountsHooksIndexReExportPattern, "")
+      .replace(/\/\/.*$/gm, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .trim() === "" &&
+    ["query", "mutation", "action", "page"].every(
+      (owner) =>
+        accountsHooksIndex.includes(`from "./${owner}"`) ||
+        accountsHooksIndex.includes(`from './${owner}'`),
+    ) &&
+    accountsHooksIndexReExports.every((reExport) =>
+      accountsHooksIndexAllowedReExports.has(reExport),
+    );
+  if (!accountsHooksIndexOnlyReExports) {
+    const extraReExports = accountsHooksIndexReExports.filter(
+      (reExport) => !accountsHooksIndexAllowedReExports.has(reExport),
+    );
+    failures.push(
+      `src/features/accounts/hooks/index.ts 只能 re-export ./query、./mutation、./action、./page${
+        extraReExports.length > 0 ? `；额外导出：${extraReExports.join(", ")}` : ""
+      }`,
+    );
+  }
+
+  const accountsSplitOwnerOk =
     accountsService.includes("CoreEnvelope<AccountMonitorPayload>") &&
     accountsService.includes("CoreEnvelope<SwitchPayload>") &&
     accountsService.includes("CoreEnvelope<RemovePayload>") &&
@@ -583,15 +635,87 @@ function validateKnownInternalFrontendGates() {
     accountsTypes.includes("export type AccountsMutationEnvelope") &&
     accountsTypes.includes("export type AccountsSnapshotEnvelope") &&
     accountsTypes.includes("export type AccountsCachePayload") &&
-    accountsHooks.includes("AccountsMutationEnvelope") &&
-    accountsHooks.includes("AccountsSnapshotEnvelope") &&
-    !accountsHooks.includes("writeMutationPayload = (\n    payload: unknown") &&
-    !accountsHooks.includes("writeSnapshotPayload = (\n    payload: unknown") &&
-    !accountsCache.includes("ModuleCacheEnvelope<unknown>");
-  if (!accountsTypedPayloadOk) {
-    failures.push("accounts IPC payload owner 未收口到 typed envelope、模块 types 和 cache helper");
-  } else {
-    console.log("PASS accounts typed IPC payload owner：service/hook/cache");
+    accountsTypes.includes("export interface AccountsPageQueries") &&
+    accountsTypes.includes("export interface AccountsPageMutations") &&
+    accountsTypes.includes("export interface AccountsPathActions") &&
+    accountsTypes.includes("export interface AccountsModuleController") &&
+    accountsTypes.includes("export interface AccountsPageController") &&
+    accountsCache.includes("createModuleCacheOwner<AccountsCachePayload>(\"accounts\")") &&
+    accountsCache.includes("writeAccountsSnapshotPayload") &&
+    accountsCache.includes("writeAccountsMutationPayload") &&
+    accountsCache.includes("invalidateAccountsDumpedQueries") &&
+    accountsCache.includes("setQueryData<ModuleCacheEnvelope<AccountsCachePayload>>") &&
+    accountsCache.includes("mutationFenceAt") &&
+    accountsCache.includes("isStaleEnvelope") &&
+    accountsQuery.includes("useAccountsCacheController") &&
+    accountsQuery.includes("useModuleCacheController(AccountsCache)") &&
+    accountsQuery.includes("useAccountsPageQueries") &&
+    accountsQuery.includes("useQuery") &&
+    accountsQuery.includes("useQueryClient") &&
+    accountsQuery.includes("accountsService.loadSnapshot(true)") &&
+    accountsQuery.includes("AccountsAuthoritativeQueryKeys") &&
+    accountsQuery.includes("AccountsDumpedQueryKeys") &&
+    accountsQuery.includes("writeAccountsSnapshotPayload") &&
+    accountsQuery.includes("AccountsSnapshotEnvelope") &&
+    accountsMutation.includes("useAccountsPageMutations") &&
+    accountsMutation.includes("useMutation") &&
+    accountsMutation.includes("useQueryClient") &&
+    accountsMutation.includes("accountsService.beginAddAccountAttachMonitor") &&
+    accountsMutation.includes("accountsService.refreshUsageSnapshot") &&
+    accountsMutation.includes("accountsService.switchAccount") &&
+    accountsMutation.includes("accountsService.switchAccountAndRestartCodex") &&
+    accountsMutation.includes("accountsService.removeAccounts") &&
+    accountsMutation.includes("accountsService.logout") &&
+    accountsMutation.includes("accountsService.importChatGptSessionAccount") &&
+    accountsMutation.includes("accountsService.exportAccountsToFile") &&
+    accountsMutation.includes("accountsService.previewAccountImport") &&
+    accountsMutation.includes("accountsService.importAccountsFromFile") &&
+    accountsMutation.includes("writeAccountsMutationPayload") &&
+    accountsMutation.includes("writeAccountsSnapshotPayload") &&
+    accountsMutation.includes("invalidateAccountsDumpedQueries") &&
+    accountsAction.includes("useAccountsPathActions") &&
+    accountsAction.includes("accountsService.openPath") &&
+    accountsPageHook.includes("useAccountsPageController") &&
+    accountsPageHook.includes("AccountsPageController") &&
+    accountsPageHook.includes("useAccountsPageQueries") &&
+    accountsPageHook.includes("useAccountsPageMutations") &&
+    accountsPageHook.includes("useAccountsPathActions") &&
+    accountsPageHook.includes("useState") &&
+    accountsPageHook.includes("useMemo") &&
+    accountsPageHook.includes("envelopeData") &&
+    accountsPageHook.includes("readArray<AccountRecord>") &&
+    !accountsTypes.includes("AccountsCacheEnvelope<TPayload = unknown>") &&
+    !accountsTypes.includes("ModuleCacheEnvelope<unknown>") &&
+    !accountsTypes.includes("payload: unknown") &&
+    !accountsTypes.includes("ReturnType<typeof useAccountsPageController>") &&
+    !accountsTypes.includes("ReturnType<typeof useAccountsModule>") &&
+    !accountsCache.includes("createModuleCacheOwner(\"accounts\")") &&
+    !accountsCache.includes("ModuleCacheEnvelope<unknown>") &&
+    !accountsCache.includes("payload: unknown") &&
+    !/@\/services\/accounts|@\/services\/system|@\/services\/maintenance|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|accountsService\.|systemService\.|maintenanceService\.|invokeIpc|invoke\(/.test(accountsCache) &&
+    !/\buseMutation\b/.test(accountsQuery) &&
+    !/\b(useState|useReducer|useMemo|useCallback)\b/.test(accountsQuery) &&
+    !/\b(setQueryData|invalidateQueries|cancelQueries|writeAccountsMutationPayload)\b/.test(accountsQuery) &&
+    !/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/.test(accountsQuery) &&
+    !/ModuleCacheEnvelope<unknown>|payload:\s*unknown/.test(accountsQuery) &&
+    !/\buseQuery\b/.test(accountsMutation) &&
+    !/\b(useState|useReducer|useEffect|useMemo|useCallback)\b/.test(accountsMutation) &&
+    !/\bsetQueryData\b/.test(accountsMutation) &&
+    !/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/.test(accountsMutation) &&
+    !/ModuleCacheEnvelope<unknown>|payload:\s*unknown|useMutation<unknown/.test(accountsMutation) &&
+    !/\b(useQuery|useMutation|useQueryClient|setQueryData|invalidateQueries|cancelQueries|writeAccounts|Accounts[A-Za-z]*QueryKeys)\b/.test(accountsAction) &&
+    !/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/.test(accountsAction) &&
+    !/\buse(Query|Mutation|QueryClient)\b/.test(accountsPageHook) &&
+    !/\b(setQueryData|invalidateQueries|cancelQueries|writeAccounts|Accounts[A-Za-z]*QueryKeys)\b/.test(accountsPageHook) &&
+    !/@\/services\/accounts|@\/services\/system|@\/services\/maintenance|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|accountsService\.|systemService\.|maintenanceService\.|invokeIpc|invoke\(/.test(accountsPageHook) &&
+    !/ModuleCacheEnvelope<unknown>|payload:\s*unknown/.test(accountsPageHook) &&
+    !accountsControllerConsumerText.includes("ReturnType<typeof useAccountsPageController>") &&
+    !accountsControllerConsumerText.includes("ReturnType<typeof useAccountsModule>") &&
+    !/(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(accountsControllerConsumerText);
+  if (!accountsSplitOwnerOk) {
+    failures.push("accounts IPC payload owner 必须迁移到 split hooks、typed types、cache helper 和显式 controller props");
+  } else if (accountsHooksIndexOnlyReExports) {
+    console.log("PASS accounts typed IPC payload owner：split hooks/types/cache");
   }
 
   const sessionsTypedPayloadOk =

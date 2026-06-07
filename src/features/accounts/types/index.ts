@@ -79,3 +79,95 @@ export interface AccountImportFileInput {
 export interface AccountOpenPathInput {
   path: string;
 }
+
+export interface AccountsSnapshotQueryController {
+  data: AccountsSnapshotEnvelope | undefined;
+  error: unknown;
+  isError: boolean;
+  isFetching: boolean;
+  isLoading: boolean;
+  refetch: () => Promise<unknown>;
+}
+
+export interface AccountsPageQueries {
+  snapshotEnvelope: AccountsCacheEnvelope | null | undefined;
+  snapshotQuery: AccountsSnapshotQueryController;
+  refreshSnapshot: () => Promise<void>;
+}
+
+export interface AccountsAction<TResult = void> {
+  run: () => Promise<TResult>;
+  isPending: boolean;
+}
+
+export interface AccountsNamedAction<TResult = void>
+  extends AccountsAction<TResult> {
+  id: string;
+  labelKey: string;
+}
+
+export interface AccountsInputAction<TInput, TResult = void> {
+  run: (input: TInput) => Promise<TResult>;
+  isPending: boolean;
+}
+
+export interface AccountsPageMutations {
+  refreshUsageSnapshotAction: AccountsNamedAction<void>;
+  attachMonitorAction: AccountsNamedAction<AccountsMutationEnvelope>;
+  switchAccount: AccountsInputAction<AccountSwitchInput, AccountsMutationEnvelope>;
+  switchAccountAndRestart: AccountsInputAction<
+    AccountSwitchInput,
+    AccountsMutationEnvelope
+  >;
+  removeAccounts: AccountsInputAction<AccountKeysInput, AccountsMutationEnvelope>;
+  logout: AccountsAction<AccountsMutationEnvelope>;
+  importChatGptSessionAccount: AccountsInputAction<
+    AccountImportSessionInput,
+    AccountsMutationEnvelope
+  >;
+  exportAccountsToFile: AccountsInputAction<
+    AccountExportFileInput,
+    AccountsMutationEnvelope
+  >;
+  previewAccountImport: AccountsInputAction<
+    AccountPreviewImportInput,
+    AccountsMutationEnvelope
+  >;
+  importAccountsFromFile: AccountsInputAction<
+    AccountImportFileInput,
+    AccountsMutationEnvelope
+  >;
+}
+
+export interface AccountsPathActions {
+  openPath: AccountsInputAction<AccountOpenPathInput, void>;
+}
+
+export interface AccountsModuleController
+  extends AccountsPageMutations,
+    AccountsPathActions {
+  snapshotEnvelope: AccountsCacheEnvelope | null | undefined;
+  snapshotQuery: AccountsSnapshotQueryController;
+}
+
+export interface AccountsPageController {
+  module: AccountsModuleController;
+  query: string;
+  setQuery: (query: string) => void;
+  planFilter: AccountPlanFilter;
+  setPlanFilter: (planFilter: AccountPlanFilter) => void;
+  planFilters: readonly AccountPlanFilter[];
+  accounts: AccountRecord[];
+  filteredAccounts: AccountRecord[];
+  selectedKey: string | null;
+  effectiveSelectedKey: string;
+  selectedAccount: AccountRecord | null;
+  activeAccount: AccountRecord | null;
+  apiReachability: string;
+  loading: boolean;
+  error: unknown;
+  isFetching: boolean;
+  isRefreshing: boolean;
+  selectAccount: (accountKey: string) => void;
+  refresh: () => Promise<void>;
+}

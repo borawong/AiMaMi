@@ -554,7 +554,21 @@
     "switchConfirmDesc": "????? {{email}} ??????",
     "switchTo": "??????",
     "weekly": "??",
-    "workspaceName": "?????"
+    "workspaceName": "?????",
+    "tokenStatus": {
+      "fresh": "凭据有效",
+      "refreshed": "凭据已自动续期",
+      "noRefreshToken": "缺少刷新令牌",
+      "refreshReused": "复用刷新令牌",
+      "refreshFailed": "刷新失败",
+      "freshDesc": "OAuth 凭据正常，已成功拉取最新数据。",
+      "refreshedDesc": "本次刷新已用 refresh token 续期 access token，并写回快照。",
+      "noRefreshTokenDesc": "此账号快照不包含刷新令牌，自动额度刷新可能不可用。",
+      "refreshReusedDesc": "此账号正在复用已有刷新令牌，依赖自动刷新前请先确认状态。",
+      "refreshFailedDesc": "令牌刷新尝试失败，请稍后重试或重新导入账号会话。",
+      "expiresInDays": "{{days}} 天后过期",
+      "expiresInHours": "{{hours}} 小时后过期"
+    }
   },
   "sessions": {
     "description": "基于会话 IPC 与分析契约恢复会话模块入口，会话列表由模块 query owner 管理。",

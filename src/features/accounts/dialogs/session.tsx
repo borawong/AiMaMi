@@ -13,9 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import type { useAccountsModule } from "../hooks";
-
-type AccountsModuleController = ReturnType<typeof useAccountsModule>;
+import type { AccountsModuleController } from "../types";
 
 export function AddSessionAccountDialog({
   module,

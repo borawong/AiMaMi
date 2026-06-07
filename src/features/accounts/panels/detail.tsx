@@ -5,8 +5,11 @@ import { Button } from "@/components/ui/button";
 import { ButtonBusyContent } from "@/components/ui/busy";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import type { AccountsPageController } from "../hooks";
-import type { AccountQuotaWindowSlot, AccountRecord } from "../types";
+import type {
+  AccountQuotaWindowSlot,
+  AccountRecord,
+  AccountsPageController,
+} from "../types";
 import {
   accountEmail,
   accountKey,

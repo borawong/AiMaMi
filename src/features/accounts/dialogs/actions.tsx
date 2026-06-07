@@ -11,11 +11,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert";
-import type { useAccountsModule } from "../hooks";
-import type { AccountRecord } from "../types";
+import type { AccountRecord, AccountsModuleController } from "../types";
 import { accountEmail, accountKey } from "../utils";
-
-type AccountsModuleController = ReturnType<typeof useAccountsModule>;
 
 interface AccountActionDialogControls {
   requestSwitch: (account: AccountRecord) => void;

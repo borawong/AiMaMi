@@ -177,6 +177,175 @@ function assertOnlyBarrelReExports(file, content, owners) {
   }
 }
 
+function validateAccountsDeepOwnerBoundaries() {
+  const accountsRoot = join(featuresRoot, "accounts");
+  const hooksIndexPath = join(accountsRoot, "hooks", "index.ts");
+  const queryPath = join(accountsRoot, "hooks", "query.ts");
+  const mutationPath = join(accountsRoot, "hooks", "mutation.ts");
+  const actionPath = join(accountsRoot, "hooks", "action.ts");
+  const pagePath = join(accountsRoot, "hooks", "page.ts");
+  const cachePath = join(accountsRoot, "cache", "index.ts");
+  const typesPath = join(accountsRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    ...walkFiles(join(accountsRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(accountsRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(accountsRoot, "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const action = readRequired(actionPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
+
+  assertOnlyBarrelReExports("src/features/accounts/hooks/index.ts", hooksIndex, [
+    "query",
+    "mutation",
+    "action",
+    "page",
+  ]);
+  assertNotMatches("src/features/accounts/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "accounts hooks/index can only re-export split owners"],
+    [/\b(writeAccounts|setQueryData|invalidateQueries|cancelQueries|Accounts[A-Za-z]*QueryKeys)\b/, "accounts hooks/index must not own cache writes or query keys"],
+    [/@\/services\/accounts|@\/services\/system|@\/services\/maintenance|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|accountsService\.|systemService\.|maintenanceService\.|invokeIpc|invoke\(/, "accounts hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/accounts/hooks/query.ts", query, [
+    "useAccountsCacheController",
+    "useModuleCacheController(AccountsCache)",
+    "useAccountsPageQueries",
+    "useQuery",
+    "useQueryClient",
+    "accountsService.loadSnapshot(true)",
+    "AccountsAuthoritativeQueryKeys",
+    "AccountsDumpedQueryKeys",
+    "writeAccountsSnapshotPayload",
+    "AccountsSnapshotEnvelope",
+  ]);
+  assertNotMatches("src/features/accounts/hooks/query.ts", query, [
+    [/\buseMutation\b/, "accounts query owner must not own mutation"],
+    [/\buse(State|Reducer|Memo|Callback)\b/, "accounts query owner must not own page/controller UI state or view models"],
+    [/\b(writeAccountsMutationPayload|invalidateAccountsDumpedQueries|setQueryData|cancelQueries)\b/, "accounts query owner must delegate mutation writes and invalidation"],
+    [/useTranslation|AccountsPageController|setQuery|setPlanFilter|setSelectedKey|envelopeData|readArray|accountEmail|accountKey|accountPlan|isActiveAccount/, "accounts query owner must not own page controller, locale formatting, or view model parsing"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "accounts query owner must use accounts service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "accounts query owner must keep typed authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/accounts/hooks/mutation.ts", mutation, [
+    "useAccountsPageMutations",
+    "useMutation",
+    "useQueryClient",
+    "accountsService.beginAddAccountAttachMonitor",
+    "accountsService.refreshUsageSnapshot",
+    "accountsService.switchAccount",
+    "accountsService.switchAccountAndRestartCodex",
+    "accountsService.removeAccounts",
+    "accountsService.logout",
+    "accountsService.importChatGptSessionAccount",
+    "accountsService.exportAccountsToFile",
+    "accountsService.previewAccountImport",
+    "accountsService.importAccountsFromFile",
+    "writeAccountsMutationPayload",
+    "writeAccountsSnapshotPayload",
+    "invalidateAccountsDumpedQueries",
+  ]);
+  assertNotMatches("src/features/accounts/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "accounts mutation owner must not own query"],
+    [/\buse(State|Reducer|Effect|Memo|Callback)\b/, "accounts mutation owner must not own page/controller UI state"],
+    [/\bsetQueryData\b/, "accounts mutation owner must delegate cache writes to cache helper"],
+    [/useTranslation|AccountsPageController|setQuery|setPlanFilter|setSelectedKey|envelopeData|readArray|accountEmail|accountPlan|isActiveAccount/, "accounts mutation owner must not own page controller, locale formatting, or view model parsing"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "accounts mutation owner must use accounts service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|useMutation<unknown/, "accounts mutation owner must keep typed mutation payloads"],
+  ]);
+
+  assertIncludes("src/features/accounts/hooks/action.ts", action, [
+    "useAccountsPathActions",
+    "accountsService.openPath",
+  ]);
+  assertNotMatches("src/features/accounts/hooks/action.ts", action, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "accounts action owner must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|writeAccounts|Accounts[A-Za-z]*QueryKeys)\b/, "accounts action owner must not write cache or consume query keys"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "accounts action owner must not bypass service wrapper"],
+    [/useTranslation|AccountsPageController|setQuery|setPlanFilter|setSelectedKey|envelopeData|readArray/, "accounts action owner must not own page controller or UI view model"],
+  ]);
+
+  assertIncludes("src/features/accounts/hooks/page.ts", page, [
+    "useAccountsPageController",
+    "AccountsPageController",
+    "useAccountsPageQueries",
+    "useAccountsPageMutations",
+    "useAccountsPathActions",
+    "useState",
+    "useMemo",
+    "envelopeData",
+    "readArray<AccountRecord>",
+    "accountEmail",
+    "accountKey",
+    "accountPlan",
+    "isActiveAccount",
+  ]);
+  assertNotMatches("src/features/accounts/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "accounts page/controller may compose split owner hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|writeAccounts|Accounts[A-Za-z]*QueryKeys)\b/, "accounts page/controller must not write cache, invalidate, cancel, or consume query keys"],
+    [/@\/services\/accounts|@\/services\/system|@\/services\/maintenance|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|accountsService\.|systemService\.|maintenanceService\.|invokeIpc|invoke\(/, "accounts page/controller must not access service/API/IPC directly"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "accounts page/controller must not use generic authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/accounts/types/index.ts", types, [
+    "export type AccountsMutationPayload",
+    "export type AccountsMutationEnvelope",
+    "export type AccountsSnapshotEnvelope",
+    "export type AccountsCachePayload",
+    "export interface AccountsPageQueries",
+    "export interface AccountsPageMutations",
+    "export interface AccountsPathActions",
+    "export interface AccountsModuleController",
+    "export interface AccountsPageController",
+  ]);
+  assertNotMatches("src/features/accounts/types/index.ts", types, [
+    [/AccountsPageController\s*=\s*ReturnType|ReturnType<typeof useAccountsPageController>|ReturnType<typeof useAccountsModule>/, "accounts controller contract must be explicit, not ReturnType"],
+    [/AccountsCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "accounts types owner must keep typed cache payloads"],
+  ]);
+
+  assertIncludes("src/features/accounts/cache/index.ts", cache, [
+    "createModuleCacheOwner<AccountsCachePayload>(\"accounts\")",
+    "AccountsDumpedQueryKeys",
+    "AccountsAuthoritativeQueryKeys",
+    "writeAccountsSnapshotPayload",
+    "writeAccountsMutationPayload",
+    "invalidateAccountsDumpedQueries",
+    "setQueryData<ModuleCacheEnvelope<AccountsCachePayload>>",
+    "mutationFenceAt",
+    "isStaleEnvelope",
+    "next.sequence < current.sequence",
+  ]);
+  assertNotMatches("src/features/accounts/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "accounts cache owner must not own React hooks"],
+    [/@\/services\/accounts|@\/services\/system|@\/services\/maintenance|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|accountsService\.|systemService\.|maintenanceService\.|invokeIpc|invoke\(/, "accounts cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("accounts"\)|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "accounts cache owner must keep typed payloads"],
+  ]);
+
+  if (
+    controllerConsumerText.includes("ReturnType<typeof useAccountsPageController>") ||
+    controllerConsumerText.includes("ReturnType<typeof useAccountsModule>")
+  ) {
+    failures.push("src/features/accounts panels/dialogs/components must consume explicit Accounts controller types, not hook ReturnType");
+  }
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+Accounts[A-Za-z]*(?:Controller|Props)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/accounts panels/dialogs/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS accounts deep owner gate executed: hooks/index, query, mutation, action, page, cache, types, panels/dialogs/components");
+}
+
 function validateAnalyticsDeepOwnerBoundaries() {
   const analyticsRoot = join(featuresRoot, "analytics");
   const hooksIndexPath = join(analyticsRoot, "hooks", "index.ts");
@@ -1970,6 +2139,7 @@ validateSourceFileNames();
 validateNoDuplicatePublicCommonRoots();
 validateNoFeaturePublicCommonOwnerRoots();
 validateFeatureDeepOwners();
+validateAccountsDeepOwnerBoundaries();
 validateAnalyticsDeepOwnerBoundaries();
 validateCustomInstructionsDeepOwnerBoundaries();
 validateMcpDeepOwnerBoundaries();

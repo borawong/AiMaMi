@@ -554,7 +554,21 @@
     "switchConfirmDesc": "Switch to {{email}} and restart the app?",
     "switchTo": "Switch to this account",
     "weekly": "Weekly",
-    "workspaceName": "Workspace name"
+    "workspaceName": "Workspace name",
+    "tokenStatus": {
+      "fresh": "Token healthy",
+      "refreshed": "Token auto-refreshed",
+      "noRefreshToken": "No refresh token",
+      "refreshReused": "Refresh token reused",
+      "refreshFailed": "Refresh failed",
+      "freshDesc": "OAuth credential is healthy; latest data was fetched.",
+      "refreshedDesc": "This refresh used the refresh token to mint a new access token and saved the snapshot.",
+      "noRefreshTokenDesc": "This account snapshot does not include a refresh token, so automatic quota refresh may be unavailable.",
+      "refreshReusedDesc": "This account is reusing an existing refresh token. Verify it before relying on automatic refresh.",
+      "refreshFailedDesc": "The token refresh attempt failed. Retry later or reimport the account session.",
+      "expiresInDays": "Expires in {{days}} days",
+      "expiresInHours": "Expires in {{hours}} hours"
+    }
   },
   "sessions": {
     "description": "Restores the sessions module entry from session IPC and analytics contracts. The session list is owned by the module query owner.",

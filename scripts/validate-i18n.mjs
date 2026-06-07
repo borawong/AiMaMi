@@ -54,6 +54,29 @@ function walkFiles(root) {
   return files.sort();
 }
 
+function requireLocaleKeys(keys, context) {
+  for (const key of keys) {
+    if (!hasLocaleKey(zh, key) || !hasLocaleKey(en, key)) {
+      failures.push(`${context} 缺少 zh/en locale key：${key}`);
+    }
+  }
+}
+
+function validateAccountTokenStatusKeys() {
+  const required = [
+    "accounts.tokenStatus.noRefreshToken",
+    "accounts.tokenStatus.noRefreshTokenDesc",
+    "accounts.tokenStatus.refreshReused",
+    "accounts.tokenStatus.refreshReusedDesc",
+    "accounts.tokenStatus.refreshFailed",
+    "accounts.tokenStatus.refreshFailedDesc",
+    "accounts.tokenStatus.expiresInDays",
+    "accounts.tokenStatus.expiresInHours",
+  ];
+
+  requireLocaleKeys(required, "accounts tokenStatus 动态 key");
+}
+
 const zhKeys = flattenLocaleKeys(zh).sort();
 const enKeys = flattenLocaleKeys(en).sort();
 const missingEn = zhKeys.filter((key) => !enKeys.includes(key));
@@ -65,6 +88,8 @@ for (const key of missingEn) {
 for (const key of missingZh) {
   failures.push(`zh 缺少 locale key：${key}`);
 }
+
+validateAccountTokenStatusKeys();
 
 for (const file of walkFiles(sourceRoot)) {
   const source = readFileSync(file, "utf8");

@@ -2,8 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import type { AccountsPageController } from "../hooks";
-import type { AccountRecord } from "../types";
+import type { AccountRecord, AccountsPageController } from "../types";
 import {
   accountEmail,
   accountKey,

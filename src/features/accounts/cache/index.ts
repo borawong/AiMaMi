@@ -25,6 +25,13 @@ export interface AccountsCacheWrite<TPayload> {
   receivedAt: number;
 }
 
+let accountsCacheSequence = 0;
+
+export function nextAccountsCacheSequence() {
+  accountsCacheSequence += 1;
+  return accountsCacheSequence;
+}
+
 export function writeAccountsSnapshotPayload<TPayload extends AccountsCachePayload>(
   queryClient: QueryClient,
   write: AccountsCacheWrite<TPayload>,

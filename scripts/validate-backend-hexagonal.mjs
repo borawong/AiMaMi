@@ -1421,11 +1421,31 @@ function validateAccountsTypedPayloadContracts() {
   const contractPath = join(backendRoot, "contracts", "accounts.rs");
   const servicePath = join(frontendRoot, "services", "accounts", "index.ts");
   const featureTypesPath = join(frontendRoot, "features", "accounts", "types", "index.ts");
+  const featureCachePath = join(frontendRoot, "features", "accounts", "cache", "index.ts");
+  const featureHooksPath = join(frontendRoot, "features", "accounts", "hooks", "index.ts");
+  const featureQueryHookPath = join(frontendRoot, "features", "accounts", "hooks", "query.ts");
+  const featureMutationHookPath = join(frontendRoot, "features", "accounts", "hooks", "mutation.ts");
+  const featureActionHookPath = join(frontendRoot, "features", "accounts", "hooks", "action.ts");
+  const featurePageHookPath = join(frontendRoot, "features", "accounts", "hooks", "page.ts");
+  const featureControllerConsumerPaths = [
+    ...walkFiles(join(frontendRoot, "features", "accounts", "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(frontendRoot, "features", "accounts", "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(frontendRoot, "features", "accounts", "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
   const commandText = readUtf8(commandPath);
   const usecaseText = readUtf8(usecasePath);
   const contractText = readUtf8(contractPath);
   const serviceText = readUtf8(servicePath);
-  const featureTypesText = readUtf8(featureTypesPath);
+  const featureTypesText = readRequiredUtf8(featureTypesPath, "accounts feature types owner");
+  const featureCacheText = readRequiredUtf8(featureCachePath, "accounts feature cache owner");
+  const featureHooksText = readRequiredUtf8(featureHooksPath, "accounts hooks barrel");
+  const featureQueryHookText = readRequiredUtf8(featureQueryHookPath, "accounts query hook owner");
+  const featureMutationHookText = readRequiredUtf8(featureMutationHookPath, "accounts mutation hook owner");
+  const featureActionHookText = readRequiredUtf8(featureActionHookPath, "accounts action hook owner");
+  const featurePageHookText = readRequiredUtf8(featurePageHookPath, "accounts page hook owner");
+  const featureControllerConsumerText = featureControllerConsumerPaths
+    .map((file) => readRequiredUtf8(file, "accounts controller consumer"))
+    .join("\n");
 
   assertContains(contractPath, contractText, [
     "pub(crate) struct AccountMonitorPayload",
@@ -1480,7 +1500,68 @@ function validateAccountsTypedPayloadContracts() {
     "export type AccountsMutationEnvelope",
     "export type AccountsSnapshotEnvelope",
     "export type AccountsCachePayload",
+    "export interface AccountsPageQueries",
+    "export interface AccountsPageMutations",
+    "export interface AccountsPathActions",
+    "export interface AccountsModuleController",
+    "export interface AccountsPageController",
   ], "accounts 前端模块 typed cache payload");
+
+  assertContains(featureHooksPath, featureHooksText, [
+    'from "./query"',
+    'from "./mutation"',
+    'from "./action"',
+    'from "./page"',
+  ], "accounts hooks barrel owner");
+
+  assertContains(featureQueryHookPath, featureQueryHookText, [
+    "AccountsSnapshotEnvelope",
+    "useAccountsCacheController",
+    "useAccountsPageQueries",
+    "accountsService.loadSnapshot(true)",
+    "writeAccountsSnapshotPayload",
+  ], "accounts query hooks typed authoritative envelope");
+
+  assertContains(featureMutationHookPath, featureMutationHookText, [
+    "AccountsMutationEnvelope",
+    "useAccountsPageMutations",
+    "accountsService.beginAddAccountAttachMonitor",
+    "accountsService.refreshUsageSnapshot",
+    "accountsService.switchAccount",
+    "accountsService.switchAccountAndRestartCodex",
+    "accountsService.removeAccounts",
+    "accountsService.logout",
+    "accountsService.importChatGptSessionAccount",
+    "accountsService.exportAccountsToFile",
+    "accountsService.previewAccountImport",
+    "accountsService.importAccountsFromFile",
+    "writeAccountsMutationPayload",
+    "writeAccountsSnapshotPayload",
+    "invalidateAccountsDumpedQueries",
+  ], "accounts mutation hooks typed authoritative envelope");
+
+  assertContains(featureActionHookPath, featureActionHookText, [
+    "useAccountsPathActions",
+    "accountsService.openPath",
+  ], "accounts action hook owner");
+
+  assertContains(featurePageHookPath, featurePageHookText, [
+    "AccountsPageController",
+    "useAccountsPageQueries",
+    "useAccountsPageMutations",
+    "useAccountsPathActions",
+    "readArray<AccountRecord>",
+  ], "accounts page controller owner");
+
+  assertContains(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner<AccountsCachePayload>(\"accounts\")",
+    "writeAccountsSnapshotPayload",
+    "writeAccountsMutationPayload",
+    "invalidateAccountsDumpedQueries",
+    "setQueryData<ModuleCacheEnvelope<AccountsCachePayload>>",
+    "mutationFenceAt",
+    "isStaleEnvelope",
+  ], "accounts cache typed authoritative envelope");
 
   assertNotContainsSnippet(contractPath, contractText, [
     "AccountActionPayload",
@@ -1496,6 +1577,89 @@ function validateAccountsTypedPayloadContracts() {
     "IpcEvidencePayload",
     "CoreEnvelope<IpcEvidencePayload>",
   ], "accounts service 不得退回 generic evidence payload");
+
+  assertNotContainsSnippet(featureHooksPath, featureHooksText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "writeAccountsSnapshotPayload",
+    "writeAccountsMutationPayload",
+    "accountsService.",
+    "invokeIpc",
+  ], "accounts hooks/index must stay split barrel");
+
+  assertNotContainsSnippet(featureTypesPath, featureTypesText, [
+    "AccountsCacheEnvelope<TPayload = unknown>",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "ReturnType<typeof useAccountsPageController>",
+    "ReturnType<typeof useAccountsModule>",
+  ], "accounts feature types must keep explicit typed payloads and controller contracts");
+
+  assertNotContainsSnippet(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner(\"accounts\")",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "accountsService.",
+    "systemService.",
+    "maintenanceService.",
+    "invokeIpc",
+  ], "accounts cache must keep typed authoritative payloads and avoid service access");
+
+  assertNotContainsSnippet(featureQueryHookPath, featureQueryHookText, [
+    "useMutation",
+    "writeAccountsMutationPayload",
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+    "invokeIpc",
+  ], "accounts query hook must not mix mutation or generic payloads");
+
+  assertNotContainsSnippet(featureMutationHookPath, featureMutationHookText, [
+    "useQuery(",
+    "setQueryData",
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+    "useMutation<unknown",
+    "invokeIpc",
+  ], "accounts mutation hook must not mix query, direct cache writes, or generic payloads");
+
+  assertNotContainsSnippet(featureActionHookPath, featureActionHookText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "setQueryData",
+    "invalidateQueries",
+    "cancelQueries",
+    "writeAccounts",
+    "invokeIpc",
+  ], "accounts action hook must only bridge path action to service facade");
+
+  assertNotContainsSnippet(featurePageHookPath, featurePageHookText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "accountsService.",
+    "systemService.",
+    "maintenanceService.",
+    "setQueryData",
+    "invalidateQueries",
+    "cancelQueries",
+    "AccountsAuthoritativeQueryKeys",
+    "AccountsDumpedQueryKeys",
+    "writeAccounts",
+    "invokeIpc",
+  ], "accounts page controller must not own TanStack, cache keys, or service/API access");
+
+  for (const forbidden of [
+    "ReturnType<typeof useAccountsPageController>",
+    "ReturnType<typeof useAccountsModule>",
+  ]) {
+    if (featureControllerConsumerText.includes(forbidden)) {
+      failures.push(
+        `src/features/accounts panels/dialogs/components 违反 accounts view owners must consume explicit controller types：${forbidden}`,
+      );
+    }
+  }
 }
 
 validateAccountsTypedPayloadContracts();
