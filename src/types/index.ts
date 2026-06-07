@@ -457,6 +457,7 @@ export interface RebuildRegistryPayload {
 }
 
 export interface AutoSwitchConfigPayload {
+  backendStatus: BackendSkeletonStatus;
   autoSwitch: AutoSwitchStatusPayload;
 }
 
@@ -479,6 +480,7 @@ export interface ApiProxyDetectPayload {
 }
 
 export interface DaemonRunPayload {
+  backendStatus: BackendSkeletonStatus;
   executedAt: number;
   runOnce: boolean;
   autoSwitchEnabled: boolean;

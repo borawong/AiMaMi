@@ -13,12 +13,22 @@ import {
   DAEMON_AUTOSWITCH_PENDING_QUERY_KEY,
   DaemonAutoswitchCache,
   invalidateDaemonAutoswitchContractQueries,
+  writeDaemonAutoswitchAuthoritativePayload,
 } from "../cache";
 import type {
+  DaemonAutoswitchCachePayload,
+  DaemonAutoswitchConfigEnvelope,
+  DaemonAutoswitchDismissEnvelope,
   DaemonAutoswitchMetricModel,
+  DaemonAutoswitchMutationEnvelope,
   DaemonAutoswitchPageController,
   DaemonAutoswitchPanelModel,
+  DaemonAutoswitchRunEnvelope,
 } from "../types";
+import type {
+  BootstrapStatePayload,
+  PendingAutoSwitchStatePayload,
+} from "@/types";
 import {
   envelopeData,
   readBoolean,
@@ -33,7 +43,7 @@ function nextDaemonAutoswitchCacheSequence() {
   return daemonAutoswitchCacheSequence;
 }
 
-function writeDaemonAutoswitchCachePayload<TPayload>(
+function writeDaemonAutoswitchCachePayload<TPayload extends DaemonAutoswitchCachePayload>(
   queryClient: QueryClient,
   payload: TPayload,
   source: "full-refresh" | "mutation-payload",
@@ -44,7 +54,7 @@ function writeDaemonAutoswitchCachePayload<TPayload>(
   }
 
   daemonAutoswitchLatestAcceptedSequence = sequence;
-  DaemonAutoswitchCache.writeAuthoritativePayload(queryClient, {
+  writeDaemonAutoswitchAuthoritativePayload(queryClient, {
     payload,
     source,
     sequence,
@@ -53,7 +63,7 @@ function writeDaemonAutoswitchCachePayload<TPayload>(
   return true;
 }
 
-async function runDaemonAutoswitchQuery<TPayload>(
+async function runDaemonAutoswitchQuery<TPayload extends DaemonAutoswitchCachePayload>(
   queryClient: QueryClient,
   queryKey: QueryKey,
   load: () => Promise<TPayload>,
@@ -74,7 +84,7 @@ async function runDaemonAutoswitchQuery<TPayload>(
 
 async function writeDaemonAutoswitchMutationPayload(
   queryClient: QueryClient,
-  payload: unknown,
+  payload: DaemonAutoswitchMutationEnvelope,
 ) {
   const accepted = writeDaemonAutoswitchCachePayload(
     queryClient,
@@ -90,6 +100,10 @@ async function writeDaemonAutoswitchMutationPayload(
     queryClient.invalidateQueries({ queryKey: ["runtime-state", "display"] }),
     queryClient.invalidateQueries({ queryKey: ["quota-history"] }),
   ]);
+}
+
+async function reloadDaemonAutoswitchAfterMutation(queryClient: QueryClient) {
+  await invalidateDaemonAutoswitchContractQueries(queryClient);
 }
 
 function cancelDaemonAutoswitchQueries(queryClient: QueryClient) {
@@ -146,11 +160,14 @@ export function useDaemonAutoswitchPendingQuery() {
 export function useDaemonAutoswitchPendingPrompt() {
   const queryClient = useQueryClient();
   const pendingQuery = useDaemonAutoswitchPendingQuery();
-  const writePendingMutationPayload = useCallback(
-    async (payload: unknown) => {
-      queryClient.setQueryData(DAEMON_AUTOSWITCH_PENDING_QUERY_KEY, payload);
+  const writePendingDismissPayload = useCallback(
+    async (payload: DaemonAutoswitchDismissEnvelope) => {
       await writeDaemonAutoswitchMutationPayload(queryClient, payload);
     },
+    [queryClient],
+  );
+  const reloadPendingAfterConfirm = useCallback(
+    () => reloadDaemonAutoswitchAfterMutation(queryClient),
     [queryClient],
   );
 
@@ -166,14 +183,14 @@ export function useDaemonAutoswitchPendingPrompt() {
   const dismissPendingMutation = useMutation({
     mutationFn: () => daemonAutoswitchService.dismissPendingAutoSwitch(),
     onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
-    onSuccess: writePendingMutationPayload,
+    onSuccess: writePendingDismissPayload,
   });
 
   const confirmPendingAndRestartMutation = useMutation({
     mutationFn: () =>
       daemonAutoswitchService.confirmPendingAutoSwitchAndRestartCodex(),
     onMutate: () => cancelDaemonAutoswitchQueries(queryClient),
-    onSuccess: writePendingMutationPayload,
+    onSuccess: reloadPendingAfterConfirm,
   });
 
   return {
@@ -195,7 +212,9 @@ export function useDaemonAutoswitchPendingPrompt() {
 
 export function useDaemonAutoswitchModule() {
   const queryClient = useQueryClient();
-  const writeDaemonPayload = (payload: unknown) =>
+  const writeDaemonPayload = (
+    payload: DaemonAutoswitchRunEnvelope | DaemonAutoswitchConfigEnvelope,
+  ) =>
     writeDaemonAutoswitchMutationPayload(queryClient, payload);
 
   const bootstrapQuery = useDaemonAutoswitchBootstrapQuery();
@@ -231,8 +250,12 @@ export function useDaemonAutoswitchModule() {
 
 export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageController {
   const module = useDaemonAutoswitchModule();
-  const bootstrap = envelopeData(module.bootstrapQuery.data);
-  const pending = envelopeData(module.pendingQuery.data);
+  const bootstrap = envelopeData<BootstrapStatePayload>(
+    module.bootstrapQuery.data,
+  );
+  const pending = envelopeData<PendingAutoSwitchStatePayload>(
+    module.pendingQuery.data,
+  );
   const enabled = readBoolean(bootstrap, ["autoSwitchEnabled"]);
   const pendingAccountKey = readString(bootstrap, ["pendingSwitchAccountKey"], "");
   const executedAt = readString(bootstrap, ["executedAt"], "");

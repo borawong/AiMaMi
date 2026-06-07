@@ -695,9 +695,9 @@ function validateKnownInternalFrontendGates() {
     !skillsHooks.includes("writeSkillsQueryMutationPayload(queryClient: QueryClient, payload: unknown)") &&
     !skillsHooks.includes("async function writeSkillsMutationPayload<TPayload>");
   if (!skillsTypedPayloadOk) {
-    failures.push("skills IPC payload owner 蹇呴』鏀跺彛鍒?typed envelope銆佹ā鍧?types 鍜?cache helper");
+    failures.push("skills IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
   } else {
-    console.log("PASS skills typed IPC payload owner锛歴ervice/hook/cache");
+    console.log("PASS skills typed IPC payload owner：service/hook/cache");
   }
 }
 
@@ -764,9 +764,56 @@ function validateSharedCacheTypedGate() {
     !sharedPanels.includes("items: unknown[]");
 
   if (!sharedCacheTypedOk || !sharedUpdaterTypedOk || !sharedPanelsTypedOk) {
-    failures.push("_shared cache/updater/panel 蹇呴』淇濇寔 owner 绾ф硾鍨?payload 鍜岀粍浠?item 杈圭晫");
+    failures.push("_shared cache/updater/panel 必须保持 owner 级泛型 payload 和组件 item 边界");
   } else {
-    console.log("PASS _shared cache/updater/panel typed owner 杈圭晫");
+    console.log("PASS _shared cache/updater/panel typed owner 边界");
+  }
+}
+
+function validateDaemonAutoswitchTypedPayloadGate() {
+  const typesPath = join(repoRoot, "src", "features", "daemon-autoswitch", "types", "index.ts");
+  const cachePath = join(repoRoot, "src", "features", "daemon-autoswitch", "cache", "index.ts");
+  const hooksPath = join(repoRoot, "src", "features", "daemon-autoswitch", "hooks", "index.ts");
+  const payloadPanelPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "daemon-autoswitch",
+    "panels",
+    "payload.tsx",
+  );
+  const types = readRequired(typesPath);
+  const cache = readRequired(cachePath);
+  const hooks = readRequired(hooksPath);
+  const payloadPanel = readRequired(payloadPanelPath);
+
+  const typedPayloadOk =
+    types.includes("export type DaemonAutoswitchCachePayload") &&
+    types.includes("export type DaemonAutoswitchMutationEnvelope") &&
+    types.includes("export type DaemonAutoswitchMutationPayload") &&
+    types.includes("export type DaemonAutoswitchPanelPayload") &&
+    types.includes("ModuleCacheEnvelope<TPayload>") &&
+    types.includes('id: "bootstrap"') &&
+    types.includes('id: "pending"') &&
+    cache.includes("createModuleCacheOwner<DaemonAutoswitchCachePayload>(\"daemon-autoswitch\")") &&
+    cache.includes("Omit<DaemonAutoswitchCacheEnvelope<TPayload>, \"moduleId\">") &&
+    hooks.includes("DaemonAutoswitchCachePayload") &&
+    hooks.includes("DaemonAutoswitchMutationEnvelope") &&
+    hooks.includes("writeDaemonAutoswitchAuthoritativePayload") &&
+    hooks.includes("reloadDaemonAutoswitchAfterMutation") &&
+    payloadPanel.includes("DaemonAutoswitchPanelPayload") &&
+    !types.includes("DaemonAutoswitchCacheEnvelope<TPayload = unknown>") &&
+    !types.includes("payload: unknown") &&
+    !cache.includes("createModuleCacheOwner(\"daemon-autoswitch\")") &&
+    !cache.includes("ModuleCacheEnvelope<unknown>") &&
+    !hooks.includes("payload: unknown") &&
+    !hooks.includes("ModuleCacheEnvelope<unknown>") &&
+    !payloadPanel.includes("value: unknown");
+
+  if (!typedPayloadOk) {
+    failures.push("daemon-autoswitch IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
+  } else {
+    console.log("PASS daemon-autoswitch typed IPC payload owner：service/hook/cache");
   }
 }
 
@@ -1003,6 +1050,7 @@ validatePageChunks(raw.frontendFiles);
 validateRoutesAndLocales(raw.controlFlow);
 validateKnownInternalFrontendGates();
 validateSharedCacheTypedGate();
+validateDaemonAutoswitchTypedPayloadGate();
 validateMcpTypedPayloadGate();
 validatePluginsFrontendNoPromotionGate();
 validatePluginsTypedPayloadGate();

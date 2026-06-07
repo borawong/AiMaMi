@@ -1,6 +1,11 @@
 import { previewText, recordEntries } from "../utils";
+import type { DaemonAutoswitchPanelPayload } from "../types";
 
-export function DaemonPayloadSummary({ value }: { value: unknown }) {
+export function DaemonPayloadSummary({
+  value,
+}: {
+  value: DaemonAutoswitchPanelPayload;
+}) {
   const entries = recordEntries(value).slice(0, 4);
 
   if (entries.length === 0) {

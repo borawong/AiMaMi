@@ -1,7 +1,12 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { createModuleCacheOwner } from "@/features/_shared/cache";
+import type {
+  DaemonAutoswitchCacheEnvelope,
+  DaemonAutoswitchCachePayload,
+} from "../types";
 
-export const DaemonAutoswitchCache = createModuleCacheOwner("daemon-autoswitch");
+export const DaemonAutoswitchCache =
+  createModuleCacheOwner<DaemonAutoswitchCachePayload>("daemon-autoswitch");
 export const DaemonAutoswitchQueryKeys = DaemonAutoswitchCache.queryKeys;
 export const DAEMON_AUTOSWITCH_BOOTSTRAP_QUERY_KEY = [
   ...DaemonAutoswitchCache.queryKeys.root,
@@ -11,7 +16,12 @@ export const DAEMON_AUTOSWITCH_PENDING_QUERY_KEY = [
   ...DaemonAutoswitchCache.queryKeys.root,
   "pending",
 ] as const;
-export const writeDaemonAutoswitchAuthoritativePayload = DaemonAutoswitchCache.writeAuthoritativePayload;
+export const writeDaemonAutoswitchAuthoritativePayload = <
+  TPayload extends DaemonAutoswitchCachePayload,
+>(
+  queryClient: QueryClient,
+  envelope: Omit<DaemonAutoswitchCacheEnvelope<TPayload>, "moduleId">,
+) => DaemonAutoswitchCache.writeAuthoritativePayload(queryClient, envelope);
 
 export async function invalidateDaemonAutoswitchContractQueries(
   queryClient: QueryClient,
