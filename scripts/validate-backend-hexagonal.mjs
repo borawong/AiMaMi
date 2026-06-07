@@ -122,6 +122,34 @@ function assertNotContainsSnippet(file, content, snippets, rule) {
   }
 }
 
+function rustMethodBody(content, methodName) {
+  const signature = new RegExp(`\\bfn\\s+${methodName}\\s*\\(`);
+  const match = signature.exec(content);
+  if (!match) {
+    return null;
+  }
+
+  const openIndex = content.indexOf("{", match.index);
+  if (openIndex === -1) {
+    return null;
+  }
+
+  let depth = 0;
+  for (let index = openIndex; index < content.length; index += 1) {
+    const char = content[index];
+    if (char === "{") {
+      depth += 1;
+    } else if (char === "}") {
+      depth -= 1;
+      if (depth === 0) {
+        return content.slice(openIndex + 1, index);
+      }
+    }
+  }
+
+  return null;
+}
+
 function rustFiles(relativeDirectory) {
   return walkFiles(join(backendRoot, relativeDirectory), (file) => file.endsWith(".rs"));
 }
@@ -2371,6 +2399,86 @@ function validateAnalyticsTypedPayloadContracts() {
 }
 
 validateAnalyticsTypedPayloadContracts();
+
+function validateRelayReadOnlyBackendHexagonalGate() {
+  const repositoryPath = join(backendRoot, "repository", "relay.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "relay.rs");
+  const pathsPath = join(backendRoot, "repository", "paths.rs");
+  const repositoryText = readRequiredUtf8(repositoryPath, "relay repository");
+  const usecaseText = readRequiredUtf8(usecasePath, "relay usecase");
+  const pathsText = readRequiredUtf8(pathsPath, "repository paths");
+  const sideEffectPatterns = [
+    /\bwrite_string\s*\(/,
+    /\bstd::fs::write\b/,
+    /\bremove_file\s*\(/,
+    /\bcreate_dir(?:_all)?\s*\(/,
+    /\brename\s*\(/,
+    /\bcopy\s*\(/,
+    /\breqwest\b/,
+    /\bureq\b/,
+    /\bCommand::new\b/,
+    /\btaskkill\b/,
+    /\bschtasks\b/,
+    /\bforce_kill\b/,
+  ];
+
+  if (!/Self::RelaySource\s*=>\s*&\["relay",\s*"relay\.json"\]/.test(pathsText)) {
+    failures.push(`${toRelative(pathsPath)} 缺少 relay 路径契约：Self::RelaySource => &["relay", "relay.json"]`);
+  }
+
+  assertContains(repositoryPath, repositoryText, [
+    "FileSystemAdapter",
+    "RepositoryPath::RelaySource",
+    "read_to_string",
+    "exists",
+  ], "relay repository 只读加载器");
+
+  assertNotContains(repositoryPath, repositoryText, sideEffectPatterns, "relay repository 必须保持只读");
+  assertNotContains(usecasePath, usecaseText, sideEffectPatterns, "relay usecase 不得拥有写入、HTTP 或进程副作用");
+
+  for (const methodName of ["load_state", "get_active", "get_proxy_status"]) {
+    const body = rustMethodBody(usecaseText, methodName);
+    if (!body) {
+      failures.push(`${toRelative(usecasePath)} 缺少 relay 只读 usecase 方法：${methodName}`);
+      continue;
+    }
+
+    if (!/self\.repositories\.relay\s*\(\)/.test(body) && !/\bself\.(?:load_relay|relay_repository)\w*\s*\(/.test(body)) {
+      failures.push(`${toRelative(usecasePath)} relay ${methodName} 必须经 self.repositories.relay() 或 repository helper 加载`);
+    }
+
+    if (/\bstd::fs\b|\btokio::fs\b|\bread_to_string\s*\(|RepositoryPath::|contract_string\s*\(|\bjoin\s*\(/.test(body)) {
+      failures.push(`${toRelative(usecasePath)} relay ${methodName} 不得直接读取 FS 或拼 repository 路径`);
+    }
+  }
+
+  assertContains(usecasePath, usecaseText, [
+    'self.no_op_plan("upsert_relay_provider")',
+    'self.no_op_plan("delete_relay_provider")',
+    'self.no_op_plan("activate_relay_provider")',
+    'self.no_op_plan("deactivate_relay_provider")',
+    'self.no_op_plan("set_relay_provider_network")',
+    'self.no_op_plan("test_relay_provider")',
+    'self.no_op_plan("test_relay_draft")',
+    'self.no_op_plan("fetch_relay_models_draft")',
+    'self.no_op_plan("set_codex_router_enabled")',
+    'self.no_op_plan("export_relay_config")',
+    'self.no_op_plan("import_relay_config")',
+    'self.no_op_plan("set_block_official_passthrough")',
+    'self.no_op_plan("diagnose_codex_router")',
+    'self.no_op_plan("run_codex_router_diagnostics")',
+    'self.no_op_plan("fix_codex_router_issue")',
+  ], "relay mutation 命令必须保留 no-op/pending 后端骨架");
+
+  assertNotContains(usecasePath, usecaseText, [
+    /\bapi_key\s*:\s*raw\.api_key\b/,
+    /\bapi_key\s*:\s*input\.api_key\b/,
+    /\bapi_key\s*:\s*provider\.api_key\b/,
+    /\bapi_key\s*:\s*draft\.api_key\b/,
+  ], "relay 输出不得直接回填明文 api key");
+}
+
+validateRelayReadOnlyBackendHexagonalGate();
 
 function validateRelayTypedPayloadContracts() {
   const commandPath = join(backendRoot, "commands", "relay.rs");

@@ -24,6 +24,10 @@ impl<'a> RelayUseCase<'a> {
 
     pub(crate) fn load_state(&self) -> Result<CoreEnvelope<RelayStatePayload>, CoreError> {
         let plan = self.pending_plan("load_relay_state");
+        if let Some(state) = self.relay_repository_state(&plan)? {
+            return Ok(CoreEnvelope::from_backend_plan(state, &plan));
+        }
+
         Ok(CoreEnvelope::from_backend_plan(
             self.state_payload(&plan, None, false, false),
             &plan,
@@ -155,6 +159,22 @@ impl<'a> RelayUseCase<'a> {
 
     pub(crate) fn get_active(&self) -> Result<CoreEnvelope<RelayActivePayload>, CoreError> {
         let plan = self.no_op_plan("get_relay_active");
+        if let Some(state) = self.relay_repository_state(&plan)? {
+            let active_provider_id = state
+                .active_provider_id
+                .or_else(|| first_codex_active(&state.active_by_ide));
+            return Ok(CoreEnvelope::from_backend_plan(
+                RelayActivePayload {
+                    backend_status: Some(self.status(&plan)),
+                    enabled: state.enabled || state.codex_router_enabled,
+                    active_provider: active_provider_id.clone(),
+                    active_provider_id,
+                    ide: DEFAULT_IDE.to_owned(),
+                },
+                &plan,
+            ));
+        }
+
         Ok(CoreEnvelope::from_backend_plan(
             RelayActivePayload {
                 backend_status: Some(self.status(&plan)),
@@ -169,6 +189,10 @@ impl<'a> RelayUseCase<'a> {
 
     pub(crate) fn get_proxy_status(&self) -> Result<CoreEnvelope<RelayProxyPayload>, CoreError> {
         let plan = self.no_op_plan("get_relay_proxy_status");
+        if let Some(state) = self.relay_repository_state(&plan)? {
+            return Ok(CoreEnvelope::from_backend_plan(state.proxy_status, &plan));
+        }
+
         Ok(CoreEnvelope::from_backend_plan(
             self.proxy_payload(&plan),
             &plan,
@@ -333,6 +357,32 @@ impl<'a> RelayUseCase<'a> {
 
     fn source_path(&self) -> String {
         self.repositories.relay().source_path()
+    }
+
+    fn relay_repository_state(
+        &self,
+        plan: &BackendOperationPlan,
+    ) -> Result<Option<RelayStatePayload>, CoreError> {
+        self.repositories
+            .relay()
+            .load_state()
+            .map(|state| state.map(|state| self.with_backend_status(state, plan)))
+    }
+
+    fn with_backend_status(
+        &self,
+        mut state: RelayStatePayload,
+        plan: &BackendOperationPlan,
+    ) -> RelayStatePayload {
+        let status = Some(self.status(plan));
+        state.backend_status = status.clone();
+        for provider in &mut state.providers {
+            provider.backend_status = status.clone();
+            provider.api_key = None;
+        }
+        state.proxy.backend_status = status.clone();
+        state.proxy_status.backend_status = status;
+        state
     }
 
     fn state_payload(
@@ -516,6 +566,19 @@ fn active_map(active_provider: Option<&(String, String)>) -> RelayActiveByIdePay
         }
     }
     active_by_ide
+}
+
+fn first_codex_active(active_by_ide: &RelayActiveByIdePayload) -> Option<String> {
+    active_by_ide.get(DEFAULT_IDE).and_then(|providers| {
+        providers.iter().find_map(|provider| {
+            let provider = provider.trim();
+            if provider.is_empty() {
+                None
+            } else {
+                Some(provider.to_owned())
+            }
+        })
+    })
 }
 
 fn empty_headers() -> Option<RelayExtraHeaders> {
