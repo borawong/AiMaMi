@@ -89,11 +89,10 @@ export interface FrontendDumpedModuleRestorationRequirement {
   module: "plugins";
   command: string;
   source: string;
-  status: "covered";
+  status: "contract-service-only";
   service: string;
-  hook: string;
-  cache: string;
-  panel: string;
+  contract: string;
+  types: string;
   note: string;
 }
 
@@ -365,25 +364,23 @@ export const FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX = [
     module: "plugins",
     command: "get_plugin_config",
     source: "assets/index-CL22l5v8.js",
-    status: "covered",
+    status: "contract-service-only",
     service: "src/services/plugins/index.ts",
-    hook: "src/features/plugins/hooks/query.ts",
-    cache: "src/features/plugins/cache/index.ts",
-    panel: "src/features/plugins/panels/page.tsx",
+    contract: "src/features/plugins/contract.ts",
+    types: "src/features/plugins/types/index.ts",
     note:
-      "get_plugin_config 必须落到 plugins query hook、config cache 和具体 panel；只在 service/type/contract 出现不算还原。",
+      "raw 证据只保留命令合同、服务包装和类型化 DTO；缺少可见配置界面调用方，不得提升为查询钩子、缓存、面板或弹窗归属。",
   },
   {
     module: "plugins",
     command: "update_plugin_config",
     source: "assets/index-CL22l5v8.js",
-    status: "covered",
+    status: "contract-service-only",
     service: "src/services/plugins/index.ts",
-    hook: "src/features/plugins/hooks/mutation.ts",
-    cache: "src/features/plugins/cache/index.ts",
-    panel: "src/features/plugins/panels/page.tsx",
+    contract: "src/features/plugins/contract.ts",
+    types: "src/features/plugins/types/index.ts",
     note:
-      "update_plugin_config 必须落到 plugins mutation hook、mutation payload cache 和具体 panel；只覆盖命令字符串不算还原。",
+      "raw 证据只保留命令合同、服务包装和类型化 DTO；缺少可见配置界面调用方，不得提升为查询钩子、缓存、面板或弹窗归属。",
   },
 ] as const satisfies readonly FrontendDumpedModuleRestorationRequirement[];
 

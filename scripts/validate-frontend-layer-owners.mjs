@@ -997,6 +997,39 @@ function validatePluginsDeepOwnerBoundaries() {
   const dialogsIndex = readRequired(dialogsIndexPath);
   const panelOwnerText = panelPaths.map((file) => readRequired(file)).join("\n");
   const cacheOwnerText = `${cache}\n${cacheSequence}`;
+  const forbiddenPluginsConfigOwnerSignals = [
+    "usePluginConfigQuery",
+    "usePluginsConfigMutation",
+    "pluginsService.getConfig",
+    "pluginsService.updateConfig",
+    "getPluginsConfigQueryKey",
+    "writePluginsConfigQueryPayload",
+    "beginPluginsConfigMutation",
+    "rollbackPluginsConfig",
+    "PluginsConfigSection",
+    "pluginConfigQueryKey",
+    "getPluginConfig",
+    "updatePluginConfig",
+  ];
+  const pluginsConfigOwnerTargets = [
+    ["src/features/plugins/hooks/index.ts", hooksIndex],
+    ["src/features/plugins/hooks/query.ts", query],
+    ["src/features/plugins/hooks/refresh.ts", refresh],
+    ["src/features/plugins/hooks/mutation.ts", mutation],
+    ["src/features/plugins/hooks/page.ts", page],
+    ["src/features/plugins/cache/index.ts", cache],
+    ["src/features/plugins/components/page.tsx", componentPage],
+    ["src/features/plugins/panels 和 dialogs", panelOwnerText],
+    ["src/features/plugins/dialogs/index.ts", dialogsIndex],
+  ];
+
+  for (const [file, content] of pluginsConfigOwnerTargets) {
+    for (const signal of forbiddenPluginsConfigOwnerSignals) {
+      if (content.includes(signal)) {
+        failures.push(`${file} 缺少可见配置 UI 证据，不得提升 config owner 信号：${signal}`);
+      }
+    }
+  }
 
   assertOnlyBarrelReExports("src/features/plugins/hooks/index.ts", hooksIndex, [
     "query",
@@ -1018,10 +1051,6 @@ function validatePluginsDeepOwnerBoundaries() {
     "PLUGINS_LIST_QUERY_KEY",
     "pluginsService.list",
     "writePluginsListQueryPayload",
-    "usePluginConfigQuery",
-    "pluginsService.getConfig",
-    "getPluginsConfigQueryKey",
-    "writePluginsConfigQueryPayload",
   ]);
   assertNotMatches("src/features/plugins/hooks/query.ts", query, [
     [/\buseMutation\b/, "plugins query owner 不得 owning mutation 或 refresh mutation"],
@@ -1057,10 +1086,6 @@ function validatePluginsDeepOwnerBoundaries() {
     "optimisticallyUpdatePluginsToggle",
     "rollbackPluginsToggle",
     "writePluginsMutationPayload",
-    "usePluginsConfigMutation",
-    "pluginsService.updateConfig",
-    "beginPluginsConfigMutation",
-    "rollbackPluginsConfig",
   ]);
   assertNotMatches("src/features/plugins/hooks/mutation.ts", mutation, [
     [/\buseQuery\b/, "plugins mutation owner 不得 owning query"],
@@ -1076,14 +1101,8 @@ function validatePluginsDeepOwnerBoundaries() {
     "usePluginsListQuery",
     "usePluginsRefreshMutation",
     "usePluginsToggleMutation",
-    "usePluginConfigQuery",
-    "usePluginsConfigMutation",
-    "selectedPluginId",
-    "selectedPlugin",
-    "configDraft",
-    "configErrorKey",
-    "setConfigDraft",
-    "saveConfig",
+    "refreshAction",
+    "togglePlugin",
   ]);
   assertNotMatches("src/features/plugins/hooks/page.ts", page, [
     [/\buse(Query|Mutation|QueryClient)\b/, "plugins page/controller 只能组合 query/refresh/mutation hook，不得直接 owning TanStack"],
@@ -1096,15 +1115,9 @@ function validatePluginsDeepOwnerBoundaries() {
     "export interface PluginsPageAction",
     "export interface PluginsTogglePluginAction",
     "export interface PluginsPagePanelProps",
-    "export interface PluginsConfigPanelController",
-    "selectedPluginId",
-    "selectedPlugin",
-    "configQuery",
-    "configDraft",
-    "configErrorKey",
-    "canSaveConfig",
-    "setConfigDraft",
-    "saveConfig",
+    "pluginsQuery",
+    "refreshAction",
+    "togglePlugin",
   ]);
   if (
     panelOwnerText.includes("ReturnType<typeof usePluginsPageController>") ||
@@ -1124,14 +1137,6 @@ function validatePluginsDeepOwnerBoundaries() {
     "writePluginsMutationPayload",
     "invalidatePluginsContractQueries",
     "invalidateQueries({ queryKey: PLUGINS_LIST_QUERY_KEY })",
-    "PLUGINS_CONFIG_QUERY_ROOT",
-    "getPluginsConfigQueryKey",
-    "writePluginsConfigQueryPayload",
-    "beginPluginsConfigMutation",
-    "rollbackPluginsConfig",
-    "isPluginsConfigEnvelope",
-    "queryClient.setQueryData(getPluginsConfigQueryKey",
-    "invalidateQueries({ queryKey: PLUGINS_CONFIG_QUERY_ROOT })",
   ]);
   if (
     !cacheOwnerText.includes("nextPluginsCacheSequence") ||
@@ -1150,19 +1155,16 @@ function validatePluginsDeepOwnerBoundaries() {
   ]);
 
   assertIncludes("src/features/plugins/panels/page.tsx", panelPage, [
-    "PluginsConfigSection",
-    "Textarea",
     "Button",
-    "selectedPlugin",
-    "configDraft",
-    "configErrorKey",
-    "setConfigDraft",
-    "saveConfig",
-    "plugins.configJson",
-    "plugins.saveConfig",
+    "Switch",
+    "PluginsPageHeader",
+    "controller.refreshAction",
+    "PluginsListSection",
+    "PluginRows",
+    "controller.togglePlugin.run",
   ]);
 
-  console.log("PASS plugins 深层 owner 边界门禁已执行：hooks/index、query、refresh、mutation、page、cache、types、panels");
+  console.log("PASS plugins 深层 owner 边界门禁已执行：list/toggle/refresh owner 保留，config UI owner 未提升");
 }
 
 function validateTrayShellDeepOwnerBoundaries() {
