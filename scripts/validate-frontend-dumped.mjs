@@ -52,6 +52,65 @@ const appShellDesktopMessageQueryContract = {
   surfacePath: "src/app/runtime/popover.tsx",
 };
 
+const appShellIndexQueryContracts = [
+  {
+    source: "assets/index-CL22l5v8.js",
+    queryKey: "quota-history",
+    hitCount: 2,
+    module: "accounts",
+    status: "owner-closed",
+    ownerCachePath: "src/features/accounts/cache/index.ts",
+    ownerHookPath: "src/features/accounts/hooks/mutation.ts",
+    consumerPath: "src/features/overview/hooks/mutation.ts",
+    commands: ["load_snapshot", "refresh_usage_snapshot"],
+    ownerFragments: ["AccountsDumpedQueryKeys", "quotaHistory"],
+    hookFragments: ["refreshUsageSnapshotMutation", "invalidateAccountsDumpedQueries"],
+    consumerFragments: ["refreshUsageMutation", "invalidateOverviewUsageMutationQueries"],
+  },
+  {
+    source: "assets/index-CL22l5v8.js",
+    queryKey: "usage-analytics",
+    hitCount: 1,
+    module: "analytics",
+    status: "owner-closed",
+    ownerCachePath: "src/features/analytics/cache/index.ts",
+    ownerHookPath: "src/features/analytics/hooks/query.ts",
+    consumerPath: "src/features/overview/hooks/query.ts",
+    commands: ["load_usage_analytics"],
+    ownerFragments: ["AnalyticsDumpedQueryKeys", "usage"],
+    hookFragments: ["AnalyticsDumpedQueryKeys.usage", "loadUsageAnalytics"],
+    consumerFragments: ["usageQuery", "loadUsageAnalytics"],
+  },
+  {
+    source: "assets/index-CL22l5v8.js",
+    queryKey: "mcp-servers",
+    hitCount: 1,
+    module: "mcp",
+    status: "owner-closed",
+    ownerCachePath: "src/features/mcp/cache/index.ts",
+    ownerHookPath: "src/features/mcp/hooks/query.ts",
+    consumerPath: "src/features/overview/hooks/query.ts",
+    commands: ["load_mcp_servers"],
+    ownerFragments: ["MCP_SERVERS_QUERY_KEY", "mcp-servers"],
+    hookFragments: ["MCP_SERVERS_QUERY_KEY", "loadServers"],
+    consumerFragments: ["mcpQuery", "loadServers"],
+  },
+  {
+    source: "assets/index-CL22l5v8.js",
+    queryKey: "installed-skills",
+    hitCount: 1,
+    module: "skills",
+    status: "owner-closed",
+    ownerCachePath: "src/features/skills/cache/index.ts",
+    ownerHookPath: "src/features/skills/hooks/query.ts",
+    consumerPath: "src/features/overview/hooks/query.ts",
+    commands: ["load_installed_skills"],
+    ownerFragments: ["SKILLS_INSTALLED_QUERY_KEY", "installed-skills"],
+    hookFragments: ["SKILLS_INSTALLED_QUERY_KEY", "loadInstalled"],
+    consumerFragments: ["skillsQuery", "loadInstalled"],
+  },
+];
+
 const failures = [];
 
 function toRepoPath(path) {
@@ -375,6 +434,11 @@ function extractTsStringField(block, field) {
   return block.match(new RegExp(`${field}:\\s*"([^"]*)"`))?.[1] ?? "";
 }
 
+function extractTsNumberField(block, field) {
+  const value = block.match(new RegExp(`${field}:\\s*(\\d+)`))?.[1];
+  return value ? Number(value) : NaN;
+}
+
 function extractTsStringArrayField(block, field) {
   const match = block.match(new RegExp(`${field}:\\s*\\[([\\s\\S]*?)\\]`));
   if (!match) return [];
@@ -400,10 +464,23 @@ function rawQueryHitHasKey(hit, queryKey) {
   );
 }
 
+function rawQueryHitMatchHasKey(hit, queryKey) {
+  return new RegExp(`queryKey\\s*:\\s*\\[\\s*["']${queryKey}["']\\s*\\]`).test(
+    String(hit.match ?? ""),
+  );
+}
+
 function isAppShellDesktopMessageQueryHit(hit) {
   return (
     normalizePath(String(hit.file ?? "")) === appShellDesktopMessageQueryContract.source &&
-    rawQueryHitHasKey(hit, appShellDesktopMessageQueryContract.queryKey)
+    rawQueryHitMatchHasKey(hit, appShellDesktopMessageQueryContract.queryKey)
+  );
+}
+
+function appShellIndexQueryContractForHit(hit) {
+  const file = normalizePath(String(hit.file ?? ""));
+  return appShellIndexQueryContracts.find(
+    (contract) => file === contract.source && rawQueryHitMatchHasKey(hit, contract.queryKey),
   );
 }
 
@@ -1014,6 +1091,120 @@ function validateAppShellDesktopMessageQueryMatrix(raw, manifest) {
   }
 }
 
+function validateAppShellIndexQueryMatrix(raw, manifest) {
+  const before = failures.length;
+  const blocks = extractTsConstArrayBlocks(
+    manifest,
+    "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
+  );
+  const entries = blocks.map((block) => ({
+    module: extractTsStringField(block, "module"),
+    source: extractTsStringField(block, "source"),
+    queryKey: extractTsStringField(block, "queryKey"),
+    hitCount: extractTsNumberField(block, "hitCount"),
+    status: extractTsStringField(block, "status"),
+    ownerCache: extractTsStringField(block, "ownerCache"),
+    ownerHook: extractTsStringField(block, "ownerHook"),
+    consumer: extractTsStringField(block, "consumer"),
+    commands: extractTsStringArrayField(block, "commands"),
+    reason: extractTsStringField(block, "reason"),
+  }));
+
+  const uniqueKeys = new Set(entries.map((entry) => entry.queryKey));
+  if (uniqueKeys.size !== entries.length) {
+    failures.push("app-shell index query matrix 不允许重复登记同一个 queryKey。");
+  }
+
+  for (const contract of appShellIndexQueryContracts) {
+    const hits = raw.queryHits.filter(
+      (hit) =>
+        normalizePath(String(hit.file ?? "")) === contract.source &&
+        rawQueryHitMatchHasKey(hit, contract.queryKey),
+    );
+    if (hits.length !== contract.hitCount) {
+      failures.push(
+        `${contract.queryKey} app-shell/index raw hit 数量必须为 ${contract.hitCount}，当前为 ${hits.length}。`,
+      );
+    }
+
+    const entry = entries.find((item) => item.queryKey === contract.queryKey);
+    if (!entry) {
+      failures.push(`app-shell index query matrix 缺少 ${contract.queryKey}。`);
+      continue;
+    }
+
+    const expectedFields = {
+      module: contract.module,
+      source: contract.source,
+      status: contract.status,
+      ownerCache: contract.ownerCachePath,
+      ownerHook: contract.ownerHookPath,
+      consumer: contract.consumerPath,
+    };
+    for (const [field, expected] of Object.entries(expectedFields)) {
+      const actual = entry[field];
+      if (actual !== expected) {
+        failures.push(
+          `${contract.queryKey} app-shell index query matrix 的 ${field} 必须为 ${expected}，当前为 ${actual || "空"}。`,
+        );
+      }
+    }
+
+    if (entry.hitCount !== contract.hitCount) {
+      failures.push(
+        `${contract.queryKey} app-shell index query matrix 的 hitCount 必须为 ${contract.hitCount}，当前为 ${Number.isNaN(entry.hitCount) ? "空" : entry.hitCount}。`,
+      );
+    }
+
+    for (const command of contract.commands) {
+      if (!entry.commands.includes(command)) {
+        failures.push(`${contract.queryKey} app-shell index query matrix 缺少命令 ${command}。`);
+      }
+    }
+
+    if (!hasAnyFragment(entry.reason, ["归属", "owner", "app-shell", "index"])) {
+      failures.push(`${contract.queryKey} app-shell index query matrix 必须写明 index 命中如何回到模块归属。`);
+    }
+
+    const ownerCache = readRequired(resolveRepoPath(contract.ownerCachePath));
+    const ownerHook = readRequired(resolveRepoPath(contract.ownerHookPath));
+    const consumer = readRequired(resolveRepoPath(contract.consumerPath));
+
+    for (const fragment of [contract.queryKey, ...contract.ownerFragments]) {
+      if (!ownerCache.includes(fragment)) {
+        failures.push(`${contract.queryKey} owner cache 缺少 ${fragment}：${contract.ownerCachePath}`);
+      }
+    }
+    for (const fragment of contract.hookFragments) {
+      if (!ownerHook.includes(fragment)) {
+        failures.push(`${contract.queryKey} owner hook 缺少 ${fragment}：${contract.ownerHookPath}`);
+      }
+    }
+    for (const fragment of contract.consumerFragments) {
+      if (!consumer.includes(fragment)) {
+        failures.push(`${contract.queryKey} consumer 缺少 ${fragment}：${contract.consumerPath}`);
+      }
+    }
+  }
+
+  const closedCount = raw.queryHits.filter(appShellIndexQueryContractForHit).length;
+  const expectedCount = appShellIndexQueryContracts.reduce(
+    (total, contract) => total + contract.hitCount,
+    0,
+  );
+  if (closedCount !== expectedCount) {
+    failures.push(
+      `app-shell index query closure raw hit 数量必须为 ${expectedCount}，当前为 ${closedCount}。`,
+    );
+  }
+
+  if (failures.length === before) {
+    logPass("app-shell index query closure", `${closedCount}/${expectedCount}`);
+  } else {
+    logFail("app-shell index query closure", "存在 evidence、manifest 或模块 owner 缺口");
+  }
+}
+
 function validateVoiceManifestBoundary(expectedCommands) {
   const before = failures.length;
   const manifest = readRequired(frontendManifestPath);
@@ -1241,9 +1432,11 @@ function validateRawQueryKeys(queryHits, rawModules) {
   const appShellQueryHits = queryHits.filter(
     (hit) => !moduleChunks.has(normalizePath(String(hit.file ?? ""))),
   );
-  const closedAppShellQueryHits = appShellQueryHits.filter(isAppShellDesktopMessageQueryHit);
+  const closedAppShellQueryHits = appShellQueryHits.filter(
+    (hit) => isAppShellDesktopMessageQueryHit(hit) || appShellIndexQueryContractForHit(hit),
+  );
   const unclosedAppShellQueryHits = appShellQueryHits.filter(
-    (hit) => !isAppShellDesktopMessageQueryHit(hit),
+    (hit) => !isAppShellDesktopMessageQueryHit(hit) && !appShellIndexQueryContractForHit(hit),
   );
   const keyToEvidence = extractRawQueryKeys(moduleQueryHits);
 
@@ -1471,6 +1664,7 @@ validatePluginsRestorationMatrix(frontendManifest);
 validateAppShellRemoteSecretRestorationMatrix(raw, frontendManifest);
 validateIndexAssetSourceManifest(raw, frontendManifest);
 validateAppShellDesktopMessageQueryMatrix(raw, frontendManifest);
+validateAppShellIndexQueryMatrix(raw, frontendManifest);
 validateVoiceReopenedContract();
 validateRawPageRouteAndContent(rawModules);
 validateRouterEvidence(rawModules, raw.routerHits);
