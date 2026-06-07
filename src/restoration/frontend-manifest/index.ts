@@ -300,7 +300,7 @@ export const FRONTEND_DUMPED_APP_SHELL_DESKTOP_MESSAGE_QUERY_MATRIX = [
     runtimeOwner: "src/app/runtime/message.ts",
     surface: "src/app/runtime/popover.tsx",
     reason:
-      "dumped evidence 只证明 desktop-message queryKey 和 staleTime，没有可审计 endpoint；runtime 只能登记 source-only 边界并说明空 payload 来源。",
+      "dumped 证据只证明 desktop-message queryKey 和 staleTime，没有可审计 endpoint；运行时只能登记 source-only 边界并说明空负载来源。",
   },
 ] as const satisfies readonly FrontendDumpedAppShellDesktopMessageQueryRestorationRequirement[];
 
