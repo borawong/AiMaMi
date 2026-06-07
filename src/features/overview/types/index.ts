@@ -1,3 +1,7 @@
+import type {
+  UseMutationResult,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import type {
   CoreEnvelope,
@@ -29,6 +33,15 @@ export type OverviewCachePayload =
 export type OverviewCacheEnvelope<
   TPayload extends OverviewCachePayload = OverviewCachePayload,
 > = ModuleCacheEnvelope<TPayload>;
+export type OverviewSnapshotQuery = UseQueryResult<OverviewSnapshotEnvelope, Error>;
+export type OverviewUsageQuery = UseQueryResult<OverviewUsageEnvelope, Error>;
+export type OverviewMcpQuery = UseQueryResult<OverviewMcpEnvelope, Error>;
+export type OverviewSkillsQuery = UseQueryResult<OverviewSkillsEnvelope, Error>;
+export type OverviewDeviceIdQuery = UseQueryResult<string, Error>;
+export type OverviewNotificationQuery =
+  UseQueryResult<OverviewNotificationEnvelope, Error>;
+export type OverviewMysteryGrantsQuery =
+  UseQueryResult<OverviewMysteryGrantsEnvelope, Error>;
 export type OverviewRecordPayload = DailyActivity | McpServerSummary;
 export type OverviewPayloadSummaryValue =
   | OverviewRecordPayload
@@ -144,6 +157,44 @@ export interface OverviewImportRemoteSecretDialog {
 
 export interface OverviewDialogController {
   importRemoteSecret: OverviewImportRemoteSecretDialog;
+}
+
+export interface OverviewQueryController {
+  snapshotQuery: OverviewSnapshotQuery;
+  usageQuery: OverviewUsageQuery;
+  mcpQuery: OverviewMcpQuery;
+  skillsQuery: OverviewSkillsQuery;
+  deviceIdQuery: OverviewDeviceIdQuery;
+  notificationStateQuery: OverviewNotificationQuery;
+  mysteryUnlockGrantsQuery: OverviewMysteryGrantsQuery;
+}
+
+export interface OverviewMutationController {
+  refreshUsageMutation: UseMutationResult<
+    OverviewSnapshotEnvelope,
+    Error,
+    void,
+    unknown
+  >;
+  focusMainWindowMutation: UseMutationResult<void, Error, void, unknown>;
+  remoteDeviceSecretMutation: UseMutationResult<string, Error, void, unknown>;
+  importRemoteSecretMutation: UseMutationResult<void, Error, string, unknown>;
+  mergeMysteryGrantsMutation: UseMutationResult<
+    OverviewMysteryGrantsEnvelope,
+    Error,
+    MysteryRouteGrant[],
+    unknown
+  >;
+}
+
+export interface OverviewModuleController
+  extends OverviewQueryController,
+    OverviewMutationController {
+  remoteDeviceSecret: string | null;
+  setRemoteDeviceSecret: (secret: string | null) => void;
+  importRemoteSecretDialog: OverviewImportRemoteSecretDialog;
+  refreshUsageAction: OverviewAction;
+  focusMainWindowAction: OverviewAction;
 }
 
 export type OverviewDataPanelModel =

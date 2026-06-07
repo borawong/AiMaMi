@@ -1364,6 +1364,153 @@ function validateMaintenanceDeepOwnerBoundaries() {
   console.log("PASS maintenance deep owner gate executed: hooks/index, query, mutation, page, cache, types, dialogs/panels/components");
 }
 
+function validateOverviewDeepOwnerBoundaries() {
+  const overviewRoot = join(featuresRoot, "overview");
+  const hooksIndexPath = join(overviewRoot, "hooks", "index.ts");
+  const queryPath = join(overviewRoot, "hooks", "query.ts");
+  const mutationPath = join(overviewRoot, "hooks", "mutation.ts");
+  const pagePath = join(overviewRoot, "hooks", "page.ts");
+  const cachePath = join(overviewRoot, "cache", "index.ts");
+  const typesPath = join(overviewRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    ...walkFiles(join(overviewRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(overviewRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(overviewRoot, "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
+
+  assertOnlyBarrelReExports("src/features/overview/hooks/index.ts", hooksIndex, [
+    "query",
+    "mutation",
+    "page",
+  ]);
+  assertNotMatches("src/features/overview/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "overview hooks/index can only re-export split owners"],
+    [/\b(writeOverview|setQueryData|invalidateQueries|cancelQueries|Overview[A-Za-z]*QueryKeys|OVERVIEW_[A-Z0-9_]+_QUERY_KEY)\b/, "overview hooks/index must not own cache writes or query keys"],
+    [/@\/services\/(?:accounts|analytics|mcp|skills|system)|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|(?:accounts|analytics|mcp|skills|system)Service\.|invokeIpc|invoke\(/, "overview hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/overview/hooks/query.ts", query, [
+    "useOverviewCacheController",
+    "useModuleCacheController(OverviewCache)",
+    "useOverviewPageQueries",
+    "useQuery",
+    "useQueryClient",
+    "accountsService.loadSnapshot(true)",
+    "analyticsService.loadUsageAnalytics",
+    "mcpService.loadServers",
+    "skillsService.loadInstalled",
+    "systemService.getDeviceId",
+    "systemService.getNotificationClientState",
+    "systemService.getMysteryUnlockGrants",
+    "runOverviewQuery",
+  ]);
+  assertNotMatches("src/features/overview/hooks/query.ts", query, [
+    [/\buseMutation\b/, "overview query owner must not own mutation"],
+    [/\buse(State|Reducer|Memo)\b/, "overview query owner must not own page/controller UI state or view models"],
+    [/\b(writeOverviewMutationPayload|writeOverviewMysteryGrantsPayload|invalidateOverviewContractQueries|setQueryData|cancelQueries)\b/, "overview query owner must delegate mutation writes and invalidation"],
+    [/toast\(|useTranslation|OverviewPageController|setRemoteDeviceSecret|importRemoteSecret/, "overview query owner must not own page controller, locale formatting, or dialog state"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "overview query owner must use module service wrappers, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "overview query owner must keep typed authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/overview/hooks/mutation.ts", mutation, [
+    "useOverviewPageMutations",
+    "useMutation",
+    "useQueryClient",
+    "accountsService.refreshUsageSnapshot",
+    "systemService.focusMainWindow",
+    "systemService.getOrCreateRemoteDeviceSecret",
+    "systemService.importRemoteDeviceSecretIfEmpty",
+    "systemService.mergeMysteryUnlockGrants",
+    "writeOverviewMutationPayload",
+    "writeOverviewMysteryGrantsPayload",
+    "prepareOverviewMutation",
+    "invalidateOverviewUsageMutationQueries",
+    "invalidateOverviewMysteryGrantsQueries",
+  ]);
+  assertNotMatches("src/features/overview/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "overview mutation owner must not own query"],
+    [/\buse(State|Reducer|Effect|Memo)\b/, "overview mutation owner must not own page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries)\b/, "overview mutation owner must delegate cache writes and invalidation to cache helper"],
+    [/toast\(|useTranslation|OverviewPageController|setRemoteDeviceSecret|importRemoteSecret(?:Draft|Open|Dialog)/, "overview mutation owner must not own page controller, locale formatting, or dialog state"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "overview mutation owner must use module service wrappers, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|useMutation<unknown/, "overview mutation owner must keep typed mutation payloads"],
+  ]);
+
+  assertIncludes("src/features/overview/hooks/page.ts", page, [
+    "useOverviewPageController",
+    "OverviewPageController",
+    "useOverviewPageQueries",
+    "useOverviewPageMutations",
+    "useState",
+    "useTranslation",
+    "envelopeData<CoreSnapshotPayload>",
+    "readArray<DailyActivity>",
+    "readArray<McpServerSummary>",
+    "readArray<InstalledSkillSummary>",
+  ]);
+  assertNotMatches("src/features/overview/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "overview page/controller may compose split owner hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|writeOverview|Overview[A-Za-z]*QueryKeys|OVERVIEW_[A-Z0-9_]+_QUERY_KEY)\b/, "overview page/controller must not write cache, invalidate, cancel, or consume query keys"],
+    [/@\/services\/(?:accounts|analytics|mcp|skills|system)|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|(?:accounts|analytics|mcp|skills|system)Service\.|invokeIpc|invoke\(/, "overview page/controller must not access service/API/IPC directly"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "overview page/controller must not use generic authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/overview/types/index.ts", types, [
+    "export type OverviewSnapshotEnvelope",
+    "export type OverviewUsageEnvelope",
+    "export type OverviewMcpEnvelope",
+    "export type OverviewSkillsEnvelope",
+    "export type OverviewNotificationEnvelope",
+    "export type OverviewMysteryGrantsEnvelope",
+    "export type OverviewCachePayload",
+    "export interface OverviewPageController",
+  ]);
+  assertNotMatches("src/features/overview/types/index.ts", types, [
+    [/OverviewPageController\s*=\s*ReturnType|ReturnType<typeof useOverviewPageController>/, "overview controller contract must be explicit, not ReturnType"],
+    [/OverviewCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown|items:\s*unknown\[\]/, "overview types owner must keep typed cache payloads"],
+  ]);
+
+  assertIncludes("src/features/overview/cache/index.ts", cache, [
+    "createModuleCacheOwner<OverviewCachePayload>(\"overview\")",
+    "OverviewQueryKeys",
+    "OVERVIEW_MYSTERY_GRANTS_QUERY_KEY",
+    "writeOverviewAuthoritativePayload",
+    "writeOverviewQueryPayload",
+    "writeOverviewMutationPayload",
+    "writeOverviewMysteryGrantsPayload",
+    "invalidateOverviewContractQueries",
+    "Omit<OverviewCacheEnvelope<TPayload>, \"moduleId\">",
+  ]);
+  assertNotMatches("src/features/overview/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "overview cache owner must not own React hooks"],
+    [/@\/services\/(?:accounts|analytics|mcp|skills|system)|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|(?:accounts|analytics|mcp|skills|system)Service\.|invokeIpc|invoke\(/, "overview cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("overview"\)|OverviewCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "overview cache owner must keep typed payloads"],
+  ]);
+
+  if (controllerConsumerText.includes("ReturnType<typeof useOverviewPageController>")) {
+    failures.push("src/features/overview panels/dialogs/components must consume explicit Overview controller types, not hook ReturnType");
+  }
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+Overview[A-Za-z]*(?:Controller|Props)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/overview panels/dialogs/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS overview deep owner gate executed: hooks/index, query, mutation, page, cache, types, panels/dialogs/components");
+}
+
 function validateFeatureDeepOwners() {
   for (const moduleId of featureModules) {
     const moduleRoot = join(featuresRoot, moduleId);
@@ -1632,6 +1779,7 @@ validateSettingsDeepOwnerBoundaries();
 validateSkillsDeepOwnerBoundaries();
 validateRelayDeepOwnerBoundaries();
 validateMaintenanceDeepOwnerBoundaries();
+validateOverviewDeepOwnerBoundaries();
 validateRouteShells();
 validateFeaturePageShells();
 validateServiceOwners();

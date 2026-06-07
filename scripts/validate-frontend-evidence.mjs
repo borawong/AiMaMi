@@ -1009,7 +1009,10 @@ function validateSharedCacheTypedGate() {
 function validateOverviewTypedPayloadGate() {
   const typesPath = join(repoRoot, "src", "features", "overview", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "overview", "cache", "index.ts");
-  const hooksPath = join(repoRoot, "src", "features", "overview", "hooks", "index.ts");
+  const hooksIndexPath = join(repoRoot, "src", "features", "overview", "hooks", "index.ts");
+  const queryHookPath = join(repoRoot, "src", "features", "overview", "hooks", "query.ts");
+  const mutationHookPath = join(repoRoot, "src", "features", "overview", "hooks", "mutation.ts");
+  const pageHookPath = join(repoRoot, "src", "features", "overview", "hooks", "page.ts");
   const utilsPath = join(repoRoot, "src", "features", "overview", "utils", "index.ts");
   const boundaryPanelPath = join(repoRoot, "src", "features", "overview", "panels", "boundary.tsx");
   const dataPanelPath = join(repoRoot, "src", "features", "overview", "panels", "data.tsx");
@@ -1019,7 +1022,10 @@ function validateOverviewTypedPayloadGate() {
   const recordsPanelPath = join(repoRoot, "src", "features", "overview", "panels", "records.tsx");
   const types = readRequired(typesPath);
   const cache = readRequired(cachePath);
-  const hooks = readRequired(hooksPath);
+  const hooksIndex = readRequired(hooksIndexPath);
+  const queryHook = readRequired(queryHookPath);
+  const mutationHook = readRequired(mutationHookPath);
+  const pageHook = readRequired(pageHookPath);
   const utils = readRequired(utilsPath);
   const boundaryPanel = readRequired(boundaryPanelPath);
   const dataPanel = readRequired(dataPanelPath);
@@ -1027,6 +1033,26 @@ function validateOverviewTypedPayloadGate() {
   const systemService = readRequired(systemServicePath);
   const payloadPanel = readRequired(payloadPanelPath);
   const recordsPanel = readRequired(recordsPanelPath);
+  const hooksIndexReExportPattern =
+    /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const hooksIndexReExports = [...hooksIndex.matchAll(hooksIndexReExportPattern)].map(
+    (match) => match[1],
+  );
+  const hooksIndexOnlyReExports =
+    hooksIndex
+      .replace(hooksIndexReExportPattern, "")
+      .replace(/\/\/.*$/gm, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .trim() === "" &&
+    ["query", "mutation", "page"].every(
+      (owner) =>
+        hooksIndex.includes(`from "./${owner}"`) ||
+        hooksIndex.includes(`from './${owner}'`),
+    ) &&
+    hooksIndexReExports.every((reExport) =>
+      ["./query", "./mutation", "./page"].includes(reExport),
+    );
+  const splitOwnerText = `${queryHook}\n${mutationHook}\n${pageHook}`;
 
   const typedPayloadOk =
     types.includes("export type OverviewCachePayload") &&
@@ -1042,24 +1068,63 @@ function validateOverviewTypedPayloadGate() {
     types.includes("run?: () => Promise<unknown> | unknown") &&
     types.includes("ModuleCacheEnvelope<TPayload>") &&
     cache.includes("createModuleCacheOwner<OverviewCachePayload>(\"overview\")") &&
+    cache.includes("OverviewQueryKeys") &&
     cache.includes("OVERVIEW_MYSTERY_GRANTS_QUERY_KEY") &&
+    cache.includes("writeOverviewQueryPayload") &&
+    cache.includes("writeOverviewMutationPayload") &&
     cache.includes("writeOverviewMysteryGrantsPayload") &&
     cache.includes("Omit<OverviewCacheEnvelope<TPayload>, \"moduleId\">") &&
-    hooks.includes("writeOverviewAuthoritativePayload") &&
-    hooks.includes("systemService.getOrCreateRemoteDeviceSecret()") &&
-    hooks.includes("systemService.importRemoteDeviceSecretIfEmpty(secret.trim())") &&
-    hooks.includes("systemService.mergeMysteryUnlockGrants(") &&
-    hooks.includes("writeOverviewMysteryGrantsPayload(queryClient, payload)") &&
-    hooks.includes("queryKey: OVERVIEW_MYSTERY_GRANTS_QUERY_KEY") &&
-    hooks.includes("envelopeData<CoreSnapshotPayload>") &&
-    hooks.includes("envelopeData<UsageAnalyticsPayload>") &&
-    hooks.includes("envelopeData<McpServerListPayload>") &&
-    hooks.includes("envelopeData<SkillListPayload>") &&
-    hooks.includes("envelopeData<NotificationClientStatePayload>") &&
-    hooks.includes("envelopeData<MysteryRouteGrant[]>") &&
-    hooks.includes("readArray<DailyActivity>") &&
-    hooks.includes("readArray<McpServerSummary>") &&
-    hooks.includes("readArray<InstalledSkillSummary>") &&
+    cache.includes("invalidateOverviewContractQueries") &&
+    hooksIndexOnlyReExports &&
+    !/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/.test(hooksIndex) &&
+    !/\b(writeOverview|setQueryData|invalidateQueries|cancelQueries)\b/.test(hooksIndex) &&
+    !/@\/services\/(?:accounts|analytics|mcp|skills|system)|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|(?:accounts|analytics|mcp|skills|system)Service\.|invokeIpc|invoke\(/.test(hooksIndex) &&
+    queryHook.includes("useOverviewCacheController") &&
+    queryHook.includes("useOverviewPageQueries") &&
+    queryHook.includes("useQuery") &&
+    queryHook.includes("useQueryClient") &&
+    queryHook.includes("accountsService.loadSnapshot(true)") &&
+    queryHook.includes("analyticsService.loadUsageAnalytics") &&
+    queryHook.includes("mcpService.loadServers") &&
+    queryHook.includes("skillsService.loadInstalled") &&
+    queryHook.includes("systemService.getDeviceId") &&
+    queryHook.includes("systemService.getNotificationClientState") &&
+    queryHook.includes("systemService.getMysteryUnlockGrants") &&
+    queryHook.includes("runOverviewQuery") &&
+    !queryHook.includes("useMutation") &&
+    !queryHook.includes("payload: unknown") &&
+    mutationHook.includes("useOverviewPageMutations") &&
+    mutationHook.includes("useMutation") &&
+    mutationHook.includes("useQueryClient") &&
+    mutationHook.includes("accountsService.refreshUsageSnapshot") &&
+    mutationHook.includes("systemService.focusMainWindow") &&
+    mutationHook.includes("systemService.getOrCreateRemoteDeviceSecret()") &&
+    mutationHook.includes("systemService.importRemoteDeviceSecretIfEmpty(secret.trim())") &&
+    mutationHook.includes("systemService.mergeMysteryUnlockGrants(") &&
+    mutationHook.includes("writeOverviewMutationPayload") &&
+    /writeOverviewMysteryGrantsPayload\(\s*queryClient,\s*payload/.test(mutationHook) &&
+    mutationHook.includes("prepareOverviewMutation") &&
+    mutationHook.includes("invalidateOverviewUsageMutationQueries") &&
+    mutationHook.includes("invalidateOverviewMysteryGrantsQueries") &&
+    cache.includes("writeOverviewQueryPayload") &&
+    cache.includes("cancelQueries") &&
+    !mutationHook.includes("useQuery(") &&
+    !mutationHook.includes("payload: unknown") &&
+    pageHook.includes("useOverviewPageController") &&
+    pageHook.includes("OverviewPageController") &&
+    pageHook.includes("useOverviewPageQueries") &&
+    pageHook.includes("useOverviewPageMutations") &&
+    pageHook.includes("useState") &&
+    pageHook.includes("useTranslation") &&
+    pageHook.includes("envelopeData<CoreSnapshotPayload>") &&
+    pageHook.includes("envelopeData<UsageAnalyticsPayload>") &&
+    pageHook.includes("envelopeData<McpServerListPayload>") &&
+    pageHook.includes("envelopeData<SkillListPayload>") &&
+    pageHook.includes("envelopeData<NotificationClientStatePayload>") &&
+    pageHook.includes("envelopeData<MysteryRouteGrant[]>") &&
+    pageHook.includes("readArray<DailyActivity>") &&
+    pageHook.includes("readArray<McpServerSummary>") &&
+    pageHook.includes("readArray<InstalledSkillSummary>") &&
     utils.includes("items: InstalledSkillSummary[]") &&
     boundaryPanel.includes("onClick={() => void action.run?.()}") &&
     boundaryPanel.includes("disabled={action.disabled || action.isPending}") &&
@@ -1077,6 +1142,11 @@ function validateOverviewTypedPayloadGate() {
     !types.includes("payload: unknown") &&
     !cache.includes("createModuleCacheOwner(\"overview\")") &&
     !cache.includes("ModuleCacheEnvelope<unknown>") &&
+    !cache.includes("payload: unknown") &&
+    !splitOwnerText.includes("ModuleCacheEnvelope<unknown>") &&
+    !splitOwnerText.includes("payload: unknown") &&
+    !/\buse(Query|Mutation|QueryClient)\b/.test(pageHook) &&
+    !/@\/services\/(?:accounts|analytics|mcp|skills|system)|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|(?:accounts|analytics|mcp|skills|system)Service\.|invokeIpc|invoke\(/.test(pageHook) &&
     !payloadPanel.includes("value: unknown");
 
   if (!typedPayloadOk) {
