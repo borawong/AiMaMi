@@ -16,16 +16,27 @@ import {
   type RelayImportDialogInput,
   type RelayProviderDraft,
 } from "@/services/relay";
-import type { CoreEnvelope, RelayDiagnosticPayload, RelayExtraHeaders } from "@/types";
+import type {
+  CoreEnvelope,
+  RelayDiagnosticPayload,
+  RelayExtraHeaders,
+  RelayRouterTogglePayload,
+  RelayStatePayload,
+} from "@/types";
 import {
   invalidateRelayContractQueries,
   RelayCache,
   RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY,
   RELAY_STATE_QUERY_KEY,
   type RelayRouterToggleProgress,
+  writeRelayAuthoritativePayload,
   writeRelayRouterToggleProgress,
 } from "../cache";
 import type {
+  RelayCacheDataPayload,
+  RelayCachePayload,
+  RelayKnownQueryPayload,
+  RelayMutationDataPayload,
   RelayNetworkMode,
   RelayProviderForm,
   RelayProviderPreset,
@@ -257,7 +268,7 @@ function nextRelayCacheSequence() {
   return relayCacheSequence;
 }
 
-function writeRelayCachePayload<TPayload>(
+function writeRelayCachePayload<TPayload extends RelayCachePayload>(
   queryClient: QueryClient,
   payload: TPayload,
   source: "full-refresh" | "mutation-payload",
@@ -269,7 +280,7 @@ function writeRelayCachePayload<TPayload>(
   }
 
   relayLatestAcceptedSequence = sequence;
-  RelayCache.writeAuthoritativePayload(queryClient, {
+  writeRelayAuthoritativePayload(queryClient, {
     payload,
     source,
     sequence,
@@ -278,7 +289,7 @@ function writeRelayCachePayload<TPayload>(
   return true;
 }
 
-async function runRelayQuery<TPayload>(
+async function runRelayQuery<TPayload extends RelayCachePayload>(
   queryClient: QueryClient,
   queryKey: QueryKey,
   load: () => Promise<TPayload>,
@@ -291,8 +302,12 @@ async function runRelayQuery<TPayload>(
   return payload;
 }
 
-function useRelayEvidenceMutation<TVariables, TPayload>(
+function useRelayEvidenceMutation<TVariables, TPayload extends RelayMutationDataPayload>(
   mutationFn: (variables: TVariables) => Promise<CoreEnvelope<TPayload>>,
+  writeKnownQueries?: (
+    queryClient: QueryClient,
+    payload: CoreEnvelope<TPayload>,
+  ) => void,
 ) {
   const queryClient = useQueryClient();
 
@@ -319,7 +334,7 @@ function useRelayEvidenceMutation<TVariables, TPayload>(
         return;
       }
 
-      writeKnownRelayQueryPayload(queryClient, payload);
+      writeKnownQueries?.(queryClient, payload);
       void invalidateRelayContractQueries(queryClient);
     },
   });
@@ -331,77 +346,30 @@ function useRelayVoidMutation<TVariables>(
   return useMutation<void, Error, TVariables>({ mutationFn });
 }
 
-function writeKnownRelayQueryPayload<TPayload>(
-  queryClient: QueryClient,
-  payload: CoreEnvelope<TPayload>,
-) {
-  const data = readEnvelopeData(payload);
-  if (!isRecord(data)) return;
-
-  if (hasRelayStateShape(data)) {
-    writeQueryPayload(queryClient, RELAY_STATE_QUERY_KEY, payload, data);
-  }
-
-  if (hasRelayActiveShape(data)) {
-    writeQueryPayload(queryClient, relayActiveStateQueryKey, payload, data);
-  }
-
-  if (hasRelayProxyShape(data)) {
-    writeQueryPayload(queryClient, relayProxyStatusQueryKey, payload, data);
-  }
-}
-
-function writeQueryPayload(
+function writeQueryPayload<TPayload extends RelayKnownQueryPayload>(
   queryClient: QueryClient,
   queryKey: QueryKey,
-  sourcePayload: unknown,
-  data: unknown,
+  sourcePayload: CoreEnvelope<RelayCacheDataPayload>,
+  data: TPayload,
 ) {
-  queryClient.setQueryData<unknown>(queryKey, (current: unknown) => {
-    if (isEnvelopeRecord(current)) {
-      return { ...current, data };
-    }
-    if (isEnvelopeRecord(sourcePayload)) {
-      return { ...sourcePayload, data };
-    }
-    return data;
+  queryClient.setQueryData<CoreEnvelope<TPayload>>(queryKey, (current) => {
+    const base = current ?? sourcePayload;
+    return { ...base, data } as CoreEnvelope<TPayload>;
   });
 }
 
-function readEnvelopeData(value: unknown) {
-  if (isRecord(value) && "data" in value) {
-    return value.data ?? null;
-  }
-  return value ?? null;
+function writeRelayStateQueryPayload(
+  queryClient: QueryClient,
+  payload: CoreEnvelope<RelayStatePayload>,
+) {
+  writeQueryPayload(queryClient, RELAY_STATE_QUERY_KEY, payload, payload.data);
 }
 
-function hasRelayStateShape(value: Record<string, unknown>) {
-  return (
-    "providers" in value ||
-    "items" in value ||
-    "relayProviders" in value ||
-    "routerEnabled" in value ||
-    "codexRouterEnabled" in value ||
-    "blockOfficialPassthrough" in value ||
-    "passthroughBlocked" in value
-  );
-}
-
-function hasRelayActiveShape(value: Record<string, unknown>) {
-  return (
-    "providerId" in value ||
-    "activeProviderId" in value ||
-    "ide" in value ||
-    "activeIde" in value
-  );
-}
-
-function hasRelayProxyShape(value: Record<string, unknown>) {
-  return "reachable" in value || "status" in value || "code" in value;
-}
-
-function isEnvelopeRecord(value: unknown): value is Record<string, unknown> & { data: unknown } {
-  return isRecord(value) && "data" in value;
+function writeRelayRouterToggleQueryPayload(
+  queryClient: QueryClient,
+  payload: CoreEnvelope<RelayRouterTogglePayload>,
+) {
+  writeQueryPayload(queryClient, RELAY_STATE_QUERY_KEY, payload, payload.data.state);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -495,14 +463,17 @@ export function useRelayModule() {
   );
   const deleteProviderMutation = useRelayEvidenceMutation(
     (providerId: string) => relayService.delete(providerId),
+    writeRelayStateQueryPayload,
   );
   const activateProviderMutation = useRelayEvidenceMutation(
     ({ providerId, ide }: RelayProviderIdeInput) =>
       relayService.activate(providerId, ide),
+    writeRelayStateQueryPayload,
   );
   const deactivateProviderMutation = useRelayEvidenceMutation(
     ({ providerId, ide }: RelayProviderIdeInput) =>
       relayService.deactivate(providerId, ide),
+    writeRelayStateQueryPayload,
   );
   const setNetworkMutation = useRelayEvidenceMutation(
     ({ providerId, network }: RelayNetworkInput) =>
@@ -520,6 +491,7 @@ export function useRelayModule() {
   const setRouterEnabledMutation = useRelayEvidenceMutation(
     ({ enabled, relaunch }: RelayRouterInput) =>
       relayService.setCodexRouterEnabled(enabled, relaunch),
+    writeRelayRouterToggleQueryPayload,
   );
   const restartCodexAppMutation = useRelayVoidMutation<void>(
     () => relayService.restartCodexApp(),

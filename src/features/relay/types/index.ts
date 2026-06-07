@@ -1,8 +1,47 @@
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
-import type { RelayStatePayload } from "@/types";
+import type {
+  CoreEnvelope,
+  RelayActivePayload,
+  RelayDiagnosticPayload,
+  RelayExportPayload,
+  RelayImportPayload,
+  RelayPassthroughAuditEntry,
+  RelayProviderPayload,
+  RelayProxyPayload,
+  RelayRouterIssueFixPayload,
+  RelayRouterTogglePayload,
+  RelayStatePayload,
+  RelayTestPayload,
+} from "@/types";
 
 export type RelayModuleId = "relay";
-export type RelayCacheEnvelope<TPayload = RelayStatePayload> =
+export type RelayQueryDataPayload =
+  | RelayStatePayload
+  | RelayActivePayload
+  | RelayProxyPayload
+  | RelayPassthroughAuditEntry[];
+export type RelayMutationDataPayload =
+  | RelayProviderPayload
+  | RelayStatePayload
+  | RelayTestPayload
+  | string[]
+  | RelayRouterTogglePayload
+  | boolean
+  | RelayExportPayload
+  | RelayImportPayload
+  | RelayDiagnosticPayload
+  | RelayRouterIssueFixPayload;
+export type RelayCacheDataPayload =
+  | RelayQueryDataPayload
+  | RelayMutationDataPayload;
+export type RelayCachePayload = CoreEnvelope<RelayCacheDataPayload>;
+export type RelayKnownQueryPayload =
+  | RelayStatePayload
+  | RelayActivePayload
+  | RelayProxyPayload;
+export type RelayCacheEnvelope<
+  TPayload extends RelayCachePayload = RelayCachePayload,
+> =
   ModuleCacheEnvelope<TPayload>;
 
 export type WireApi = "openai-responses" | "anthropic" | "openai-chat";

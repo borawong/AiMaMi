@@ -1,14 +1,21 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { createModuleCacheOwner } from "@/features/_shared/cache";
+import type {
+  RelayCacheEnvelope,
+  RelayCachePayload,
+} from "../types";
 
-export const RelayCache = createModuleCacheOwner("relay");
+export const RelayCache = createModuleCacheOwner<RelayCachePayload>("relay");
 export const RelayQueryKeys = RelayCache.queryKeys;
 export const RELAY_STATE_QUERY_KEY = ["relay-state"] as const;
 export const RELAY_ROUTER_TOGGLE_PROGRESS_QUERY_KEY = [
   ...RelayCache.queryKeys.root,
   "router-toggle-progress",
 ] as const;
-export const writeRelayAuthoritativePayload = RelayCache.writeAuthoritativePayload;
+export const writeRelayAuthoritativePayload = <TPayload extends RelayCachePayload>(
+  queryClient: QueryClient,
+  envelope: Omit<RelayCacheEnvelope<TPayload>, "moduleId">,
+) => RelayCache.writeAuthoritativePayload(queryClient, envelope);
 
 export interface RelayRouterToggleProgress {
   label: string;

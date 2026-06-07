@@ -448,6 +448,7 @@ function validateKnownInternalFrontendGates() {
   const analyticsServicePath = join(repoRoot, "src", "services", "analytics", "index.ts");
   const relayHooksPath = join(repoRoot, "src", "features", "relay", "hooks", "index.ts");
   const relayCachePath = join(repoRoot, "src", "features", "relay", "cache", "index.ts");
+  const relayTypesPath = join(repoRoot, "src", "features", "relay", "types", "index.ts");
   const relayPagePath = join(repoRoot, "src", "features", "relay", "components", "page.tsx");
   const relayPanelsPath = join(repoRoot, "src", "features", "relay", "panels", "panels.tsx");
   const relayServicePath = join(repoRoot, "src", "services", "relay", "index.ts");
@@ -497,6 +498,7 @@ function validateKnownInternalFrontendGates() {
   const analyticsService = readRequired(analyticsServicePath);
   const relayHooks = readRequired(relayHooksPath);
   const relayCache = readRequired(relayCachePath);
+  const relayTypes = readRequired(relayTypesPath);
   const relayPage = readRequired(relayPagePath);
   const relayPanels = readRequired(relayPanelsPath);
   const relayService = readRequired(relayServicePath);
@@ -611,14 +613,44 @@ function validateKnownInternalFrontendGates() {
     relayService.includes('RelayNetworkConfig = "system" | "direct"') &&
     relayService.includes("CoreEnvelope<RelayStatePayload>") &&
     relayService.includes("CoreEnvelope<RelayProviderPayload>") &&
+    relayService.includes("CoreEnvelope<RelayTestPayload>") &&
+    relayService.includes("CoreEnvelope<string[]>") &&
+    relayService.includes("CoreEnvelope<RelayActivePayload>") &&
+    relayService.includes("CoreEnvelope<RelayProxyPayload>") &&
     relayService.includes("CoreEnvelope<RelayRouterTogglePayload>") &&
+    relayService.includes("CoreEnvelope<boolean>") &&
+    relayService.includes("CoreEnvelope<RelayExportPayload>") &&
+    relayService.includes("CoreEnvelope<RelayImportPayload>") &&
+    relayService.includes("CoreEnvelope<RelayPassthroughAuditEntry[]>") &&
     relayService.includes("CoreEnvelope<RelayDiagnosticPayload>") &&
+    relayService.includes("CoreEnvelope<RelayRouterIssueFixPayload>") &&
     relayService.includes("systemService.restartCodex()") &&
     !relayService.includes("IpcEvidencePayload") &&
     !relayService.includes("IpcJsonObject") &&
     !relayService.includes("extends IpcJsonObject") &&
     !relayService.includes('"restart_codex"') &&
+    relayTypes.includes("export type RelayQueryDataPayload") &&
+    relayTypes.includes("export type RelayMutationDataPayload") &&
+    relayTypes.includes("export type RelayCachePayload") &&
+    relayTypes.includes("export type RelayCacheDataPayload") &&
+    relayTypes.includes("export type RelayKnownQueryPayload") &&
+    relayTypes.includes("RelayPassthroughAuditEntry[]") &&
+    relayTypes.includes("| boolean") &&
+    relayTypes.includes("| RelayRouterIssueFixPayload") &&
+    relayTypes.includes("CoreEnvelope<RelayCacheDataPayload>") &&
+    !relayTypes.includes("RelayCacheEnvelope<TPayload = unknown>") &&
+    !relayTypes.includes("ModuleCacheEnvelope<unknown>") &&
+    relayCache.includes("createModuleCacheOwner<RelayCachePayload>(\"relay\")") &&
+    relayCache.includes("Omit<RelayCacheEnvelope<TPayload>, \"moduleId\">") &&
+    !relayCache.includes("createModuleCacheOwner(\"relay\")") &&
+    !relayCache.includes("ModuleCacheEnvelope<unknown>") &&
     relayHooks.includes("CoreEnvelope<TPayload>") &&
+    relayHooks.includes("TPayload extends RelayCachePayload") &&
+    relayHooks.includes("TPayload extends RelayMutationDataPayload") &&
+    relayHooks.includes("writeQueryPayload<TPayload extends RelayKnownQueryPayload>") &&
+    relayHooks.includes("writeRelayAuthoritativePayload(queryClient") &&
+    relayHooks.includes("writeRelayStateQueryPayload") &&
+    relayHooks.includes("writeRelayRouterToggleQueryPayload") &&
     relayHooks.includes("relayActiveStateQueryKey") &&
     relayHooks.includes("useRelayVoidMutation") &&
     !relayHooks.includes("useMutation<unknown") &&
@@ -626,7 +658,10 @@ function validateKnownInternalFrontendGates() {
     !relayHooks.includes("formatExtraHeaders(provider: unknown)") &&
     relayHooks.includes("formatExtraHeaders(extraHeaders: RelayExtraHeaders | undefined)") &&
     !relayHooks.includes("writeKnownRelayQueryPayload(queryClient: QueryClient, payload: unknown)") &&
-    !relayCache.includes("RelayCacheEnvelope<TPayload = unknown>");
+    !relayHooks.includes("RelayCache.writeAuthoritativePayload(queryClient") &&
+    !relayHooks.includes("setQueryData<unknown>") &&
+    !relayHooks.includes("sourcePayload: unknown") &&
+    !relayHooks.includes("data: unknown");
   if (!relayTypedPayloadOk) {
     failures.push("relay IPC payload owner 未收口到 typed envelope、独立 active query key 和 system restart facade");
   } else {
