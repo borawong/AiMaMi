@@ -442,7 +442,9 @@ function validateKnownInternalFrontendGates() {
   const sessionsCachePath = join(repoRoot, "src", "features", "sessions", "cache", "index.ts");
   const sessionsTypesPath = join(repoRoot, "src", "features", "sessions", "types", "index.ts");
   const sessionsServicePath = join(repoRoot, "src", "services", "sessions", "index.ts");
-  const analyticsHooksPath = join(repoRoot, "src", "features", "analytics", "hooks", "index.ts");
+  const analyticsHooksIndexPath = join(repoRoot, "src", "features", "analytics", "hooks", "index.ts");
+  const analyticsQueryPath = join(repoRoot, "src", "features", "analytics", "hooks", "query.ts");
+  const analyticsPageHookPath = join(repoRoot, "src", "features", "analytics", "hooks", "page.ts");
   const analyticsCachePath = join(repoRoot, "src", "features", "analytics", "cache", "index.ts");
   const analyticsTypesPath = join(repoRoot, "src", "features", "analytics", "types", "index.ts");
   const analyticsServicePath = join(repoRoot, "src", "services", "analytics", "index.ts");
@@ -500,7 +502,9 @@ function validateKnownInternalFrontendGates() {
   const sessionsCache = readRequired(sessionsCachePath);
   const sessionsTypes = readRequired(sessionsTypesPath);
   const sessionsService = readRequired(sessionsServicePath);
-  const analyticsHooks = readRequired(analyticsHooksPath);
+  const analyticsHooksIndex = readRequired(analyticsHooksIndexPath);
+  const analyticsQuery = readRequired(analyticsQueryPath);
+  const analyticsPageHook = readRequired(analyticsPageHookPath);
   const analyticsCache = readRequired(analyticsCachePath);
   const analyticsTypes = readRequired(analyticsTypesPath);
   const analyticsService = readRequired(analyticsServicePath);
@@ -576,6 +580,25 @@ function validateKnownInternalFrontendGates() {
     console.log("PASS sessions typed IPC payload owner：service/hook/cache");
   }
 
+  const analyticsHooksIndexReExportPattern =
+    /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const analyticsHooksIndexReExports = [...analyticsHooksIndex.matchAll(analyticsHooksIndexReExportPattern)].map(
+    (match) => match[1],
+  );
+  const analyticsHooksIndexOnlyReExports =
+    analyticsHooksIndex
+      .replace(analyticsHooksIndexReExportPattern, "")
+      .replace(/\/\/.*$/gm, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .trim() === "" &&
+    ["query", "page"].every(
+      (owner) =>
+        analyticsHooksIndex.includes(`from "./${owner}"`) ||
+        analyticsHooksIndex.includes(`from './${owner}'`),
+    ) &&
+    analyticsHooksIndexReExports.every((reExport) =>
+      new Set(["./query", "./page"]).has(reExport),
+    );
   const analyticsTypedPayloadOk =
     analyticsService.includes("CoreEnvelope<UsageAnalyticsPayload>") &&
     analyticsService.includes("CoreEnvelope<QuotaHistoryPayload>") &&
@@ -591,18 +614,36 @@ function validateKnownInternalFrontendGates() {
     analyticsTypes.includes("export type AnalyticsChangeEnvelope") &&
     analyticsTypes.includes("export type AnalyticsQuotaEnvelope") &&
     analyticsTypes.includes("export type AnalyticsCachePayload") &&
-    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsUsageEnvelope>") &&
-    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsSessionEnvelope>") &&
-    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsTokenEnvelope>") &&
-    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsToolEnvelope>") &&
-    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsChangeEnvelope>") &&
-    analyticsHooks.includes("AnalyticsCacheEnvelope<AnalyticsQuotaEnvelope>") &&
+    analyticsHooksIndexOnlyReExports &&
+    analyticsQuery.includes("AnalyticsCacheEnvelope<AnalyticsUsageEnvelope>") &&
+    analyticsQuery.includes("AnalyticsCacheEnvelope<AnalyticsSessionEnvelope>") &&
+    analyticsQuery.includes("AnalyticsCacheEnvelope<AnalyticsTokenEnvelope>") &&
+    analyticsQuery.includes("AnalyticsCacheEnvelope<AnalyticsToolEnvelope>") &&
+    analyticsQuery.includes("AnalyticsCacheEnvelope<AnalyticsChangeEnvelope>") &&
+    analyticsQuery.includes("AnalyticsCacheEnvelope<AnalyticsQuotaEnvelope>") &&
+    analyticsQuery.includes("useAnalyticsModule") &&
+    analyticsQuery.includes("writeAnalyticsPanelPayload") &&
+    analyticsPageHook.includes("useAnalyticsPageController") &&
+    analyticsPageHook.includes("AnalyticsPageController") &&
+    analyticsPageHook.includes("PANELS") &&
+    analyticsPageHook.includes("ANALYTICS_RANGES") &&
+    analyticsPageHook.includes("ACTIVITY_RANGES") &&
+    analyticsPageHook.includes("buildActivityPanel") &&
+    analyticsPageHook.includes("buildSessionsPanel") &&
+    analyticsPageHook.includes("buildTokenPanel") &&
+    analyticsPageHook.includes("buildToolsPanel") &&
+    analyticsPageHook.includes("buildChangesPanel") &&
+    analyticsPageHook.includes("buildQuotaPanel") &&
+    !analyticsPageHook.match(/\buse(Query|Mutation|QueryClient)\b/) &&
+    !analyticsPageHook.match(/@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|analyticsService\.|invokeIpc|invoke\(/) &&
     analyticsCache.includes("AnalyticsCachePayload") &&
-    !analyticsCache.includes("ModuleCacheEnvelope<unknown>");
+    !analyticsCache.includes("ModuleCacheEnvelope<unknown>") &&
+    !analyticsQuery.includes("payload: unknown") &&
+    !analyticsPageHook.includes("payload: unknown");
   if (!analyticsTypedPayloadOk) {
-    failures.push("analytics IPC payload owner 未收口到 typed envelope、模块 types 和 cache helper");
+    failures.push("analytics IPC payload owner 必须收口到 split query/page owner、typed envelope、模块 types 和 cache helper");
   } else {
-    console.log("PASS analytics typed IPC payload owner：service/hook/cache");
+    console.log("PASS analytics typed IPC payload owner：service/query/page/cache");
   }
 
   const relayEventOk =

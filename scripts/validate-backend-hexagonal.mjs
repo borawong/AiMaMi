@@ -1133,7 +1133,9 @@ function validateAnalyticsTypedPayloadContracts() {
   const servicePath = join(frontendRoot, "services", "analytics", "index.ts");
   const featureTypesPath = join(frontendRoot, "features", "analytics", "types", "index.ts");
   const featureCachePath = join(frontendRoot, "features", "analytics", "cache", "index.ts");
-  const featureHooksPath = join(frontendRoot, "features", "analytics", "hooks", "index.ts");
+  const featureHooksIndexPath = join(frontendRoot, "features", "analytics", "hooks", "index.ts");
+  const featureQueryHookPath = join(frontendRoot, "features", "analytics", "hooks", "query.ts");
+  const featurePageHookPath = join(frontendRoot, "features", "analytics", "hooks", "page.ts");
   const commandText = readUtf8(commandPath);
   const usecaseText = readUtf8(usecasePath);
   const contractText = readUtf8(contractPath);
@@ -1141,7 +1143,9 @@ function validateAnalyticsTypedPayloadContracts() {
   const serviceText = readUtf8(servicePath);
   const featureTypesText = readUtf8(featureTypesPath);
   const featureCacheText = readUtf8(featureCachePath);
-  const featureHooksText = readUtf8(featureHooksPath);
+  const featureHooksIndexText = readRequiredUtf8(featureHooksIndexPath, "analytics hooks index owner");
+  const featureQueryHookText = readRequiredUtf8(featureQueryHookPath, "analytics query hook owner");
+  const featurePageHookText = readRequiredUtf8(featurePageHookPath, "analytics page hook owner");
 
   assertContains(contractPath, contractText, [
     "pub(crate) struct SessionAnalyticsPayload",
@@ -1197,14 +1201,54 @@ function validateAnalyticsTypedPayloadContracts() {
     "export type AnalyticsCachePayload",
   ], "analytics 前端模块 typed cache payload");
 
-  assertContains(featureHooksPath, featureHooksText, [
+  const hooksIndexReExportPattern =
+    /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const hooksIndexReExports = [...featureHooksIndexText.matchAll(hooksIndexReExportPattern)].map(
+    (match) => match[1],
+  );
+  const hooksIndexOnlyReExports =
+    featureHooksIndexText
+      .replace(hooksIndexReExportPattern, "")
+      .replace(/\/\/.*$/gm, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .trim() === "" &&
+    ["query", "page"].every(
+      (owner) =>
+        featureHooksIndexText.includes(`from "./${owner}"`) ||
+        featureHooksIndexText.includes(`from './${owner}'`),
+    ) &&
+    hooksIndexReExports.every((reExport) =>
+      new Set(["./query", "./page"]).has(reExport),
+    );
+  if (!hooksIndexOnlyReExports) {
+    failures.push("src/features/analytics/hooks/index.ts must only re-export ./query and ./page split owners");
+  }
+
+  assertContains(featureQueryHookPath, featureQueryHookText, [
     "AnalyticsCacheEnvelope<AnalyticsUsageEnvelope>",
     "AnalyticsCacheEnvelope<AnalyticsSessionEnvelope>",
     "AnalyticsCacheEnvelope<AnalyticsTokenEnvelope>",
     "AnalyticsCacheEnvelope<AnalyticsToolEnvelope>",
     "AnalyticsCacheEnvelope<AnalyticsChangeEnvelope>",
     "AnalyticsCacheEnvelope<AnalyticsQuotaEnvelope>",
-  ], "analytics hooks typed authoritative envelope");
+    "useAnalyticsModule",
+    "writeAnalyticsPanelPayload",
+  ], "analytics query hooks typed authoritative envelope");
+
+  assertContains(featurePageHookPath, featurePageHookText, [
+    "useAnalyticsPageController",
+    "AnalyticsPageController",
+    "useAnalyticsModule",
+    "PANELS",
+    "ANALYTICS_RANGES",
+    "ACTIVITY_RANGES",
+    "buildActivityPanel",
+    "buildSessionsPanel",
+    "buildTokenPanel",
+    "buildToolsPanel",
+    "buildChangesPanel",
+    "buildQuotaPanel",
+  ], "analytics page controller split owner");
 
   assertNotContainsSnippet(contractPath, contractText, [
     "pub(crate) struct AnalyticsPayload",
@@ -1219,6 +1263,24 @@ function validateAnalyticsTypedPayloadContracts() {
   assertNotContainsSnippet(featureCachePath, featureCacheText, [
     "ModuleCacheEnvelope<unknown>",
   ], "analytics cache helper 不得使用 unknown authoritative envelope");
+  assertNotContainsSnippet(featureQueryHookPath, featureQueryHookText, [
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+    "IpcEvidencePayload",
+  ], "analytics query hooks must keep typed authoritative payloads");
+
+  assertNotContainsSnippet(featurePageHookPath, featurePageHookText, [
+    "useQuery",
+    "useQueryClient",
+    "analyticsService.",
+    "invokeIpc",
+    "invoke(",
+    "AnalyticsDumpedQueryKeys",
+    "AnalyticsAuthoritativeQueryKeys",
+    "writeAnalyticsPanelPayload",
+    "setQueryData",
+    "invalidateQueries",
+  ], "analytics page controller must not own TanStack, service/API/IPC, query keys, or cache writes");
 }
 
 validateAnalyticsTypedPayloadContracts();

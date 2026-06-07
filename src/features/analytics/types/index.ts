@@ -38,6 +38,12 @@ export type AnalyticsPanelId =
 
 export type AnalyticsActivityRange = "week" | "month" | "year";
 
+export interface AnalyticsModuleOptions {
+  activePanel?: AnalyticsPanelId;
+  quotaAccountKey?: string | null;
+  queriesEnabled?: boolean;
+}
+
 export interface AnalyticsOption<TValue extends string> {
   value: TValue;
   labelKey: string;
@@ -71,6 +77,13 @@ export interface AnalyticsHeatmapDay {
 export interface AnalyticsPanelState {
   loading: boolean;
   errorMessage: string | null;
+}
+
+export interface AnalyticsPanelQueryState {
+  isPending: boolean;
+  isFetching: boolean;
+  isError: boolean;
+  error: unknown;
 }
 
 export interface AnalyticsActivityPanelModel extends AnalyticsPanelState {

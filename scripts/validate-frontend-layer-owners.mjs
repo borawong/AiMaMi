@@ -177,6 +177,136 @@ function assertOnlyBarrelReExports(file, content, owners) {
   }
 }
 
+function validateAnalyticsDeepOwnerBoundaries() {
+  const analyticsRoot = join(featuresRoot, "analytics");
+  const hooksIndexPath = join(analyticsRoot, "hooks", "index.ts");
+  const queryPath = join(analyticsRoot, "hooks", "query.ts");
+  const pagePath = join(analyticsRoot, "hooks", "page.ts");
+  const cachePath = join(analyticsRoot, "cache", "index.ts");
+  const typesPath = join(analyticsRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    ...walkFiles(join(analyticsRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(analyticsRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(analyticsRoot, "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
+
+  assertOnlyBarrelReExports("src/features/analytics/hooks/index.ts", hooksIndex, [
+    "query",
+    "page",
+  ]);
+  assertNotMatches("src/features/analytics/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "analytics hooks/index can only re-export split owners"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|writeAnalytics|fenceAnalytics|Analytics[A-Za-z]*QueryKeys)\b/, "analytics hooks/index must not own cache writes or query keys"],
+    [/@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|analyticsService\.|invokeIpc|invoke\(/, "analytics hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/analytics/hooks/query.ts", query, [
+    "useAnalyticsCacheController",
+    "useModuleCacheController(AnalyticsCache)",
+    "useAnalyticsModule",
+    "useQuery",
+    "useQueryClient",
+    "analyticsService.loadUsageAnalytics",
+    "analyticsService.loadSessionAnalytics",
+    "analyticsService.loadTokenAnalytics",
+    "analyticsService.loadToolAnalytics",
+    "analyticsService.loadChangeAnalytics",
+    "analyticsService.loadQuotaHistory",
+    "AnalyticsAuthoritativeQueryKeys",
+    "AnalyticsDumpedQueryKeys",
+    "writeAnalyticsPanelPayload",
+    "AnalyticsCacheEnvelope<AnalyticsUsageEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsSessionEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsTokenEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsToolEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsChangeEnvelope>",
+    "AnalyticsCacheEnvelope<AnalyticsQuotaEnvelope>",
+  ]);
+  assertNotMatches("src/features/analytics/hooks/query.ts", query, [
+    [/\buseMutation\b/, "analytics query owner must not own mutation"],
+    [/\buse(State|Reducer|Memo)\b/, "analytics query owner must not own page/controller UI state or view models"],
+    [/useTranslation|formatInvokeError|build[A-Za-z]*(Panel|Model)|AnalyticsPageController|setActivePanel|setRange|setActivityRange|setQuotaAccountKey/, "analytics query owner must not own page controller, locale formatting, or panel view models"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "analytics query owner must use analytics service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "analytics query owner must keep typed authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/analytics/hooks/page.ts", page, [
+    "useAnalyticsPageController",
+    "AnalyticsPageController",
+    "useAnalyticsModule",
+    "useState",
+    "useMemo",
+    "useTranslation",
+    "PANELS",
+    "ANALYTICS_RANGES",
+    "ACTIVITY_RANGES",
+    "buildActivityPanel",
+    "buildSessionsPanel",
+    "buildTokenPanel",
+    "buildToolsPanel",
+    "buildChangesPanel",
+    "buildQuotaPanel",
+  ]);
+  assertNotMatches("src/features/analytics/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "analytics page/controller may compose query hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|writeAnalytics|fenceAnalytics|Analytics[A-Za-z]*QueryKeys)\b/, "analytics page/controller must not write cache, invalidate, cancel, or consume query keys"],
+    [/@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|analyticsService\.|invokeIpc|invoke\(/, "analytics page/controller must not access service/API/IPC directly"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "analytics page/controller must not use generic authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/analytics/types/index.ts", types, [
+    "export type AnalyticsUsageEnvelope",
+    "export type AnalyticsSessionEnvelope",
+    "export type AnalyticsTokenEnvelope",
+    "export type AnalyticsToolEnvelope",
+    "export type AnalyticsChangeEnvelope",
+    "export type AnalyticsQuotaEnvelope",
+    "export type AnalyticsCachePayload",
+    "export interface AnalyticsPageController",
+  ]);
+  assertNotMatches("src/features/analytics/types/index.ts", types, [
+    [/AnalyticsPageController\s*=\s*ReturnType|ReturnType<typeof useAnalyticsPageController>/, "analytics controller contract must be explicit, not ReturnType"],
+    [/AnalyticsCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "analytics types owner must keep typed cache payloads"],
+  ]);
+
+  assertIncludes("src/features/analytics/cache/index.ts", cache, [
+    "createModuleCacheOwner<AnalyticsCachePayload>(\"analytics\")",
+    "AnalyticsDumpedQueryKeys",
+    "AnalyticsAuthoritativeQueryKeys",
+    "writeAnalyticsPanelPayload",
+    "setQueryData<ModuleCacheEnvelope<AnalyticsCachePayload>>",
+    "mutationFenceAt",
+    "isStaleEnvelope",
+    "next.sequence < current.sequence",
+  ]);
+  assertNotMatches("src/features/analytics/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "analytics cache owner must not own React hooks"],
+    [/@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|analyticsService\.|invokeIpc|invoke\(/, "analytics cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("analytics"\)|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "analytics cache owner must keep typed payloads"],
+  ]);
+
+  if (controllerConsumerText.includes("ReturnType<typeof useAnalyticsPageController>")) {
+    failures.push("src/features/analytics panels/dialogs/components must consume explicit Analytics controller types, not hook ReturnType");
+  }
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+Analytics[A-Za-z]*(?:Controller|Props)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/analytics panels/dialogs/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS analytics deep owner gate executed: hooks/index, query, page, cache, types, panels/dialogs/components");
+}
+
 function validateMcpDeepOwnerBoundaries() {
   const mcpRoot = join(featuresRoot, "mcp");
   const hooksIndexPath = join(mcpRoot, "hooks", "index.ts");
@@ -1373,6 +1503,7 @@ validateSourceFileNames();
 validateNoDuplicatePublicCommonRoots();
 validateNoFeaturePublicCommonOwnerRoots();
 validateFeatureDeepOwners();
+validateAnalyticsDeepOwnerBoundaries();
 validateMcpDeepOwnerBoundaries();
 validatePluginsDeepOwnerBoundaries();
 validateTrayShellDeepOwnerBoundaries();
