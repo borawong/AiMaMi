@@ -428,6 +428,227 @@ function validateMcpTypedPayloadContracts() {
 validateMcpUpsertArgumentChain();
 validateMcpTypedPayloadContracts();
 
+function validateCustomInstructionsTypedPayloadContracts() {
+  const commandPath = join(backendRoot, "commands", "custom_instructions.rs");
+  const usecasePath = join(backendRoot, "application", "usecase", "custom_instructions.rs");
+  const contractPath = join(backendRoot, "contracts", "custom_instructions.rs");
+  const repositoryPath = join(backendRoot, "repository", "custom_instructions.rs");
+  const servicePath = join(frontendRoot, "services", "custom-instructions", "index.ts");
+  const ipcPath = join(frontendRoot, "contracts", "ipc", "commands.ts");
+  const featureTypesPath = join(frontendRoot, "features", "custom-instructions", "types", "index.ts");
+  const featureCachePath = join(frontendRoot, "features", "custom-instructions", "cache", "index.ts");
+  const featureHooksPath = join(frontendRoot, "features", "custom-instructions", "hooks", "index.ts");
+  const featureQueryHookPath = join(frontendRoot, "features", "custom-instructions", "hooks", "query.ts");
+  const featureMutationHookPath = join(frontendRoot, "features", "custom-instructions", "hooks", "mutation.ts");
+  const featureActionHookPath = join(frontendRoot, "features", "custom-instructions", "hooks", "action.ts");
+  const featurePageHookPath = join(frontendRoot, "features", "custom-instructions", "hooks", "page.ts");
+  const commandText = readRequiredUtf8(commandPath, "custom-instructions command adapter");
+  const usecaseText = readRequiredUtf8(usecasePath, "custom-instructions usecase");
+  const contractText = readRequiredUtf8(contractPath, "custom-instructions backend contract");
+  const repositoryText = readRequiredUtf8(repositoryPath, "custom-instructions repository");
+  const serviceText = readRequiredUtf8(servicePath, "custom-instructions service wrapper");
+  const ipcText = readRequiredUtf8(ipcPath, "custom-instructions IPC contract");
+  const featureTypesText = readRequiredUtf8(featureTypesPath, "custom-instructions feature types");
+  const featureCacheText = readRequiredUtf8(featureCachePath, "custom-instructions feature cache");
+  const featureHooksText = readRequiredUtf8(featureHooksPath, "custom-instructions hooks barrel");
+  const featureQueryHookText = readRequiredUtf8(featureQueryHookPath, "custom-instructions query hook");
+  const featureMutationHookText = readRequiredUtf8(featureMutationHookPath, "custom-instructions mutation hook");
+  const featureActionHookText = readRequiredUtf8(featureActionHookPath, "custom-instructions action hook");
+  const featurePageHookText = readRequiredUtf8(featurePageHookPath, "custom-instructions page hook");
+
+  assertContains(contractPath, contractText, [
+    "pub(crate) enum CustomInstructionProtectionState",
+    "pub(crate) enum CustomInstructionHistoryAction",
+    "pub(crate) struct CustomInstructionCurrentState",
+    "pub(crate) struct CustomInstructionHistoryEntry",
+    "pub(crate) struct CustomInstructionStatePayload",
+    "pub(crate) struct CustomInstructionPreviewPayload",
+    "pub status: BackendSkeletonStatus",
+    "pub history: Vec<CustomInstructionHistoryEntry>",
+  ], "custom-instructions backend typed DTO");
+
+  assertContains(commandPath, commandText, [
+    "Result<CoreEnvelope<CustomInstructionStatePayload>, String>",
+    "Result<CoreEnvelope<CustomInstructionPreviewPayload>, String>",
+    "content: Option<String>",
+    "source: Option<String>",
+    "template_code: Option<String>",
+    "template_title: Option<String>",
+    "history_id: Option<String>",
+    "state.services().custom_instructions().load_state()",
+    "state.services().custom_instructions()",
+    ".preview_apply(content)",
+    "state.services().custom_instructions().apply(",
+    "state.services().custom_instructions().clear_block()",
+    "state.services().custom_instructions().rollback(history_id)",
+  ], "custom-instructions command typed envelope");
+
+  assertContains(usecasePath, usecaseText, [
+    "Result<CoreEnvelope<CustomInstructionStatePayload>, CoreError>",
+    "Result<CoreEnvelope<CustomInstructionPreviewPayload>, CoreError>",
+    "BackendOperationPlan::pending",
+    "BackendOperationPlan::no_op",
+    "BackendBoundaryProbe::from_repository_source",
+    "CustomInstructionStatePayload {",
+    "CustomInstructionCurrentState {",
+    "CustomInstructionPreviewPayload {",
+    "required_text(",
+    "clean_optional_text(",
+  ], "custom-instructions usecase typed transaction");
+
+  assertContains(repositoryPath, repositoryText, [
+    "pub(crate) struct CustomInstructionsRepository",
+    "FileSystemAdapter",
+    "RepositoryPathContext",
+    "RepositoryPath::CustomInstructionsSource",
+    "source_path(&self) -> String",
+  ], "custom-instructions repository path boundary");
+
+  assertContains(servicePath, serviceText, [
+    "readEnvelopeData(",
+    "CoreEnvelope<CustomInstructionStatePayload>",
+    "CoreEnvelope<CustomInstructionPreviewPayload>",
+    '"load_custom_instruction_state"',
+    '"preview_custom_instruction_apply"',
+    '"apply_custom_instruction"',
+    '"clear_custom_instruction_block"',
+    '"rollback_custom_instruction"',
+    "systemService.openPath",
+  ], "custom-instructions service typed envelope");
+
+  assertContains(ipcPath, ipcText, [
+    '"load_custom_instruction_state"',
+    '"preview_custom_instruction_apply"',
+    '"apply_custom_instruction"',
+    '"clear_custom_instruction_block"',
+    '"rollback_custom_instruction"',
+  ], "custom-instructions IPC command contract");
+
+  assertContains(featureTypesPath, featureTypesText, [
+    "export type CustomInstructionsStateQueryKey",
+    "export type CustomInstructionsTemplatesQueryKey",
+    "export type CustomInstructionsCachePayload",
+    "export type CustomInstructionsCacheEnvelope",
+    "export interface CustomInstructionsPageController",
+  ], "custom-instructions frontend typed cache/controller contract");
+
+  assertContains(featureHooksPath, featureHooksText, [
+    'from "./query"',
+    'from "./mutation"',
+    'from "./action"',
+    'from "./page"',
+  ], "custom-instructions hooks barrel owner");
+
+  assertContains(featureQueryHookPath, featureQueryHookText, [
+    "CUSTOM_INSTRUCTION_STATE_QUERY_KEY",
+    "CUSTOM_INSTRUCTION_TEMPLATES_QUERY_KEY",
+    "customInstructionsService.loadState",
+    "runCustomInstructionsStateQuery",
+    "mergeCustomInstructionTemplates",
+  ], "custom-instructions query hook typed payload owner");
+
+  assertContains(featureMutationHookPath, featureMutationHookText, [
+    "customInstructionsService.previewApply",
+    "customInstructionsService.apply",
+    "customInstructionsService.clearBlock",
+    "customInstructionsService.rollback",
+    "writeCustomInstructionsStateMutationPayload",
+    "cancelQueries",
+  ], "custom-instructions mutation hook typed payload owner");
+
+  assertContains(featureActionHookPath, featureActionHookText, [
+    "useCustomInstructionPathActions",
+    "customInstructionsService.openPath",
+  ], "custom-instructions action hook owner");
+
+  assertContains(featurePageHookPath, featurePageHookText, [
+    "useCustomInstructionsPageController",
+    "CustomInstructionsPageController",
+    "useCustomInstructionQueries",
+    "useCustomInstructionMutations",
+    "useCustomInstructionPathActions",
+    "stateQuery.isError",
+    "templatesQuery.isError",
+    "loadErrorPanel",
+  ], "custom-instructions page controller owner");
+
+  assertContains(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner<CustomInstructionsCachePayload>(\"custom-instructions\")",
+    "Omit<CustomInstructionsCacheEnvelope<TPayload>, \"moduleId\">",
+    "writeCustomInstructionsStatePayload",
+    "runCustomInstructionsStateQuery",
+    "writeCustomInstructionsStateMutationPayload",
+    "invalidateCustomInstructionsContractQueries",
+    "setQueryData<CustomInstructionStatePayload>",
+    "nextCustomInstructionsCacheSequence",
+  ], "custom-instructions cache typed authoritative envelope");
+
+  assertNotContains(commandPath, commandText, [
+    /\bserde_json::Value\b/,
+    /\bCoreEnvelope<IpcEvidencePayload>\b/,
+    /\bCoreEnvelope<unknown>\b/,
+  ], "custom-instructions command must not return generic payload");
+
+  assertNotContains(usecasePath, usecaseText, [
+    /\bserde_json::Value\b/,
+    /\bCoreEnvelope<IpcEvidencePayload>\b/,
+    /\bCoreEnvelope<unknown>\b/,
+  ], "custom-instructions usecase must not return generic payload");
+
+  assertNotContains(servicePath, serviceText, [
+    /\bIpcEvidencePayload\b/,
+    /\bIpcJsonObject\b/,
+    /\bCoreEnvelope<unknown>\b/,
+  ], "custom-instructions service must not return generic evidence payload");
+
+  assertNotContains(featureHooksPath, featureHooksText, [
+    /\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/,
+    /@\/services\/custom-instructions|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|customInstructionsService\.|invokeIpc|invoke\(/,
+  ], "custom-instructions hooks/index must stay split barrel");
+
+  assertNotContains(featureActionHookPath, featureActionHookText, [
+    /\buse(Query|Mutation|QueryClient)\b/,
+    /\bsetQueryData|invalidateQueries|cancelQueries|CUSTOM_INSTRUCTION_[A-Z0-9_]+_QUERY_KEY|writeCustomInstructions\b/,
+    /@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/,
+  ], "custom-instructions action hook must not own TanStack, cache, or IPC");
+
+  assertNotContains(featurePageHookPath, featurePageHookText, [
+    /\buse(Query|Mutation|QueryClient)\b/,
+    /\bsetQueryData|invalidateQueries|cancelQueries|CUSTOM_INSTRUCTION_[A-Z0-9_]+_QUERY_KEY|runCustomInstructionsStateQuery|writeCustomInstructions\b/,
+    /@\/services\/custom-instructions|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|customInstructionsService\.|invokeIpc|invoke\(/,
+    /\bModuleCacheEnvelope<unknown>|payload:\s*unknown|response\.data\b/,
+  ], "custom-instructions page controller must not own TanStack, service/API/IPC, query keys, or cache writes");
+
+  assertNotContainsSnippet(featureTypesPath, featureTypesText, [
+    "CustomInstructionsCacheEnvelope<TPayload = unknown>",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "ReturnType<typeof useCustomInstructionsPageController>",
+  ], "custom-instructions feature types must keep explicit typed payloads and controller contracts");
+
+  assertNotContainsSnippet(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner(\"custom-instructions\")",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "customInstructionsService.",
+    "invokeIpc",
+  ], "custom-instructions cache must keep typed authoritative payloads");
+
+  assertNotContainsSnippet(featureQueryHookPath, featureQueryHookText, [
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "useMutation",
+  ], "custom-instructions query hook must keep typed authoritative payloads");
+
+  assertNotContainsSnippet(featureMutationHookPath, featureMutationHookText, [
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "useMutation<unknown",
+  ], "custom-instructions mutation hook must keep typed authoritative payloads");
+}
+
+validateCustomInstructionsTypedPayloadContracts();
+
 function validateSkillsTypedPayloadContracts() {
   const servicePath = join(frontendRoot, "services", "skills", "index.ts");
   const commandPath = join(backendRoot, "commands", "skills.rs");

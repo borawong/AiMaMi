@@ -1,17 +1,15 @@
 import { useTranslation } from "react-i18next";
 
 import { SegmentedOptions } from "@/components/ui/options";
-import type { CustomInstructionsTab } from "../types";
-
-interface CustomInstructionsPageHeaderPanelProps {
-  tab: CustomInstructionsTab;
-  onTabChange: (tab: CustomInstructionsTab) => void;
-}
+import type {
+  CustomInstructionsHeaderPanelController,
+  CustomInstructionsTab,
+} from "../types";
 
 export function CustomInstructionsPageHeaderPanel({
   tab,
   onTabChange,
-}: CustomInstructionsPageHeaderPanelProps) {
+}: CustomInstructionsHeaderPanelController) {
   const { t } = useTranslation();
 
   return (

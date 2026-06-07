@@ -307,6 +307,205 @@ function validateAnalyticsDeepOwnerBoundaries() {
   console.log("PASS analytics deep owner gate executed: hooks/index, query, page, cache, types, panels/dialogs/components");
 }
 
+function validateCustomInstructionsDeepOwnerBoundaries() {
+  const customInstructionsRoot = join(featuresRoot, "custom-instructions");
+  const hooksIndexPath = join(customInstructionsRoot, "hooks", "index.ts");
+  const queryPath = join(customInstructionsRoot, "hooks", "query.ts");
+  const mutationPath = join(customInstructionsRoot, "hooks", "mutation.ts");
+  const actionPath = join(customInstructionsRoot, "hooks", "action.ts");
+  const pagePath = join(customInstructionsRoot, "hooks", "page.ts");
+  const cachePath = join(customInstructionsRoot, "cache", "index.ts");
+  const typesPath = join(customInstructionsRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    ...walkFiles(join(customInstructionsRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(customInstructionsRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(customInstructionsRoot, "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const action = readRequired(actionPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
+
+  const hooksIndexReExportPattern =
+    /export\s+(type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const hooksIndexReExports = [...hooksIndex.matchAll(hooksIndexReExportPattern)].map(
+    (match) => ({ typeOnly: Boolean(match[1]), path: match[2] }),
+  );
+  const hooksIndexRemainder = hooksIndex
+    .replace(hooksIndexReExportPattern, "")
+    .replace(/\/\/.*$/gm, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .trim();
+  const hooksIndexAllowedReExports = new Set([
+    "./query",
+    "./mutation",
+    "./action",
+    "./page",
+    "../types",
+  ]);
+  if (hooksIndexRemainder) {
+    failures.push("src/features/custom-instructions/hooks/index.ts 只能作为 re-export barrel，不得包含 hook 实现、cache 写入或 page controller");
+  }
+  for (const owner of ["query", "mutation", "action", "page"]) {
+    if (!hooksIndexReExports.some((item) => item.path === `./${owner}`)) {
+      failures.push(`src/features/custom-instructions/hooks/index.ts 必须 re-export ./${owner} owner`);
+    }
+  }
+  for (const reExport of hooksIndexReExports) {
+    if (!hooksIndexAllowedReExports.has(reExport.path)) {
+      failures.push(`src/features/custom-instructions/hooks/index.ts 不得导出 ${reExport.path}`);
+    }
+    if (reExport.path === "../types" && !reExport.typeOnly) {
+      failures.push("src/features/custom-instructions/hooks/index.ts 只能从 ../types re-export 显式 controller 类型");
+    }
+  }
+  assertNotMatches("src/features/custom-instructions/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "custom-instructions hooks/index can only re-export split owners"],
+    [/\b(runCustomInstructionsStateQuery|writeCustomInstructions|setQueryData|invalidateQueries|cancelQueries|CUSTOM_INSTRUCTION_[A-Z0-9_]+_QUERY_KEY)\b/, "custom-instructions hooks/index must not own query keys or cache writes"],
+    [/@\/services\/custom-instructions|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|customInstructionsService\.|systemService\.|invokeIpc|invoke\(/, "custom-instructions hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/custom-instructions/hooks/query.ts", query, [
+    "useCustomInstructionsCacheController",
+    "useModuleCacheController(CustomInstructionsCache)",
+    "useCustomInstructionQueries",
+    "useQuery",
+    "useQueryClient",
+    "CUSTOM_INSTRUCTION_STATE_QUERY_KEY",
+    "CUSTOM_INSTRUCTION_TEMPLATES_QUERY_KEY",
+    "runCustomInstructionsStateQuery",
+    "customInstructionsService.loadState",
+    "mergeCustomInstructionTemplates",
+  ]);
+  assertNotMatches("src/features/custom-instructions/hooks/query.ts", query, [
+    [/\buseMutation\b/, "custom-instructions query owner must not own mutation"],
+    [/\buse(State|Reducer|Memo|Callback)\b/, "custom-instructions query owner must not own page/controller UI state or view models"],
+    [/\b(writeCustomInstructionsStateMutationPayload|invalidateCustomInstructionsContractQueries|setQueryData|cancelQueries)\b/, "custom-instructions query owner must delegate mutation writes and invalidation"],
+    [/toast\(|useTranslation|useBusyAction|CustomInstructionsPageController|loadErrorPanel|setDraftContent|setPreview|setPendingApply/, "custom-instructions query owner must not own page controller, locale formatting, busy actions, or dialog state"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "custom-instructions query owner must use module service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "custom-instructions query owner must keep typed authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/custom-instructions/hooks/mutation.ts", mutation, [
+    "useCustomInstructionMutations",
+    "useMutation",
+    "useQueryClient",
+    "customInstructionsService.previewApply",
+    "customInstructionsService.apply",
+    "customInstructionsService.clearBlock",
+    "customInstructionsService.rollback",
+    "writeCustomInstructionsStateMutationPayload",
+    "cancelQueries",
+  ]);
+  assertNotMatches("src/features/custom-instructions/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "custom-instructions mutation owner must not own query"],
+    [/\buse(State|Reducer|Effect|Memo|Callback)\b/, "custom-instructions mutation owner must not own page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries)\b/, "custom-instructions mutation owner must delegate cache writes and invalidation to cache helper"],
+    [/toast\(|useTranslation|useBusyAction|CustomInstructionsPageController|setDraftContent|setPreview|setPendingApply|previewOpen|clearOpen/, "custom-instructions mutation owner must not own page controller, locale formatting, busy actions, or dialog state"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "custom-instructions mutation owner must use module service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|useMutation<unknown|Promise<unknown>/, "custom-instructions mutation owner must keep typed mutation payloads"],
+  ]);
+
+  assertIncludes("src/features/custom-instructions/hooks/action.ts", action, [
+    "useCustomInstructionPathActions",
+    "customInstructionsService.openPath",
+  ]);
+  assertNotMatches("src/features/custom-instructions/hooks/action.ts", action, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "custom-instructions action owner must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|runCustomInstructionsStateQuery|writeCustomInstructions|CUSTOM_INSTRUCTION_[A-Z0-9_]+_QUERY_KEY)\b/, "custom-instructions action owner must not write cache or consume query keys"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "custom-instructions action owner must not bypass service wrapper"],
+    [/toast\(|useTranslation|useBusyAction|CustomInstructionsPageController|setDraftContent|setPreview|setPendingApply/, "custom-instructions action owner must not own page controller or UI feedback"],
+  ]);
+
+  assertIncludes("src/features/custom-instructions/hooks/page.ts", page, [
+    "useCustomInstructionsPageController",
+    "CustomInstructionsPageController",
+    "useCustomInstructionQueries",
+    "useCustomInstructionMutations",
+    "useCustomInstructionPathActions",
+    "useState",
+    "useMemo",
+    "useTranslation",
+    "useBusyAction",
+    "stateQuery.isError",
+    "templatesQuery.isError",
+    "loadErrorPanel",
+  ]);
+  assertNotMatches("src/features/custom-instructions/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "custom-instructions page/controller may compose split hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|runCustomInstructionsStateQuery|writeCustomInstructions|CUSTOM_INSTRUCTION_[A-Z0-9_]+_QUERY_KEY)\b/, "custom-instructions page/controller must not write cache, invalidate, cancel, or consume query keys"],
+    [/@\/services\/custom-instructions|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|customInstructionsService\.|systemService\.|invokeIpc|invoke\(/, "custom-instructions page/controller must not access service/API/IPC directly"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|response\.data/, "custom-instructions page/controller must not use generic authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/custom-instructions/types/index.ts", types, [
+    "export type CustomInstructionsStateQueryKey",
+    "export type CustomInstructionsTemplatesQueryKey",
+    "export type CustomInstructionsCachePayload",
+    "export type CustomInstructionsCacheEnvelope",
+    "export interface CustomInstructionsPageController",
+  ]);
+  assertIncludes("src/features/custom-instructions/types/index.ts", types, [
+    "export interface CustomInstructionsHeaderPanelController",
+    "export interface CustomInstructionsLoadErrorPanelController",
+    "export interface CustomInstructionsConfigurePanelController",
+    "export interface CustomInstructionsTemplatesPanelController",
+    "export interface CustomInstructionsBodyPanelController",
+    "export interface CustomInstructionsPreviewDialogController",
+    "export interface CustomInstructionsClearDialogController",
+  ]);
+  assertNotMatches("src/features/custom-instructions/types/index.ts", types, [
+    [/CustomInstructionsPageController\s*=\s*ReturnType|ReturnType<typeof useCustomInstructionsPageController>/, "custom-instructions controller contract must be explicit, not ReturnType"],
+    [/CustomInstructionsCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "custom-instructions types owner must keep typed cache payloads"],
+  ]);
+
+  assertIncludes("src/features/custom-instructions/cache/index.ts", cache, [
+    "createModuleCacheOwner<CustomInstructionsCachePayload>(\"custom-instructions\")",
+    "Omit<CustomInstructionsCacheEnvelope<TPayload>, \"moduleId\">",
+    "CUSTOM_INSTRUCTION_STATE_QUERY_KEY",
+    "CUSTOM_INSTRUCTION_TEMPLATES_QUERY_KEY",
+    "writeCustomInstructionsAuthoritativePayload",
+    "writeCustomInstructionsStatePayload",
+    "runCustomInstructionsStateQuery",
+    "writeCustomInstructionsStateMutationPayload",
+    "invalidateCustomInstructionsContractQueries",
+    "setQueryData<CustomInstructionStatePayload>",
+  ]);
+  if (
+    !cache.includes("nextCustomInstructionsCacheSequence") ||
+    !(
+      cache.includes("customInstructionsLatestAcceptedSequence") ||
+      cache.includes("sequence <")
+    )
+  ) {
+    failures.push("src/features/custom-instructions/cache/index.ts must own sequence/stale/delayed response protection");
+  }
+  assertNotMatches("src/features/custom-instructions/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "custom-instructions cache owner must not own React hooks"],
+    [/@\/services\/custom-instructions|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|customInstructionsService\.|systemService\.|invokeIpc|invoke\(/, "custom-instructions cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("custom-instructions"\)|CustomInstructionsCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "custom-instructions cache owner must keep typed payloads"],
+  ]);
+
+  if (controllerConsumerText.includes("ReturnType<typeof useCustomInstructionsPageController>")) {
+    failures.push("src/features/custom-instructions panels/dialogs/components must consume explicit CustomInstructions controller types, not hook ReturnType");
+  }
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+CustomInstructions[A-Za-z]*(?:Controller|Props)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/custom-instructions panels/dialogs/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS custom-instructions deep owner gate executed: hooks/index, query, mutation, action, page, cache, types, panels/dialogs/components");
+}
+
 function validateMcpDeepOwnerBoundaries() {
   const mcpRoot = join(featuresRoot, "mcp");
   const hooksIndexPath = join(mcpRoot, "hooks", "index.ts");
@@ -1772,6 +1971,7 @@ validateNoDuplicatePublicCommonRoots();
 validateNoFeaturePublicCommonOwnerRoots();
 validateFeatureDeepOwners();
 validateAnalyticsDeepOwnerBoundaries();
+validateCustomInstructionsDeepOwnerBoundaries();
 validateMcpDeepOwnerBoundaries();
 validatePluginsDeepOwnerBoundaries();
 validateTrayShellDeepOwnerBoundaries();

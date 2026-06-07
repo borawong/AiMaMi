@@ -10,10 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import type { CustomInstructionsPageController } from "../hooks";
-
-type CustomInstructionsPreviewApplyDialogProps =
-  CustomInstructionsPageController["previewDialog"];
+import type { CustomInstructionsPreviewDialogController } from "../types";
 
 export function CustomInstructionsPreviewApplyDialog({
   open,
@@ -21,7 +18,7 @@ export function CustomInstructionsPreviewApplyDialog({
   applying,
   onOpenChange,
   onApply,
-}: CustomInstructionsPreviewApplyDialogProps) {
+}: CustomInstructionsPreviewDialogController) {
   const { t } = useTranslation();
 
   return (

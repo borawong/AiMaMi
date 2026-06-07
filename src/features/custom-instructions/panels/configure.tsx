@@ -1,10 +1,7 @@
-import type { CustomInstructionsPageController } from "../hooks";
+import type { CustomInstructionsConfigurePanelController } from "../types";
 import { CustomInstructionsCurrentStatusPanel } from "./status";
 import { CustomInstructionsEditorPanel } from "./editor";
 import { CustomInstructionsHistoryPanel } from "./history";
-
-type CustomInstructionsConfigurePanelProps =
-  CustomInstructionsPageController["bodyPanel"]["configure"];
 
 export function CustomInstructionsConfigurePanel({
   current,
@@ -22,7 +19,7 @@ export function CustomInstructionsConfigurePanel({
   onPreviewDraft,
   onResetEditor,
   onRollback,
-}: CustomInstructionsConfigurePanelProps) {
+}: CustomInstructionsConfigurePanelController) {
   return (
     <div className="space-y-6">
       <CustomInstructionsCurrentStatusPanel

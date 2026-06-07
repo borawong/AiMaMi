@@ -1,15 +1,12 @@
-import type { CustomInstructionsPageController } from "../hooks";
+import type { CustomInstructionsBodyPanelController } from "../types";
 import { CustomInstructionsConfigurePanel } from "./configure";
 import { CustomInstructionsTemplatesPanel } from "./templates";
-
-type CustomInstructionsPageBodyPanelProps =
-  CustomInstructionsPageController["bodyPanel"];
 
 export function CustomInstructionsPageBodyPanel({
   tab,
   configure,
   templates,
-}: CustomInstructionsPageBodyPanelProps) {
+}: CustomInstructionsBodyPanelController) {
   return tab === "templates" ? (
     <CustomInstructionsTemplatesPanel {...templates} />
   ) : (

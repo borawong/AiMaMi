@@ -4,18 +4,8 @@ import { useTranslation } from "react-i18next";
 import { BentoCard } from "@/components/ui/bento";
 import { Button } from "@/components/ui/button";
 import { ButtonBusyContent } from "@/components/ui/busy";
-import type { CustomInstructionTemplate } from "@/lib/templates";
 import { TemplateCard } from "../components/template";
-import type { CustomInstructionTemplateView } from "../types";
-
-interface CustomInstructionsTemplatesPanelProps {
-  templates: CustomInstructionTemplateView[];
-  selectedTemplateCode: string | null;
-  refreshing: boolean;
-  onRefresh: () => Promise<void>;
-  onSelectTemplate: (template: CustomInstructionTemplate) => void;
-  onPreviewTemplate: (template: CustomInstructionTemplate) => void;
-}
+import type { CustomInstructionsTemplatesPanelController } from "../types";
 
 export function CustomInstructionsTemplatesPanel({
   templates,
@@ -24,7 +14,7 @@ export function CustomInstructionsTemplatesPanel({
   onRefresh,
   onSelectTemplate,
   onPreviewTemplate,
-}: CustomInstructionsTemplatesPanelProps) {
+}: CustomInstructionsTemplatesPanelController) {
   const { t } = useTranslation();
 
   return (

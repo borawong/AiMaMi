@@ -468,13 +468,45 @@ function validateKnownInternalFrontendGates() {
     "components",
     "page.tsx",
   );
-  const customInstructionsHooksPath = join(
+  const customInstructionsHooksIndexPath = join(
     repoRoot,
     "src",
     "features",
     "custom-instructions",
     "hooks",
     "index.ts",
+  );
+  const customInstructionsQueryHookPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "query.ts",
+  );
+  const customInstructionsMutationHookPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "mutation.ts",
+  );
+  const customInstructionsActionHookPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "action.ts",
+  );
+  const customInstructionsPageHookPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "page.ts",
   );
   const customInstructionsLoadErrorPanelPath = join(
     repoRoot,
@@ -520,7 +552,11 @@ function validateKnownInternalFrontendGates() {
   const relayDialogs = readRequired(relayDialogsPath);
   const relayService = readRequired(relayServicePath);
   const customInstructionsPage = readRequired(customInstructionsPagePath);
-  const customInstructionsHooks = readRequired(customInstructionsHooksPath);
+  readRequired(customInstructionsHooksIndexPath);
+  const customInstructionsQueryHook = readRequired(customInstructionsQueryHookPath);
+  readRequired(customInstructionsMutationHookPath);
+  readRequired(customInstructionsActionHookPath);
+  const customInstructionsPageHook = readRequired(customInstructionsPageHookPath);
   const customInstructionsLoadErrorPanel = readRequired(customInstructionsLoadErrorPanelPath);
   const skillsService = readRequired(skillsServicePath);
   const skillsPage = readRequired(skillsPagePath);
@@ -768,9 +804,10 @@ function validateKnownInternalFrontendGates() {
   }
 
   const customInstructionsErrorOk =
-    customInstructionsHooks.includes("stateQuery.isError") &&
-    customInstructionsHooks.includes("templatesQuery.isError") &&
-    customInstructionsHooks.includes("loadErrorPanel") &&
+    customInstructionsQueryHook.includes("useCustomInstructionQueries") &&
+    customInstructionsPageHook.includes("stateQuery.isError") &&
+    customInstructionsPageHook.includes("templatesQuery.isError") &&
+    customInstructionsPageHook.includes("loadErrorPanel") &&
     customInstructionsPage.includes("CustomInstructionsLoadErrorPanel") &&
     customInstructionsLoadErrorPanel.includes('role="alert"') &&
     customInstructionsLoadErrorPanel.includes("customInstructions.loadFailed");
@@ -1508,7 +1545,7 @@ function validateCustomInstructionsTypedPayloadGate() {
     "cache",
     "index.ts",
   );
-  const hooksPath = join(
+  const hooksIndexPath = join(
     repoRoot,
     "src",
     "features",
@@ -1516,10 +1553,66 @@ function validateCustomInstructionsTypedPayloadGate() {
     "hooks",
     "index.ts",
   );
+  const queryHookPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "query.ts",
+  );
+  const mutationHookPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "mutation.ts",
+  );
+  const actionHookPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "action.ts",
+  );
+  const pageHookPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "page.ts",
+  );
   const service = readRequired(servicePath);
   const types = readRequired(typesPath);
   const cache = readRequired(cachePath);
-  const hooks = readRequired(hooksPath);
+  const hooksIndex = readRequired(hooksIndexPath);
+  const queryHook = readRequired(queryHookPath);
+  const mutationHook = readRequired(mutationHookPath);
+  const actionHook = readRequired(actionHookPath);
+  const pageHook = readRequired(pageHookPath);
+
+  const hooksIndexReExportPattern =
+    /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const hooksIndexReExports = [...hooksIndex.matchAll(hooksIndexReExportPattern)].map(
+    (match) => match[1],
+  );
+  const hooksIndexOnlyReExports =
+    hooksIndex
+      .replace(hooksIndexReExportPattern, "")
+      .replace(/\/\/.*$/gm, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .trim() === "" &&
+    ["query", "mutation", "action", "page"].every(
+      (owner) =>
+        hooksIndex.includes(`from "./${owner}"`) ||
+        hooksIndex.includes(`from './${owner}'`),
+    ) &&
+    hooksIndexReExports.every((reExport) =>
+      new Set(["./query", "./mutation", "./action", "./page", "../types"]).has(reExport),
+    );
 
   const typedPayloadOk =
     service.includes("readEnvelopeData(") &&
@@ -1539,15 +1632,58 @@ function validateCustomInstructionsTypedPayloadGate() {
     cache.includes("runCustomInstructionsStateQuery") &&
     cache.includes("writeCustomInstructionsStateMutationPayload") &&
     cache.includes("setQueryData<CustomInstructionStatePayload>") &&
+    cache.includes("invalidateCustomInstructionsContractQueries") &&
+    cache.includes("nextCustomInstructionsCacheSequence") &&
+    (cache.includes("customInstructionsLatestAcceptedSequence") ||
+      cache.includes("sequence <")) &&
     !cache.includes("createModuleCacheOwner(\"custom-instructions\")") &&
     !cache.includes("ModuleCacheEnvelope<unknown>") &&
-    hooks.includes("runCustomInstructionsStateQuery") &&
-    hooks.includes("writeCustomInstructionsStateMutationPayload") &&
-    hooks.includes("const state = stateQuery.data;") &&
-    !hooks.includes("response.data") &&
-    !hooks.includes("writeCustomInstructionsCachePayload<TPayload>") &&
-    !hooks.includes("writeCustomInstructionsMutationPayload<TPayload>") &&
-    !hooks.includes("CustomInstructionsCache.writeAuthoritativePayload");
+    hooksIndexOnlyReExports &&
+    hooksIndex.includes('export type { CustomInstructionsPageController } from "../types"') &&
+    !/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/.test(hooksIndex) &&
+    !/\b(runCustomInstructionsStateQuery|writeCustomInstructions|setQueryData|invalidateQueries|cancelQueries)\b/.test(hooksIndex) &&
+    !/@\/services\/custom-instructions|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|customInstructionsService\.|invokeIpc|invoke\(/.test(hooksIndex) &&
+    queryHook.includes("useCustomInstructionsCacheController") &&
+    queryHook.includes("useModuleCacheController(CustomInstructionsCache)") &&
+    queryHook.includes("useQuery") &&
+    queryHook.includes("useQueryClient") &&
+    queryHook.includes("CUSTOM_INSTRUCTION_STATE_QUERY_KEY") &&
+    queryHook.includes("CUSTOM_INSTRUCTION_TEMPLATES_QUERY_KEY") &&
+    queryHook.includes("runCustomInstructionsStateQuery") &&
+    queryHook.includes("customInstructionsService.loadState") &&
+    queryHook.includes("mergeCustomInstructionTemplates") &&
+    !queryHook.includes("useMutation") &&
+    !queryHook.includes("writeCustomInstructionsStateMutationPayload") &&
+    !queryHook.includes("payload: unknown") &&
+    mutationHook.includes("useMutation") &&
+    mutationHook.includes("useQueryClient") &&
+    mutationHook.includes("customInstructionsService.previewApply") &&
+    mutationHook.includes("customInstructionsService.apply") &&
+    mutationHook.includes("customInstructionsService.clearBlock") &&
+    mutationHook.includes("customInstructionsService.rollback") &&
+    mutationHook.includes("writeCustomInstructionsStateMutationPayload") &&
+    mutationHook.includes("cancelQueries") &&
+    !mutationHook.includes("useQuery(") &&
+    !mutationHook.includes("useMutation<unknown") &&
+    !mutationHook.includes("payload: unknown") &&
+    actionHook.includes("useCustomInstructionPathActions") &&
+    actionHook.includes("customInstructionsService.openPath") &&
+    !/\b(useQuery|useMutation|useQueryClient|setQueryData|invalidateQueries|cancelQueries|CUSTOM_INSTRUCTION_[A-Z0-9_]+_QUERY_KEY|writeCustomInstructions)\b/.test(actionHook) &&
+    pageHook.includes("useCustomInstructionsPageController") &&
+    pageHook.includes("CustomInstructionsPageController") &&
+    pageHook.includes("useCustomInstructionQueries") &&
+    pageHook.includes("useCustomInstructionMutations") &&
+    pageHook.includes("useCustomInstructionPathActions") &&
+    pageHook.includes("const state = stateQuery.data;") &&
+    pageHook.includes("stateQuery.isError") &&
+    pageHook.includes("templatesQuery.isError") &&
+    pageHook.includes("loadErrorPanel") &&
+    !/\b(useQuery|useMutation|useQueryClient|setQueryData|invalidateQueries|cancelQueries|CUSTOM_INSTRUCTION_[A-Z0-9_]+_QUERY_KEY|runCustomInstructionsStateQuery|writeCustomInstructions)\b/.test(pageHook) &&
+    !/@\/services\/custom-instructions|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|customInstructionsService\.|invokeIpc|invoke\(/.test(pageHook) &&
+    !pageHook.includes("response.data") &&
+    !pageHook.includes("payload: unknown") &&
+    types.includes("export interface CustomInstructionsPageController") &&
+    !types.includes("ReturnType<typeof useCustomInstructionsPageController>");
 
   if (!typedPayloadOk) {
     failures.push("custom-instructions IPC payload owner 必须收口到 typed data payload、模块 types 和 cache helper");

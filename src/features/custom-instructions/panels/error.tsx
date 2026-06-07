@@ -4,18 +4,13 @@ import { useTranslation } from "react-i18next";
 import { BentoCard } from "@/components/ui/bento";
 import { Button } from "@/components/ui/button";
 import { ButtonBusyContent } from "@/components/ui/busy";
-
-interface CustomInstructionsLoadErrorPanelProps {
-  visible: boolean;
-  refreshing: boolean;
-  onRefresh: () => Promise<void>;
-}
+import type { CustomInstructionsLoadErrorPanelController } from "../types";
 
 export function CustomInstructionsLoadErrorPanel({
   visible,
   refreshing,
   onRefresh,
-}: CustomInstructionsLoadErrorPanelProps) {
+}: CustomInstructionsLoadErrorPanelController) {
   const { t } = useTranslation();
 
   if (!visible) return null;

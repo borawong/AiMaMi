@@ -10,17 +10,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert";
-import type { CustomInstructionsPageController } from "../hooks";
-
-type CustomInstructionsClearManagedBlockDialogProps =
-  CustomInstructionsPageController["clearDialog"];
+import type { CustomInstructionsClearDialogController } from "../types";
 
 export function CustomInstructionsClearManagedBlockDialog({
   open,
   clearing,
   onOpenChange,
   onConfirm,
-}: CustomInstructionsClearManagedBlockDialogProps) {
+}: CustomInstructionsClearDialogController) {
   const { t } = useTranslation();
 
   return (
