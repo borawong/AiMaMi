@@ -17,6 +17,16 @@ function flattenLocaleKeys(value, prefix = "") {
   });
 }
 
+function flattenLocaleEntries(value, prefix = "") {
+  return Object.entries(value).flatMap(([key, child]) => {
+    const nextPrefix = prefix ? `${prefix}.${key}` : key;
+    if (child && typeof child === "object" && !Array.isArray(child)) {
+      return flattenLocaleEntries(child, nextPrefix);
+    }
+    return [[nextPrefix, child]];
+  });
+}
+
 const sessionLocaleValueQualityKeys = [
   "sessions.childThread",
   "sessions.childThreadsInline",
@@ -60,6 +70,56 @@ function validateLocaleValueQuality(locale, localeName, keys) {
       .replace(/\s+/g, "");
     if (/^\?+$/.test(valueWithoutInterpolations) || value.includes("\uFFFD")) {
       failures.push(`${localeName} locale value looks corrupted: ${key}`);
+    }
+  }
+}
+
+function stripInterpolations(value) {
+  return value.replace(/\{\{[^}]*\}\}/g, "").replace(/\s+/g, "");
+}
+
+function hasReplacementChar(value) {
+  return value.includes("\uFFFD");
+}
+
+function hasQuestionRun(value) {
+  return /\?{3,}/.test(value);
+}
+
+function hasAsciiQuestionMark(value) {
+  return value.includes("?");
+}
+
+function isOnlyQuestionPlaceholder(value) {
+  const stripped = stripInterpolations(value);
+  return stripped.length > 0 && /^\?+$/.test(stripped);
+}
+
+function hasMojibakeFragment(value) {
+  return /[\uE000-\uF8FF]/.test(value) ||
+    /(?:绠|浣|撲|腑|鏂|涓|浠|鍚|绔|鍓|鍏|鐢|鏃|鍔|妯|缂|獙|璇|宸|彂|鐩|潰|鎬|銆|锛|€)/.test(value);
+}
+
+function validateAllLocaleValueQuality(locale, localeName, options = {}) {
+  for (const [key, value] of flattenLocaleEntries(locale)) {
+    if (typeof value !== "string") {
+      continue;
+    }
+
+    if (hasReplacementChar(value)) {
+      failures.push(`${localeName} locale value 含 replacement char：${key}`);
+    }
+    if (hasQuestionRun(value)) {
+      failures.push(`${localeName} locale value 含连续问号占位：${key}`);
+    }
+    if (options.rejectAsciiQuestionMark && hasAsciiQuestionMark(value)) {
+      failures.push(`${localeName} locale value 含 ASCII 问号：${key}`);
+    }
+    if (options.rejectQuestionOnly && isOnlyQuestionPlaceholder(value)) {
+      failures.push(`${localeName} locale value 只剩问号或插值占位：${key}`);
+    }
+    if (options.rejectMojibake && hasMojibakeFragment(value)) {
+      failures.push(`${localeName} locale value 疑似 mojibake 乱码：${key}`);
     }
   }
 }
@@ -138,6 +198,12 @@ for (const key of missingZh) {
 
 validateLocaleValueQuality(zh, "zh", sessionLocaleValueQualityKeys);
 validateLocaleValueQuality(en, "en", sessionLocaleValueQualityKeys);
+validateAllLocaleValueQuality(zh, "zh", {
+  rejectAsciiQuestionMark: true,
+  rejectQuestionOnly: true,
+  rejectMojibake: true,
+});
+validateAllLocaleValueQuality(en, "en");
 validateAccountTokenStatusKeys();
 
 for (const file of walkFiles(sourceRoot)) {

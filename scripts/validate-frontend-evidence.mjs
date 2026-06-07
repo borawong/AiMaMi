@@ -1200,6 +1200,54 @@ function validateKnownInternalFrontendGates() {
   }
 }
 
+function validateAccountsRestorationManifestCoverage() {
+  const manifestPath = join(
+    repoRoot,
+    "src",
+    "restoration",
+    "frontend-manifest",
+    "index.ts",
+  );
+  const manifest = readRequired(manifestPath);
+  const requiredCommands = [
+    "begin_add_account_attach_monitor",
+    "export_accounts_to_file",
+    "import_accounts_from_file",
+    "logout",
+    "preview_account_import",
+    "remove_accounts",
+    "switch_account",
+    "switch_account_and_restart_codex",
+  ];
+
+  if (!/type\s+SliceDDumpedModule[\s\S]*\|\s*"accounts"/.test(manifest)) {
+    failures.push("frontend manifest SliceDDumpedModule 必须包含 accounts");
+  }
+
+  for (const command of requiredCommands) {
+    const entryPattern = new RegExp(
+      String.raw`module:\s*"accounts"[\s\S]*?command:\s*"${command}"[\s\S]*?status:\s*"covered"`,
+    );
+    if (!entryPattern.test(manifest)) {
+      failures.push(`frontend manifest 缺少 accounts command coverage：${command}`);
+    }
+  }
+
+  const requiredOwnerFiles = [
+    "src/services/accounts/index.ts",
+    "src/features/accounts/hooks/mutation.ts",
+    "src/features/accounts/panels/actions.tsx",
+    "src/features/accounts/panels/detail.tsx",
+  ];
+  for (const ownerFile of requiredOwnerFiles) {
+    if (!manifest.includes(ownerFile)) {
+      failures.push(`frontend manifest accounts coverage 缺少 owner 文件：${ownerFile}`);
+    }
+  }
+
+  console.log(`PASS accounts restoration manifest coverage：${requiredCommands.length}/${requiredCommands.length}`);
+}
+
 function validateMcpTypedPayloadGate() {
   const servicePath = join(repoRoot, "src", "services", "mcp", "index.ts");
   const hooksPath = join(repoRoot, "src", "features", "mcp", "hooks", "index.ts");
@@ -2367,6 +2415,7 @@ validateQueryKeys(raw.queryHits);
 validatePageChunks(raw.frontendFiles);
 validateRoutesAndLocales(raw.controlFlow);
 validateKnownInternalFrontendGates();
+validateAccountsRestorationManifestCoverage();
 validateSharedCacheTypedGate();
 validateOverviewTypedPayloadGate();
 validateTrayShellTypedPayloadGate();

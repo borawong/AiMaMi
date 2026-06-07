@@ -42,6 +42,7 @@ export type FrontendDumpedContractSliceA =
   typeof FRONTEND_DUMPED_CONTRACT_SLICE_A;
 
 export type SliceDDumpedModule =
+  | "accounts"
   | "sessions"
   | "analytics"
   | "voice"
@@ -61,6 +62,78 @@ export interface SliceDDumpedCommandCoverage {
 }
 
 export const FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE = [
+  {
+    module: "accounts",
+    command: "begin_add_account_attach_monitor",
+    status: "covered",
+    service: "src/services/accounts/index.ts",
+    feature: "src/features/accounts/hooks/mutation.ts",
+    surface: "src/features/accounts/panels/actions.tsx",
+    note: "账号添加监控由 accounts service 暴露原始命令，mutation hook 写入账号模块缓存，操作面板只触发模块 action。",
+  },
+  {
+    module: "accounts",
+    command: "export_accounts_to_file",
+    status: "covered",
+    service: "src/services/accounts/index.ts",
+    feature: "src/features/accounts/hooks/mutation.ts",
+    surface: "src/features/accounts/panels/actions.tsx",
+    note: "账号导出由 accounts service 统一处理保存路径和 IPC wrapper，mutation 成功后只写回 accounts cache。",
+  },
+  {
+    module: "accounts",
+    command: "import_accounts_from_file",
+    status: "covered",
+    service: "src/services/accounts/index.ts",
+    feature: "src/features/accounts/hooks/mutation.ts",
+    surface: "src/features/accounts/panels/actions.tsx",
+    note: "账号文件导入由操作面板收集路径和选择项，hook 提交 mutation，并按模块合同刷新账号事实。",
+  },
+  {
+    module: "accounts",
+    command: "logout",
+    status: "covered",
+    service: "src/services/accounts/index.ts",
+    feature: "src/features/accounts/hooks/mutation.ts",
+    surface: "src/features/accounts/panels/actions.tsx",
+    note: "登出命令作为账号模块 action 暴露，页面不直连 IPC，结果经 mutation owner 写回缓存。",
+  },
+  {
+    module: "accounts",
+    command: "preview_account_import",
+    status: "covered",
+    service: "src/services/accounts/index.ts",
+    feature: "src/features/accounts/hooks/mutation.ts",
+    surface: "src/features/accounts/panels/actions.tsx",
+    note: "导入预览由 accounts service owning 打开文件对话框和 preview wrapper，面板只消费返回的文件路径和预览结果。",
+  },
+  {
+    module: "accounts",
+    command: "remove_accounts",
+    status: "covered",
+    service: "src/services/accounts/index.ts",
+    feature: "src/features/accounts/hooks/mutation.ts",
+    surface: "src/features/accounts/panels/detail.tsx",
+    note: "批量移除和详情页移除都归 accounts mutation owner，组件只传账号 key，不保存后端事实。",
+  },
+  {
+    module: "accounts",
+    command: "switch_account",
+    status: "covered",
+    service: "src/services/accounts/index.ts",
+    feature: "src/features/accounts/hooks/mutation.ts",
+    surface: "src/features/accounts/panels/detail.tsx",
+    note: "账号切换由详情面板和操作面板复用同一 mutation action，后端返回 payload 后再更新账号缓存。",
+  },
+  {
+    module: "accounts",
+    command: "switch_account_and_restart_codex",
+    status: "covered",
+    service: "src/services/accounts/index.ts",
+    feature: "src/features/accounts/hooks/mutation.ts",
+    surface: "src/features/accounts/panels/actions.tsx",
+    note: "切换并重启由账号操作面板触发，同样经 accounts mutation owner 写回结果，页面层不直连 IPC。",
+  },
   {
     module: "sessions",
     command: "load_sessions",
