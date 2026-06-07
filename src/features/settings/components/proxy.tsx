@@ -27,7 +27,7 @@ interface ApiProxyDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   currentProxy?: ApiProxyConfigPayload | null;
-  onSaved?: () => Promise<unknown> | void;
+  onSaved?: () => Promise<void> | void;
   defaultModeOnOpen?: ApiProxyMode;
 }
 

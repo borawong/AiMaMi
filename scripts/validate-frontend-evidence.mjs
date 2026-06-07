@@ -875,6 +875,47 @@ function validateTrayShellTypedPayloadGate() {
   }
 }
 
+function validateSettingsTypedPayloadGate() {
+  const typesPath = join(repoRoot, "src", "features", "settings", "types", "index.ts");
+  const cachePath = join(repoRoot, "src", "features", "settings", "cache", "index.ts");
+  const hooksPath = join(repoRoot, "src", "features", "settings", "hooks", "index.ts");
+  const proxyComponentPath = join(repoRoot, "src", "features", "settings", "components", "proxy.tsx");
+  const types = readRequired(typesPath);
+  const cache = readRequired(cachePath);
+  const hooks = readRequired(hooksPath);
+  const proxyComponent = readRequired(proxyComponentPath);
+
+  const typedPayloadOk =
+    types.includes("export type SettingsQueryPayload = boolean | RefreshInterval") &&
+    types.includes("export type SettingsWritableQueryKey") &&
+    types.includes("export type SettingsQueryPayloadForKey") &&
+    types.includes("export type SettingsCachePayload =") &&
+    types.includes("queryKey: SettingsHasNotchQueryKey") &&
+    types.includes("queryKey: SettingsUsageRefreshIntervalQueryKey") &&
+    types.includes("value: RefreshInterval") &&
+    types.includes("ModuleCacheEnvelope<TPayload>") &&
+    types.includes("onRefreshUsageStatus?: () => Promise<void> | void") &&
+    cache.includes("createModuleCacheOwner<SettingsCachePayload>(\"settings\")") &&
+    cache.includes("Omit<SettingsCacheEnvelope<TPayload>, \"moduleId\">") &&
+    cache.includes("TKey extends SettingsWritableQueryKey") &&
+    cache.includes("SettingsQueryPayloadForKey<TKey>") &&
+    cache.includes("toSettingsCachePayload") &&
+    cache.includes("writeSettingsAuthoritativePayload(queryClient") &&
+    hooks.includes("Promise<void> | void") &&
+    proxyComponent.includes("onSaved?: () => Promise<void> | void") &&
+    !types.includes("SettingsCacheEnvelope<TPayload = unknown>") &&
+    !cache.includes("createModuleCacheOwner(\"settings\")") &&
+    !cache.includes("ModuleCacheEnvelope<unknown>") &&
+    !hooks.includes("Promise<unknown> | void") &&
+    !proxyComponent.includes("Promise<unknown> | void");
+
+  if (!typedPayloadOk) {
+    failures.push("settings IPC payload owner 必须收口到 typed query payload、模块 types 和 cache helper");
+  } else {
+    console.log("PASS settings typed IPC payload owner：service/hook/cache");
+  }
+}
+
 function validateDaemonAutoswitchTypedPayloadGate() {
   const typesPath = join(repoRoot, "src", "features", "daemon-autoswitch", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "daemon-autoswitch", "cache", "index.ts");
@@ -1157,6 +1198,7 @@ validateKnownInternalFrontendGates();
 validateSharedCacheTypedGate();
 validateOverviewTypedPayloadGate();
 validateTrayShellTypedPayloadGate();
+validateSettingsTypedPayloadGate();
 validateDaemonAutoswitchTypedPayloadGate();
 validateMcpTypedPayloadGate();
 validatePluginsFrontendNoPromotionGate();

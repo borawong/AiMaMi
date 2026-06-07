@@ -4,20 +4,37 @@ import {
   createModuleCacheOwner,
   type ModuleCacheSource,
 } from "@/features/_shared/cache";
+import type {
+  SettingsCacheEnvelope,
+  SettingsCachePayload,
+  SettingsHasNotchQueryKey,
+  SettingsHotspotEnabledQueryKey,
+  SettingsImageCompatQueryKey,
+  SettingsQueryPayloadForKey,
+  SettingsRuntimeStateDisplayQueryKey,
+  SettingsUsageRefreshIntervalQueryKey,
+  SettingsWritableQueryKey,
+} from "../types";
 
-export const SettingsCache = createModuleCacheOwner("settings");
+export const SettingsCache =
+  createModuleCacheOwner<SettingsCachePayload>("settings");
 export const SettingsQueryKeys = SettingsCache.queryKeys;
-export const SETTINGS_RUNTIME_STATE_DISPLAY_QUERY_KEY = [
+export const SETTINGS_RUNTIME_STATE_DISPLAY_QUERY_KEY: SettingsRuntimeStateDisplayQueryKey = [
   "runtime-state",
   "display",
 ] as const;
-export const SETTINGS_HAS_NOTCH_QUERY_KEY = ["has-notch"] as const;
-export const SETTINGS_HOTSPOT_ENABLED_QUERY_KEY = ["hotspot-enabled"] as const;
-export const SETTINGS_IMAGE_COMPAT_QUERY_KEY = ["imageCompat"] as const;
-export const SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY = [
+export const SETTINGS_HAS_NOTCH_QUERY_KEY: SettingsHasNotchQueryKey = ["has-notch"] as const;
+export const SETTINGS_HOTSPOT_ENABLED_QUERY_KEY: SettingsHotspotEnabledQueryKey = ["hotspot-enabled"] as const;
+export const SETTINGS_IMAGE_COMPAT_QUERY_KEY: SettingsImageCompatQueryKey = ["imageCompat"] as const;
+export const SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY: SettingsUsageRefreshIntervalQueryKey = [
   "usage-refresh-interval",
 ] as const;
-export const writeSettingsAuthoritativePayload = SettingsCache.writeAuthoritativePayload;
+export const writeSettingsAuthoritativePayload = <
+  TPayload extends SettingsCachePayload,
+>(
+  queryClient: QueryClient,
+  envelope: Omit<SettingsCacheEnvelope<TPayload>, "moduleId">,
+) => SettingsCache.writeAuthoritativePayload(queryClient, envelope);
 
 let settingsModuleSequence = 0;
 const settingsQuerySequences = new Map<string, number>();
@@ -55,7 +72,7 @@ function canAcceptSettingsPayload(
   return sequence >= latestStarted && sequence >= mutationFence;
 }
 
-export function beginSettingsMutation(queryKey: QueryKey) {
+export function beginSettingsMutation(queryKey: SettingsWritableQueryKey) {
   const sequence = nextSettingsQuerySequence(queryKey);
   const serialized = serializeSettingsQueryKey(queryKey);
   settingsMutationFences.set(
@@ -65,10 +82,10 @@ export function beginSettingsMutation(queryKey: QueryKey) {
   return sequence;
 }
 
-export function writeSettingsQueryPayload<TPayload>(
+export function writeSettingsQueryPayload<TKey extends SettingsWritableQueryKey>(
   queryClient: QueryClient,
-  queryKey: QueryKey,
-  payload: TPayload,
+  queryKey: TKey,
+  payload: SettingsQueryPayloadForKey<TKey>,
   options: {
     source: ModuleCacheSource;
     sequence?: number;
@@ -84,12 +101,9 @@ export function writeSettingsQueryPayload<TPayload>(
     return false;
   }
 
-  queryClient.setQueryData<TPayload>(queryKey, payload);
-  SettingsCache.writeAuthoritativePayload(queryClient, {
-    payload: {
-      queryKey,
-      value: payload,
-    },
+  queryClient.setQueryData<SettingsQueryPayloadForKey<TKey>>(queryKey, payload);
+  writeSettingsAuthoritativePayload(queryClient, {
+    payload: toSettingsCachePayload(queryKey, payload),
     source: options.source,
     sequence: nextSettingsModuleSequence(),
     receivedAt: Date.now(),
@@ -97,10 +111,10 @@ export function writeSettingsQueryPayload<TPayload>(
   return true;
 }
 
-export async function runSettingsQuery<TPayload>(
+export async function runSettingsQuery<TKey extends SettingsWritableQueryKey>(
   queryClient: QueryClient,
-  queryKey: QueryKey,
-  load: () => Promise<TPayload>,
+  queryKey: TKey,
+  load: () => Promise<SettingsQueryPayloadForKey<TKey>>,
   source: ModuleCacheSource = "full-refresh",
 ) {
   const sequence = nextSettingsQuerySequence(queryKey);
@@ -111,16 +125,16 @@ export async function runSettingsQuery<TPayload>(
   });
 
   if (!accepted) {
-    return queryClient.getQueryData<TPayload>(queryKey) ?? payload;
+    return queryClient.getQueryData<SettingsQueryPayloadForKey<TKey>>(queryKey) ?? payload;
   }
 
   return payload;
 }
 
-export async function writeSettingsMutationPayload<TPayload>(
+export async function writeSettingsMutationPayload<TKey extends SettingsWritableQueryKey>(
   queryClient: QueryClient,
-  queryKey: QueryKey,
-  payload: TPayload,
+  queryKey: TKey,
+  payload: SettingsQueryPayloadForKey<TKey>,
   sequence?: number,
 ) {
   const accepted = writeSettingsQueryPayload(queryClient, queryKey, payload, {
@@ -133,6 +147,27 @@ export async function writeSettingsMutationPayload<TPayload>(
   }
 
   return accepted;
+}
+
+function toSettingsCachePayload<TKey extends SettingsWritableQueryKey>(
+  queryKey: TKey,
+  value: SettingsQueryPayloadForKey<TKey>,
+): SettingsCachePayload {
+  if (queryKey === SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY) {
+    return {
+      queryKey,
+      value: value as SettingsQueryPayloadForKey<SettingsUsageRefreshIntervalQueryKey>,
+    };
+  }
+
+  return {
+    queryKey,
+    value: value as SettingsQueryPayloadForKey<
+      | SettingsHasNotchQueryKey
+      | SettingsHotspotEnabledQueryKey
+      | SettingsImageCompatQueryKey
+    >,
+  } as SettingsCachePayload;
 }
 
 export async function invalidateSettingsContractQueries(queryClient: QueryClient) {

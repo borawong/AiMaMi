@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/controller";
 import { useBusyAction } from "@/hooks/busy";
+import type { RefreshInterval } from "@/hooks/refresh";
 import { toast } from "@/hooks/toast";
 import { isMacPlatform } from "@/lib/platform";
 import { settingsService } from "@/services/settings";
@@ -536,13 +537,16 @@ export function useSettingsRefreshInterval() {
     queryKey: SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY,
     queryFn: () =>
       runSettingsQuery(queryClient, SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY, () =>
-        settingsService.getUsageRefreshInterval(),
+        loadSettingsRefreshInterval(),
       ),
     staleTime: Infinity,
   });
 
   const saveRefreshIntervalMutation = useMutation({
-    mutationFn: (interval: string) => settingsService.setUsageRefreshInterval(interval),
+    mutationFn: (interval: RefreshInterval) =>
+      settingsService
+        .setUsageRefreshInterval(interval)
+        .then(normalizeSettingsRefreshInterval),
     onMutate: async () => {
       const sequence = beginSettingsMutation(SETTINGS_USAGE_REFRESH_INTERVAL_QUERY_KEY);
       await queryClient.cancelQueries({
@@ -566,6 +570,16 @@ export function useSettingsRefreshInterval() {
   };
 }
 
+async function loadSettingsRefreshInterval(): Promise<RefreshInterval> {
+  return normalizeSettingsRefreshInterval(
+    await settingsService.getUsageRefreshInterval(),
+  );
+}
+
+function normalizeSettingsRefreshInterval(value: string): RefreshInterval {
+  return isSettingsRefreshInterval(value) ? value : "1m";
+}
+
 export function useSettingsAppVersion() {
   const [appVersion, setAppVersion] = useState("...");
 
@@ -579,7 +593,7 @@ export function useSettingsAppVersion() {
 }
 
 export function useApiProxyMutations(options?: {
-  onSaved?: (result: Awaited<ReturnType<typeof settingsService.setApiProxyConfig>>) => Promise<unknown> | void;
+  onSaved?: (result: Awaited<ReturnType<typeof settingsService.setApiProxyConfig>>) => Promise<void> | void;
   onSaveError?: (error: unknown) => void;
   onTested?: (result: ApiProxyTestPayload) => void;
   onTestError?: (error: unknown) => void;
