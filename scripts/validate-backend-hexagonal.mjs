@@ -913,6 +913,10 @@ function validateRuntimeExtensionsTypedPayloadContracts() {
   const featureTypesPath = join(frontendRoot, "features", "plugins", "types", "index.ts");
   const featureCachePath = join(frontendRoot, "features", "plugins", "cache", "index.ts");
   const featureHooksPath = join(frontendRoot, "features", "plugins", "hooks", "index.ts");
+  const featureQueryHookPath = join(frontendRoot, "features", "plugins", "hooks", "query.ts");
+  const featureRefreshHookPath = join(frontendRoot, "features", "plugins", "hooks", "refresh.ts");
+  const featureMutationHookPath = join(frontendRoot, "features", "plugins", "hooks", "mutation.ts");
+  const featurePageHookPath = join(frontendRoot, "features", "plugins", "hooks", "page.ts");
   const commandText = readUtf8(commandPath);
   const usecaseText = readUtf8(usecasePath);
   const contractText = readUtf8(contractPath);
@@ -921,6 +925,10 @@ function validateRuntimeExtensionsTypedPayloadContracts() {
   const featureTypesText = readUtf8(featureTypesPath);
   const featureCacheText = readUtf8(featureCachePath);
   const featureHooksText = readUtf8(featureHooksPath);
+  const featureQueryHookText = readUtf8(featureQueryHookPath);
+  const featureRefreshHookText = readUtf8(featureRefreshHookPath);
+  const featureMutationHookText = readUtf8(featureMutationHookPath);
+  const featurePageHookText = readUtf8(featurePageHookPath);
 
   assertContains(contractPath, contractText, [
     "pub(crate) enum RuntimeExtensionSettingsValue",
@@ -969,11 +977,57 @@ function validateRuntimeExtensionsTypedPayloadContracts() {
   ], "plugins 前端模块 typed cache payload");
 
   assertContains(featureHooksPath, featureHooksText, [
+    'from "./query"',
+    'from "./refresh"',
+    'from "./mutation"',
+    'from "./page"',
+  ], "plugins hooks barrel owner");
+
+  assertNotContainsSnippet(featureHooksPath, featureHooksText, [
+    "useQuery",
+    "useMutation",
+    "writePluginsAuthoritativePayload",
+    "writePluginsMutationPayload",
+    "pluginsService.",
+  ], "plugins hooks/index 不得继续承载 typed payload 或 service 逻辑");
+
+  assertContains(featureQueryHookPath, featureQueryHookText, [
     "PluginsListEnvelope",
+    "pluginsService.list",
+    "writePluginsListQueryPayload",
+  ], "plugins query hooks typed authoritative envelope");
+
+  assertContains(featureRefreshHookPath, featureRefreshHookText, [
+    "PluginsListEnvelope",
+    "pluginsService.list",
+    "nextPluginsCacheSequence",
+    "writePluginsRefreshPayload",
+  ], "plugins refresh hooks typed authoritative envelope");
+
+  assertContains(featureMutationHookPath, featureMutationHookText, [
     "PluginsToggleEnvelope",
+    "pluginsService.toggle",
+    "optimisticallyUpdatePluginsToggle",
+    "rollbackPluginsToggle",
+    "writePluginsMutationPayload",
+  ], "plugins mutation hooks typed authoritative envelope");
+
+  assertContains(featurePageHookPath, featurePageHookText, [
+    "PluginsPageController",
+    "usePluginsListQuery",
+    "usePluginsRefreshMutation",
+    "usePluginsToggleMutation",
+  ], "plugins page controller typed envelope");
+
+  assertContains(featureCachePath, featureCacheText, [
     "writePluginsAuthoritativePayload",
     "toPluginsListEnvelope",
-  ], "plugins hooks typed authoritative envelope");
+    "writePluginsListQueryPayload",
+    "writePluginsRefreshPayload",
+    "writePluginsMutationPayload",
+    "optimisticallyUpdatePluginsToggle",
+    "rollbackPluginsToggle",
+  ], "plugins cache typed authoritative envelope");
 
   assertContains(featureCachePath, featureCacheText, [
     "Omit<PluginsCacheEnvelope, \"moduleId\">",

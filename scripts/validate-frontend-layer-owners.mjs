@@ -145,6 +145,38 @@ function assertNotMatches(file, content, patterns) {
   }
 }
 
+function assertOnlyBarrelReExports(file, content, owners) {
+  const reExportPattern =
+    /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const reExports = [...content.matchAll(reExportPattern)].map((match) => match[1]);
+  const allowedPaths = new Set(owners.map((owner) => `./${owner}`));
+  const remainder = content
+    .replace(reExportPattern, "")
+    .replace(/\/\/.*$/gm, "")
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .trim();
+
+  if (remainder) {
+    failures.push(`${file} 只能作为 re-export barrel，不得包含 hook 实现、cache 写入或 page controller`);
+  }
+
+  for (const owner of owners) {
+    if (!reExports.includes(`./${owner}`)) {
+      failures.push(`${file} 必须 re-export ./${owner} owner`);
+    }
+  }
+
+  for (const reExport of reExports) {
+    if (!allowedPaths.has(reExport)) {
+      failures.push(
+        `${file} 只能 re-export ${owners
+          .map((owner) => `./${owner}`)
+          .join("、")}，不得导出 ${reExport}`,
+      );
+    }
+  }
+}
+
 function validateMcpDeepOwnerBoundaries() {
   const mcpRoot = join(featuresRoot, "mcp");
   const hooksIndexPath = join(mcpRoot, "hooks", "index.ts");
@@ -277,6 +309,190 @@ function validateMcpDeepOwnerBoundaries() {
   ]);
 
   console.log("PASS mcp 深层 owner 边界门禁已执行：hooks/index、query、mutation、page、cache");
+}
+
+function validatePluginsDeepOwnerBoundaries() {
+  const pluginsRoot = join(featuresRoot, "plugins");
+  const hooksIndexPath = join(pluginsRoot, "hooks", "index.ts");
+  const queryPath = join(pluginsRoot, "hooks", "query.ts");
+  const refreshPath = join(pluginsRoot, "hooks", "refresh.ts");
+  const mutationPath = join(pluginsRoot, "hooks", "mutation.ts");
+  const pagePath = join(pluginsRoot, "hooks", "page.ts");
+  const cachePath = join(pluginsRoot, "cache", "index.ts");
+  const sequencePath = join(pluginsRoot, "cache", "sequence.ts");
+  const typesPath = join(pluginsRoot, "types", "index.ts");
+  const componentPagePath = join(pluginsRoot, "components", "page.tsx");
+  const dialogsIndexPath = join(pluginsRoot, "dialogs", "index.ts");
+  const configDialogPath = join(pluginsRoot, "dialogs", "config.tsx");
+  const panelPaths = [
+    ...walkFiles(join(pluginsRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(pluginsRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const refresh = readRequired(refreshPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const cacheSequence = existsSync(sequencePath) ? readRequired(sequencePath) : "";
+  const types = readRequired(typesPath);
+  const componentPage = readRequired(componentPagePath);
+  const dialogsIndex = readRequired(dialogsIndexPath);
+  const panelOwnerText = panelPaths.map((file) => readRequired(file)).join("\n");
+  const cacheOwnerText = `${cache}\n${cacheSequence}`;
+  const visibleOwnerText = [
+    query,
+    refresh,
+    mutation,
+    page,
+    componentPage,
+    panelOwnerText,
+    dialogsIndex,
+  ].join("\n");
+  const configUiSignals = [
+    "PluginConfigDialog",
+    "configDialog",
+    "openForPlugin",
+    "loadConfigMutation",
+    "updatePluginConfigMutation",
+    "pluginsService.getConfig",
+    "pluginsService.updateConfig",
+    "getPluginConfig",
+    "updatePluginConfig",
+    "pluginConfigQueryKey",
+  ];
+
+  assertOnlyBarrelReExports("src/features/plugins/hooks/index.ts", hooksIndex, [
+    "query",
+    "refresh",
+    "mutation",
+    "page",
+  ]);
+  assertNotMatches("src/features/plugins/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "plugins hooks/index 只能聚合 re-export，不得 owning query/mutation/controller"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "plugins hooks/index 不得 owning TanStack cache 操作"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "plugins hooks/index 不得直接拼底层 IPC transport"],
+  ]);
+
+  assertIncludes("src/features/plugins/hooks/query.ts", query, [
+    "useQuery",
+    "useQueryClient",
+    "useModuleCacheController",
+    "PluginsCache",
+    "PLUGINS_LIST_QUERY_KEY",
+    "pluginsService.list",
+    "writePluginsListQueryPayload",
+  ]);
+  assertNotMatches("src/features/plugins/hooks/query.ts", query, [
+    [/\buseMutation\b/, "plugins query owner 不得 owning mutation 或 refresh mutation"],
+    [/\buse(State|Reducer)\b/, "plugins query owner 不得 owning 页面短生命周期 UI state"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "plugins query owner 不得 owning cache 写入、失效或取消"],
+    [/toast\(|useToast|navigator\.clipboard/, "plugins query owner 不得 owning toast 或 UI 组合"],
+    [/pluginsService\.(getConfig|updateConfig)|getPluginConfig|updatePluginConfig|PluginConfigDialog|configDialog|pluginConfigQueryKey/, "plugins query owner 不得消费缺少可见证据的 config UI/service"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "plugins query owner 必须经 plugins service wrapper，不得直接拼 IPC"],
+  ]);
+
+  assertIncludes("src/features/plugins/hooks/refresh.ts", refresh, [
+    "useMutation",
+    "useQueryClient",
+    "pluginsService.list",
+    "nextPluginsCacheSequence",
+    "writePluginsRefreshPayload",
+  ]);
+  if (!/nextPluginsCacheSequence\(\)[\s\S]*pluginsService\.list\(\)/.test(refresh)) {
+    failures.push("src/features/plugins/hooks/refresh.ts 必须在请求发起前分配 refresh sequence");
+  }
+  assertNotMatches("src/features/plugins/hooks/refresh.ts", refresh, [
+    [/\buseQuery\b/, "plugins refresh owner 不得 owning list query"],
+    [/\buse(State|Reducer|Effect|Memo)\b/, "plugins refresh owner 不得 owning page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "plugins refresh owner 必须把 cache 写入、失效和取消交给 cache helper"],
+    [/writePluginsMutationPayload|optimisticallyUpdatePluginsToggle|rollbackPluginsToggle/, "plugins refresh owner 不得 owning toggle mutation payload、optimistic update 或 rollback"],
+    [/pluginsService\.(getConfig|updateConfig)|getPluginConfig|updatePluginConfig|PluginConfigDialog|configDialog|pluginConfigQueryKey/, "plugins refresh owner 不得消费缺少可见证据的 config UI/service"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "plugins refresh owner 必须经 plugins service wrapper，不得直接拼 IPC"],
+  ]);
+
+  assertIncludes("src/features/plugins/hooks/mutation.ts", mutation, [
+    "useMutation",
+    "useQueryClient",
+    "pluginsService.toggle",
+    "optimisticallyUpdatePluginsToggle",
+    "rollbackPluginsToggle",
+    "writePluginsMutationPayload",
+  ]);
+  assertNotMatches("src/features/plugins/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "plugins mutation owner 不得 owning query"],
+    [/\buse(State|Reducer|Effect|Memo)\b/, "plugins mutation owner 不得 owning page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries)\b/, "plugins mutation owner 必须把 optimistic update、rollback、cache 写入和失效交给 cache helper"],
+    [/writePluginsRefreshPayload|pluginsService\.list/, "plugins mutation owner 不得 owning refresh/list 请求"],
+    [/pluginsService\.(getConfig|updateConfig)|getPluginConfig|updatePluginConfig|PluginConfigDialog|configDialog|pluginConfigQueryKey/, "plugins mutation owner 不得消费缺少可见证据的 config UI/service"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "plugins mutation owner 必须经 plugins service wrapper，不得直接拼 IPC"],
+  ]);
+
+  assertIncludes("src/features/plugins/hooks/page.ts", page, [
+    "usePluginsPageController",
+    "PluginsPageController",
+    "usePluginsListQuery",
+    "usePluginsRefreshMutation",
+    "usePluginsToggleMutation",
+  ]);
+  assertNotMatches("src/features/plugins/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "plugins page/controller 只能组合 query/refresh/mutation hook，不得直接 owning TanStack"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|nextPluginsCacheSequence|writePlugins|PLUGINS_LIST_QUERY_KEY)\b/, "plugins page/controller 不得直接写 cache、失效 query、分配 sequence 或消费 query key"],
+    [/@\/services\/plugins|@\/services\/runtime-extensions|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|pluginsService|invokeIpc|invoke\(/, "plugins page/controller 不得直接访问 service、API 或 IPC"],
+  ]);
+
+  assertIncludes("src/features/plugins/types/index.ts", types, [
+    "export interface PluginsPageController",
+    "export interface PluginsPageAction",
+    "export interface PluginsTogglePluginAction",
+    "export interface PluginsPagePanelProps",
+  ]);
+  if (
+    panelOwnerText.includes("ReturnType<typeof usePluginsPageController>") ||
+    panelOwnerText.includes("../hooks")
+  ) {
+    failures.push("src/features/plugins/panels 和 dialogs 必须消费 types controller 合同，不得反向依赖 hooks ReturnType");
+  }
+
+  assertIncludes("src/features/plugins/cache/index.ts", cache, [
+    "createModuleCacheOwner<PluginsCachePayload>(\"plugins\")",
+    "PLUGINS_LIST_QUERY_KEY",
+    "writePluginsAuthoritativePayload",
+    "writePluginsListQueryPayload",
+    "writePluginsRefreshPayload",
+    "optimisticallyUpdatePluginsToggle",
+    "rollbackPluginsToggle",
+    "writePluginsMutationPayload",
+    "invalidatePluginsContractQueries",
+    "invalidateQueries({ queryKey: PLUGINS_LIST_QUERY_KEY })",
+  ]);
+  if (
+    !cacheOwnerText.includes("nextPluginsCacheSequence") ||
+    !(
+      cacheOwnerText.includes("pluginsLatestAcceptedSequence") ||
+      cacheOwnerText.includes("acceptPluginsCacheSequence") ||
+      cacheOwnerText.includes("sequence <")
+    )
+  ) {
+    failures.push("src/features/plugins/cache/index.ts 或 cache/sequence.ts 必须托管 sequence/stale/delayed response 防护");
+  }
+  assertNotMatches("src/features/plugins/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "plugins cache owner 不得 owning React hook"],
+    [/@\/services\/plugins|@\/services\/runtime-extensions|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "plugins cache owner 不得直接拼 IPC 或调用 service"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "plugins cache owner 必须保留 typed payload"],
+  ]);
+
+  for (const signal of configUiSignals) {
+    if (visibleOwnerText.includes(signal)) {
+      failures.push(`plugins 缺少可见配置 UI 证据，hook/page/panel/dialog 不得消费 ${signal}`);
+    }
+  }
+  if (existsSync(configDialogPath)) {
+    failures.push("plugins 缺少可见配置 UI 证据，不得保留 dialogs/config.tsx");
+  }
+
+  console.log("PASS plugins 深层 owner 边界门禁已执行：hooks/index、query、refresh、mutation、page、cache、types、panels");
 }
 
 function validateFeatureDeepOwners() {
@@ -540,6 +756,7 @@ validateNoDuplicatePublicCommonRoots();
 validateNoFeaturePublicCommonOwnerRoots();
 validateFeatureDeepOwners();
 validateMcpDeepOwnerBoundaries();
+validatePluginsDeepOwnerBoundaries();
 validateRouteShells();
 validateFeaturePageShells();
 validateServiceOwners();

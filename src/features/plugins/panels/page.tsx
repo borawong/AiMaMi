@@ -3,14 +3,16 @@ import { Puzzle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import type { PluginsPageController } from "../hooks";
+import type {
+  PluginsPageController,
+  PluginsPagePanelProps,
+  PluginsPluginRecord,
+} from "../types";
 import { readPluginDescription, readPluginTitle } from "../utils";
 
 export function PluginsPagePanel({
   controller,
-}: {
-  controller: PluginsPageController;
-}) {
+}: PluginsPagePanelProps) {
   return (
     <>
       <PluginsPageHeader
@@ -154,7 +156,7 @@ function PluginRows({
   loading,
   controller,
 }: {
-  items: PluginsPageController["plugins"];
+  items: PluginsPluginRecord[];
   emptyKey: string;
   loading: boolean;
   controller: PluginsPageController;

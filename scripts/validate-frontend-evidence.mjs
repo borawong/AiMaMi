@@ -1238,7 +1238,11 @@ function validatePluginsFrontendNoPromotionGate() {
   const pluginsServicePath = join(repoRoot, "src", "services", "plugins", "index.ts");
   const runtimeExtensionsServicePath = join(repoRoot, "src", "services", "runtime-extensions", "index.ts");
   const pluginsContractPath = join(repoRoot, "src", "features", "plugins", "contract.ts");
-  const pluginsHooksPath = join(repoRoot, "src", "features", "plugins", "hooks", "index.ts");
+  const pluginsHooksIndexPath = join(repoRoot, "src", "features", "plugins", "hooks", "index.ts");
+  const pluginsQueryHookPath = join(repoRoot, "src", "features", "plugins", "hooks", "query.ts");
+  const pluginsRefreshHookPath = join(repoRoot, "src", "features", "plugins", "hooks", "refresh.ts");
+  const pluginsMutationHookPath = join(repoRoot, "src", "features", "plugins", "hooks", "mutation.ts");
+  const pluginsPageHookPath = join(repoRoot, "src", "features", "plugins", "hooks", "page.ts");
   const pluginsCachePath = join(repoRoot, "src", "features", "plugins", "cache", "index.ts");
   const pluginsTypesPath = join(repoRoot, "src", "features", "plugins", "types", "index.ts");
   const pluginsPagePath = join(repoRoot, "src", "features", "plugins", "components", "page.tsx");
@@ -1249,7 +1253,12 @@ function validatePluginsFrontendNoPromotionGate() {
   const service = readRequired(pluginsServicePath);
   const runtimeService = readRequired(runtimeExtensionsServicePath);
   const contract = readRequired(pluginsContractPath);
-  const hooks = readRequired(pluginsHooksPath);
+  const hooksIndex = readRequired(pluginsHooksIndexPath);
+  const queryHook = readRequired(pluginsQueryHookPath);
+  const refreshHook = readRequired(pluginsRefreshHookPath);
+  const mutationHook = readRequired(pluginsMutationHookPath);
+  const pageHook = readRequired(pluginsPageHookPath);
+  const hooks = [hooksIndex, queryHook, refreshHook, mutationHook, pageHook].join("\n");
   const cache = readRequired(pluginsCachePath);
   const types = readRequired(pluginsTypesPath);
   const page = readRequired(pluginsPagePath);
@@ -1332,6 +1341,8 @@ function validatePluginsFrontendNoPromotionGate() {
     "updatePluginConfigMutation",
     "pluginsService.getConfig",
     "pluginsService.updateConfig",
+    "getPluginConfig",
+    "updatePluginConfig",
     "pluginConfigQueryKey",
   ];
   for (const signal of visibleConfigUiSignals) {
@@ -1344,9 +1355,14 @@ function validatePluginsFrontendNoPromotionGate() {
   }
 
   const listToggleOwnerOk =
-    hooks.includes("pluginsService.list()") &&
-    hooks.includes("pluginsService.toggle(id, enabled)") &&
-    hooks.includes("writePluginsMutationPayload") &&
+    queryHook.includes("pluginsService.list()") &&
+    queryHook.includes("writePluginsListQueryPayload") &&
+    refreshHook.includes("pluginsService.list()") &&
+    refreshHook.includes("writePluginsRefreshPayload") &&
+    mutationHook.includes("pluginsService.toggle(id, enabled)") &&
+    mutationHook.includes("writePluginsMutationPayload") &&
+    cache.includes("optimisticallyUpdatePluginsToggle") &&
+    cache.includes("rollbackPluginsToggle") &&
     panel.includes("controller.togglePlugin.run(id, checked)") &&
     !panel.includes("Settings2");
   if (!listToggleOwnerOk) {
@@ -1359,14 +1375,23 @@ function validatePluginsFrontendNoPromotionGate() {
 function validatePluginsTypedPayloadGate() {
   const pluginsServicePath = join(repoRoot, "src", "services", "plugins", "index.ts");
   const runtimeExtensionsServicePath = join(repoRoot, "src", "services", "runtime-extensions", "index.ts");
-  const pluginsHooksPath = join(repoRoot, "src", "features", "plugins", "hooks", "index.ts");
+  const pluginsHooksIndexPath = join(repoRoot, "src", "features", "plugins", "hooks", "index.ts");
+  const pluginsQueryHookPath = join(repoRoot, "src", "features", "plugins", "hooks", "query.ts");
+  const pluginsRefreshHookPath = join(repoRoot, "src", "features", "plugins", "hooks", "refresh.ts");
+  const pluginsMutationHookPath = join(repoRoot, "src", "features", "plugins", "hooks", "mutation.ts");
+  const pluginsPageHookPath = join(repoRoot, "src", "features", "plugins", "hooks", "page.ts");
   const pluginsCachePath = join(repoRoot, "src", "features", "plugins", "cache", "index.ts");
   const pluginsTypesPath = join(repoRoot, "src", "features", "plugins", "types", "index.ts");
   const pluginsPanelPath = join(repoRoot, "src", "features", "plugins", "panels", "page.tsx");
 
   const service = readRequired(pluginsServicePath);
   const runtimeService = readRequired(runtimeExtensionsServicePath);
-  const hooks = readRequired(pluginsHooksPath);
+  const hooksIndex = readRequired(pluginsHooksIndexPath);
+  const queryHook = readRequired(pluginsQueryHookPath);
+  const refreshHook = readRequired(pluginsRefreshHookPath);
+  const mutationHook = readRequired(pluginsMutationHookPath);
+  const pageHook = readRequired(pluginsPageHookPath);
+  const hooks = [hooksIndex, queryHook, refreshHook, mutationHook, pageHook].join("\n");
   const cache = readRequired(pluginsCachePath);
   const types = readRequired(pluginsTypesPath);
   const panel = readRequired(pluginsPanelPath);
@@ -1384,9 +1409,17 @@ function validatePluginsTypedPayloadGate() {
     types.includes("export type PluginsListEnvelope") &&
     types.includes("export type PluginsToggleEnvelope") &&
     types.includes("export type PluginsConfigEnvelope") &&
-    hooks.includes("PluginsListEnvelope") &&
-    hooks.includes("PluginsToggleEnvelope") &&
-    hooks.includes("writePluginsAuthoritativePayload") &&
+    queryHook.includes("PluginsListEnvelope") &&
+    refreshHook.includes("PluginsListEnvelope") &&
+    mutationHook.includes("PluginsToggleEnvelope") &&
+    hooks.includes("writePluginsListQueryPayload") &&
+    hooks.includes("writePluginsRefreshPayload") &&
+    hooks.includes("writePluginsMutationPayload") &&
+    pageHook.includes("PluginsPageController") &&
+    cache.includes("writePluginsAuthoritativePayload") &&
+    cache.includes("writePluginsListQueryPayload") &&
+    cache.includes("writePluginsRefreshPayload") &&
+    cache.includes("writePluginsMutationPayload") &&
     cache.includes("Omit<PluginsCacheEnvelope, \"moduleId\">") &&
     !cache.includes("ModuleCacheEnvelope<unknown>") &&
     !panel.includes("items: unknown[]");

@@ -34,3 +34,32 @@ export type PluginsConfigEnvelope = ServicePluginsConfigEnvelope;
 export type PluginsMutationEnvelope = ServicePluginsMutationEnvelope;
 export type PluginsCacheEnvelope<TPayload = PluginsCachePayload> =
   ModuleCacheEnvelope<TPayload>;
+
+export interface PluginsQueryViewState {
+  isLoading: boolean;
+  isFetching: boolean;
+}
+
+export interface PluginsPageAction {
+  id: string;
+  labelKey: string;
+  run: () => Promise<unknown> | unknown;
+  isPending?: boolean;
+}
+
+export interface PluginsTogglePluginAction {
+  isPending: boolean;
+  run: (id: string, enabled: boolean) => void;
+}
+
+export interface PluginsPageController {
+  plugins: PluginsPluginRecord[];
+  enabledCount: number;
+  pluginsQuery: PluginsQueryViewState;
+  refreshAction: PluginsPageAction;
+  togglePlugin: PluginsTogglePluginAction;
+}
+
+export interface PluginsPagePanelProps {
+  controller: PluginsPageController;
+}
