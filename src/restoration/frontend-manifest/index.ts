@@ -110,6 +110,16 @@ export interface FrontendDumpedAppShellRemoteSecretRestorationRequirement {
   note: string;
 }
 
+export interface FrontendDumpedAppShellDesktopMessageQueryRestorationRequirement {
+  module: "app-shell";
+  source: string;
+  queryKey: "desktop-message";
+  status: "source-only";
+  runtimeOwner: string;
+  surface: string;
+  reason: string;
+}
+
 export interface FrontendDumpedBoundaryException {
   module: "voice";
   status: "boundary-only";
@@ -258,6 +268,19 @@ export const FRONTEND_DUMPED_APP_SHELL_REMOTE_SECRET_RESTORATION_MATRIX = [
       "app-shell 启动迁移链路必须在导入旧值后获取或创建 remote device secret，并由 initializer 挂载 runtime owner 完成缓存写入。",
   },
 ] as const satisfies readonly FrontendDumpedAppShellRemoteSecretRestorationRequirement[];
+
+export const FRONTEND_DUMPED_APP_SHELL_DESKTOP_MESSAGE_QUERY_MATRIX = [
+  {
+    module: "app-shell",
+    source: "assets/index-CL22l5v8.js",
+    queryKey: "desktop-message",
+    status: "source-only",
+    runtimeOwner: "src/app/runtime/message.ts",
+    surface: "src/app/runtime/popover.tsx",
+    reason:
+      "dumped evidence 只证明 desktop-message queryKey 和 staleTime，没有可审计 endpoint；runtime 只能登记 source-only 边界并说明空 payload 来源。",
+  },
+] as const satisfies readonly FrontendDumpedAppShellDesktopMessageQueryRestorationRequirement[];
 
 export const FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX = [
   {

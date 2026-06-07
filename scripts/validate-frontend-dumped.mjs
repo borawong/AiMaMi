@@ -44,6 +44,14 @@ const localesRoot = join(repoRoot, "src", "locales");
 const backendRoot = join(repoRoot, "src-tauri", "src");
 const frontendManifestPath = join(repoRoot, "src", "restoration", "frontend-manifest", "index.ts");
 
+const appShellDesktopMessageQueryContract = {
+  source: "assets/index-CL22l5v8.js",
+  queryKey: "desktop-message",
+  manifestConst: "FRONTEND_DUMPED_APP_SHELL_DESKTOP_MESSAGE_QUERY_MATRIX",
+  runtimeOwnerPath: "src/app/runtime/message.ts",
+  surfacePath: "src/app/runtime/popover.tsx",
+};
+
 const failures = [];
 
 function toRepoPath(path) {
@@ -380,6 +388,43 @@ function resolveRepoPath(repoPath) {
 function hasAnyFragment(text, fragments) {
   const lowerText = text.toLowerCase();
   return fragments.some((fragment) => lowerText.includes(fragment.toLowerCase()));
+}
+
+function rawQueryHitText(hit) {
+  return `${hit.match ?? ""}\n${hit.snippet ?? ""}`;
+}
+
+function rawQueryHitHasKey(hit, queryKey) {
+  return new RegExp(`queryKey\\s*:\\s*\\[\\s*["']${queryKey}["']\\s*\\]`).test(
+    rawQueryHitText(hit),
+  );
+}
+
+function isAppShellDesktopMessageQueryHit(hit) {
+  return (
+    normalizePath(String(hit.file ?? "")) === appShellDesktopMessageQueryContract.source &&
+    rawQueryHitHasKey(hit, appShellDesktopMessageQueryContract.queryKey)
+  );
+}
+
+function unexplainedReturnNullLines(text) {
+  const lines = text.split(/\r?\n/);
+  return lines
+    .map((line, index) => {
+      if (!/\breturn\s+null\s*;/.test(line)) return null;
+      const context = lines
+        .slice(Math.max(0, index - 2), Math.min(lines.length, index + 3))
+        .join("\n")
+        .toLowerCase();
+      const explained =
+        context.includes("source-only") ||
+        context.includes("endpoint") ||
+        context.includes("证据") ||
+        context.includes("边界") ||
+        context.includes("空 payload");
+      return explained ? null : index + 1;
+    })
+    .filter(Boolean);
 }
 
 function extractArgKeysForCommand(source, command) {
@@ -826,6 +871,149 @@ function validateAppShellRemoteSecretRestorationMatrix(raw, manifest) {
   }
 }
 
+function validateAppShellDesktopMessageQueryMatrix(raw, manifest) {
+  const before = failures.length;
+  const contract = appShellDesktopMessageQueryContract;
+  const hits = raw.queryHits.filter(isAppShellDesktopMessageQueryHit);
+
+  if (hits.length === 0) {
+    failures.push(
+      `${contract.source} 必须在 query-hits.jsonl 中命中 queryKey:["${contract.queryKey}"]，不能只把 app-shell query 计为跳过。`,
+    );
+  }
+
+  const blocks = extractTsConstArrayBlocks(manifest, contract.manifestConst);
+  const entries = blocks.map((block) => ({
+    module: extractTsStringField(block, "module"),
+    source: extractTsStringField(block, "source"),
+    queryKey: extractTsStringField(block, "queryKey"),
+    status: extractTsStringField(block, "status"),
+    runtimeOwner: extractTsStringField(block, "runtimeOwner"),
+    surface: extractTsStringField(block, "surface"),
+    reason: extractTsStringField(block, "reason"),
+  }));
+  const entry = entries.find((item) => item.queryKey === contract.queryKey);
+
+  if (!entry) {
+    failures.push(
+      `frontend manifest 缺少 ${contract.queryKey} app-shell query closure 显式登记。`,
+    );
+  } else {
+    const expectedFields = {
+      module: "app-shell",
+      source: contract.source,
+      status: "source-only",
+      runtimeOwner: contract.runtimeOwnerPath,
+      surface: contract.surfacePath,
+    };
+    for (const [field, expected] of Object.entries(expectedFields)) {
+      const actual = entry[field];
+      if (actual !== expected) {
+        failures.push(
+          `desktop-message query matrix 的 ${field} 必须为 ${expected}，当前为 ${actual || "空"}。`,
+        );
+      }
+    }
+    if (
+      !entry.reason.includes("source-only") ||
+      !hasAnyFragment(entry.reason, ["endpoint", "端点", "证据"])
+    ) {
+      failures.push(
+        "desktop-message query matrix 必须写明 source-only 原因，且说明 evidence 没有可审计 endpoint。",
+      );
+    }
+  }
+
+  for (const repoPath of [contract.runtimeOwnerPath, contract.surfacePath]) {
+    if (!existsSync(resolveRepoPath(repoPath))) {
+      failures.push(`desktop-message query closure 指向的文件不存在：${repoPath}`);
+    }
+  }
+
+  const runtimeOwner = readRequired(resolveRepoPath(contract.runtimeOwnerPath));
+  if (runtimeOwner.trim()) {
+    const runtimeRequirements = [
+      {
+        name: "DESKTOP_MESSAGE_QUERY_KEY",
+        ok: runtimeOwner.includes("DESKTOP_MESSAGE_QUERY_KEY"),
+      },
+      {
+        name: "DESKTOP_MESSAGE_STALE_TIME",
+        ok: runtimeOwner.includes("DESKTOP_MESSAGE_STALE_TIME"),
+      },
+      {
+        name: "显式 source-only 状态",
+        ok:
+          runtimeOwner.includes("DESKTOP_MESSAGE_SOURCE_STATUS") &&
+          runtimeOwner.includes('"source-only"'),
+      },
+      {
+        name: "显式 source-only 原因",
+        ok:
+          runtimeOwner.includes("DESKTOP_MESSAGE_SOURCE_REASON") &&
+          hasAnyFragment(runtimeOwner, ["missingAuditableEndpoint", "endpoint", "端点"]),
+      },
+    ];
+
+    for (const requirement of runtimeRequirements) {
+      if (!requirement.ok) {
+        failures.push(`desktop-message runtime owner 缺少：${requirement.name}`);
+      }
+    }
+
+    const hasCacheWrite =
+      runtimeOwner.includes("QueryClient") &&
+      runtimeOwner.includes("DESKTOP_MESSAGE_QUERY_KEY") &&
+      /\.setQueryData(?:<[^>]+>)?\s*\(/.test(runtimeOwner);
+    const hasOwnerHook =
+      /\buseQuery\s*\(/.test(runtimeOwner) &&
+      /queryKey:\s*DESKTOP_MESSAGE_QUERY_KEY/.test(runtimeOwner);
+    if (!hasCacheWrite && !hasOwnerHook) {
+      failures.push(
+        "desktop-message runtime owner 必须包含 QueryClient cache write 或 useQuery owner hook。",
+      );
+    }
+
+    const returnNullLines = unexplainedReturnNullLines(runtimeOwner);
+    if (returnNullLines.length > 0) {
+      failures.push(
+        `desktop-message runtime owner 禁止无说明的 return null stub：${contract.runtimeOwnerPath}:${returnNullLines.join(", ")}`,
+      );
+    }
+  }
+
+  const surface = readRequired(resolveRepoPath(contract.surfacePath));
+  if (surface.trim()) {
+    const importsOwnerHook =
+      /\buseDesktopMessageQuery\b/.test(surface) &&
+      /from\s+["'](?:\.\/message|@\/app\/runtime\/message)["']/.test(surface);
+    if (!importsOwnerHook) {
+      failures.push(
+        "desktop-message popover 必须通过 message runtime owner hook 消费查询结果。",
+      );
+    }
+    if (/\buseQuery\s*\(/.test(surface) || /@tanstack\/react-query/.test(surface)) {
+      failures.push(
+        "desktop-message popover 不得直接 import 或调用 useQuery，查询归属必须留在 message owner。",
+      );
+    }
+    if (
+      /\bqueryKey\s*:/.test(surface) ||
+      surface.includes('["desktop-message"]') ||
+      surface.includes("['desktop-message']") ||
+      surface.includes("DESKTOP_MESSAGE_QUERY_KEY")
+    ) {
+      failures.push("desktop-message popover 不得直接拼 queryKey 或消费 query key 常量。");
+    }
+  }
+
+  if (failures.length === before) {
+    logPass("app-shell desktop-message query closure", `${hits.length}/${hits.length}`);
+  } else {
+    logFail("app-shell desktop-message query closure", "存在 evidence、manifest 或 runtime owner 缺口");
+  }
+}
+
 function validateVoiceManifestBoundary(expectedCommands) {
   const before = failures.length;
   const manifest = readRequired(frontendManifestPath);
@@ -1050,7 +1238,13 @@ function validateRawQueryKeys(queryHits, rawModules) {
   const moduleQueryHits = queryHits.filter((hit) =>
     moduleChunks.has(normalizePath(String(hit.file ?? ""))),
   );
-  const appShellQueryHits = queryHits.length - moduleQueryHits.length;
+  const appShellQueryHits = queryHits.filter(
+    (hit) => !moduleChunks.has(normalizePath(String(hit.file ?? ""))),
+  );
+  const closedAppShellQueryHits = appShellQueryHits.filter(isAppShellDesktopMessageQueryHit);
+  const unclosedAppShellQueryHits = appShellQueryHits.filter(
+    (hit) => !isAppShellDesktopMessageQueryHit(hit),
+  );
   const keyToEvidence = extractRawQueryKeys(moduleQueryHits);
 
   let covered = 0;
@@ -1068,7 +1262,7 @@ function validateRawQueryKeys(queryHits, rawModules) {
   }
 
   const total = keyToEvidence.size;
-  const detail = `${covered}/${total}${appShellQueryHits > 0 ? `，跳过 app shell/index 命中 ${appShellQueryHits} 条` : ""}`;
+  const detail = `${covered}/${total}${closedAppShellQueryHits.length > 0 ? `，app-shell closure ${closedAppShellQueryHits.length}` : ""}${unclosedAppShellQueryHits.length > 0 ? `，app-shell/index 其他命中 ${unclosedAppShellQueryHits.length}` : ""}`;
   if (failures.length === before) {
     logPass("raw queryKey 到模块 query/cache 覆盖", detail);
   } else {
@@ -1276,6 +1470,7 @@ validatePluginsDumpedContract();
 validatePluginsRestorationMatrix(frontendManifest);
 validateAppShellRemoteSecretRestorationMatrix(raw, frontendManifest);
 validateIndexAssetSourceManifest(raw, frontendManifest);
+validateAppShellDesktopMessageQueryMatrix(raw, frontendManifest);
 validateVoiceReopenedContract();
 validateRawPageRouteAndContent(rawModules);
 validateRouterEvidence(rawModules, raw.routerHits);

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Bell, Inbox, Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,22 +8,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import {
-  DESKTOP_MESSAGE_QUERY_KEY,
-  DESKTOP_MESSAGE_STALE_TIME,
-  loadDesktopMessageBoundary,
-} from "./message";
+import { useDesktopMessageQuery } from "./message";
 
 export function DesktopMessagePopover() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const query = useQuery({
-    queryKey: DESKTOP_MESSAGE_QUERY_KEY,
-    queryFn: loadDesktopMessageBoundary,
-    staleTime: DESKTOP_MESSAGE_STALE_TIME,
-    enabled: open,
-  });
-  const message = query.data ?? null;
+  const query = useDesktopMessageQuery(open);
+  const message = query.data?.payload ?? null;
   const title = message?.title?.trim() || t("messageBoard.defaultTitle");
   const hasBody = Boolean(message?.body?.trim());
   const hasImage = Boolean(message?.imageUrl?.trim());
