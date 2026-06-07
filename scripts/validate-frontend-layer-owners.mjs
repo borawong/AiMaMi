@@ -1889,6 +1889,159 @@ function validateMaintenanceDeepOwnerBoundaries() {
   console.log("PASS maintenance deep owner gate executed: hooks/index, query, mutation, page, cache, types, dialogs/panels/components");
 }
 
+function validateDaemonAutoswitchDeepOwnerBoundaries() {
+  const daemonRoot = join(featuresRoot, "daemon-autoswitch");
+  const hooksIndexPath = join(daemonRoot, "hooks", "index.ts");
+  const queryPath = join(daemonRoot, "hooks", "query.ts");
+  const mutationPath = join(daemonRoot, "hooks", "mutation.ts");
+  const runtimePath = join(daemonRoot, "hooks", "runtime.ts");
+  const pagePath = join(daemonRoot, "hooks", "page.ts");
+  const cachePath = join(daemonRoot, "cache", "index.ts");
+  const typesPath = join(daemonRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    ...walkFiles(join(daemonRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(daemonRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(daemonRoot, "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const runtime = readRequired(runtimePath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((path) => readRequired(path))
+    .join("\n");
+
+  assertOnlyBarrelReExports("src/features/daemon-autoswitch/hooks/index.ts", hooksIndex, [
+    "query",
+    "mutation",
+    "runtime",
+    "page",
+  ]);
+  assertNotMatches("src/features/daemon-autoswitch/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "daemon-autoswitch hooks/index can only re-export split owners"],
+    [/\b(writeDaemonAutoswitch|setQueryData|invalidateQueries|cancelQueries|DaemonAutoswitch[A-Za-z]*QueryKeys|DAEMON_AUTOSWITCH_[A-Z0-9_]+_QUERY_KEY)\b/, "daemon-autoswitch hooks/index must not own cache writes or query keys"],
+    [/@\/services\/daemon-autoswitch|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|daemonAutoswitchService\.|systemService\.|invokeIpc|invoke\(/, "daemon-autoswitch hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/daemon-autoswitch/hooks/query.ts", query, [
+    "useDaemonAutoswitchCacheController",
+    "useModuleCacheController(DaemonAutoswitchCache)",
+    "useDaemonAutoswitchBootstrapQuery",
+    "useDaemonAutoswitchPendingQuery",
+    "useQuery",
+    "useQueryClient",
+    "runDaemonAutoswitchQuery",
+    "daemonAutoswitchService.loadBootstrapState",
+    "daemonAutoswitchService.loadPendingAutoSwitch",
+  ]);
+  assertNotMatches("src/features/daemon-autoswitch/hooks/query.ts", query, [
+    [/\buseMutation\b/, "daemon-autoswitch query owner must not own mutation"],
+    [/\buseEffect\b/, "daemon-autoswitch query owner must not own runtime subscriptions"],
+    [/\buse(State|Reducer|Memo|Callback)\b/, "daemon-autoswitch query owner must not own page/controller UI state or view models"],
+    [/\b(cancelDaemonAutoswitchQueries|writeDaemonAutoswitchMutationPayload|invalidateDaemonAutoswitchContractQueries|setQueryData|cancelQueries)\b/, "daemon-autoswitch query owner must delegate mutation writes, cancellation, and invalidation"],
+    [/useTranslation|DaemonAutoswitchPageController|useDaemonAutoswitchModule|useDaemonAutoswitchPendingPrompt|metrics|panels|labelKey|envelopeData|readBoolean|readString/, "daemon-autoswitch query owner must not own page controller, locale, or view model parsing"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "daemon-autoswitch query owner must use daemon-autoswitch service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>|response\.data/, "daemon-autoswitch query owner must keep typed authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/daemon-autoswitch/hooks/mutation.ts", mutation, [
+    "useMutation",
+    "useQueryClient",
+    "daemonAutoswitchService.runDaemonOnce",
+    "daemonAutoswitchService.setAutoSwitch",
+    "daemonAutoswitchService.dismissPendingAutoSwitch",
+    "daemonAutoswitchService.confirmPendingAutoSwitchAndRestartCodex",
+    "cancelDaemonAutoswitchQueries",
+    "writeDaemonAutoswitchMutationPayload",
+    "invalidateDaemonAutoswitchContractQueries",
+  ]);
+  assertNotMatches("src/features/daemon-autoswitch/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "daemon-autoswitch mutation owner must not own query"],
+    [/\buse(State|Reducer|Effect|Memo|Callback)\b/, "daemon-autoswitch mutation owner must not own page/controller UI state"],
+    [/\bsetQueryData\b/, "daemon-autoswitch mutation owner must delegate cache writes to cache helper"],
+    [/useTranslation|DaemonAutoswitchPageController|useDaemonAutoswitchModule|useDaemonAutoswitchPendingPrompt|metrics|panels|labelKey|envelopeData|readBoolean|readString/, "daemon-autoswitch mutation owner must not own page controller, locale, or view model parsing"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "daemon-autoswitch mutation owner must use daemon-autoswitch service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>|useMutation<unknown|Promise<unknown>|response\.data/, "daemon-autoswitch mutation owner must keep typed mutation payloads"],
+  ]);
+
+  assertIncludes("src/features/daemon-autoswitch/hooks/runtime.ts", runtime, [
+    "useDaemonAutoswitchRuntimeSubscriptions",
+    "useEffect",
+    "useQueryClient",
+    "daemonAutoswitchService.subscribePendingAutoSwitch",
+    "invalidateQueries",
+    "DAEMON_AUTOSWITCH_PENDING_QUERY_KEY",
+  ]);
+  assertNotMatches("src/features/daemon-autoswitch/hooks/runtime.ts", runtime, [
+    [/\buse(Query|Mutation)\b/, "daemon-autoswitch runtime owner must not own query or mutation"],
+    [/\buse(State|Reducer|Memo|Callback)\b/, "daemon-autoswitch runtime owner must not own page/controller UI state"],
+    [/\bsetQueryData\b/, "daemon-autoswitch runtime owner must invalidate through cache/query helper only"],
+    [/useTranslation|DaemonAutoswitchPageController|useDaemonAutoswitchModule|useDaemonAutoswitchPendingPrompt|metrics|panels|labelKey|envelopeData|readBoolean|readString/, "daemon-autoswitch runtime owner must not own page controller, locale, or view model parsing"],
+    [/daemonAutoswitchService\.(?!subscribePendingAutoSwitch\b)\w+/, "daemon-autoswitch runtime owner must not call daemon-autoswitch service commands beyond pending subscription"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "daemon-autoswitch runtime owner must use service event facade, not IPC/API transport"],
+  ]);
+
+  assertIncludes("src/features/daemon-autoswitch/hooks/page.ts", page, [
+    "useDaemonAutoswitchPendingPrompt",
+    "useDaemonAutoswitchModule",
+    "useDaemonAutoswitchPageController",
+    "DaemonAutoswitchPageController",
+    "metrics",
+    "panels",
+    "useDaemonAutoswitchPageQueries",
+    "useDaemonAutoswitchPageMutations",
+    "useDaemonAutoswitchRuntimeSubscriptions",
+  ]);
+  assertNotMatches("src/features/daemon-autoswitch/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "daemon-autoswitch page/controller may compose split owner hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|writeDaemonAutoswitch|DaemonAutoswitch[A-Za-z]*QueryKeys|DAEMON_AUTOSWITCH_[A-Z0-9_]+_QUERY_KEY)\b/, "daemon-autoswitch page/controller must not write cache, invalidate, cancel, or consume query keys"],
+    [/@\/services\/daemon-autoswitch|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|daemonAutoswitchService\.|systemService\.|invokeIpc|invoke\(/, "daemon-autoswitch page/controller must not access service/API/IPC directly"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>|response\.data/, "daemon-autoswitch page/controller must not use generic authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/daemon-autoswitch/types/index.ts", types, [
+    "export type DaemonAutoswitchCachePayload",
+    "export type DaemonAutoswitchMutationEnvelope",
+    "export type DaemonAutoswitchMutationPayload",
+    "export interface DaemonAutoswitchPageQueries",
+    "export interface DaemonAutoswitchPageMutations",
+    "export interface DaemonAutoswitchRuntime",
+    "export interface DaemonAutoswitchPageController",
+  ]);
+  assertNotMatches("src/features/daemon-autoswitch/types/index.ts", types, [
+    [/DaemonAutoswitch[A-Za-z]*(?:Controller|Queries|Mutations)\s*=\s*ReturnType|ReturnType<typeof useDaemonAutoswitch[A-Za-z]*/, "daemon-autoswitch controller/query/mutation/runtime contracts must be explicit, not hook ReturnType"],
+    [/DaemonAutoswitchCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>/, "daemon-autoswitch types owner must keep typed cache payloads"],
+  ]);
+
+  assertIncludes("src/features/daemon-autoswitch/cache/index.ts", cache, [
+    "createModuleCacheOwner<DaemonAutoswitchCachePayload>(\"daemon-autoswitch\")",
+    "Omit<DaemonAutoswitchCacheEnvelope<TPayload>, \"moduleId\">",
+    "writeDaemonAutoswitchAuthoritativePayload",
+    "invalidateDaemonAutoswitchContractQueries",
+  ]);
+  assertNotMatches("src/features/daemon-autoswitch/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "daemon-autoswitch cache owner must not own React hooks"],
+    [/@\/services\/daemon-autoswitch|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|daemonAutoswitchService\.|systemService\.|invokeIpc|invoke\(/, "daemon-autoswitch cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("daemon-autoswitch"\)|DaemonAutoswitchCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "daemon-autoswitch cache owner must keep typed payloads"],
+  ]);
+
+  if (controllerConsumerText.includes("ReturnType<typeof useDaemonAutoswitchPageController>")) {
+    failures.push("src/features/daemon-autoswitch panels/dialogs/components must consume explicit DaemonAutoswitch controller types, not hook ReturnType");
+  }
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+DaemonAutoswitch[A-Za-z]*(?:Controller|Props)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/daemon-autoswitch panels/dialogs/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS daemon-autoswitch deep owner gate executed: hooks/index, query, mutation, runtime, page, cache, types, panels/dialogs/components");
+}
+
 function validateOverviewDeepOwnerBoundaries() {
   const overviewRoot = join(featuresRoot, "overview");
   const hooksIndexPath = join(overviewRoot, "hooks", "index.ts");
@@ -2307,6 +2460,7 @@ validateSettingsDeepOwnerBoundaries();
 validateSkillsDeepOwnerBoundaries();
 validateRelayDeepOwnerBoundaries();
 validateMaintenanceDeepOwnerBoundaries();
+validateDaemonAutoswitchDeepOwnerBoundaries();
 validateOverviewDeepOwnerBoundaries();
 validateRouteShells();
 validateFeaturePageShells();

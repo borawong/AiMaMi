@@ -1942,7 +1942,11 @@ function validateCustomInstructionsTypedPayloadGate() {
 function validateDaemonAutoswitchTypedPayloadGate() {
   const typesPath = join(repoRoot, "src", "features", "daemon-autoswitch", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "daemon-autoswitch", "cache", "index.ts");
-  const hooksPath = join(repoRoot, "src", "features", "daemon-autoswitch", "hooks", "index.ts");
+  const hooksIndexPath = join(repoRoot, "src", "features", "daemon-autoswitch", "hooks", "index.ts");
+  const queryHookPath = join(repoRoot, "src", "features", "daemon-autoswitch", "hooks", "query.ts");
+  const mutationHookPath = join(repoRoot, "src", "features", "daemon-autoswitch", "hooks", "mutation.ts");
+  const runtimeHookPath = join(repoRoot, "src", "features", "daemon-autoswitch", "hooks", "runtime.ts");
+  const pageHookPath = join(repoRoot, "src", "features", "daemon-autoswitch", "hooks", "page.ts");
   const payloadPanelPath = join(
     repoRoot,
     "src",
@@ -1953,36 +1957,104 @@ function validateDaemonAutoswitchTypedPayloadGate() {
   );
   const types = readRequired(typesPath);
   const cache = readRequired(cachePath);
-  const hooks = readRequired(hooksPath);
+  const hooksIndex = readRequired(hooksIndexPath);
+  const queryHook = readRequired(queryHookPath);
+  const mutationHook = readRequired(mutationHookPath);
+  const runtimeHook = readRequired(runtimeHookPath);
+  const pageHook = readRequired(pageHookPath);
   const payloadPanel = readRequired(payloadPanelPath);
+  const hooksIndexReExportPattern =
+    /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const hooksIndexReExports = [...hooksIndex.matchAll(hooksIndexReExportPattern)].map(
+    (match) => match[1],
+  );
+  const hooksIndexAllowedReExports = new Set(["./query", "./mutation", "./runtime", "./page"]);
+  const hooksIndexOnlyReExports =
+    hooksIndex
+      .replace(hooksIndexReExportPattern, "")
+      .replace(/\/\/.*$/gm, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .trim() === "" &&
+    ["query", "mutation", "runtime", "page"].every(
+      (owner) =>
+        hooksIndex.includes(`from "./${owner}"`) ||
+        hooksIndex.includes(`from './${owner}'`),
+    ) &&
+    hooksIndexReExports.every((reExport) => hooksIndexAllowedReExports.has(reExport));
 
   const typedPayloadOk =
+    hooksIndexOnlyReExports &&
     types.includes("export type DaemonAutoswitchCachePayload") &&
     types.includes("export type DaemonAutoswitchMutationEnvelope") &&
     types.includes("export type DaemonAutoswitchMutationPayload") &&
     types.includes("export type DaemonAutoswitchPanelPayload") &&
+    types.includes("export interface DaemonAutoswitchPageQueries") &&
+    types.includes("export interface DaemonAutoswitchPageMutations") &&
+    types.includes("export interface DaemonAutoswitchRuntime") &&
+    types.includes("export interface DaemonAutoswitchPageController") &&
     types.includes("ModuleCacheEnvelope<TPayload>") &&
     types.includes('id: "bootstrap"') &&
     types.includes('id: "pending"') &&
     cache.includes("createModuleCacheOwner<DaemonAutoswitchCachePayload>(\"daemon-autoswitch\")") &&
     cache.includes("Omit<DaemonAutoswitchCacheEnvelope<TPayload>, \"moduleId\">") &&
-    hooks.includes("DaemonAutoswitchCachePayload") &&
-    hooks.includes("DaemonAutoswitchMutationEnvelope") &&
-    hooks.includes("writeDaemonAutoswitchAuthoritativePayload") &&
-    hooks.includes("reloadDaemonAutoswitchAfterMutation") &&
+    cache.includes("writeDaemonAutoswitchAuthoritativePayload") &&
+    cache.includes("invalidateDaemonAutoswitchContractQueries") &&
+    queryHook.includes("useDaemonAutoswitchCacheController") &&
+    queryHook.includes("useDaemonAutoswitchBootstrapQuery") &&
+    queryHook.includes("useDaemonAutoswitchPendingQuery") &&
+    queryHook.includes("useQuery") &&
+    queryHook.includes("useQueryClient") &&
+    queryHook.includes("runDaemonAutoswitchQuery") &&
+    queryHook.includes("daemonAutoswitchService.loadBootstrapState") &&
+    queryHook.includes("daemonAutoswitchService.loadPendingAutoSwitch") &&
+    mutationHook.includes("useMutation") &&
+    mutationHook.includes("useQueryClient") &&
+    mutationHook.includes("daemonAutoswitchService.runDaemonOnce") &&
+    mutationHook.includes("daemonAutoswitchService.setAutoSwitch") &&
+    mutationHook.includes("daemonAutoswitchService.dismissPendingAutoSwitch") &&
+    mutationHook.includes("daemonAutoswitchService.confirmPendingAutoSwitchAndRestartCodex") &&
+    mutationHook.includes("writeDaemonAutoswitchMutationPayload") &&
+    mutationHook.includes("cancelDaemonAutoswitchQueries") &&
+    runtimeHook.includes("useDaemonAutoswitchRuntimeSubscriptions") &&
+    runtimeHook.includes("daemonAutoswitchService.subscribePendingAutoSwitch") &&
+    runtimeHook.includes("invalidateQueries") &&
+    pageHook.includes("useDaemonAutoswitchPendingPrompt") &&
+    pageHook.includes("useDaemonAutoswitchModule") &&
+    pageHook.includes("useDaemonAutoswitchPageController") &&
+    pageHook.includes("DaemonAutoswitchPageController") &&
+    pageHook.includes("metrics") &&
+    pageHook.includes("panels") &&
     payloadPanel.includes("DaemonAutoswitchPanelPayload") &&
     !types.includes("DaemonAutoswitchCacheEnvelope<TPayload = unknown>") &&
     !types.includes("payload: unknown") &&
+    !types.includes("ReturnType<typeof useDaemonAutoswitch") &&
     !cache.includes("createModuleCacheOwner(\"daemon-autoswitch\")") &&
     !cache.includes("ModuleCacheEnvelope<unknown>") &&
-    !hooks.includes("payload: unknown") &&
-    !hooks.includes("ModuleCacheEnvelope<unknown>") &&
+    !/@\/services\/daemon-autoswitch|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|daemonAutoswitchService\.|systemService\.|invokeIpc|invoke\(/.test(cache) &&
+    !/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/.test(hooksIndex) &&
+    !/\b(writeDaemonAutoswitch|setQueryData|invalidateQueries|cancelQueries|DaemonAutoswitch[A-Za-z]*QueryKeys|DAEMON_AUTOSWITCH_[A-Z0-9_]+_QUERY_KEY)\b/.test(hooksIndex) &&
+    !/@\/services\/daemon-autoswitch|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|daemonAutoswitchService\.|systemService\.|invokeIpc|invoke\(/.test(hooksIndex) &&
+    !/\buseMutation\b/.test(queryHook) &&
+    !/\buseEffect\b/.test(queryHook) &&
+    !/useTranslation|DaemonAutoswitchPageController|useDaemonAutoswitchModule|useDaemonAutoswitchPendingPrompt|metrics|panels|labelKey|envelopeData|readBoolean|readString/.test(queryHook) &&
+    !/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/.test(queryHook) &&
+    !/\buseQuery\b/.test(mutationHook) &&
+    !/useTranslation|DaemonAutoswitchPageController|useDaemonAutoswitchModule|useDaemonAutoswitchPendingPrompt|metrics|panels|labelKey|envelopeData|readBoolean|readString/.test(mutationHook) &&
+    !/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/.test(mutationHook) &&
+    !/\buse(Query|Mutation)\b/.test(runtimeHook) &&
+    !/useTranslation|DaemonAutoswitchPageController|useDaemonAutoswitchModule|useDaemonAutoswitchPendingPrompt|metrics|panels|labelKey|envelopeData|readBoolean|readString/.test(runtimeHook) &&
+    !/daemonAutoswitchService\.(?!subscribePendingAutoSwitch\b)\w+/.test(runtimeHook) &&
+    !/\buse(Query|Mutation|QueryClient)\b/.test(pageHook) &&
+    !/\b(setQueryData|invalidateQueries|cancelQueries|writeDaemonAutoswitch|DaemonAutoswitch[A-Za-z]*QueryKeys|DAEMON_AUTOSWITCH_[A-Z0-9_]+_QUERY_KEY)\b/.test(pageHook) &&
+    !/@\/services\/daemon-autoswitch|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|daemonAutoswitchService\.|systemService\.|invokeIpc|invoke\(/.test(pageHook) &&
+    ![queryHook, mutationHook, runtimeHook, pageHook].join("\n").includes("payload: unknown") &&
+    ![queryHook, mutationHook, runtimeHook, pageHook].join("\n").includes("ModuleCacheEnvelope<unknown>") &&
     !payloadPanel.includes("value: unknown");
 
   if (!typedPayloadOk) {
-    failures.push("daemon-autoswitch IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
+    failures.push("daemon-autoswitch IPC payload owner 必须收口到 split hooks、typed envelope、模块 types 和 cache helper");
   } else {
-    console.log("PASS daemon-autoswitch typed IPC payload owner：service/hook/cache");
+    console.log("PASS daemon-autoswitch typed IPC payload owner：split hooks/types/cache");
   }
 }
 

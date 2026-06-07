@@ -1,3 +1,4 @@
+import type { UseMutationResult, UseQueryResult } from "@tanstack/react-query";
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import type {
   AutoSwitchConfigPayload,
@@ -44,6 +45,55 @@ export interface DaemonAutoswitchQueryState {
   isFetching?: boolean;
   isError?: boolean;
   refetch?: () => unknown;
+}
+
+export interface DaemonAutoswitchPageQueries {
+  bootstrapQuery: UseQueryResult<DaemonAutoswitchBootstrapEnvelope>;
+  pendingQuery: UseQueryResult<DaemonAutoswitchPendingEnvelope>;
+}
+
+export interface DaemonAutoswitchPageMutations {
+  runOnceMutation: UseMutationResult<DaemonAutoswitchRunEnvelope, Error, void>;
+  setAutoSwitchMutation: UseMutationResult<
+    DaemonAutoswitchConfigEnvelope,
+    Error,
+    boolean
+  >;
+  dismissPendingMutation: UseMutationResult<
+    DaemonAutoswitchDismissEnvelope,
+    Error,
+    void
+  >;
+  confirmPendingAndRestartMutation: UseMutationResult<void, Error, void>;
+}
+
+export interface DaemonAutoswitchRuntimeController {
+  pendingAutoSwitchSubscribed: boolean;
+}
+
+export interface DaemonAutoswitchAsyncAction {
+  id: string;
+  labelKey: string;
+  run: () => Promise<unknown>;
+  isPending: boolean;
+}
+
+export interface DaemonAutoswitchToggleAction {
+  run: (enabled: boolean) => Promise<unknown>;
+  isPending: boolean;
+}
+
+export interface DaemonAutoswitchPendingPromptController {
+  pendingQuery: DaemonAutoswitchPageQueries["pendingQuery"];
+  dismissPendingAction: DaemonAutoswitchAsyncAction;
+  confirmPendingAndRestartAction: DaemonAutoswitchAsyncAction;
+}
+
+export interface DaemonAutoswitchModuleController
+  extends DaemonAutoswitchPageQueries {
+  runtimeSubscriptions: DaemonAutoswitchRuntimeController;
+  runOnceAction: DaemonAutoswitchAsyncAction;
+  setAutoSwitchAction: DaemonAutoswitchToggleAction;
 }
 
 export type DaemonAutoswitchMetricValue =
