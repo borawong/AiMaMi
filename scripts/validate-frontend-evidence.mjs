@@ -916,6 +916,76 @@ function validateSettingsTypedPayloadGate() {
   }
 }
 
+function validateMaintenanceTypedPayloadGate() {
+  const servicePath = join(repoRoot, "src", "services", "maintenance", "index.ts");
+  const typesPath = join(repoRoot, "src", "features", "maintenance", "types", "index.ts");
+  const cachePath = join(repoRoot, "src", "features", "maintenance", "cache", "index.ts");
+  const hooksPath = join(repoRoot, "src", "features", "maintenance", "hooks", "index.ts");
+  const diagnosticsDialogPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "maintenance",
+    "dialogs",
+    "diagnostics.tsx",
+  );
+  const service = readRequired(servicePath);
+  const types = readRequired(typesPath);
+  const cache = readRequired(cachePath);
+  const hooks = readRequired(hooksPath);
+  const diagnosticsDialog = readRequired(diagnosticsDialogPath);
+
+  const typedPayloadOk =
+    service.includes("readEnvelopeData(systemService.clean())") &&
+    service.includes("readEnvelopeData(systemService.rebuildRegistry())") &&
+    service.includes("readEnvelopeData(systemService.diagnose())") &&
+    service.includes("CoreEnvelope<RelayDiagnosticPayload>") &&
+    service.includes("CoreEnvelope<RelayRouterIssueFixPayload>") &&
+    !service.includes("CoreEnvelope<unknown>") &&
+    !service.includes("IpcEvidencePayload") &&
+    types.includes("export type MaintenanceCachePayload") &&
+    types.includes("export type MaintenanceQueryPayloadForKey") &&
+    types.includes("export type MaintenanceSystemInfoPayload") &&
+    types.includes("export type MaintenanceRouterDiagnosticsPayload = RelayDiagnosticPayload") &&
+    types.includes("export type MaintenanceRouterFixPayload = RelayRouterIssueFixPayload") &&
+    types.includes("ModuleCacheEnvelope<TPayload>") &&
+    types.includes("SystemInfoPayload") &&
+    !types.includes("MaintenanceCacheEnvelope<TPayload = unknown>") &&
+    !types.includes("payload: unknown") &&
+    cache.includes("createModuleCacheOwner<MaintenanceCachePayload>(\"maintenance\")") &&
+    cache.includes("Omit<MaintenanceCacheEnvelope<TPayload>, \"moduleId\">") &&
+    cache.includes("TKey extends MaintenanceWritableQueryKey") &&
+    cache.includes("MaintenanceQueryPayloadForKey<TKey>") &&
+    cache.includes("toMaintenanceCachePayload") &&
+    cache.includes("TPayload extends MaintenanceActionPayload") &&
+    !cache.includes("createModuleCacheOwner(\"maintenance\")") &&
+    !cache.includes("ModuleCacheEnvelope<unknown>") &&
+    hooks.includes("invalidateMaintenanceContractQueries") &&
+    hooks.includes("value: systemInfoQuery.data?.os ?? \"-\"") &&
+    hooks.includes("value: systemInfoQuery.data?.arch ?? \"-\"") &&
+    hooks.includes("value: systemInfoQuery.data?.osVersion ?? \"-\"") &&
+    hooks.includes("async (key: string, mutateAsync: () => Promise<void>)") &&
+    !hooks.includes("readSystemInfoField(value: unknown") &&
+    !hooks.includes("writeMaintenanceActionPayload(queryClient, result);\n      options.onRestarted()") &&
+    !hooks.includes("writeMaintenanceActionPayload(queryClient, result);\n    },\n  });\n\n  const resetConfigMutation") &&
+    diagnosticsDialog.includes("runDiagnostics: () => Promise<MaintenanceRouterDiagnosticsPayload>") &&
+    diagnosticsDialog.includes("fixResult: MaintenanceRouterFixPayload") &&
+    diagnosticsDialog.includes("diagnosticsResult: MaintenanceRouterDiagnosticsPayload") &&
+    diagnosticsDialog.includes("readRouterDiagnosticLabel(item)") &&
+    diagnosticsDialog.includes("readRouterDiagnosticStatus(item)") &&
+    !diagnosticsDialog.includes("runDiagnostics: () => Promise<unknown>") &&
+    !diagnosticsDialog.includes("fixResult: unknown") &&
+    !diagnosticsDialog.includes("diagnosticsResult: unknown") &&
+    !diagnosticsDialog.includes("function readRouterDiagnosticsPayload(") &&
+    !diagnosticsDialog.includes("function readRouterFixPayload(");
+
+  if (!typedPayloadOk) {
+    failures.push("maintenance IPC payload owner 必须收口到 typed data payload、模块 types、cache helper 和 dialog typed props");
+  } else {
+    console.log("PASS maintenance typed IPC payload owner：service/hook/cache/dialog");
+  }
+}
+
 function validateDaemonAutoswitchTypedPayloadGate() {
   const typesPath = join(repoRoot, "src", "features", "daemon-autoswitch", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "daemon-autoswitch", "cache", "index.ts");
@@ -1199,6 +1269,7 @@ validateSharedCacheTypedGate();
 validateOverviewTypedPayloadGate();
 validateTrayShellTypedPayloadGate();
 validateSettingsTypedPayloadGate();
+validateMaintenanceTypedPayloadGate();
 validateDaemonAutoswitchTypedPayloadGate();
 validateMcpTypedPayloadGate();
 validatePluginsFrontendNoPromotionGate();

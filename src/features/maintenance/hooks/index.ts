@@ -20,6 +20,7 @@ import { useModuleCacheController } from "@/features/_shared/controller";
 import { maintenanceService } from "@/services/maintenance";
 import {
   beginMaintenanceMutation,
+  invalidateMaintenanceContractQueries,
   MaintenanceCache,
   MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
   MAINTENANCE_SYSTEM_INFO_QUERY_KEY,
@@ -120,8 +121,8 @@ export function useMaintenanceActionMutations(options: {
 
   const restartMutation = useMutation({
     mutationFn: () => maintenanceService.restartCodex(),
-    onSuccess: async (result) => {
-      await writeMaintenanceActionPayload(queryClient, result);
+    onSuccess: async () => {
+      await invalidateMaintenanceContractQueries(queryClient);
       options.onRestarted();
     },
     onError: options.onRestartError,
@@ -129,15 +130,15 @@ export function useMaintenanceActionMutations(options: {
 
   const forceKillMutation = useMutation({
     mutationFn: () => maintenanceService.forceKillCodex(),
-    onSuccess: async (result) => {
-      await writeMaintenanceActionPayload(queryClient, result);
+    onSuccess: async () => {
+      await invalidateMaintenanceContractQueries(queryClient);
     },
   });
 
   const resetConfigMutation = useMutation({
     mutationFn: () => maintenanceService.resetCodexConfig(),
-    onSuccess: async (result) => {
-      await writeMaintenanceActionPayload(queryClient, result);
+    onSuccess: async () => {
+      await invalidateMaintenanceContractQueries(queryClient);
     },
   });
 
@@ -195,8 +196,8 @@ export function useMaintenanceActionMutations(options: {
 
   const openPathMutation = useMutation({
     mutationFn: ({ path }: { path: string }) => maintenanceService.openPath(path),
-    onSuccess: async (result) => {
-      await writeMaintenanceActionPayload(queryClient, result);
+    onSuccess: async () => {
+      await invalidateMaintenanceContractQueries(queryClient);
     },
   });
 
@@ -252,27 +253,25 @@ export function useMaintenancePageController() {
     fixRouterIssueAndRefresh,
   } = useMaintenanceActionMutations({
     onDiagnosed: (res) => {
-      const d = res.data;
       setActionResult("diagnose", {
         type: "success",
         message: t("maintenance.diagnoseResult", {
-          os: d.platform.os,
-          arch: d.platform.arch,
-          version: d.coreVersion,
-          count: d.registryState.accountCount,
+          os: res.platform.os,
+          arch: res.platform.arch,
+          version: res.coreVersion,
+          count: res.registryState.accountCount,
         }),
       });
     },
     onDiagnoseError: (err) =>
       setActionResult("diagnose", { type: "error", message: String(err) }),
     onCleaned: (res) => {
-      const d = res.data;
       setActionResult("clean", {
         type: "success",
         message: t("maintenance.cleanResult", {
-          authBackups: d.authBackupsRemoved,
-          registryBackups: d.registryBackupsRemoved,
-          staleEntries: d.staleEntriesRemoved,
+          authBackups: res.authBackupsRemoved,
+          registryBackups: res.registryBackupsRemoved,
+          staleEntries: res.staleEntriesRemoved,
         }),
       });
     },
@@ -281,7 +280,7 @@ export function useMaintenancePageController() {
     onRebuilt: (res) => {
       setActionResult("rebuild", {
         type: "success",
-        message: t("maintenance.rebuildResult", { count: res.data.accountCount }),
+        message: t("maintenance.rebuildResult", { count: res.accountCount }),
       });
     },
     onRebuildError: (err) =>
@@ -296,7 +295,7 @@ export function useMaintenancePageController() {
   });
 
   const runAction = useCallback(
-    async (key: string, mutateAsync: () => Promise<unknown>) => {
+    async (key: string, mutateAsync: () => Promise<void>) => {
       if (runningKeysRef.current[key]) {
         return;
       }
@@ -323,21 +322,23 @@ export function useMaintenancePageController() {
 
   const handleRestartConfirm = useCallback(() => {
     setRestartConfirmOpen(false);
-    void runAction("restart", () => restartMutation.mutateAsync());
+    void runAction("restart", async () => {
+      await restartMutation.mutateAsync();
+    });
   }, [restartMutation, runAction]);
 
   const systemInfoFields: MaintenanceSystemInfoField[] = [
     {
       label: t("maintenance.systemInfoOs"),
-      value: readSystemInfoField(systemInfoQuery.data, [["platform", "os"], ["os"]]),
+      value: systemInfoQuery.data?.os ?? "-",
     },
     {
       label: t("maintenance.systemInfoArch"),
-      value: readSystemInfoField(systemInfoQuery.data, [["platform", "arch"], ["arch"]]),
+      value: systemInfoQuery.data?.arch ?? "-",
     },
     {
       label: t("maintenance.systemInfoVersion"),
-      value: readSystemInfoField(systemInfoQuery.data, [["coreVersion"], ["version"]]),
+      value: systemInfoQuery.data?.osVersion ?? "-",
     },
   ];
 
@@ -350,7 +351,10 @@ export function useMaintenancePageController() {
       description: t("maintenance.diagnoseDesc"),
       actionLabel: t("maintenance.diagnoseAction"),
       loadingLabel: t("maintenance.diagnosing"),
-      onAction: () => void runAction("diagnose", () => diagnoseMutation.mutateAsync()),
+      onAction: () =>
+        void runAction("diagnose", async () => {
+          await diagnoseMutation.mutateAsync();
+        }),
     },
     {
       key: "routerDiagnostics",
@@ -370,7 +374,10 @@ export function useMaintenancePageController() {
       description: t("maintenance.cleanDesc"),
       actionLabel: t("maintenance.cleanAction"),
       loadingLabel: t("maintenance.cleaning"),
-      onAction: () => void runAction("clean", () => cleanMutation.mutateAsync()),
+      onAction: () =>
+        void runAction("clean", async () => {
+          await cleanMutation.mutateAsync();
+        }),
     },
     {
       key: "rebuild",
@@ -380,7 +387,10 @@ export function useMaintenancePageController() {
       description: t("maintenance.rebuildDesc"),
       actionLabel: t("maintenance.rebuildAction"),
       loadingLabel: t("maintenance.rebuilding"),
-      onAction: () => void runAction("rebuild", () => rebuildMutation.mutateAsync()),
+      onAction: () =>
+        void runAction("rebuild", async () => {
+          await rebuildMutation.mutateAsync();
+        }),
     },
     {
       key: "forceKill",
@@ -491,30 +501,4 @@ async function waitForFeedback(startedAt: number) {
   if (elapsed < MIN_FEEDBACK_MS) {
     await new Promise((resolve) => setTimeout(resolve, MIN_FEEDBACK_MS - elapsed));
   }
-}
-
-function readSystemInfoField(value: unknown, paths: string[][]) {
-  for (const path of paths) {
-    const field = readUnknownPath(value, path);
-    if (
-      typeof field === "string" ||
-      typeof field === "number" ||
-      typeof field === "boolean"
-    ) {
-      return String(field);
-    }
-  }
-
-  return "-";
-}
-
-function readUnknownPath(value: unknown, path: string[]) {
-  let current = value;
-  for (const segment of path) {
-    if (!current || typeof current !== "object" || Array.isArray(current)) {
-      return undefined;
-    }
-    current = (current as Record<string, unknown>)[segment];
-  }
-  return current;
 }

@@ -24,12 +24,12 @@ const MODAL_FEEDBACK_MS = 600;
 interface RouterDiagnosticsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  runDiagnostics: () => Promise<unknown>;
+  runDiagnostics: () => Promise<MaintenanceRouterDiagnosticsPayload>;
   fixIssueAndRefresh: (
     input: MaintenanceFixIssueInput,
   ) => Promise<{
-    fixResult: unknown;
-    diagnosticsResult: unknown;
+    fixResult: MaintenanceRouterFixPayload;
+    diagnosticsResult: MaintenanceRouterDiagnosticsPayload;
   }>;
 }
 
@@ -51,29 +51,17 @@ export function RouterDiagnosticsDialog({
   const busy = diagnosticsBusy || fixingAll || fixingItemId !== null;
 
   const handleDiagnosticsResult = useCallback(
-    (value: unknown) => {
-      const payload = readRouterDiagnosticsPayload(value);
-      if (!payload) {
-        setError(t("relay.diagnostic.dataFormatError"));
-        return;
-      }
-
+    (payload: MaintenanceRouterDiagnosticsPayload) => {
       setDiagnostics(payload);
     },
-    [t],
+    [],
   );
 
   const handleFixResult = useCallback(
-    (value: unknown) => {
-      const payload = readRouterFixPayload(value);
-      if (!payload) {
-        setError(t("relay.diagnostic.dataFormatError"));
-        return;
-      }
-
+    (payload: MaintenanceRouterFixPayload) => {
       setFixResult(payload);
     },
-    [t],
+    [],
   );
 
   const recheck = useCallback(
@@ -156,7 +144,9 @@ export function RouterDiagnosticsDialog({
   }, [open, recheck]);
 
   const fixableIssueCount =
-    diagnostics?.items.filter((item) => item.fixable && item.status !== "ok")
+    diagnostics?.items.filter(
+      (item) => item.fixable && readRouterDiagnosticStatus(item) !== "ok",
+    )
       .length ?? 0;
 
   return (
@@ -268,8 +258,9 @@ function RouterFixLog({
   result: MaintenanceRouterFixPayload | null;
 }) {
   const { t } = useTranslation();
+  const details = result?.details ? [result.details] : [];
 
-  if (!result || result.details.length === 0) {
+  if (details.length === 0) {
     return null;
   }
 
@@ -278,7 +269,7 @@ function RouterFixLog({
       <p className="mb-1 text-[11px] font-medium text-muted-foreground">
         {t("relay.diagnostic.fixLog")}
       </p>
-      {result.details.map((detail, index) => (
+      {details.map((detail, index) => (
         <p key={`${detail}-${index}`} className="text-[11px] text-muted-foreground">
           {detail}
         </p>
@@ -300,11 +291,13 @@ function RouterDiagnosticItemRow({
 }) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
-  const StatusIcon = item.status === "ok" ? CheckCircle2 : AlertCircle;
+  const status = readRouterDiagnosticStatus(item);
+  const detail = item.detail ?? null;
+  const StatusIcon = status === "ok" ? CheckCircle2 : AlertCircle;
   const iconColor =
-    item.status === "ok"
+    status === "ok"
       ? "text-emerald-500"
-      : item.status === "warning"
+      : status === "warning"
         ? "text-amber-500"
         : "text-red-500";
 
@@ -315,12 +308,12 @@ function RouterDiagnosticItemRow({
         <button
           type="button"
           className="flex-1 text-left text-[12px] leading-snug"
-          onClick={() => item.detail && setExpanded((value) => !value)}
-          aria-expanded={item.detail ? expanded : undefined}
+          onClick={() => detail && setExpanded((value) => !value)}
+          aria-expanded={detail ? expanded : undefined}
         >
-          {item.label}
+          {readRouterDiagnosticLabel(item)}
         </button>
-        {item.fixable && item.status !== "ok" && (
+        {item.fixable && status !== "ok" && (
           <Button
             size="sm"
             variant="outline"
@@ -338,9 +331,9 @@ function RouterDiagnosticItemRow({
           </Button>
         )}
       </div>
-      {expanded && item.detail && (
+      {expanded && detail && (
         <p className="mt-1.5 pl-5 text-[11px] leading-relaxed text-muted-foreground">
-          {item.detail}
+          {detail}
         </p>
       )}
     </div>
@@ -360,69 +353,12 @@ async function waitForFeedback(startedAt: number) {
   }
 }
 
-function readRouterDiagnosticsPayload(
-  value: unknown,
-): MaintenanceRouterDiagnosticsPayload | null {
-  if (!isRecord(value) || typeof value.hasIssues !== "boolean") {
-    return null;
-  }
-
-  if (!Array.isArray(value.items)) {
-    return null;
-  }
-
-  const items = value.items.map(readRouterDiagnosticItem);
-  if (items.some((item) => item === null)) {
-    return null;
-  }
-
-  return {
-    hasIssues: value.hasIssues,
-    items: items as MaintenanceRouterDiagnosticItem[],
-  };
+function readRouterDiagnosticLabel(item: MaintenanceRouterDiagnosticItem) {
+  return item.label ?? item.title ?? item.message ?? item.id;
 }
 
-function readRouterDiagnosticItem(value: unknown) {
-  if (
-    !isRecord(value) ||
-    typeof value.id !== "string" ||
-    typeof value.label !== "string" ||
-    typeof value.status !== "string" ||
-    typeof value.fixable !== "boolean"
-  ) {
-    return null;
-  }
-
-  const item: MaintenanceRouterDiagnosticItem = {
-    id: value.id,
-    label: value.label,
-    status: value.status,
-    fixable: value.fixable,
-  };
-
-  if (typeof value.detail === "string") {
-    item.detail = value.detail;
-  }
-
-  return item;
-}
-
-function readRouterFixPayload(value: unknown): MaintenanceRouterFixPayload | null {
-  if (!isRecord(value) || !Array.isArray(value.details)) {
-    return null;
-  }
-
-  if (!value.details.every((detail) => typeof detail === "string")) {
-    return null;
-  }
-
-  return {
-    details: value.details,
-  };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+function readRouterDiagnosticStatus(item: MaintenanceRouterDiagnosticItem) {
+  return item.status ?? item.severity;
 }
 
 function errorToString(error: unknown) {

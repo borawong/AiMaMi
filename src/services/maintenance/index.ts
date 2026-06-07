@@ -11,11 +11,11 @@ async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T
 }
 
 export const maintenanceService = {
-  clean: systemService.clean,
+  clean: () => readEnvelopeData(systemService.clean()),
 
-  rebuildRegistry: systemService.rebuildRegistry,
+  rebuildRegistry: () => readEnvelopeData(systemService.rebuildRegistry()),
 
-  diagnose: systemService.diagnose,
+  diagnose: () => readEnvelopeData(systemService.diagnose()),
 
   restartCodex: systemService.restartCodex,
 

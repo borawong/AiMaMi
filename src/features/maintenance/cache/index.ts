@@ -3,15 +3,32 @@ import {
   createModuleCacheOwner,
   type ModuleCacheSource,
 } from "@/features/_shared/cache";
+import type {
+  MaintenanceActionPayload,
+  MaintenanceCacheEnvelope,
+  MaintenanceCachePayload,
+  MaintenanceImageCompatQueryKey,
+  MaintenanceQueryPayloadForKey,
+  MaintenanceSystemInfoQueryKey,
+  MaintenanceWritableQueryKey,
+} from "../types";
 
-export const MaintenanceCache = createModuleCacheOwner("maintenance");
+export const MaintenanceCache =
+  createModuleCacheOwner<MaintenanceCachePayload>("maintenance");
 export const MaintenanceQueryKeys = MaintenanceCache.queryKeys;
-export const MAINTENANCE_IMAGE_COMPAT_QUERY_KEY = ["imageCompat"] as const;
-export const MAINTENANCE_SYSTEM_INFO_QUERY_KEY = [
-  ...MaintenanceCache.queryKeys.root,
+export const MAINTENANCE_IMAGE_COMPAT_QUERY_KEY: MaintenanceImageCompatQueryKey = [
+  "imageCompat",
+] as const;
+export const MAINTENANCE_SYSTEM_INFO_QUERY_KEY: MaintenanceSystemInfoQueryKey = [
+  "maintenance",
   "system-info",
 ] as const;
-export const writeMaintenanceAuthoritativePayload = MaintenanceCache.writeAuthoritativePayload;
+export const writeMaintenanceAuthoritativePayload = <
+  TPayload extends MaintenanceCachePayload,
+>(
+  queryClient: QueryClient,
+  envelope: Omit<MaintenanceCacheEnvelope<TPayload>, "moduleId">,
+) => MaintenanceCache.writeAuthoritativePayload(queryClient, envelope);
 
 let maintenanceModuleSequence = 0;
 const maintenanceQuerySequences = new Map<string, number>();
@@ -49,7 +66,7 @@ function canAcceptMaintenancePayload(
   return sequence >= latestStarted && sequence >= mutationFence;
 }
 
-export function beginMaintenanceMutation(queryKey: QueryKey) {
+export function beginMaintenanceMutation(queryKey: MaintenanceWritableQueryKey) {
   const sequence = nextMaintenanceQuerySequence(queryKey);
   const serialized = serializeMaintenanceQueryKey(queryKey);
   maintenanceMutationFences.set(
@@ -59,10 +76,10 @@ export function beginMaintenanceMutation(queryKey: QueryKey) {
   return sequence;
 }
 
-export function writeMaintenanceQueryPayload<TPayload>(
+export function writeMaintenanceQueryPayload<TKey extends MaintenanceWritableQueryKey>(
   queryClient: QueryClient,
-  queryKey: QueryKey,
-  payload: TPayload,
+  queryKey: TKey,
+  payload: MaintenanceQueryPayloadForKey<TKey>,
   options: {
     source: ModuleCacheSource;
     sequence?: number;
@@ -78,12 +95,9 @@ export function writeMaintenanceQueryPayload<TPayload>(
     return false;
   }
 
-  queryClient.setQueryData<TPayload>(queryKey, payload);
-  MaintenanceCache.writeAuthoritativePayload(queryClient, {
-    payload: {
-      queryKey,
-      value: payload,
-    },
+  queryClient.setQueryData<MaintenanceQueryPayloadForKey<TKey>>(queryKey, payload);
+  writeMaintenanceAuthoritativePayload(queryClient, {
+    payload: toMaintenanceCachePayload(queryKey, payload),
     source: options.source,
     sequence: nextMaintenanceModuleSequence(),
     receivedAt: Date.now(),
@@ -91,10 +105,10 @@ export function writeMaintenanceQueryPayload<TPayload>(
   return true;
 }
 
-export async function runMaintenanceQuery<TPayload>(
+export async function runMaintenanceQuery<TKey extends MaintenanceWritableQueryKey>(
   queryClient: QueryClient,
-  queryKey: QueryKey,
-  load: () => Promise<TPayload>,
+  queryKey: TKey,
+  load: () => Promise<MaintenanceQueryPayloadForKey<TKey>>,
   source: ModuleCacheSource = "full-refresh",
 ) {
   const sequence = nextMaintenanceQuerySequence(queryKey);
@@ -105,16 +119,16 @@ export async function runMaintenanceQuery<TPayload>(
   });
 
   if (!accepted) {
-    return queryClient.getQueryData<TPayload>(queryKey) ?? payload;
+    return queryClient.getQueryData<MaintenanceQueryPayloadForKey<TKey>>(queryKey) ?? payload;
   }
 
   return payload;
 }
 
-export async function writeMaintenanceMutationPayload<TPayload>(
+export async function writeMaintenanceMutationPayload<TKey extends MaintenanceWritableQueryKey>(
   queryClient: QueryClient,
-  queryKey: QueryKey,
-  payload: TPayload,
+  queryKey: TKey,
+  payload: MaintenanceQueryPayloadForKey<TKey>,
   sequence?: number,
 ) {
   const accepted = writeMaintenanceQueryPayload(queryClient, queryKey, payload, {
@@ -129,17 +143,34 @@ export async function writeMaintenanceMutationPayload<TPayload>(
   return accepted;
 }
 
-export async function writeMaintenanceActionPayload<TPayload>(
+export async function writeMaintenanceActionPayload<TPayload extends MaintenanceActionPayload>(
   queryClient: QueryClient,
   payload: TPayload,
 ) {
-  MaintenanceCache.writeAuthoritativePayload(queryClient, {
+  writeMaintenanceAuthoritativePayload(queryClient, {
     payload,
     source: "mutation-payload",
     sequence: nextMaintenanceModuleSequence(),
     receivedAt: Date.now(),
   });
   await invalidateMaintenanceContractQueries(queryClient);
+}
+
+function toMaintenanceCachePayload<TKey extends MaintenanceWritableQueryKey>(
+  queryKey: TKey,
+  value: MaintenanceQueryPayloadForKey<TKey>,
+): MaintenanceCachePayload {
+  if (queryKey === MAINTENANCE_SYSTEM_INFO_QUERY_KEY) {
+    return {
+      queryKey: MAINTENANCE_SYSTEM_INFO_QUERY_KEY,
+      value: value as MaintenanceQueryPayloadForKey<MaintenanceSystemInfoQueryKey>,
+    };
+  }
+
+  return {
+    queryKey: MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
+    value: value as MaintenanceQueryPayloadForKey<MaintenanceImageCompatQueryKey>,
+  };
 }
 
 export async function invalidateMaintenanceContractQueries(queryClient: QueryClient) {
