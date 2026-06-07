@@ -447,10 +447,18 @@ function validateKnownInternalFrontendGates() {
     ...walkFiles(join(repoRoot, "src", "features", "accounts", "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
     ...walkFiles(join(repoRoot, "src", "features", "accounts", "components"), (file) => /\.(ts|tsx)$/.test(file)),
   ];
-  const sessionsHooksPath = join(repoRoot, "src", "features", "sessions", "hooks", "index.ts");
+  const sessionsHooksIndexPath = join(repoRoot, "src", "features", "sessions", "hooks", "index.ts");
+  const sessionsQueryPath = join(repoRoot, "src", "features", "sessions", "hooks", "query.ts");
+  const sessionsMutationPath = join(repoRoot, "src", "features", "sessions", "hooks", "mutation.ts");
+  const sessionsPageHookPath = join(repoRoot, "src", "features", "sessions", "hooks", "page.ts");
   const sessionsCachePath = join(repoRoot, "src", "features", "sessions", "cache", "index.ts");
   const sessionsTypesPath = join(repoRoot, "src", "features", "sessions", "types", "index.ts");
   const sessionsServicePath = join(repoRoot, "src", "services", "sessions", "index.ts");
+  const sessionsControllerConsumerPaths = [
+    ...walkFiles(join(repoRoot, "src", "features", "sessions", "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(repoRoot, "src", "features", "sessions", "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(repoRoot, "src", "features", "sessions", "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
   const analyticsHooksIndexPath = join(repoRoot, "src", "features", "analytics", "hooks", "index.ts");
   const analyticsQueryPath = join(repoRoot, "src", "features", "analytics", "hooks", "query.ts");
   const analyticsPageHookPath = join(repoRoot, "src", "features", "analytics", "hooks", "page.ts");
@@ -546,10 +554,16 @@ function validateKnownInternalFrontendGates() {
   const accountsControllerConsumerText = accountsControllerConsumerPaths
     .map((file) => readRequired(file))
     .join("\n");
-  const sessionsHooks = readRequired(sessionsHooksPath);
+  const sessionsHooksIndex = readRequired(sessionsHooksIndexPath);
+  const sessionsQuery = readRequired(sessionsQueryPath);
+  const sessionsMutation = readRequired(sessionsMutationPath);
+  const sessionsPageHook = readRequired(sessionsPageHookPath);
   const sessionsCache = readRequired(sessionsCachePath);
   const sessionsTypes = readRequired(sessionsTypesPath);
   const sessionsService = readRequired(sessionsServicePath);
+  const sessionsControllerConsumerText = sessionsControllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
   const analyticsHooksIndex = readRequired(analyticsHooksIndexPath);
   const analyticsQuery = readRequired(analyticsQueryPath);
   const analyticsPageHook = readRequired(analyticsPageHookPath);
@@ -718,7 +732,42 @@ function validateKnownInternalFrontendGates() {
     console.log("PASS accounts typed IPC payload owner：split hooks/types/cache");
   }
 
-  const sessionsTypedPayloadOk =
+  const sessionsHooksIndexReExportPattern =
+    /export\s+(?:type\s+)?(?:\*|\{[\s\S]*?\})\s+from\s+["']([^"']+)["'];?/g;
+  const sessionsHooksIndexReExports = [...sessionsHooksIndex.matchAll(sessionsHooksIndexReExportPattern)].map(
+    (match) => match[1],
+  );
+  const sessionsHooksIndexAllowedReExports = new Set([
+    "./query",
+    "./mutation",
+    "./page",
+  ]);
+  const sessionsHooksIndexOnlyReExports =
+    sessionsHooksIndex
+      .replace(sessionsHooksIndexReExportPattern, "")
+      .replace(/\/\/.*$/gm, "")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .trim() === "" &&
+    ["query", "mutation", "page"].every(
+      (owner) =>
+        sessionsHooksIndex.includes(`from "./${owner}"`) ||
+        sessionsHooksIndex.includes(`from './${owner}'`),
+    ) &&
+    sessionsHooksIndexReExports.every((reExport) =>
+      sessionsHooksIndexAllowedReExports.has(reExport),
+    );
+  if (!sessionsHooksIndexOnlyReExports) {
+    const extraReExports = sessionsHooksIndexReExports.filter(
+      (reExport) => !sessionsHooksIndexAllowedReExports.has(reExport),
+    );
+    failures.push(
+      `src/features/sessions/hooks/index.ts 只能 re-export ./query、./mutation、./page${
+        extraReExports.length > 0 ? `；额外导出：${extraReExports.join(", ")}` : ""
+      }`,
+    );
+  }
+
+  const sessionsSplitOwnerOk =
     sessionsService.includes("CoreEnvelope<SessionsListPayload>") &&
     sessionsService.includes("CoreEnvelope<SessionsDeletePayload>") &&
     sessionsService.includes("CoreEnvelope<SessionAnalyticsPayload>") &&
@@ -728,16 +777,90 @@ function validateKnownInternalFrontendGates() {
     sessionsTypes.includes("export type SessionsListEnvelope") &&
     sessionsTypes.includes("export type SessionsDeleteEnvelope") &&
     sessionsTypes.includes("export type SessionsMutationPayload") &&
+    sessionsTypes.includes("export type SessionsMutationEnvelope") &&
     sessionsTypes.includes("export type SessionsCachePayload") &&
-    sessionsHooks.includes("SessionsCacheEnvelope") &&
-    sessionsHooks.includes("SessionsDeleteEnvelope") &&
-    sessionsHooks.includes("selectDeletedSessionIds") &&
+    sessionsTypes.includes("export interface SessionsPageQueries") &&
+    sessionsTypes.includes("export interface SessionsPageMutations") &&
+    sessionsTypes.includes("export interface SessionsModuleController") &&
+    sessionsTypes.includes("export interface SessionsPageController") &&
+    !sessionsTypes.includes("SessionsCacheEnvelope<TPayload = unknown>") &&
+    !sessionsTypes.includes("ModuleCacheEnvelope<unknown>") &&
+    !sessionsTypes.includes("payload: unknown") &&
+    sessionsCache.includes("createModuleCacheOwner<SessionsCachePayload>(\"sessions\")") &&
+    sessionsCache.includes("writeSessionsListPayload") &&
+    sessionsCache.includes("writeSessionsMutationPayload") &&
+    sessionsCache.includes("invalidateSessionsDumpedQueries") &&
+    sessionsCache.includes("setQueryData<ModuleCacheEnvelope<SessionsCachePayload>>") &&
+    sessionsCache.includes("mutationFenceAt") &&
+    sessionsCache.includes("isStaleEnvelope") &&
+    !sessionsCache.includes("createModuleCacheOwner(\"sessions\")") &&
+    !sessionsCache.includes("ModuleCacheEnvelope<unknown>") &&
+    !sessionsCache.includes("payload: unknown") &&
+    !/@\/services\/sessions|@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|sessionsService\.|analyticsService\.|invokeIpc|invoke\(/.test(sessionsCache) &&
+    sessionsHooksIndexOnlyReExports &&
+    !/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback|useRef)\b/.test(sessionsHooksIndex) &&
+    !/\b(writeSessions|writeAnalytics|fenceAnalytics|setQueryData|invalidateQueries|cancelQueries|Sessions[A-Za-z]*QueryKeys|Analytics[A-Za-z]*QueryKeys)\b/.test(sessionsHooksIndex) &&
+    !/@\/services\/sessions|@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|sessionsService\.|analyticsService\.|invokeIpc|invoke\(/.test(sessionsHooksIndex) &&
+    sessionsQuery.includes("useSessionsCacheController") &&
+    sessionsQuery.includes("useModuleCacheController(SessionsCache)") &&
+    sessionsQuery.includes("useSessionsPageQueries") &&
+    sessionsQuery.includes("useQuery") &&
+    sessionsQuery.includes("useQueryClient") &&
+    sessionsQuery.includes("SessionsAuthoritativeQueryKeys") &&
+    sessionsQuery.includes("SessionsDumpedQueryKeys") &&
+    sessionsQuery.includes("AnalyticsAuthoritativeQueryKeys") &&
+    sessionsQuery.includes("AnalyticsDumpedQueryKeys") &&
+    sessionsQuery.includes("sessionsService.loadSessions") &&
+    sessionsQuery.includes("analyticsService.loadUsageAnalytics") &&
+    sessionsQuery.includes("writeSessionsListPayload") &&
+    sessionsQuery.includes("writeAnalyticsPanelPayload") &&
+    sessionsMutation.includes("SessionsDeleteEnvelope") &&
+    sessionsMutation.includes("useSessionsPageMutations") &&
+    sessionsMutation.includes("useMutation") &&
+    sessionsMutation.includes("useQueryClient") &&
+    sessionsMutation.includes("sessionsService.deleteSessions") &&
+    sessionsMutation.includes("writeSessionsMutationPayload") &&
+    sessionsMutation.includes("fenceAnalyticsPanelPayload") &&
+    sessionsMutation.includes("invalidateSessionsDumpedQueries") &&
+    /refreshPromiseRef|singleFlight|refreshPromise/.test(sessionsMutation) &&
+    sessionsPageHook.includes("useSessionsModule") &&
+    sessionsPageHook.includes("SessionsModuleController") &&
+    sessionsPageHook.includes("useSessionsPageController") &&
+    sessionsPageHook.includes("SessionsPageController") &&
+    sessionsPageHook.includes("useSessionsPageQueries") &&
+    sessionsPageHook.includes("useSessionsPageMutations") &&
+    sessionsPageHook.includes("useState") &&
+    sessionsPageHook.includes("useMemo") &&
+    sessionsPageHook.includes("buildSessionGroups") &&
+    sessionsPageHook.includes("countOrphans") &&
+    sessionsPageHook.includes("flattenGroups") &&
+    sessionsPageHook.includes("formatBytes") &&
+    sessionsPageHook.includes("readNumber") &&
+    sessionsPageHook.includes("selectDeletedSessionIds") &&
     sessionsCache.includes("SessionsCachePayload") &&
-    !sessionsCache.includes("ModuleCacheEnvelope<unknown>");
-  if (!sessionsTypedPayloadOk) {
-    failures.push("sessions IPC payload owner 未收口到 typed envelope、模块 types 和 cache helper");
-  } else {
-    console.log("PASS sessions typed IPC payload owner：service/hook/cache");
+    !sessionsTypes.includes("ReturnType<typeof useSessionsPageController>") &&
+    !sessionsTypes.includes("ReturnType<typeof useSessionsModule>") &&
+    !/\buseMutation\b/.test(sessionsQuery) &&
+    !/\b(useState|useReducer|useMemo|useCallback)\b/.test(sessionsQuery) &&
+    !/\b(writeSessionsMutationPayload|invalidateSessionsDumpedQueries|fenceAnalyticsPanelPayload|setQueryData|cancelQueries)\b/.test(sessionsQuery) &&
+    !/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/.test(sessionsQuery) &&
+    !/ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>|response\.data/.test(sessionsQuery) &&
+    !/\buseQuery\b/.test(sessionsMutation) &&
+    !/\b(useState|useReducer|useEffect|useMemo|useCallback)\b/.test(sessionsMutation) &&
+    !/\bsetQueryData\b/.test(sessionsMutation) &&
+    !/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/.test(sessionsMutation) &&
+    !/ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>|useMutation<unknown|Promise<unknown>|response\.data/.test(sessionsMutation) &&
+    !/\buse(Query|Mutation|QueryClient)\b/.test(sessionsPageHook) &&
+    !/\b(setQueryData|invalidateQueries|cancelQueries|writeSessions|writeAnalytics|fenceAnalytics|Sessions[A-Za-z]*QueryKeys|Analytics[A-Za-z]*QueryKeys)\b/.test(sessionsPageHook) &&
+    !/@\/services\/sessions|@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|sessionsService\.|analyticsService\.|invokeIpc|invoke\(/.test(sessionsPageHook) &&
+    !/ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>|response\.data/.test(sessionsPageHook) &&
+    !sessionsControllerConsumerText.includes("ReturnType<typeof useSessionsPageController>") &&
+    !sessionsControllerConsumerText.includes("ReturnType<typeof useSessionsModule>") &&
+    !/(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(sessionsControllerConsumerText);
+  if (!sessionsSplitOwnerOk) {
+    failures.push("sessions IPC payload owner 必须迁移到 split hooks、typed types、cache helper 和显式 controller props");
+  } else if (sessionsHooksIndexOnlyReExports) {
+    console.log("PASS sessions typed IPC payload owner：split hooks/types/cache");
   }
 
   const analyticsHooksIndexReExportPattern =

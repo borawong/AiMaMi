@@ -346,6 +346,163 @@ function validateAccountsDeepOwnerBoundaries() {
   console.log("PASS accounts deep owner gate executed: hooks/index, query, mutation, action, page, cache, types, panels/dialogs/components");
 }
 
+function validateSessionsDeepOwnerBoundaries() {
+  const sessionsRoot = join(featuresRoot, "sessions");
+  const hooksIndexPath = join(sessionsRoot, "hooks", "index.ts");
+  const queryPath = join(sessionsRoot, "hooks", "query.ts");
+  const mutationPath = join(sessionsRoot, "hooks", "mutation.ts");
+  const pagePath = join(sessionsRoot, "hooks", "page.ts");
+  const cachePath = join(sessionsRoot, "cache", "index.ts");
+  const typesPath = join(sessionsRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    ...walkFiles(join(sessionsRoot, "panels"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(sessionsRoot, "dialogs"), (file) => /\.(ts|tsx)$/.test(file)),
+    ...walkFiles(join(sessionsRoot, "components"), (file) => /\.(ts|tsx)$/.test(file)),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((file) => readRequired(file))
+    .join("\n");
+
+  assertOnlyBarrelReExports("src/features/sessions/hooks/index.ts", hooksIndex, [
+    "query",
+    "mutation",
+    "page",
+  ]);
+  assertNotMatches("src/features/sessions/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback|useRef)\b/, "sessions hooks/index can only re-export split owners"],
+    [/\b(writeSessions|writeAnalytics|fenceAnalytics|setQueryData|invalidateQueries|cancelQueries|Sessions[A-Za-z]*QueryKeys|Analytics[A-Za-z]*QueryKeys)\b/, "sessions hooks/index must not own cache writes or query keys"],
+    [/@\/services\/sessions|@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|sessionsService\.|analyticsService\.|invokeIpc|invoke\(/, "sessions hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/sessions/hooks/query.ts", query, [
+    "SessionsCacheEnvelope",
+    "useSessionsCacheController",
+    "useModuleCacheController(SessionsCache)",
+    "useSessionsPageQueries",
+    "useQuery",
+    "useQueryClient",
+    "SessionsAuthoritativeQueryKeys",
+    "SessionsDumpedQueryKeys",
+    "AnalyticsAuthoritativeQueryKeys",
+    "AnalyticsDumpedQueryKeys",
+    "sessionsService.loadSessions",
+    "analyticsService.loadUsageAnalytics",
+    "writeSessionsListPayload",
+    "writeAnalyticsPanelPayload",
+  ]);
+  assertNotMatches("src/features/sessions/hooks/query.ts", query, [
+    [/\buseMutation\b/, "sessions query owner must not own mutation"],
+    [/\buse(State|Reducer|Memo|Callback)\b/, "sessions query owner must not own page/controller UI state or view models"],
+    [/\b(writeSessionsMutationPayload|invalidateSessionsDumpedQueries|fenceAnalyticsPanelPayload|setQueryData|cancelQueries)\b/, "sessions query owner must delegate mutation writes, fences, and invalidation"],
+    [/useTranslation|SessionsPageController|SessionsModuleController|setSelected|setExpanded|setFocused|deleteRequest|setDeleteRequest|buildSessionGroups|countOrphans|flattenGroups|formatBytes|readNumber|selectDeletedSessionIds/, "sessions query owner must not own page controller, locale formatting, view model, or delete dialog state"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "sessions query owner must use sessions/analytics service wrappers, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>|response\.data/, "sessions query owner must keep typed authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/sessions/hooks/mutation.ts", mutation, [
+    "SessionsDeleteEnvelope",
+    "useSessionsPageMutations",
+    "useMutation",
+    "useQueryClient",
+    "sessionsService.deleteSessions",
+    "writeSessionsMutationPayload",
+    "fenceAnalyticsPanelPayload",
+    "invalidateSessionsDumpedQueries",
+  ]);
+  if (!/refreshPromiseRef|singleFlight|refreshPromise/.test(mutation)) {
+    failures.push("src/features/sessions/hooks/mutation.ts must own single-flight refresh");
+  }
+  assertNotMatches("src/features/sessions/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "sessions mutation owner must not own query"],
+    [/\buse(State|Reducer|Effect|Memo|Callback)\b/, "sessions mutation owner must not own page/controller UI state"],
+    [/\bsetQueryData\b/, "sessions mutation owner must delegate cache writes to cache helper"],
+    [/useTranslation|SessionsPageController|setSelected|setExpanded|setFocused|deleteRequest|setDeleteRequest|buildSessionGroups|countOrphans|flattenGroups|formatBytes|readNumber/, "sessions mutation owner must not own page controller, locale formatting, view model, or delete dialog state"],
+    [/@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|invokeIpc|invoke\(/, "sessions mutation owner must use sessions service wrapper, not IPC/API transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>|useMutation<unknown|Promise<unknown>|response\.data/, "sessions mutation owner must keep typed mutation payloads"],
+  ]);
+
+  assertIncludes("src/features/sessions/hooks/page.ts", page, [
+    "useSessionsModule",
+    "SessionsModuleController",
+    "useSessionsPageController",
+    "SessionsPageController",
+    "useSessionsPageQueries",
+    "useSessionsPageMutations",
+    "useState",
+    "useMemo",
+    "useTranslation",
+    "buildSessionGroups",
+    "countOrphans",
+    "flattenGroups",
+    "formatBytes",
+    "readNumber",
+    "selectDeletedSessionIds",
+    "deleteRequest",
+  ]);
+  assertNotMatches("src/features/sessions/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "sessions page/controller may compose split owner hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|writeSessions|writeAnalytics|fenceAnalytics|Sessions[A-Za-z]*QueryKeys|Analytics[A-Za-z]*QueryKeys)\b/, "sessions page/controller must not write cache, invalidate, cancel, or consume query keys"],
+    [/@\/services\/sessions|@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|sessionsService\.|analyticsService\.|invokeIpc|invoke\(/, "sessions page/controller must not access service/API/IPC directly"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>|response\.data/, "sessions page/controller must not use generic authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/sessions/types/index.ts", types, [
+    "export type SessionsListEnvelope",
+    "export type SessionsDeleteEnvelope",
+    "export type SessionsMutationPayload",
+    "export type SessionsMutationEnvelope",
+    "export type SessionsCachePayload",
+    "export interface SessionsModuleController",
+    "export interface SessionsPageQueries",
+    "export interface SessionsPageMutations",
+    "export interface SessionsPageController",
+  ]);
+  assertNotMatches("src/features/sessions/types/index.ts", types, [
+    [/Sessions[A-Za-z]*(?:Controller|Queries|Mutations)\s*=\s*ReturnType|ReturnType<typeof useSessions[A-Za-z]*/, "sessions controller contracts must be explicit, not hook ReturnType"],
+    [/SessionsCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>/, "sessions types owner must keep typed cache payloads"],
+  ]);
+
+  assertIncludes("src/features/sessions/cache/index.ts", cache, [
+    "createModuleCacheOwner<SessionsCachePayload>(\"sessions\")",
+    "SessionsDumpedQueryKeys",
+    "SessionsAuthoritativeQueryKeys",
+    "writeSessionsListPayload",
+    "writeSessionsMutationPayload",
+    "invalidateSessionsDumpedQueries",
+    "setQueryData<ModuleCacheEnvelope<SessionsCachePayload>>",
+    "mutationFenceAt",
+    "isStaleEnvelope",
+    "next.sequence < current.sequence",
+  ]);
+  assertNotMatches("src/features/sessions/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback|Ref)\b/, "sessions cache owner must not own React hooks"],
+    [/@\/services\/sessions|@\/services\/analytics|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|sessionsService\.|analyticsService\.|invokeIpc|invoke\(/, "sessions cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("sessions"\)|ModuleCacheEnvelope<unknown>|payload:\s*unknown|CoreEnvelope<unknown>/, "sessions cache owner must keep typed payloads"],
+  ]);
+
+  if (
+    controllerConsumerText.includes("ReturnType<typeof useSessionsPageController>") ||
+    controllerConsumerText.includes("ReturnType<typeof useSessionsModule>")
+  ) {
+    failures.push("src/features/sessions panels/dialogs/components must consume explicit Sessions controller types, not hook ReturnType");
+  }
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+Sessions[A-Za-z]*(?:Controller|Props|Queries|Mutations)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/sessions panels/dialogs/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS sessions deep owner gate executed: hooks/index, query, mutation, page, cache, types, panels/dialogs/components");
+}
+
 function validateAnalyticsDeepOwnerBoundaries() {
   const analyticsRoot = join(featuresRoot, "analytics");
   const hooksIndexPath = join(analyticsRoot, "hooks", "index.ts");
@@ -2140,6 +2297,7 @@ validateNoDuplicatePublicCommonRoots();
 validateNoFeaturePublicCommonOwnerRoots();
 validateFeatureDeepOwners();
 validateAccountsDeepOwnerBoundaries();
+validateSessionsDeepOwnerBoundaries();
 validateAnalyticsDeepOwnerBoundaries();
 validateCustomInstructionsDeepOwnerBoundaries();
 validateMcpDeepOwnerBoundaries();

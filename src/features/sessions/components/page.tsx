@@ -1,10 +1,9 @@
 import { SessionsDeleteConfirmDialog } from "../dialogs";
-import { useSessionsModule, useSessionsPageController } from "../hooks";
+import { useSessionsPageController } from "../hooks";
 import { SessionsMainPanel } from "../panels";
 
 export function SessionsPage() {
-  const module = useSessionsModule();
-  const controller = useSessionsPageController(module);
+  const controller = useSessionsPageController();
 
   return (
     <>

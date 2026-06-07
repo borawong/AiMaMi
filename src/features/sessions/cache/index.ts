@@ -8,6 +8,13 @@ export const SessionsQueryKeys = SessionsCache.queryKeys;
 export const writeSessionsAuthoritativePayload = SessionsCache.writeAuthoritativePayload;
 export const invalidateSessionsContractQueries = SessionsCache.invalidateContractQueries;
 
+let sessionsCacheSequence = 0;
+
+export function nextSessionsCacheSequence() {
+  sessionsCacheSequence += 1;
+  return sessionsCacheSequence;
+}
+
 export const SessionsDumpedQueryKeys = {
   sessions: ["sessions"] as const,
   usageAnalytics: ["usage-analytics"] as const,

@@ -1674,6 +1674,11 @@ function validateSessionsTypedPayloadContracts() {
   const servicePath = join(frontendRoot, "services", "sessions", "index.ts");
   const analyticsServicePath = join(frontendRoot, "services", "analytics", "index.ts");
   const featureTypesPath = join(frontendRoot, "features", "sessions", "types", "index.ts");
+  const featureCachePath = join(frontendRoot, "features", "sessions", "cache", "index.ts");
+  const featureHooksPath = join(frontendRoot, "features", "sessions", "hooks", "index.ts");
+  const featureQueryHookPath = join(frontendRoot, "features", "sessions", "hooks", "query.ts");
+  const featureMutationHookPath = join(frontendRoot, "features", "sessions", "hooks", "mutation.ts");
+  const featurePageHookPath = join(frontendRoot, "features", "sessions", "hooks", "page.ts");
   const commandText = readUtf8(commandPath);
   const analyticsCommandText = readUtf8(analyticsCommandPath);
   const usecaseText = readUtf8(usecasePath);
@@ -1682,7 +1687,12 @@ function validateSessionsTypedPayloadContracts() {
   const analyticsContractText = readUtf8(analyticsContractPath);
   const serviceText = readUtf8(servicePath);
   const analyticsServiceText = readUtf8(analyticsServicePath);
-  const featureTypesText = readUtf8(featureTypesPath);
+  const featureTypesText = readRequiredUtf8(featureTypesPath, "sessions feature types owner");
+  const featureCacheText = readRequiredUtf8(featureCachePath, "sessions feature cache owner");
+  const featureHooksText = readRequiredUtf8(featureHooksPath, "sessions hooks barrel");
+  const featureQueryHookText = readRequiredUtf8(featureQueryHookPath, "sessions query hook owner");
+  const featureMutationHookText = readRequiredUtf8(featureMutationHookPath, "sessions mutation hook owner");
+  const featurePageHookText = readRequiredUtf8(featurePageHookPath, "sessions page hook owner");
 
   assertContains(contractPath, contractText, [
     "pub(crate) struct SessionRecordPayload",
@@ -1738,8 +1748,67 @@ function validateSessionsTypedPayloadContracts() {
     "export type SessionsListEnvelope",
     "export type SessionsDeleteEnvelope",
     "export type SessionsMutationPayload",
+    "export type SessionsMutationEnvelope",
     "export type SessionsCachePayload",
+    "export interface SessionsPageQueries",
+    "export interface SessionsPageMutations",
+    "export interface SessionsModuleController",
+    "export interface SessionsPageController",
   ], "sessions 前端模块 typed cache payload");
+
+  assertContains(featureHooksPath, featureHooksText, [
+    'from "./query"',
+    'from "./mutation"',
+    'from "./page"',
+  ], "sessions hooks split barrel owner");
+
+  assertContains(featureQueryHookPath, featureQueryHookText, [
+    "SessionsCacheEnvelope",
+    "useSessionsCacheController",
+    "useSessionsPageQueries",
+    "SessionsAuthoritativeQueryKeys",
+    "SessionsDumpedQueryKeys",
+    "AnalyticsAuthoritativeQueryKeys",
+    "AnalyticsDumpedQueryKeys",
+    "sessionsService.loadSessions",
+    "analyticsService.loadUsageAnalytics",
+    "writeSessionsListPayload",
+    "writeAnalyticsPanelPayload",
+  ], "sessions query hook typed authoritative envelope");
+
+  assertContains(featureMutationHookPath, featureMutationHookText, [
+    "SessionsDeleteEnvelope",
+    "useSessionsPageMutations",
+    "sessionsService.deleteSessions",
+    "writeSessionsMutationPayload",
+    "fenceAnalyticsPanelPayload",
+    "invalidateSessionsDumpedQueries",
+  ], "sessions mutation hook typed authoritative envelope");
+
+  if (!/refreshPromiseRef|singleFlight|refreshPromise/.test(featureMutationHookText)) {
+    failures.push("src/features/sessions/hooks/mutation.ts missing sessions single-flight refresh owner");
+  }
+
+  assertContains(featurePageHookPath, featurePageHookText, [
+    "useSessionsModule",
+    "SessionsModuleController",
+    "useSessionsPageController",
+    "SessionsPageController",
+    "useSessionsPageQueries",
+    "useSessionsPageMutations",
+    "buildSessionGroups",
+    "selectDeletedSessionIds",
+  ], "sessions page controller split owner");
+
+  assertContains(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner<SessionsCachePayload>(\"sessions\")",
+    "writeSessionsListPayload",
+    "writeSessionsMutationPayload",
+    "invalidateSessionsDumpedQueries",
+    "setQueryData<ModuleCacheEnvelope<SessionsCachePayload>>",
+    "mutationFenceAt",
+    "isStaleEnvelope",
+  ], "sessions frontend split cache payload owner");
 
   assertNotContainsSnippet(contractPath, contractText, [
     "SessionsPayload",
@@ -1755,6 +1824,72 @@ function validateSessionsTypedPayloadContracts() {
     "IpcEvidencePayload",
     "CoreEnvelope<IpcEvidencePayload>",
   ], "sessions service 不得退回 generic evidence payload");
+
+  assertNotContainsSnippet(featureHooksPath, featureHooksText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "writeSessionsListPayload",
+    "writeSessionsMutationPayload",
+    "sessionsService.",
+    "analyticsService.",
+    "invokeIpc",
+  ], "sessions hooks/index must stay split barrel");
+
+  assertNotContainsSnippet(featureTypesPath, featureTypesText, [
+    "SessionsCacheEnvelope<TPayload = unknown>",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "ReturnType<typeof useSessionsPageController>",
+    "ReturnType<typeof useSessionsModule>",
+  ], "sessions feature types must keep explicit typed payloads and controller contracts");
+
+  assertNotContainsSnippet(featureCachePath, featureCacheText, [
+    "createModuleCacheOwner(\"sessions\")",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "sessionsService.",
+    "analyticsService.",
+    "invokeIpc",
+  ], "sessions cache must keep typed authoritative payloads and avoid service access");
+
+  assertNotContainsSnippet(featureQueryHookPath, featureQueryHookText, [
+    "useMutation",
+    "writeSessionsMutationPayload",
+    "fenceAnalyticsPanelPayload",
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+    "CoreEnvelope<unknown>",
+    "invokeIpc",
+  ], "sessions query hook must not mix mutation or generic payloads");
+
+  assertNotContainsSnippet(featureMutationHookPath, featureMutationHookText, [
+    "useQuery(",
+    "setQueryData",
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+    "CoreEnvelope<unknown>",
+    "useMutation<unknown",
+    "invokeIpc",
+  ], "sessions mutation hook must not mix query, direct cache writes, or generic payloads");
+
+  assertNotContainsSnippet(featurePageHookPath, featurePageHookText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "sessionsService.",
+    "analyticsService.",
+    "setQueryData",
+    "invalidateQueries",
+    "cancelQueries",
+    "SessionsAuthoritativeQueryKeys",
+    "SessionsDumpedQueryKeys",
+    "AnalyticsAuthoritativeQueryKeys",
+    "AnalyticsDumpedQueryKeys",
+    "writeSessions",
+    "writeAnalytics",
+    "invokeIpc",
+  ], "sessions page controller must not own TanStack, cache keys, or service/API access");
 }
 
 validateSessionsTypedPayloadContracts();

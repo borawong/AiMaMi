@@ -17,6 +17,53 @@ function flattenLocaleKeys(value, prefix = "") {
   });
 }
 
+const sessionLocaleValueQualityKeys = [
+  "sessions.childThread",
+  "sessions.childThreadsInline",
+  "sessions.conversationGroup",
+  "sessions.delete",
+  "sessions.deleteLagHint",
+  "sessions.deleteSelectionTitle",
+  "sessions.deleteSelectionDesc",
+  "sessions.mainThread",
+  "sessions.orphanCount",
+  "sessions.orphanThread",
+  "sessions.treeDescription",
+  "sessions.treeTitle",
+  "sessions.unknownProject",
+];
+
+function getLocaleValue(locale, key) {
+  let current = locale;
+  for (const part of key.split(".")) {
+    if (
+      !current ||
+      typeof current !== "object" ||
+      !Object.prototype.hasOwnProperty.call(current, part)
+    ) {
+      return undefined;
+    }
+    current = current[part];
+  }
+  return current;
+}
+
+function validateLocaleValueQuality(locale, localeName, keys) {
+  for (const key of keys) {
+    const value = getLocaleValue(locale, key);
+    if (typeof value !== "string") {
+      continue;
+    }
+
+    const valueWithoutInterpolations = value
+      .replace(/\{\{[^}]*\}\}/g, "")
+      .replace(/\s+/g, "");
+    if (/^\?+$/.test(valueWithoutInterpolations) || value.includes("\uFFFD")) {
+      failures.push(`${localeName} locale value looks corrupted: ${key}`);
+    }
+  }
+}
+
 function hasLocaleKey(locale, key) {
   let current = locale;
   for (const part of key.split(".")) {
@@ -89,6 +136,8 @@ for (const key of missingZh) {
   failures.push(`zh 缺少 locale key：${key}`);
 }
 
+validateLocaleValueQuality(zh, "zh", sessionLocaleValueQualityKeys);
+validateLocaleValueQuality(en, "en", sessionLocaleValueQualityKeys);
 validateAccountTokenStatusKeys();
 
 for (const file of walkFiles(sourceRoot)) {
