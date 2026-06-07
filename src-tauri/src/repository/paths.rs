@@ -63,7 +63,7 @@ impl RepositoryPath {
             Self::ConfigSource => &["config", "config.json"],
             Self::McpSource => &["config", "mcp.json"],
             Self::VoiceSource => &["config", "voice.json"],
-            Self::CustomInstructionsSource => &["custom-instructions", "templates.json"],
+            Self::CustomInstructionsSource => &["custom-instructions", "AGENTS.md"],
             Self::RegistrySource => &["registry", "registry.json"],
             Self::RelaySource => &["relay", "relay.json"],
             Self::RuntimeExtensionsSource => &["runtime-extensions", "plugins.json"],
@@ -109,6 +109,10 @@ mod tests {
         assert_eq!(
             context.contract_string(RepositoryPath::VoiceSource),
             "state/config/voice.json"
+        );
+        assert_eq!(
+            context.contract_string(RepositoryPath::CustomInstructionsSource),
+            "state/custom-instructions/AGENTS.md"
         );
     }
 

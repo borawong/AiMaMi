@@ -659,6 +659,7 @@ function validateCustomInstructionsTypedPayloadContracts() {
   const commandPath = join(backendRoot, "commands", "custom_instructions.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "custom_instructions.rs");
   const contractPath = join(backendRoot, "contracts", "custom_instructions.rs");
+  const repositoryPathsPath = join(backendRoot, "repository", "paths.rs");
   const repositoryPath = join(backendRoot, "repository", "custom_instructions.rs");
   const servicePath = join(frontendRoot, "services", "custom-instructions", "index.ts");
   const ipcPath = join(frontendRoot, "contracts", "ipc", "commands.ts");
@@ -672,6 +673,7 @@ function validateCustomInstructionsTypedPayloadContracts() {
   const commandText = readRequiredUtf8(commandPath, "custom-instructions command adapter");
   const usecaseText = readRequiredUtf8(usecasePath, "custom-instructions usecase");
   const contractText = readRequiredUtf8(contractPath, "custom-instructions backend contract");
+  const repositoryPathsText = readRequiredUtf8(repositoryPathsPath, "custom-instructions repository path registry");
   const repositoryText = readRequiredUtf8(repositoryPath, "custom-instructions repository");
   const serviceText = readRequiredUtf8(servicePath, "custom-instructions service wrapper");
   const ipcText = readRequiredUtf8(ipcPath, "custom-instructions IPC contract");
@@ -730,6 +732,51 @@ function validateCustomInstructionsTypedPayloadContracts() {
     "RepositoryPath::CustomInstructionsSource",
     "source_path(&self) -> String",
   ], "custom-instructions repository path boundary");
+
+  assertContains(repositoryPathsPath, repositoryPathsText, [
+    'Self::CustomInstructionsSource => &["custom-instructions", "AGENTS.md"]',
+  ], "custom-instructions raw evidence path boundary");
+
+  assertNotContainsSnippet(repositoryPathsPath, repositoryPathsText, [
+    '"custom-instructions", "templates.json"',
+  ], "custom-instructions 不得使用无证据 templates.json 路径");
+
+  assertContains(usecasePath, usecaseText, [
+    'let plan = self.pending_plan("load_custom_instruction_state");',
+    'let plan = self.pending_plan("preview_custom_instruction_apply");',
+    'let plan = self.no_op_plan("apply_custom_instruction");',
+    'let plan = self.no_op_plan("clear_custom_instruction_block");',
+    'let plan = self.no_op_plan("rollback_custom_instruction");',
+  ], "custom-instructions 只读/no-op 计划边界");
+
+  assertNotContains(repositoryPath, repositoryText, [
+    /\bread_to_string\s*\(/,
+    /\.exists\s*\(/,
+    /\bwrite_string\s*\(/,
+    /\bremove_file\s*\(/,
+    /\bcreate_dir(?:_all)?\s*\(/,
+    /\brename\s*\(/,
+    /\bcopy\s*\(/,
+  ], "custom-instructions repository 不得实现真实文件读写或存在性判断");
+
+  assertNotContains(usecasePath, usecaseText, [
+    /\bread_to_string\s*\(/,
+    /\.exists\s*\(/,
+    /\bwrite_string\s*\(/,
+    /\bremove_file\s*\(/,
+    /\bcreate_dir(?:_all)?\s*\(/,
+    /\brename\s*\(/,
+    /\bcopy\s*\(/,
+  ], "custom-instructions usecase 不得实现真实文件读写或存在性判断");
+
+  assertNotContainsSnippet(usecasePath, usecaseText, [
+    "self.state_payload(&plan, template_code, template_title, Some(content))",
+    "self.state_payload(&plan, template_code, template_title, Some(_content))",
+    "self.state_payload(&plan, _template_code, _template_title, Some(content))",
+    "self.state_payload(&plan, _template_code, _template_title, Some(_content))",
+    "self.state_payload(&plan, template_code, template_title, content)",
+    "self.state_payload(&plan, _template_code, _template_title, _content)",
+  ], "custom-instructions apply no-op 不得把 content/template 写入 current state");
 
   assertContains(servicePath, serviceText, [
     "readEnvelopeData(",

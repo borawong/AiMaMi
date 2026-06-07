@@ -57,16 +57,16 @@ impl<'a> CustomInstructionsUseCase<'a> {
         template_title: Option<String>,
     ) -> Result<CoreEnvelope<CustomInstructionStatePayload>, CoreError> {
         let _source = clean_optional_text(source);
-        let template_code = clean_optional_text(template_code);
-        let template_title = clean_optional_text(template_title);
-        let content = required_text(
+        let _template_code = clean_optional_text(template_code);
+        let _template_title = clean_optional_text(template_title);
+        let _content = required_text(
             content.unwrap_or_default(),
             "empty_custom_instruction_content",
             "自定义指令内容不能为空。",
         )?;
         let plan = self.no_op_plan("apply_custom_instruction");
         Ok(CoreEnvelope::from_backend_plan(
-            self.state_payload(&plan, template_code, template_title, Some(content)),
+            self.state_payload(&plan, None, None, None),
             &plan,
         ))
     }
