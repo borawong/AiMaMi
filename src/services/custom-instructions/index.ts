@@ -13,38 +13,52 @@ export interface ApplyCustomInstructionParams {
   source: string;
 }
 
+async function readEnvelopeData<T>(promise: Promise<CoreEnvelope<T>>): Promise<T> {
+  return (await promise).data;
+}
+
 export const customInstructionsService = {
   loadState: () =>
-    invokeIpc<CoreEnvelope<CustomInstructionStatePayload>>(
-      "load_custom_instruction_state",
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<CustomInstructionStatePayload>>(
+        "load_custom_instruction_state",
+      ),
     ),
 
   previewApply: (content: string) =>
-    invokeIpc<CoreEnvelope<CustomInstructionPreviewPayload>>(
-      "preview_custom_instruction_apply",
-      { content },
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<CustomInstructionPreviewPayload>>(
+        "preview_custom_instruction_apply",
+        { content },
+      ),
     ),
 
   apply: (params: ApplyCustomInstructionParams) =>
-    invokeIpc<CoreEnvelope<CustomInstructionStatePayload>>(
-      "apply_custom_instruction",
-      {
-        content: params.content,
-        templateCode: params.templateCode,
-        templateTitle: params.templateTitle,
-        source: params.source,
-      },
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<CustomInstructionStatePayload>>(
+        "apply_custom_instruction",
+        {
+          content: params.content,
+          templateCode: params.templateCode,
+          templateTitle: params.templateTitle,
+          source: params.source,
+        },
+      ),
     ),
 
   clearBlock: () =>
-    invokeIpc<CoreEnvelope<CustomInstructionStatePayload>>(
-      "clear_custom_instruction_block",
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<CustomInstructionStatePayload>>(
+        "clear_custom_instruction_block",
+      ),
     ),
 
   rollback: (historyId: string) =>
-    invokeIpc<CoreEnvelope<CustomInstructionStatePayload>>(
-      "rollback_custom_instruction",
-      { historyId },
+    readEnvelopeData(
+      invokeIpc<CoreEnvelope<CustomInstructionStatePayload>>(
+        "rollback_custom_instruction",
+        { historyId },
+      ),
     ),
 
   openPath: systemService.openPath,

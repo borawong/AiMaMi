@@ -986,6 +986,78 @@ function validateMaintenanceTypedPayloadGate() {
   }
 }
 
+function validateCustomInstructionsTypedPayloadGate() {
+  const servicePath = join(
+    repoRoot,
+    "src",
+    "services",
+    "custom-instructions",
+    "index.ts",
+  );
+  const typesPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "types",
+    "index.ts",
+  );
+  const cachePath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "cache",
+    "index.ts",
+  );
+  const hooksPath = join(
+    repoRoot,
+    "src",
+    "features",
+    "custom-instructions",
+    "hooks",
+    "index.ts",
+  );
+  const service = readRequired(servicePath);
+  const types = readRequired(typesPath);
+  const cache = readRequired(cachePath);
+  const hooks = readRequired(hooksPath);
+
+  const typedPayloadOk =
+    service.includes("readEnvelopeData(") &&
+    service.includes("CoreEnvelope<CustomInstructionStatePayload>") &&
+    service.includes("CoreEnvelope<CustomInstructionPreviewPayload>") &&
+    !service.includes("CoreEnvelope<unknown>") &&
+    !service.includes("IpcEvidencePayload") &&
+    types.includes("export type CustomInstructionsStateQueryKey") &&
+    types.includes("export type CustomInstructionsCachePayload") &&
+    types.includes("CustomInstructionStatePayload") &&
+    types.includes("ModuleCacheEnvelope<TPayload>") &&
+    !types.includes("CustomInstructionsCacheEnvelope<TPayload = unknown>") &&
+    !types.includes("payload: unknown") &&
+    cache.includes("createModuleCacheOwner<CustomInstructionsCachePayload>(\"custom-instructions\")") &&
+    cache.includes("Omit<CustomInstructionsCacheEnvelope<TPayload>, \"moduleId\">") &&
+    cache.includes("writeCustomInstructionsStatePayload") &&
+    cache.includes("runCustomInstructionsStateQuery") &&
+    cache.includes("writeCustomInstructionsStateMutationPayload") &&
+    cache.includes("setQueryData<CustomInstructionStatePayload>") &&
+    !cache.includes("createModuleCacheOwner(\"custom-instructions\")") &&
+    !cache.includes("ModuleCacheEnvelope<unknown>") &&
+    hooks.includes("runCustomInstructionsStateQuery") &&
+    hooks.includes("writeCustomInstructionsStateMutationPayload") &&
+    hooks.includes("const state = stateQuery.data;") &&
+    !hooks.includes("response.data") &&
+    !hooks.includes("writeCustomInstructionsCachePayload<TPayload>") &&
+    !hooks.includes("writeCustomInstructionsMutationPayload<TPayload>") &&
+    !hooks.includes("CustomInstructionsCache.writeAuthoritativePayload");
+
+  if (!typedPayloadOk) {
+    failures.push("custom-instructions IPC payload owner 必须收口到 typed data payload、模块 types 和 cache helper");
+  } else {
+    console.log("PASS custom-instructions typed IPC payload owner：service/hook/cache");
+  }
+}
+
 function validateDaemonAutoswitchTypedPayloadGate() {
   const typesPath = join(repoRoot, "src", "features", "daemon-autoswitch", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "daemon-autoswitch", "cache", "index.ts");
@@ -1270,6 +1342,7 @@ validateOverviewTypedPayloadGate();
 validateTrayShellTypedPayloadGate();
 validateSettingsTypedPayloadGate();
 validateMaintenanceTypedPayloadGate();
+validateCustomInstructionsTypedPayloadGate();
 validateDaemonAutoswitchTypedPayloadGate();
 validateMcpTypedPayloadGate();
 validatePluginsFrontendNoPromotionGate();
