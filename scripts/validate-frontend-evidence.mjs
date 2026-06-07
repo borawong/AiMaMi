@@ -823,6 +823,58 @@ function validateOverviewTypedPayloadGate() {
   }
 }
 
+function validateTrayShellTypedPayloadGate() {
+  const typesPath = join(repoRoot, "src", "features", "tray-shell", "types", "index.ts");
+  const cachePath = join(repoRoot, "src", "features", "tray-shell", "cache", "index.ts");
+  const hooksPath = join(repoRoot, "src", "features", "tray-shell", "hooks", "index.ts");
+  const utilsPath = join(repoRoot, "src", "features", "tray-shell", "utils", "index.ts");
+  const types = readRequired(typesPath);
+  const cache = readRequired(cachePath);
+  const hooks = readRequired(hooksPath);
+  const utils = readRequired(utilsPath);
+
+  const typedPayloadOk =
+    types.includes("export type TrayShellNotificationEnvelope") &&
+    types.includes("export type TrayShellCachePayload") &&
+    types.includes("CoreEnvelope<NotificationClientStatePayload>") &&
+    types.includes("ModuleCacheEnvelope<TPayload>") &&
+    types.includes('id: "focus-main-window"') &&
+    types.includes('labelKey: "trayShell.focusMainWindow"') &&
+    types.includes("run: () => Promise<void> | void") &&
+    types.includes('id: "client"') &&
+    types.includes('labelKey: "trayShell.client"') &&
+    types.includes('id: "ready"') &&
+    types.includes('labelKey: "trayShell.ready"') &&
+    types.includes('valueKey: "common.success" | "common.error"') &&
+    types.includes('titleKey: "trayShell.notificationClient"') &&
+    cache.includes("createModuleCacheOwner<TrayShellCachePayload>(\"tray-shell\")") &&
+    cache.includes("Omit<TrayShellCacheEnvelope<TPayload>, \"moduleId\">") &&
+    hooks.includes("module.notificationQuery.data?.data ?? null") &&
+    hooks.includes("selectTrayShellClient(notification)") &&
+    hooks.includes("selectTrayShellReady(notification)") &&
+    hooks.includes("onSuccess: () =>") &&
+    !hooks.includes("writeAuthoritativePayload(queryClient") &&
+    !hooks.includes("readString(") &&
+    !hooks.includes("readBoolean(") &&
+    utils.includes("export function selectTrayShellClient(") &&
+    utils.includes("export function selectTrayShellReady(") &&
+    utils.includes("NotificationClientStatePayload | null") &&
+    !types.includes("TrayShellCacheEnvelope<TPayload = unknown>") &&
+    !types.includes("id: string") &&
+    !types.includes("labelKey: string") &&
+    !cache.includes("createModuleCacheOwner(\"tray-shell\")") &&
+    !cache.includes("ModuleCacheEnvelope<unknown>") &&
+    !utils.includes("export function readString(") &&
+    !utils.includes("export function readBoolean(") &&
+    !utils.includes("function readPath(value: unknown");
+
+  if (!typedPayloadOk) {
+    failures.push("tray-shell IPC payload owner 必须收口到 typed envelope、模块 types 和 cache helper");
+  } else {
+    console.log("PASS tray-shell typed IPC payload owner：service/hook/cache");
+  }
+}
+
 function validateDaemonAutoswitchTypedPayloadGate() {
   const typesPath = join(repoRoot, "src", "features", "daemon-autoswitch", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "daemon-autoswitch", "cache", "index.ts");
@@ -1104,6 +1156,7 @@ validateRoutesAndLocales(raw.controlFlow);
 validateKnownInternalFrontendGates();
 validateSharedCacheTypedGate();
 validateOverviewTypedPayloadGate();
+validateTrayShellTypedPayloadGate();
 validateDaemonAutoswitchTypedPayloadGate();
 validateMcpTypedPayloadGate();
 validatePluginsFrontendNoPromotionGate();

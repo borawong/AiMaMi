@@ -2,12 +2,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModuleCacheController } from "@/features/_shared/controller";
 import { systemService } from "@/services/system";
 import { TrayShellCache } from "../cache";
+import type { NotificationClientStatePayload } from "@/types";
 import type {
+  TrayShellActionModel,
   TrayShellMetricModel,
   TrayShellPageController,
   TrayShellRuntimeRowModel,
 } from "../types";
-import { envelopeData, readBoolean, readString } from "../utils";
+import {
+  selectTrayShellClient,
+  selectTrayShellReady,
+} from "../utils";
 
 export function useTrayShellCacheController() {
   return useModuleCacheController(TrayShellCache);
@@ -24,33 +29,30 @@ export function useTrayShellModule() {
 
   const focusMutation = useMutation({
     mutationFn: () => systemService.focusMainWindow(),
-    onSuccess: (payload) => {
-      TrayShellCache.writeAuthoritativePayload(queryClient, {
-        payload,
-        source: "mutation-payload",
-        sequence: Date.now(),
-        receivedAt: Date.now(),
-      });
+    onSuccess: () => {
       void TrayShellCache.invalidateContractQueries(queryClient);
     },
   });
 
+  const focusAction: TrayShellActionModel = {
+    id: "focus-main-window",
+    labelKey: "trayShell.focusMainWindow",
+    run: () => focusMutation.mutateAsync(),
+    isPending: focusMutation.isPending,
+  };
+
   return {
     notificationQuery,
-    focusAction: {
-      id: "focus-main-window",
-      labelKey: "trayShell.focusMainWindow",
-      run: () => focusMutation.mutateAsync(),
-      isPending: focusMutation.isPending,
-    },
+    focusAction,
   };
 }
 
 export function useTrayShellPageController(): TrayShellPageController {
   const module = useTrayShellModule();
-  const notification = envelopeData(module.notificationQuery.data);
-  const connected = readBoolean(notification, ["connected", "enabled", "ready"]);
-  const client = readString(notification, ["client", "name", "id"], "-");
+  const notification: NotificationClientStatePayload | null =
+    module.notificationQuery.data?.data ?? null;
+  const connected = selectTrayShellReady(notification);
+  const client = selectTrayShellClient(notification);
 
   const metrics: TrayShellMetricModel[] = [
     {

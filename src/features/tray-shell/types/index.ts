@@ -1,32 +1,55 @@
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
+import type {
+  CoreEnvelope,
+  NotificationClientStatePayload,
+} from "@/types";
 
 export type TrayShellModuleId = "tray-shell";
-export type TrayShellCacheEnvelope<TPayload = unknown> = ModuleCacheEnvelope<TPayload>;
+export type TrayShellNotificationEnvelope =
+  CoreEnvelope<NotificationClientStatePayload>;
+export type TrayShellCachePayload = TrayShellNotificationEnvelope;
+export type TrayShellCacheEnvelope<
+  TPayload extends TrayShellCachePayload = TrayShellCachePayload,
+> = ModuleCacheEnvelope<TPayload>;
 
 export interface TrayShellActionModel {
-  id: string;
-  labelKey: string;
-  run: () => Promise<unknown> | unknown;
+  id: "focus-main-window";
+  labelKey: "trayShell.focusMainWindow";
+  run: () => Promise<void> | void;
   isPending: boolean;
 }
 
-export interface TrayShellMetricModel {
-  id: string;
-  labelKey: string;
-  kind: "client" | "ready";
-  value: string | boolean;
-  loading?: boolean;
-}
+export type TrayShellMetricModel =
+  | {
+      id: "client";
+      labelKey: "trayShell.client";
+      kind: "client";
+      value: string;
+      loading?: boolean;
+    }
+  | {
+      id: "ready";
+      labelKey: "trayShell.ready";
+      kind: "ready";
+      value: boolean;
+    };
 
-export interface TrayShellRuntimeRowModel {
-  id: string;
-  labelKey: string;
-  valueKey?: string;
-  value?: string;
-}
+export type TrayShellRuntimeRowModel =
+  | {
+      id: "client";
+      labelKey: "trayShell.client";
+      value: string;
+      valueKey?: undefined;
+    }
+  | {
+      id: "ready";
+      labelKey: "trayShell.ready";
+      value?: undefined;
+      valueKey: "common.success" | "common.error";
+    };
 
 export interface TrayShellRuntimePanelModel {
-  titleKey: string;
+  titleKey: "trayShell.notificationClient";
   refreshing: boolean;
   rows: TrayShellRuntimeRowModel[];
 }
