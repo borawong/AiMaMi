@@ -120,6 +120,29 @@ export interface FrontendDumpedAppShellDesktopMessageQueryRestorationRequirement
   reason: string;
 }
 
+export type FrontendDumpedAppShellIndexQueryModule =
+  | "accounts"
+  | "analytics"
+  | "mcp"
+  | "skills";
+
+export interface FrontendDumpedAppShellIndexQueryRestorationRequirement {
+  module: FrontendDumpedAppShellIndexQueryModule;
+  source: string;
+  queryKey:
+    | "quota-history"
+    | "usage-analytics"
+    | "mcp-servers"
+    | "installed-skills";
+  hitCount: number;
+  status: "owner-closed";
+  ownerCache: string;
+  ownerHook: string;
+  consumer: string;
+  commands: readonly string[];
+  reason: string;
+}
+
 export interface FrontendDumpedBoundaryException {
   module: "voice";
   status: "boundary-only";
@@ -281,6 +304,61 @@ export const FRONTEND_DUMPED_APP_SHELL_DESKTOP_MESSAGE_QUERY_MATRIX = [
       "dumped evidence 只证明 desktop-message queryKey 和 staleTime，没有可审计 endpoint；runtime 只能登记 source-only 边界并说明空 payload 来源。",
   },
 ] as const satisfies readonly FrontendDumpedAppShellDesktopMessageQueryRestorationRequirement[];
+
+export const FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX = [
+  {
+    module: "accounts",
+    source: "assets/index-CL22l5v8.js",
+    queryKey: "quota-history",
+    hitCount: 2,
+    status: "owner-closed",
+    ownerCache: "src/features/accounts/cache/index.ts",
+    ownerHook: "src/features/accounts/hooks/mutation.ts",
+    consumer: "src/features/overview/hooks/mutation.ts",
+    commands: ["load_snapshot", "refresh_usage_snapshot"],
+    reason:
+      "index chunk 中的裸 quota-history 命中只表示 app-shell 聚合刷新后的失效关系，queryKey 归属 accounts cache，overview mutation 只消费刷新动作并触发模块失效。",
+  },
+  {
+    module: "analytics",
+    source: "assets/index-CL22l5v8.js",
+    queryKey: "usage-analytics",
+    hitCount: 1,
+    status: "owner-closed",
+    ownerCache: "src/features/analytics/cache/index.ts",
+    ownerHook: "src/features/analytics/hooks/query.ts",
+    consumer: "src/features/overview/hooks/query.ts",
+    commands: ["load_usage_analytics"],
+    reason:
+      "index chunk 中的 usage-analytics 命中归属 analytics query/cache；overview 只能作为聚合 consumer 调用服务并写入自身摘要缓存，不另建事实 owner。",
+  },
+  {
+    module: "mcp",
+    source: "assets/index-CL22l5v8.js",
+    queryKey: "mcp-servers",
+    hitCount: 1,
+    status: "owner-closed",
+    ownerCache: "src/features/mcp/cache/index.ts",
+    ownerHook: "src/features/mcp/hooks/query.ts",
+    consumer: "src/features/overview/hooks/query.ts",
+    commands: ["load_mcp_servers"],
+    reason:
+      "index chunk 中的 mcp-servers 命中归属 mcp query/cache；overview 只读取聚合所需摘要，不能成为第二套 MCP 事实 owner。",
+  },
+  {
+    module: "skills",
+    source: "assets/index-CL22l5v8.js",
+    queryKey: "installed-skills",
+    hitCount: 1,
+    status: "owner-closed",
+    ownerCache: "src/features/skills/cache/index.ts",
+    ownerHook: "src/features/skills/hooks/query.ts",
+    consumer: "src/features/overview/hooks/query.ts",
+    commands: ["load_installed_skills"],
+    reason:
+      "index chunk 中的 installed-skills 命中归属 skills query/cache；overview 只承担仪表盘 consumer 边界，不长期保存 skills 服务端事实。",
+  },
+] as const satisfies readonly FrontendDumpedAppShellIndexQueryRestorationRequirement[];
 
 export const FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX = [
   {
