@@ -1,3 +1,5 @@
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { LucideIcon } from "lucide-react";
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import type {
   CleanPayload,
@@ -58,4 +60,68 @@ export interface MaintenanceImageCompatInput {
 export interface MaintenanceActionResult {
   type: "success" | "error";
   message: string;
+}
+
+export interface MaintenanceActionMutationCallbacks {
+  onDiagnosed: (result: DiagnosePayload) => void;
+  onDiagnoseError: (error: unknown) => void;
+  onCleaned: (result: CleanPayload) => void;
+  onCleanError: (error: unknown) => void;
+  onRebuilt: (result: RebuildRegistryPayload) => void;
+  onRebuildError: (error: unknown) => void;
+  onRestarted: () => void;
+  onRestartError: (error: unknown) => void;
+}
+
+export interface MaintenanceActionView {
+  key: string;
+  icon: LucideIcon;
+  iconColor: string;
+  label: string;
+  description: string;
+  actionLabel: string;
+  loadingLabel: string;
+  onAction: () => void;
+  result?: MaintenanceActionResult;
+  busy: boolean;
+  variant?: "destructive";
+}
+
+export type MaintenanceActionDefinition = Omit<
+  MaintenanceActionView,
+  "result" | "busy"
+>;
+
+export interface MaintenanceSystemInfoField {
+  label: string;
+  value: string;
+}
+
+export type MaintenanceSystemInfoQuery = UseQueryResult<SystemInfoPayload, Error>;
+
+export interface MaintenanceRestartDialogController {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onConfirm: () => void;
+}
+
+export interface MaintenanceRouterDiagnosticsDialogController {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  runDiagnostics: () => Promise<MaintenanceRouterDiagnosticsPayload>;
+  fixIssueAndRefresh: (
+    input: MaintenanceFixIssueInput,
+  ) => Promise<{
+    fixResult: MaintenanceRouterFixPayload;
+    diagnosticsResult: MaintenanceRouterDiagnosticsPayload;
+  }>;
+}
+
+export interface MaintenancePageController {
+  actions: MaintenanceActionView[];
+  systemInfoFields: MaintenanceSystemInfoField[];
+  systemInfoQuery: MaintenanceSystemInfoQuery;
+  systemInfoIcon: LucideIcon;
+  restartDialog: MaintenanceRestartDialogController;
+  routerDiagnosticsDialog: MaintenanceRouterDiagnosticsDialogController;
 }

@@ -1243,6 +1243,127 @@ function validateRelayDeepOwnerBoundaries() {
   console.log("PASS relay deep owner gate executed: hooks/index, query, mutation, runtime, page, cache, types, panels/dialogs/components");
 }
 
+function validateMaintenanceDeepOwnerBoundaries() {
+  const maintenanceRoot = join(featuresRoot, "maintenance");
+  const hooksIndexPath = join(maintenanceRoot, "hooks", "index.ts");
+  const queryPath = join(maintenanceRoot, "hooks", "query.ts");
+  const mutationPath = join(maintenanceRoot, "hooks", "mutation.ts");
+  const pagePath = join(maintenanceRoot, "hooks", "page.ts");
+  const cachePath = join(maintenanceRoot, "cache", "index.ts");
+  const typesPath = join(maintenanceRoot, "types", "index.ts");
+  const controllerConsumerPaths = [
+    join(maintenanceRoot, "dialogs", "index.ts"),
+    join(maintenanceRoot, "dialogs", "diagnostics.tsx"),
+    join(maintenanceRoot, "dialogs", "restart.tsx"),
+    join(maintenanceRoot, "panels", "index.ts"),
+    join(maintenanceRoot, "components", "index.ts"),
+    join(maintenanceRoot, "components", "page.tsx"),
+  ];
+
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
+  const cache = readRequired(cachePath);
+  const types = readRequired(typesPath);
+  const controllerConsumerText = controllerConsumerPaths
+    .map((path) => readRequired(path))
+    .join("\n");
+
+  assertOnlyBarrelReExports("src/features/maintenance/hooks/index.ts", hooksIndex, [
+    "query",
+    "mutation",
+    "page",
+  ]);
+  assertNotMatches("src/features/maintenance/hooks/index.ts", hooksIndex, [
+    [/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/, "maintenance hooks/index can only re-export split owners"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|beginMaintenanceMutation|prepareMaintenanceMutation|writeMaintenance|Maintenance[A-Za-z]*QueryKeys|MAINTENANCE_[A-Z0-9_]+_QUERY_KEY)\b/, "maintenance hooks/index must not own cache writes or query keys"],
+    [/@\/services\/maintenance|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|maintenanceService\.|systemService\.|invokeIpc|invoke\(/, "maintenance hooks/index must not access service/API/IPC"],
+  ]);
+
+  assertIncludes("src/features/maintenance/hooks/query.ts", query, [
+    "useQuery",
+    "useQueryClient",
+    "runMaintenanceQuery",
+    "MAINTENANCE_IMAGE_COMPAT_QUERY_KEY",
+    "MAINTENANCE_SYSTEM_INFO_QUERY_KEY",
+    "maintenanceService.getImageCompat",
+    "maintenanceService.getSystemInfo",
+  ]);
+  assertNotMatches("src/features/maintenance/hooks/query.ts", query, [
+    [/\buseMutation\b/, "maintenance query owner must not own mutation"],
+    [/\buse(State|Reducer|Memo)\b/, "maintenance query owner must not own page/controller UI state or view models"],
+    [/\b(beginMaintenanceMutation|prepareMaintenanceMutation|writeMaintenanceActionPayload|writeMaintenanceMutationPayload|invalidateMaintenanceContractQueries|setQueryData|cancelQueries)\b/, "maintenance query owner must delegate mutation fences, cache writes, and invalidation"],
+    [/toast\(|useTranslation|formatInvokeError|MaintenancePageController|restartDialog|routerDiagnosticsDialog|setActionResult|setActionRunning/, "maintenance query owner must not own page controller, locale formatting, or dialog state"],
+    [/@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|systemService\.|invokeIpc|invoke\(/, "maintenance query owner must use maintenance service wrapper, not system/API/IPC transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "maintenance query owner must keep typed authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/maintenance/hooks/mutation.ts", mutation, [
+    "useMutation",
+    "useQueryClient",
+    "prepareMaintenanceMutation",
+    "writeMaintenanceActionPayload",
+    "writeMaintenanceMutationPayload",
+    "invalidateMaintenanceContractQueries",
+    "maintenanceService.diagnose",
+    "maintenanceService.clean",
+    "maintenanceService.rebuildRegistry",
+    "maintenanceService.runCodexRouterDiagnostics",
+    "maintenanceService.fixCodexRouterIssue",
+  ]);
+  assertNotMatches("src/features/maintenance/hooks/mutation.ts", mutation, [
+    [/\buseQuery\b/, "maintenance mutation owner must not own query"],
+    [/\buse(State|Reducer|Effect|Memo)\b/, "maintenance mutation owner must not own page/controller UI state"],
+    [/\b(setQueryData|invalidateQueries)\b/, "maintenance mutation owner must delegate cache writes and invalidation to cache helper"],
+    [/toast\(|useTranslation|MaintenancePageController|restartDialog|routerDiagnosticsDialog|setActionResult|setActionRunning/, "maintenance mutation owner must not own page controller, locale formatting, or dialog state"],
+    [/@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|systemService\.|invokeIpc|invoke\(/, "maintenance mutation owner must use maintenance service wrapper, not system/API/IPC transport"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown|useMutation<unknown|Promise<unknown>/, "maintenance mutation owner must keep typed mutation payloads"],
+  ]);
+
+  assertIncludes("src/features/maintenance/hooks/page.ts", page, [
+    "useMaintenance",
+    "MaintenancePageController",
+    "restartDialog",
+    "routerDiagnosticsDialog",
+  ]);
+  assertNotMatches("src/features/maintenance/hooks/page.ts", page, [
+    [/\buse(Query|Mutation|QueryClient)\b/, "maintenance page/controller may compose split owner hooks but must not call TanStack directly"],
+    [/\b(setQueryData|invalidateQueries|cancelQueries|beginMaintenanceMutation|prepareMaintenanceMutation|writeMaintenance|Maintenance[A-Za-z]*QueryKeys|MAINTENANCE_[A-Z0-9_]+_QUERY_KEY)\b/, "maintenance page/controller must not write cache, invalidate, cancel, allocate fences, or consume query keys"],
+    [/@\/services\/maintenance|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|maintenanceService\.|systemService\.|invokeIpc|invoke\(/, "maintenance page/controller must not access service/API/IPC directly"],
+    [/ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "maintenance page/controller must not use generic authoritative payloads"],
+  ]);
+
+  assertIncludes("src/features/maintenance/types/index.ts", types, [
+    "export type MaintenanceCachePayload",
+    "export type MaintenanceQueryPayloadForKey",
+    "export interface MaintenancePageController",
+  ]);
+  assertNotMatches("src/features/maintenance/types/index.ts", types, [
+    [/MaintenancePageController\s*=\s*ReturnType|ReturnType<typeof useMaintenancePageController>/, "maintenance controller contract must be explicit, not ReturnType"],
+    [/MaintenanceCacheEnvelope<TPayload = unknown>|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "maintenance types owner must keep typed cache payloads"],
+  ]);
+
+  assertNotMatches("src/features/maintenance/cache/index.ts", cache, [
+    [/\buse(Query|Mutation|QueryClient|State|Reducer|Effect|Memo|Callback)\b/, "maintenance cache owner must not own React hooks"],
+    [/@\/services\/maintenance|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|maintenanceService\.|systemService\.|invokeIpc|invoke\(/, "maintenance cache owner must not access service/API/IPC"],
+    [/createModuleCacheOwner\("maintenance"\)|ModuleCacheEnvelope<unknown>|payload:\s*unknown/, "maintenance cache owner must keep typed payloads"],
+  ]);
+
+  if (controllerConsumerText.includes("ReturnType<typeof useMaintenancePageController>")) {
+    failures.push("src/features/maintenance dialogs/panels/components must consume explicit Maintenance controller types, not hook ReturnType");
+  }
+
+  if (
+    /(?:import|export)\s+type[^;]*from\s+["']\.\.\/hooks["']/.test(controllerConsumerText) ||
+    /import\s+\{[\s\S]*?\btype\s+Maintenance[A-Za-z]*(?:Controller|Props)\b[\s\S]*?\}\s+from\s+["']\.\.\/hooks["']/.test(controllerConsumerText)
+  ) {
+    failures.push("src/features/maintenance dialogs/panels/components must import controller/props types from ../types, not ../hooks");
+  }
+
+  console.log("PASS maintenance deep owner gate executed: hooks/index, query, mutation, page, cache, types, dialogs/panels/components");
+}
+
 function validateFeatureDeepOwners() {
   for (const moduleId of featureModules) {
     const moduleRoot = join(featuresRoot, moduleId);
@@ -1510,6 +1631,7 @@ validateTrayShellDeepOwnerBoundaries();
 validateSettingsDeepOwnerBoundaries();
 validateSkillsDeepOwnerBoundaries();
 validateRelayDeepOwnerBoundaries();
+validateMaintenanceDeepOwnerBoundaries();
 validateRouteShells();
 validateFeaturePageShells();
 validateServiceOwners();

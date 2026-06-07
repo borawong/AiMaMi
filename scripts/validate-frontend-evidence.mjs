@@ -1317,7 +1317,10 @@ function validateMaintenanceTypedPayloadGate() {
   const servicePath = join(repoRoot, "src", "services", "maintenance", "index.ts");
   const typesPath = join(repoRoot, "src", "features", "maintenance", "types", "index.ts");
   const cachePath = join(repoRoot, "src", "features", "maintenance", "cache", "index.ts");
-  const hooksPath = join(repoRoot, "src", "features", "maintenance", "hooks", "index.ts");
+  const hooksIndexPath = join(repoRoot, "src", "features", "maintenance", "hooks", "index.ts");
+  const queryPath = join(repoRoot, "src", "features", "maintenance", "hooks", "query.ts");
+  const mutationPath = join(repoRoot, "src", "features", "maintenance", "hooks", "mutation.ts");
+  const pagePath = join(repoRoot, "src", "features", "maintenance", "hooks", "page.ts");
   const diagnosticsDialogPath = join(
     repoRoot,
     "src",
@@ -1329,7 +1332,10 @@ function validateMaintenanceTypedPayloadGate() {
   const service = readRequired(servicePath);
   const types = readRequired(typesPath);
   const cache = readRequired(cachePath);
-  const hooks = readRequired(hooksPath);
+  const hooksIndex = readRequired(hooksIndexPath);
+  const query = readRequired(queryPath);
+  const mutation = readRequired(mutationPath);
+  const page = readRequired(pagePath);
   const diagnosticsDialog = readRequired(diagnosticsDialogPath);
 
   const typedPayloadOk =
@@ -1357,14 +1363,39 @@ function validateMaintenanceTypedPayloadGate() {
     cache.includes("TPayload extends MaintenanceActionPayload") &&
     !cache.includes("createModuleCacheOwner(\"maintenance\")") &&
     !cache.includes("ModuleCacheEnvelope<unknown>") &&
-    hooks.includes("invalidateMaintenanceContractQueries") &&
-    hooks.includes("value: systemInfoQuery.data?.os ?? \"-\"") &&
-    hooks.includes("value: systemInfoQuery.data?.arch ?? \"-\"") &&
-    hooks.includes("value: systemInfoQuery.data?.osVersion ?? \"-\"") &&
-    hooks.includes("async (key: string, mutateAsync: () => Promise<void>)") &&
-    !hooks.includes("readSystemInfoField(value: unknown") &&
-    !hooks.includes("writeMaintenanceActionPayload(queryClient, result);\n      options.onRestarted()") &&
-    !hooks.includes("writeMaintenanceActionPayload(queryClient, result);\n    },\n  });\n\n  const resetConfigMutation") &&
+    hooksIndex.includes("from \"./query\"") &&
+    hooksIndex.includes("from \"./mutation\"") &&
+    hooksIndex.includes("from \"./page\"") &&
+    !/\b(useQuery|useMutation|useQueryClient|useState|useReducer|useEffect|useMemo|useCallback)\b/.test(hooksIndex) &&
+    !/@\/services\/maintenance|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|maintenanceService\.|systemService\.|invokeIpc|invoke\(/.test(hooksIndex) &&
+    query.includes("useQuery") &&
+    query.includes("useQueryClient") &&
+    query.includes("runMaintenanceQuery") &&
+    query.includes("MAINTENANCE_IMAGE_COMPAT_QUERY_KEY") &&
+    query.includes("MAINTENANCE_SYSTEM_INFO_QUERY_KEY") &&
+    query.includes("maintenanceService.getImageCompat") &&
+    query.includes("maintenanceService.getSystemInfo") &&
+    !query.includes("useMutation") &&
+    !query.includes("payload: unknown") &&
+    mutation.includes("useMutation") &&
+    mutation.includes("useQueryClient") &&
+    mutation.includes("prepareMaintenanceMutation") &&
+    mutation.includes("writeMaintenanceActionPayload") &&
+    mutation.includes("writeMaintenanceMutationPayload") &&
+    mutation.includes("invalidateMaintenanceContractQueries") &&
+    mutation.includes("maintenanceService.runCodexRouterDiagnostics") &&
+    mutation.includes("maintenanceService.fixCodexRouterIssue") &&
+    !mutation.includes("useQuery(") &&
+    !mutation.includes("payload: unknown") &&
+    page.includes("MaintenancePageController") &&
+    page.includes("value: systemInfoQuery.data?.os ?? \"-\"") &&
+    page.includes("value: systemInfoQuery.data?.arch ?? \"-\"") &&
+    page.includes("value: systemInfoQuery.data?.osVersion ?? \"-\"") &&
+    page.includes("async (key: string, mutateAsync: () => Promise<void>)") &&
+    !/\b(useQuery|useMutation|useQueryClient|setQueryData|invalidateQueries|cancelQueries|MAINTENANCE_[A-Z0-9_]+_QUERY_KEY)\b/.test(page) &&
+    !/@\/services\/maintenance|@\/services\/system|@\/lib\/api|@\/contracts\/ipc|@tauri-apps\/api|maintenanceService\.|systemService\.|invokeIpc|invoke\(/.test(page) &&
+    !page.includes("readSystemInfoField(value: unknown") &&
+    !page.includes("payload: unknown") &&
     diagnosticsDialog.includes("runDiagnostics: () => Promise<MaintenanceRouterDiagnosticsPayload>") &&
     diagnosticsDialog.includes("fixResult: MaintenanceRouterFixPayload") &&
     diagnosticsDialog.includes("diagnosticsResult: MaintenanceRouterDiagnosticsPayload") &&

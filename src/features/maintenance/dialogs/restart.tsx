@@ -9,18 +9,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert";
-
-interface MaintenanceRestartDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onConfirm: () => void;
-}
+import type { MaintenanceRestartDialogController } from "../types";
 
 export function MaintenanceRestartDialog({
   open,
   onOpenChange,
   onConfirm,
-}: MaintenanceRestartDialogProps) {
+}: MaintenanceRestartDialogController) {
   const { t } = useTranslation();
 
   return (

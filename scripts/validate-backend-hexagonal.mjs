@@ -714,6 +714,255 @@ function validateSystemEnvelopeServiceTypes() {
 
 validateSystemEnvelopeServiceTypes();
 
+function validateMaintenanceSystemSplitPayloadContracts() {
+  const systemCommandPath = join(backendRoot, "commands", "system.rs");
+  const systemUsecasePath = join(backendRoot, "application", "usecase", "system.rs");
+  const systemContractPath = join(backendRoot, "contracts", "system.rs");
+  const systemServicePath = join(frontendRoot, "services", "system", "index.ts");
+  const maintenanceServicePath = join(frontendRoot, "services", "maintenance", "index.ts");
+  const hooksIndexPath = join(frontendRoot, "features", "maintenance", "hooks", "index.ts");
+  const queryHookPath = join(frontendRoot, "features", "maintenance", "hooks", "query.ts");
+  const mutationHookPath = join(frontendRoot, "features", "maintenance", "hooks", "mutation.ts");
+  const pageHookPath = join(frontendRoot, "features", "maintenance", "hooks", "page.ts");
+  const cachePath = join(frontendRoot, "features", "maintenance", "cache", "index.ts");
+  const typesPath = join(frontendRoot, "features", "maintenance", "types", "index.ts");
+  const diagnosticsDialogPath = join(
+    frontendRoot,
+    "features",
+    "maintenance",
+    "dialogs",
+    "diagnostics.tsx",
+  );
+
+  const systemCommandText = readRequiredUtf8(systemCommandPath, "maintenance system command contract");
+  const systemUsecaseText = readRequiredUtf8(systemUsecasePath, "maintenance system usecase contract");
+  const systemContractText = readRequiredUtf8(systemContractPath, "maintenance system DTO contract");
+  const systemServiceText = readRequiredUtf8(systemServicePath, "maintenance system service facade");
+  const maintenanceServiceText = readRequiredUtf8(maintenanceServicePath, "maintenance service facade");
+  const hooksIndexText = readRequiredUtf8(hooksIndexPath, "maintenance hooks barrel");
+  const queryHookText = readRequiredUtf8(queryHookPath, "maintenance query hook owner");
+  const mutationHookText = readRequiredUtf8(mutationHookPath, "maintenance mutation hook owner");
+  const pageHookText = readRequiredUtf8(pageHookPath, "maintenance page hook owner");
+  const cacheText = readRequiredUtf8(cachePath, "maintenance cache owner");
+  const typesText = readRequiredUtf8(typesPath, "maintenance frontend types owner");
+  const diagnosticsDialogText = readRequiredUtf8(
+    diagnosticsDialogPath,
+    "maintenance diagnostics dialog typed props",
+  );
+
+  assertContains(systemContractPath, systemContractText, [
+    "pub(crate) struct CleanPayload",
+    "pub(crate) struct RebuildRegistryPayload",
+    "pub(crate) struct DiagnosePayload",
+    "pub(crate) struct SystemInfo",
+    "pub(crate) struct SystemActionPayload",
+  ], "maintenance/system backend typed DTO");
+
+  assertContains(systemCommandPath, systemCommandText, [
+    "Result<CoreEnvelope<CleanPayload>, String>",
+    "Result<CoreEnvelope<RebuildRegistryPayload>, String>",
+    "Result<CoreEnvelope<DiagnosePayload>, String>",
+    "Result<CoreEnvelope<SystemInfo>, String>",
+    "Result<CoreEnvelope<SystemActionPayload>, String>",
+    "Result<CoreEnvelope<bool>, String>",
+    "state.services().system().clean()",
+    "state.services().system().rebuild_registry()",
+    "state.services().system().diagnose()",
+    "state.services().system().get_system_info()",
+    "state.services().system().get_image_compat()",
+    "state.services().system().set_image_compat(enabled)",
+  ], "maintenance/system command typed envelope");
+
+  assertContains(systemUsecasePath, systemUsecaseText, [
+    "Result<CoreEnvelope<CleanPayload>, CoreError>",
+    "Result<CoreEnvelope<RebuildRegistryPayload>, CoreError>",
+    "Result<CoreEnvelope<DiagnosePayload>, CoreError>",
+    "Result<CoreEnvelope<SystemInfo>, CoreError>",
+    "Result<CoreEnvelope<SystemActionPayload>, CoreError>",
+    "Result<CoreEnvelope<bool>, CoreError>",
+    "CleanPayload {",
+    "RebuildRegistryPayload {",
+    "DiagnosePayload {",
+    "SystemInfo {",
+    "system_action_payload(&plan)",
+  ], "maintenance/system usecase typed payload");
+
+  assertContains(systemServicePath, systemServiceText, [
+    "CoreEnvelope<CleanPayload>",
+    "CoreEnvelope<RebuildRegistryPayload>",
+    "CoreEnvelope<DiagnosePayload>",
+    "CoreEnvelope<SystemInfoPayload>",
+    "CoreEnvelope<SystemActionPayload>",
+    "CoreEnvelope<boolean>>(\"get_image_compat\")",
+    "CoreEnvelope<boolean>>(\"set_image_compat\"",
+  ], "maintenance/system service typed envelope");
+
+  assertContains(maintenanceServicePath, maintenanceServiceText, [
+    "readEnvelopeData(systemService.clean())",
+    "readEnvelopeData(systemService.rebuildRegistry())",
+    "readEnvelopeData(systemService.diagnose())",
+    "systemService.restartCodex",
+    "systemService.forceKillCodex",
+    "systemService.resetCodexConfig",
+    "systemService.getImageCompat",
+    "systemService.setImageCompat",
+    "systemService.getSystemInfo",
+    "CoreEnvelope<RelayDiagnosticPayload>",
+    "CoreEnvelope<RelayRouterIssueFixPayload>",
+  ], "maintenance service typed system/router facade");
+
+  assertContains(typesPath, typesText, [
+    "export type MaintenanceCachePayload",
+    "export type MaintenanceQueryPayloadForKey",
+    "export type MaintenanceSystemInfoPayload",
+    "export type MaintenanceRouterDiagnosticsPayload = RelayDiagnosticPayload",
+    "export type MaintenanceRouterFixPayload = RelayRouterIssueFixPayload",
+    "export interface MaintenancePageController",
+    "ModuleCacheEnvelope<TPayload>",
+  ], "maintenance frontend split types");
+
+  assertContains(cachePath, cacheText, [
+    "createModuleCacheOwner<MaintenanceCachePayload>(\"maintenance\")",
+    "Omit<MaintenanceCacheEnvelope<TPayload>, \"moduleId\">",
+    "TKey extends MaintenanceWritableQueryKey",
+    "MaintenanceQueryPayloadForKey<TKey>",
+    "toMaintenanceCachePayload",
+    "TPayload extends MaintenanceActionPayload",
+  ], "maintenance frontend split cache payload owner");
+
+  assertContains(hooksIndexPath, hooksIndexText, [
+    "from \"./query\"",
+    "from \"./mutation\"",
+    "from \"./page\"",
+  ], "maintenance hooks/index split barrel");
+
+  assertContains(queryHookPath, queryHookText, [
+    "useQuery",
+    "useQueryClient",
+    "runMaintenanceQuery",
+    "MAINTENANCE_IMAGE_COMPAT_QUERY_KEY",
+    "MAINTENANCE_SYSTEM_INFO_QUERY_KEY",
+    "maintenanceService.getImageCompat",
+    "maintenanceService.getSystemInfo",
+  ], "maintenance query hook typed payload owner");
+
+  assertContains(mutationHookPath, mutationHookText, [
+    "useMutation",
+    "useQueryClient",
+    "prepareMaintenanceMutation",
+    "writeMaintenanceActionPayload",
+    "writeMaintenanceMutationPayload",
+    "invalidateMaintenanceContractQueries",
+    "maintenanceService.diagnose",
+    "maintenanceService.clean",
+    "maintenanceService.rebuildRegistry",
+    "maintenanceService.runCodexRouterDiagnostics",
+    "maintenanceService.fixCodexRouterIssue",
+  ], "maintenance mutation hook typed payload owner");
+
+  assertContains(pageHookPath, pageHookText, [
+    "MaintenancePageController",
+    "restartDialog",
+    "routerDiagnosticsDialog",
+    "value: systemInfoQuery.data?.os ?? \"-\"",
+    "value: systemInfoQuery.data?.arch ?? \"-\"",
+    "value: systemInfoQuery.data?.osVersion ?? \"-\"",
+  ], "maintenance page controller contract");
+
+  assertContains(diagnosticsDialogPath, diagnosticsDialogText, [
+    "runDiagnostics: () => Promise<MaintenanceRouterDiagnosticsPayload>",
+    "fixResult: MaintenanceRouterFixPayload",
+    "diagnosticsResult: MaintenanceRouterDiagnosticsPayload",
+  ], "maintenance diagnostics dialog typed props");
+
+  assertNotContainsSnippet(systemCommandPath, systemCommandText, [
+    "serde_json::Value",
+    "CoreEnvelope<Value>",
+  ], "maintenance/system command must not return generic payload");
+
+  assertNotContainsSnippet(systemUsecasePath, systemUsecaseText, [
+    "serde_json::Value",
+    "CoreEnvelope<Value>",
+    "json!",
+  ], "maintenance/system usecase must not return generic payload");
+
+  assertNotContainsSnippet(systemServicePath, systemServiceText, [
+    "CoreEnvelope<unknown>",
+    "IpcEvidencePayload",
+    "IpcJsonObject",
+  ], "maintenance/system service must not return generic evidence payload");
+
+  assertNotContainsSnippet(maintenanceServicePath, maintenanceServiceText, [
+    "CoreEnvelope<unknown>",
+    "IpcEvidencePayload",
+  ], "maintenance service must not return generic evidence payload");
+
+  assertNotContainsSnippet(hooksIndexPath, hooksIndexText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "payload: unknown",
+    "prepareMaintenanceMutation",
+    "maintenanceService.",
+    "systemService.",
+  ], "maintenance hooks/index must not own query, mutation, payload, or service logic");
+
+  assertNotContainsSnippet(typesPath, typesText, [
+    "MaintenanceCacheEnvelope<TPayload = unknown>",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "MaintenancePageController = ReturnType",
+  ], "maintenance frontend split types must not loosen typed payloads");
+
+  assertNotContainsSnippet(cachePath, cacheText, [
+    "createModuleCacheOwner(\"maintenance\")",
+    "ModuleCacheEnvelope<unknown>",
+    "payload: unknown",
+    "maintenanceService.",
+    "systemService.",
+  ], "maintenance frontend cache owner must not loosen typed payloads or call services");
+
+  assertNotContainsSnippet(queryHookPath, queryHookText, [
+    "useMutation",
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+    "systemService.",
+    "@/lib/api",
+    "@/contracts/ipc",
+    "invokeIpc",
+  ], "maintenance frontend query owner must not mix mutation, generic payloads, or IPC");
+
+  assertNotContainsSnippet(mutationHookPath, mutationHookText, [
+    "useQuery(",
+    "payload: unknown",
+    "ModuleCacheEnvelope<unknown>",
+    "systemService.",
+    "@/lib/api",
+    "@/contracts/ipc",
+    "invokeIpc",
+  ], "maintenance frontend mutation owner must not mix query, generic payloads, or IPC");
+
+  assertNotContainsSnippet(pageHookPath, pageHookText, [
+    "useQuery",
+    "useMutation",
+    "useQueryClient",
+    "setQueryData",
+    "invalidateQueries",
+    "cancelQueries",
+    "prepareMaintenanceMutation",
+    "MAINTENANCE_IMAGE_COMPAT_QUERY_KEY",
+    "MAINTENANCE_SYSTEM_INFO_QUERY_KEY",
+    "maintenanceService.",
+    "systemService.",
+    "@/lib/api",
+    "@/contracts/ipc",
+    "invokeIpc",
+    "payload: unknown",
+  ], "maintenance page controller must not own TanStack, cache keys, or service/API access");
+}
+
+validateMaintenanceSystemSplitPayloadContracts();
+
 function validateSettingsTypedPayloadContracts() {
   const systemCommandPath = join(backendRoot, "commands", "system.rs");
   const hotspotCommandPath = join(backendRoot, "commands", "hotspot.rs");

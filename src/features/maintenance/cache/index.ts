@@ -76,6 +76,15 @@ export function beginMaintenanceMutation(queryKey: MaintenanceWritableQueryKey) 
   return sequence;
 }
 
+export async function prepareMaintenanceMutation(
+  queryClient: QueryClient,
+  queryKey: MaintenanceWritableQueryKey,
+) {
+  const sequence = beginMaintenanceMutation(queryKey);
+  await queryClient.cancelQueries({ queryKey });
+  return { sequence };
+}
+
 export function writeMaintenanceQueryPayload<TKey extends MaintenanceWritableQueryKey>(
   queryClient: QueryClient,
   queryKey: TKey,
