@@ -4,6 +4,7 @@ use crate::contracts::{
 use crate::core::dto::{BackendBoundaryProbe, BackendOperationPlan};
 use crate::core::error::CoreError;
 use crate::repository::RepositoryBundle;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 const MODULE: &str = "sessions";
 
@@ -18,13 +19,15 @@ impl<'a> SessionsUseCase<'a> {
 
     pub(crate) fn load_sessions(&self) -> Result<CoreEnvelope<SessionsListPayload>, CoreError> {
         let plan = self.pending_plan("load_sessions");
+        let items = self.repositories.sessions().list_sessions()?;
+        let total = items.len();
         Ok(CoreEnvelope::from_backend_plan(
             SessionsListPayload {
                 backend_status: self.status(&plan),
-                items: Vec::new(),
-                total: 0,
+                items,
+                total,
                 source_path: self.repositories.sessions().source_path(),
-                last_scan_at: 0,
+                last_scan_at: current_unix_seconds(),
             },
             &plan,
         ))
@@ -64,6 +67,13 @@ impl<'a> SessionsUseCase<'a> {
     fn status(&self, plan: &BackendOperationPlan) -> BackendSkeletonStatus {
         BackendSkeletonStatus::from_plan(plan)
     }
+}
+
+fn current_unix_seconds() -> i64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_secs() as i64
 }
 
 fn required_text_list(

@@ -1846,6 +1846,7 @@ function validateSessionsTypedPayloadContracts() {
   const analyticsCommandPath = join(backendRoot, "commands", "analytics.rs");
   const usecasePath = join(backendRoot, "application", "usecase", "sessions.rs");
   const analyticsUsecasePath = join(backendRoot, "application", "usecase", "analytics.rs");
+  const repositoryPath = join(backendRoot, "repository", "sessions.rs");
   const contractPath = join(backendRoot, "contracts", "sessions.rs");
   const analyticsContractPath = join(backendRoot, "contracts", "analytics.rs");
   const servicePath = join(frontendRoot, "services", "sessions", "index.ts");
@@ -1860,6 +1861,7 @@ function validateSessionsTypedPayloadContracts() {
   const analyticsCommandText = readUtf8(analyticsCommandPath);
   const usecaseText = readUtf8(usecasePath);
   const analyticsUsecaseText = readUtf8(analyticsUsecasePath);
+  const repositoryText = readUtf8(repositoryPath);
   const contractText = readUtf8(contractPath);
   const analyticsContractText = readUtf8(analyticsContractPath);
   const serviceText = readUtf8(servicePath);
@@ -1904,6 +1906,39 @@ function validateSessionsTypedPayloadContracts() {
     "BackendOperationPlan::no_op",
     "BackendBoundaryProbe::from_repository_source",
   ], "sessions usecase 六边形 typed payload");
+
+  assertContains(repositoryPath, repositoryText, [
+    "list_sessions",
+    "self.fs.exists",
+    "self.fs.read_to_string",
+    "RepositoryPath::SessionsSource",
+    "SessionRecordPayload",
+    "serde_json",
+  ], "sessions repository readonly list owner");
+
+  assertNotContains(repositoryPath, repositoryText, [
+    /\bstd::fs\b/,
+    /\btokio::fs\b/,
+    /\bread_dir\b/,
+  ], "sessions repository must use repository filesystem adapter");
+
+  const loadSessionsBody = extractFunctionBody(usecaseText, "load_sessions");
+  if (!loadSessionsBody) {
+    failures.push(`${toRelative(usecasePath)} missing sessions load_sessions function body`);
+  } else {
+    assertContains(usecasePath, loadSessionsBody, [
+      "list_sessions",
+      "items",
+      "total",
+      "last_scan_at",
+    ], "sessions load_sessions repository readonly payload");
+
+    assertNotContainsSnippet(usecasePath, loadSessionsBody, [
+      "items: Vec::new()",
+      "total: 0",
+      "last_scan_at: 0",
+    ], "sessions load_sessions must not return empty readonly skeleton");
+  }
 
   assertContains(analyticsUsecasePath, analyticsUsecaseText, [
     "Result<CoreEnvelope<SessionAnalyticsPayload>, CoreError>",
