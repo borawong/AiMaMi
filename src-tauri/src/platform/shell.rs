@@ -1,5 +1,19 @@
-// shell 文件只保留平台边界，不打开本机路径或调用系统程序。
-pub(crate) struct ShellBoundary;
+use crate::core::error::CoreError;
 
-// 后续恢复路径打开能力时，需要先经过脱敏路径合同。
-pub(crate) trait ShellBoundaryPort {}
+pub fn open_path(path: &str) -> Result<(), CoreError> {
+    #[cfg(target_os = "macos")]
+    {
+        std::process::Command::new("open").arg(path).spawn()?;
+    }
+    #[cfg(target_os = "linux")]
+    {
+        std::process::Command::new("xdg-open").arg(path).spawn()?;
+    }
+    #[cfg(target_os = "windows")]
+    {
+        crate::platform::process::background_command("explorer")
+            .arg(path)
+            .spawn()?;
+    }
+    Ok(())
+}

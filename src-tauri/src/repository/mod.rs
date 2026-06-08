@@ -1,21 +1,47 @@
-﻿pub(crate) mod accounts;
-pub(crate) mod adapter;
-pub(crate) mod analytics;
-pub(crate) mod config;
-pub(crate) mod custom_instructions;
-pub(crate) mod mcp;
-pub(crate) mod path_guard;
-pub(crate) mod paths;
-pub(crate) mod quota;
-pub(crate) mod registry;
-pub(crate) mod relay;
-pub(crate) mod runtime_extensions;
-pub(crate) mod sessions;
-pub(crate) mod skills;
-pub(crate) mod voice;
+pub mod accounts;
+pub mod adapter;
+pub mod analytics;
+pub mod config;
+pub mod custom_instructions;
+pub mod mcp;
+pub mod path_guard;
+pub mod paths;
+pub mod quota;
+pub mod registry;
+pub mod relay;
+pub mod runtime_extensions;
+pub mod sessions;
+pub mod skills;
+pub mod voice;
 
-// 这个文件只保留仓储层的六边形入口，当前不装配任何持久化能力。
-pub(crate) struct RepositoryBoundary;
+use adapter::real_fs::RealFileSystem;
+use paths::RepositoryPaths;
 
-// 仓储合同恢复前，不在聚合入口保存模块状态或路径上下文。
-pub(crate) trait RepositoryBoundaryPort {}
+#[derive(Debug, Clone)]
+pub struct Repository {
+    paths: RepositoryPaths,
+    fs: RealFileSystem,
+}
+
+impl Repository {
+    pub fn new() -> Self {
+        Self {
+            paths: RepositoryPaths::new(),
+            fs: RealFileSystem,
+        }
+    }
+
+    pub fn paths(&self) -> &RepositoryPaths {
+        &self.paths
+    }
+
+    pub fn fs(&self) -> &RealFileSystem {
+        &self.fs
+    }
+}
+
+impl Default for Repository {
+    fn default() -> Self {
+        Self::new()
+    }
+}

@@ -1,6 +1,21 @@
-// service 文件只保留应用服务装配边界，当前不聚合任何半实现。
-// 后续服务对象只能组合端口和用例入口，不保存模块业务状态。
+use crate::contracts::{BackendEffect, BackendSkeletonStatus};
 
-pub(crate) struct ApplicationServiceBoundary;
+pub fn current_timestamp() -> i64 {
+    chrono::Utc::now().timestamp()
+}
 
-pub(crate) trait ApplicationServicePort {}
+pub fn restored_status(
+    module: &str,
+    command: &str,
+    effect: BackendEffect,
+) -> BackendSkeletonStatus {
+    BackendSkeletonStatus::restored(module, command, effect)
+}
+
+pub fn pending_status(module: &str, command: &str, note: &str) -> BackendSkeletonStatus {
+    BackendSkeletonStatus::pending(module, command, note)
+}
+
+pub fn unsupported_status(module: &str, command: &str, note: &str) -> BackendSkeletonStatus {
+    BackendSkeletonStatus::unsupported(module, command, note)
+}

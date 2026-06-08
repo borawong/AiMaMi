@@ -1,5 +1,14 @@
-// 窗口文件只保留平台边界，不持有窗口句柄或控制桌面窗口。
-pub(crate) struct WindowBoundary;
+use crate::core::error::CoreError;
+use tauri::Manager;
 
-// 后续恢复窗口能力时，需要由应用层端口表达可替换行为。
-pub(crate) trait WindowBoundaryPort {}
+pub fn focus_main_window(app: &tauri::AppHandle) -> Result<(), CoreError> {
+    if let Some(window) = app.get_webview_window("main") {
+        window
+            .show()
+            .map_err(|error| CoreError::Operation(error.to_string()))?;
+        window
+            .set_focus()
+            .map_err(|error| CoreError::Operation(error.to_string()))?;
+    }
+    Ok(())
+}

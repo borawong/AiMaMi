@@ -1,5 +1,22 @@
-// 进程文件只保留平台边界，不启动、重启或探测外部程序。
-pub(crate) struct ProcessBoundary;
+#[cfg(target_os = "windows")]
+pub fn background_command(program: &str) -> std::process::Command {
+    use std::os::windows::process::CommandExt;
+    const CREATE_NO_WINDOW: u32 = 0x08000000;
 
-// 后续恢复进程能力时，需要先补齐可替换适配器合同。
-pub(crate) trait ProcessBoundaryPort {}
+    let mut command = std::process::Command::new(program);
+    command.creation_flags(CREATE_NO_WINDOW);
+    command
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn background_command(program: &str) -> std::process::Command {
+    std::process::Command::new(program)
+}
+
+pub fn restart_app() -> Result<(), String> {
+    Err("当前公开后端未恢复重启外部程序能力".to_string())
+}
+
+pub fn force_kill_app() -> Result<(), String> {
+    Err("当前公开后端未恢复强制结束外部程序能力".to_string())
+}
