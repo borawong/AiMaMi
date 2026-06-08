@@ -571,15 +571,7 @@
   },
   "analytics": {
     "description": "基于用量、会话、Token、工具和变更分析 IPC 契约恢复分析模块入口。",
-    "panel": {
-      "usage": "用量",
-      "changes": "变更"
-    },
-    "range": {
-      "year": "全年"
-    },
     "heatmap": {
-      "sessions": "会话",
       "active": "活跃",
       "less": "少",
       "more": "多"
@@ -594,7 +586,7 @@
     "avgTokenPerSession": "每会话均值",
     "avgTurns": "平均轮数",
     "changeTitle": "代码改动",
-    "daysValue": "{{count}} 天",
+    "days": "天",
     "editTasks": "编辑任务",
     "filesTotal": "其他操作数",
     "minutesValue": "{{count}} 分钟",
@@ -627,13 +619,16 @@
     "weekActiveDays": "本周活跃天数",
     "writeOps": "新增代码行",
     "writeTotal": "新增总行数",
+    "tabActivity": "活跃趋势",
+    "tabChanges": "改动",
     "tabToken": "Token",
     "tabSessions": "会话",
     "tabTools": "工具",
     "tabQuota": "配额",
     "rangeToday": "今日",
     "rangeWeek": "本周",
-    "rangeMonth": "本月"
+    "rangeMonth": "本月",
+    "rangeYear": "年"
   },
   "relay": {
     "description": "为 Codex 配置中转模型，启用智能路由后菜单可自由切换。",
