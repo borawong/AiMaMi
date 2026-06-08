@@ -121,26 +121,34 @@ function collectFrontendDocSignals() {
     repoPath("evidence", "full-chain", "internal", "audits", "audits"),
     (file) => file.includes(`${sep}frontend${sep}`) && file.endsWith(".md"),
   ).sort();
-  const signals = [
-    "missing frontend route/API/command/mock chain",
-    "not_closed",
-    "not closed",
-    "blocked",
-    "partial",
-    "candidate",
-  ];
   const hits = [];
   for (const doc of frontendDocs) {
     const normalizedDoc = toRepoPath(doc);
     if (closedFrontendDocs.has(normalizedDoc)) continue;
     const text = readFileSync(doc, "utf8").toLowerCase();
-    for (const signal of signals) {
-      if (!text.includes(signal.toLowerCase())) continue;
-      hits.push({ file: normalizedDoc, signal });
-      break;
-    }
+    const signal = findFrontendDocSignal(text);
+    if (signal) hits.push({ file: normalizedDoc, signal });
   }
   return hits;
+}
+
+function findFrontendDocSignal(text) {
+  const checks = [
+    ["missing frontend route/API/command/mock chain", "missing frontend route/api/command/mock chain"],
+    ["not_closed", "not_closed"],
+    ["not closed", "not closed"],
+    ["partial/candidate", "partial/candidate"],
+    ["blocked by", "blocked by"],
+    ["still blocked", "still blocked"],
+    ["blockers", "blockers"],
+    ["implementation gap", "implementation gap"],
+    ["source archive 实现 gap", "source archive 实现 gap"],
+    ["**gap**", "**gap**"],
+  ];
+  for (const [label, needle] of checks) {
+    if (text.includes(needle)) return label;
+  }
+  return null;
 }
 
 function loadClosedFrontendDocs() {

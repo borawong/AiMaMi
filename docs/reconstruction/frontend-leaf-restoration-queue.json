@@ -1216,20 +1216,12 @@
   ],
   "frontendDocSignals": [
     {
-      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-relay/frontend/FRONTEND-FULL-CHAIN-109.md",
-      "signal": "blocked"
-    },
-    {
       "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-relay/frontend/RELAY-PAGE-LOAD-CHAINS-DISTILLED.md",
-      "signal": "blocked"
+      "signal": "source archive 实现 gap"
     },
     {
       "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-bootstrap/frontend/FRONTEND-FULL-CHAIN-109.md",
-      "signal": "partial"
-    },
-    {
-      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay/frontend/FRONTEND-FULL-CHAIN-109.md",
-      "signal": "blocked"
+      "signal": "partial/candidate"
     }
   ],
   "localeCoverage": [
