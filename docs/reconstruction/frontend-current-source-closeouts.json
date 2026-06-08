@@ -84,6 +84,89 @@
         }
       ],
       "reason": "internal frontend 文档记录的是旧 source archive 缺 route/API/command/mock chain；当前公开源码已经补入 plugins route、service、query/mutation/cache、panel 和 IPC mock。raw acceptance 仍显示 get/update config 没有可见 UI trigger，因此本 closeout 只关闭 list/toggle 的当前源码链路，不把 config 提升为 UI leaf。"
+    },
+    {
+      "id": "relay-passthrough-audit-backend-skeleton-chain",
+      "module": "relay",
+      "status": "current-source-closed-partial",
+      "closedFrontendDocs": [
+        "evidence/full-chain/internal/audits/audits/macos-1.0.9-relay/frontend/RELAY-PAGE-LOAD-CHAINS-DISTILLED.md"
+      ],
+      "closedCommands": [
+        "set_block_official_passthrough",
+        "get_passthrough_audit_log"
+      ],
+      "notClosedCommands": [],
+      "requiredSourceSignals": [
+        {
+          "file": "src/services/relay/index.ts",
+          "includes": [
+            "invokeIpc<CoreEnvelope<boolean>>(\"set_block_official_passthrough\"",
+            "invokeIpc<CoreEnvelope<RelayPassthroughAuditEntry[]>>",
+            "\"get_passthrough_audit_log\""
+          ]
+        },
+        {
+          "file": "src/features/relay/hooks/mutation.ts",
+          "includes": [
+            "relayService.setBlockOfficialPassthrough(blocked)"
+          ]
+        },
+        {
+          "file": "src/features/relay/hooks/query.ts",
+          "includes": [
+            "\"passthrough-audit-log\"",
+            "relayService.getPassthroughAuditLog(50)"
+          ]
+        },
+        {
+          "file": "src/mocks/fixtures/commands.ts",
+          "includes": [
+            "get_passthrough_audit_log: relayAuditHandler",
+            "set_block_official_passthrough: writeBooleanArgHandler"
+          ]
+        },
+        {
+          "file": "src-tauri/src/lib.rs",
+          "includes": [
+            "commands::relay::set_block_official_passthrough",
+            "commands::relay::get_passthrough_audit_log"
+          ]
+        },
+        {
+          "file": "src-tauri/src/commands/relay.rs",
+          "includes": [
+            "#[tauri::command]",
+            "pub fn set_block_official_passthrough",
+            "pub fn get_passthrough_audit_log"
+          ]
+        },
+        {
+          "file": "src-tauri/src/application/usecase/relay.rs",
+          "includes": [
+            "pub fn set_block_official_passthrough",
+            "pub fn get_passthrough_audit_log",
+            "真实持久化等待 raw/internal 证据补齐"
+          ]
+        },
+        {
+          "file": "src-tauri/src/repository/relay.rs",
+          "includes": [
+            "pub fn passthrough_audit_source_path",
+            "pub fn load_passthrough_audit_log",
+            "pub fn record_passthrough_policy_intent"
+          ]
+        },
+        {
+          "file": "src-tauri/src/contracts/relay.rs",
+          "includes": [
+            "pub struct RelayPassthroughAuditEntryPayload",
+            "pub provider_id: Option<String>",
+            "pub blocked: bool"
+          ]
+        }
+      ],
+      "reason": "macOS relay frontend 文档中的旧 source archive 实现 gap 已由当前公开源码补成前端 service/hook/mock 到后端 command/usecase/repository/contracts 的可调用六边形骨架；本 closeout 只关闭 passthrough/audit 入口链路缺口，不声明 relay 业务状态机或 MAC/WIN 100% leaf 已完成。"
     }
   ]
 }

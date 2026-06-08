@@ -37,6 +37,8 @@ pub fn run() {
             commands::runtime_extensions::toggle_plugin,
             commands::runtime_extensions::get_plugin_config,
             commands::runtime_extensions::update_plugin_config,
+            commands::relay::set_block_official_passthrough,
+            commands::relay::get_passthrough_audit_log,
             commands::system::load_snapshot,
             commands::system::refresh_usage_snapshot,
             commands::system::load_bootstrap_state,

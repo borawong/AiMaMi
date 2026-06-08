@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repoRoot = join(fileURLToPath(import.meta.url), "..", "..");
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const closeoutPath = join(repoRoot, "docs", "reconstruction", "frontend-current-source-closeouts.json");
 const failures = [];
 
@@ -24,11 +24,26 @@ function requireIncludes(file, snippets) {
     failures.push(`缺少 closeout 源码文件：${file}`);
     return;
   }
+
   const text = readFileSync(path, "utf8");
   for (const snippet of snippets) {
     if (!text.includes(snippet)) {
       failures.push(`${file} 缺少 closeout 片段：${snippet}`);
     }
+  }
+}
+
+function validateClosedDocs(moduleName, docs) {
+  for (const doc of docs ?? []) {
+    if (!existsSync(repoPath(doc))) {
+      failures.push(`${moduleName} closeout 缺少旧 frontend 文档：${doc}`);
+    }
+  }
+}
+
+function validateRequiredSignals(closeout) {
+  for (const signal of closeout.requiredSourceSignals ?? []) {
+    requireIncludes(signal.file, signal.includes ?? []);
   }
 }
 
@@ -49,7 +64,9 @@ function validatePluginsCloseout(closeout) {
       continue;
     }
     if (command.uiTriggerObserved !== true || command.blocked !== false) {
-      failures.push(`plugins closeout ${commandName} 不能关闭：uiTriggerObserved=${command.uiTriggerObserved} blocked=${command.blocked}`);
+      failures.push(
+        `plugins closeout ${commandName} 不能关闭：uiTriggerObserved=${command.uiTriggerObserved} blocked=${command.blocked}`,
+      );
     }
   }
 
@@ -60,19 +77,36 @@ function validatePluginsCloseout(closeout) {
       continue;
     }
     if (command.uiTriggerObserved !== false || command.blocked !== true) {
-      failures.push(`plugins closeout ${commandName} 不得标为未关闭以外状态：uiTriggerObserved=${command.uiTriggerObserved} blocked=${command.blocked}`);
+      failures.push(
+        `plugins closeout ${commandName} 不得标为未关闭以外状态：uiTriggerObserved=${command.uiTriggerObserved} blocked=${command.blocked}`,
+      );
     }
   }
 
-  for (const doc of closeout.closedFrontendDocs ?? []) {
-    if (!existsSync(repoPath(doc))) {
-      failures.push(`plugins closeout 缺少旧 frontend 文档：${doc}`);
+  validateClosedDocs("plugins", closeout.closedFrontendDocs);
+  validateRequiredSignals(closeout);
+}
+
+function validateRelayCloseout(closeout) {
+  validateClosedDocs("relay", closeout.closedFrontendDocs);
+
+  const expectedCommands = new Set([
+    "set_block_official_passthrough",
+    "get_passthrough_audit_log",
+  ]);
+
+  for (const commandName of closeout.closedCommands ?? []) {
+    if (!expectedCommands.has(commandName)) {
+      failures.push(`relay closeout 不允许关闭未验证命令：${commandName}`);
+    }
+  }
+  for (const commandName of expectedCommands) {
+    if (!(closeout.closedCommands ?? []).includes(commandName)) {
+      failures.push(`relay closeout 缺少命令：${commandName}`);
     }
   }
 
-  for (const signal of closeout.requiredSourceSignals ?? []) {
-    requireIncludes(signal.file, signal.includes ?? []);
-  }
+  validateRequiredSignals(closeout);
 }
 
 const closeouts = readJson(closeoutPath);
@@ -83,6 +117,8 @@ if (closeouts.schema !== "open-aimami.frontend_current_source_closeouts.v1") {
 for (const closeout of closeouts.closeouts ?? []) {
   if (closeout.id === "plugins-current-route-api-command-mock-chain") {
     validatePluginsCloseout(closeout);
+  } else if (closeout.id === "relay-passthrough-audit-backend-skeleton-chain") {
+    validateRelayCloseout(closeout);
   } else {
     failures.push(`未知 closeout id：${closeout.id}`);
   }

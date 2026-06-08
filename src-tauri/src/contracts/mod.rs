@@ -15,6 +15,7 @@ pub use backend_skeleton::*;
 pub use custom_instructions::*;
 pub use envelope::*;
 pub use mcp::*;
+pub use relay::*;
 pub use runtime_extensions::*;
 pub use skills::*;
 pub use system::*;
