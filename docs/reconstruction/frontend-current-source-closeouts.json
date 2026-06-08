@@ -248,6 +248,318 @@
       "reason": "mcp 和 skills 的双平台 gate-report 已达到 readyToImplement、implementation_use、gate_accepted、full_leaf_100 全 true；当前源码也已经闭合 service、query、cache、overview consumer、mock、command、usecase、repository 链路。本 closeout 只关闭 app-shell index query 的 owner-closed 队列项，不修改 manifest 状态，不声明全文案验收，也不声明 MAC/WIN 100% leaf 已完成。"
     },
     {
+      "id": "accounts-analytics-index-query-owner-closed-chain",
+      "module": "accounts-analytics",
+      "status": "current-source-closed-partial",
+      "closedFrontendDocs": [],
+      "closedManifestStatuses": [
+        {
+          "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
+          "module": "accounts",
+          "queryKey": "quota-history",
+          "source": "assets/index-CL22l5v8.js",
+          "status": "owner-closed"
+        },
+        {
+          "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
+          "module": "analytics",
+          "queryKey": "usage-analytics",
+          "source": "assets/index-CL22l5v8.js",
+          "status": "owner-closed"
+        }
+      ],
+      "gateReports": [
+        "evidence/full-chain/internal/audits/audits/windows-1.0.9-accounts/gate-report.json",
+        "evidence/full-chain/internal/audits/audits/macos-1.0.9-accounts/gate-report.json",
+        "evidence/full-chain/internal/audits/audits/windows-1.0.9-sessions-analytics/gate-report.json",
+        "evidence/full-chain/internal/audits/audits/macos-1.0.9-sessions-analytics/gate-report.json"
+      ],
+      "requiredSourceSignals": [
+        {
+          "file": "src/restoration/frontend-manifest/index.ts",
+          "includes": [
+            "module: \"accounts\"",
+            "queryKey: \"quota-history\"",
+            "status: \"owner-closed\"",
+            "ownerCache: \"src/features/accounts/cache/index.ts\"",
+            "ownerHook: \"src/features/accounts/hooks/mutation.ts\"",
+            "commands: [\"load_snapshot\", \"refresh_usage_snapshot\"]",
+            "module: \"analytics\"",
+            "queryKey: \"usage-analytics\"",
+            "ownerCache: \"src/features/analytics/cache/index.ts\"",
+            "ownerHook: \"src/features/analytics/hooks/query.ts\"",
+            "commands: [\"load_usage_analytics\"]"
+          ]
+        },
+        {
+          "file": "scripts/validate-frontend-dumped.mjs",
+          "includes": [
+            "queryKey: \"quota-history\"",
+            "queryKey: \"usage-analytics\"",
+            "status: \"owner-closed\""
+          ]
+        },
+        {
+          "file": "src/services/accounts/index.ts",
+          "includes": [
+            "loadSnapshot: (localOnly = true) => systemService.loadSnapshot(localOnly)",
+            "refreshUsageSnapshot: () => systemService.refreshUsageSnapshot()"
+          ]
+        },
+        {
+          "file": "src/services/system/index.ts",
+          "includes": [
+            "invokeIpc<CoreEnvelope<CoreSnapshotPayload>>(\"load_snapshot\"",
+            "invokeIpc<CoreEnvelope<CoreSnapshotPayload>>(\"refresh_usage_snapshot\")"
+          ]
+        },
+        {
+          "file": "src/features/accounts/cache/index.ts",
+          "includes": [
+            "createModuleCacheOwner<AccountsCachePayload>(\"accounts\")",
+            "AccountsDumpedQueryKeys",
+            "quotaHistory: [\"quota-history\"]",
+            "invalidateAccountsDumpedQueries"
+          ]
+        },
+        {
+          "file": "src/features/accounts/hooks/mutation.ts",
+          "includes": [
+            "refreshUsageSnapshotMutation",
+            "accountsService.refreshUsageSnapshot()",
+            "invalidateAccountsDumpedQueries(queryClient)"
+          ]
+        },
+        {
+          "file": "src/features/overview/hooks/mutation.ts",
+          "includes": [
+            "refreshUsageMutation",
+            "accountsService.refreshUsageSnapshot()",
+            "invalidateOverviewUsageMutationQueries(queryClient)"
+          ]
+        },
+        {
+          "file": "src/services/analytics/index.ts",
+          "includes": [
+            "loadUsageAnalytics: () =>",
+            "invokeIpc<CoreEnvelope<UsageAnalyticsPayload>>(\"load_usage_analytics\")"
+          ]
+        },
+        {
+          "file": "src/features/analytics/cache/index.ts",
+          "includes": [
+            "createModuleCacheOwner<AnalyticsCachePayload>(\"analytics\")",
+            "AnalyticsDumpedQueryKeys",
+            "usage: [\"usage-analytics\"]"
+          ]
+        },
+        {
+          "file": "src/features/analytics/hooks/query.ts",
+          "includes": [
+            "AnalyticsDumpedQueryKeys.usage",
+            "analyticsService.loadUsageAnalytics()",
+            "writeAnalyticsPanelPayload"
+          ]
+        },
+        {
+          "file": "src/features/overview/hooks/query.ts",
+          "includes": [
+            "accountsService.loadSnapshot(true)",
+            "analyticsService.loadUsageAnalytics()"
+          ]
+        },
+        {
+          "file": "src/mocks/fixtures/commands.ts",
+          "includes": [
+            "load_snapshot: coreSnapshotHandler",
+            "refresh_usage_snapshot: coreSnapshotHandler",
+            "load_usage_analytics: loadUsageAnalyticsHandler"
+          ]
+        },
+        {
+          "file": "src-tauri/src/lib.rs",
+          "includes": [
+            "commands::system::load_snapshot",
+            "commands::system::refresh_usage_snapshot"
+          ]
+        },
+        {
+          "file": "src-tauri/src/commands/system.rs",
+          "includes": [
+            "pub fn load_snapshot",
+            "pub fn refresh_usage_snapshot",
+            "usecase::system::load_snapshot",
+            "usecase::system::refresh_usage_snapshot"
+          ]
+        },
+        {
+          "file": "src-tauri/src/application/usecase/system.rs",
+          "includes": [
+            "pub fn load_snapshot",
+            "pub fn refresh_usage_snapshot",
+            "restored_status(\"system\", \"load_snapshot\"",
+            "\"refresh_usage_snapshot\""
+          ]
+        },
+        {
+          "file": "src-tauri/src/commands/analytics.rs",
+          "includes": [
+            "analytics 命令文件只保留后端入口边界，当前不注册可调用命令"
+          ]
+        },
+        {
+          "file": "src-tauri/src/application/usecase/analytics.rs",
+          "includes": [
+            "analytics 用例文件只保留一次用户动作的事务边界，当前不写可执行流程"
+          ]
+        },
+        {
+          "file": "src-tauri/src/repository/analytics.rs",
+          "includes": [
+            "这个文件只保留分析数据仓储边界，当前骨架不读取任何本地内容"
+          ]
+        },
+        {
+          "file": "src-tauri/src/contracts/analytics.rs",
+          "includes": [
+            "analytics 合同文件只保留跨层数据边界，当前不承诺具体字段"
+          ]
+        }
+      ],
+      "backendBoundaryNotes": [
+        "accounts 的 index query 命令经 system 后端入口闭合。",
+        "analytics 的当前 closeout 只关闭前端 app-shell index query owner-closed 队列项；Rust analytics 后端仍是边界占位，不作为可调用后端链路闭合声明。"
+      ],
+      "nonClaims": [
+        "不把 accounts 或 analytics 的 manifest 状态改成 covered。",
+        "不声明全文案验收完成。",
+        "不声明 MAC/WIN 100% leaf 已完成。",
+        "不声明 analytics Rust command/usecase/repository 已可调用闭合。"
+      ],
+      "reason": "accounts 与 sessions-analytics 的双平台 gate-report 已达到 readyToImplement、implementation_use、gate_accepted、full_leaf_100 全 true；当前源码已经证明 app-shell index query 命中分别归属 accounts mutation/cache 与 analytics query/cache，overview 只是 consumer。本 closeout 只关闭这两个 owner-closed 队列项，不修改 manifest 状态，不关闭 plugins 或 voice，不声明全文案验收，也不声明 MAC/WIN 100% leaf 已完成。"
+    },
+    {
+      "id": "app-shell-source-only-index-and-desktop-message-boundary",
+      "module": "app-shell",
+      "status": "current-source-closed-partial",
+      "closedFrontendDocs": [],
+      "closedManifestStatuses": [
+        {
+          "arrayName": "FRONTEND_DUMPED_INDEX_ASSET_SOURCES",
+          "owner": "app-shell",
+          "source": "assets/index-CL22l5v8.js",
+          "status": "source-only"
+        },
+        {
+          "arrayName": "FRONTEND_DUMPED_APP_SHELL_DESKTOP_MESSAGE_QUERY_MATRIX",
+          "module": "app-shell",
+          "queryKey": "desktop-message",
+          "source": "assets/index-CL22l5v8.js",
+          "status": "source-only"
+        }
+      ],
+      "requiredSourceSignals": [
+        {
+          "file": "src/restoration/frontend-manifest/index.ts",
+          "includes": [
+            "owner: \"app-shell\"",
+            "source: \"assets/index-CL22l5v8.js\"",
+            "status: \"source-only\"",
+            "commands: [",
+            "\"check_update_installability\"",
+            "\"graceful_restart_for_update\"",
+            "\"open_path\"",
+            "\"merge_mystery_unlock_grants\"",
+            "\"import_remote_device_secret_if_empty\"",
+            "\"get_or_create_remote_device_secret\"",
+            "queryKey: \"desktop-message\"",
+            "runtimeOwner: \"src/app/runtime/message.ts\"",
+            "surface: \"src/app/runtime/popover.tsx\""
+          ]
+        },
+        {
+          "file": "scripts/validate-frontend-dumped.mjs",
+          "includes": [
+            "owner: \"app-shell\", status: \"source-only\"",
+            "queryKey: \"desktop-message\"",
+            "status: \"source-only\"",
+            "desktop-message query matrix 必须写明 source-only 原因"
+          ]
+        },
+        {
+          "file": "src/services/system/index.ts",
+          "includes": [
+            "\"check_update_installability\"",
+            "\"graceful_restart_for_update\"",
+            "\"open_path\"",
+            "\"merge_mystery_unlock_grants\"",
+            "\"get_or_create_remote_device_secret\"",
+            "\"import_remote_device_secret_if_empty\""
+          ]
+        },
+        {
+          "file": "src/entry/root.tsx",
+          "includes": [
+            "RuntimeInitializer"
+          ]
+        },
+        {
+          "file": "src/app/runtime/secret.ts",
+          "includes": [
+            "ensureRuntimeRemoteDeviceSecret",
+            "systemService.importRemoteDeviceSecretIfEmpty",
+            "systemService.getOrCreateRemoteDeviceSecret"
+          ]
+        },
+        {
+          "file": "src/app/runtime/message.ts",
+          "includes": [
+            "DESKTOP_MESSAGE_QUERY_KEY = [\"desktop-message\"]",
+            "DESKTOP_MESSAGE_SOURCE_STATUS",
+            "loadDesktopMessageBoundary",
+            "不能在这里补一个未经审计的 endpoint"
+          ]
+        },
+        {
+          "file": "src/app/runtime/popover.tsx",
+          "includes": [
+            "useDesktopMessageQuery"
+          ]
+        },
+        {
+          "file": "src-tauri/src/application/usecase/system.rs",
+          "includes": [
+            "pub fn check_update_installability",
+            "pub fn graceful_restart_for_update",
+            "unsupported_status",
+            "pub fn open_path"
+          ]
+        },
+        {
+          "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-bootstrap/gate-report.json",
+          "includes": [
+            "\"gate_accepted\": false",
+            "\"implementation_use\": false"
+          ]
+        },
+        {
+          "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-window-path/gate-report.json",
+          "includes": [
+            "\"dim6_missing\": true",
+            "\"gate_accepted\": false"
+          ]
+        }
+      ],
+      "nonClaims": [
+        "不把 app-shell 的 source-only manifest 状态改成 covered。",
+        "不声明 update/restart/window-path 后端完整恢复。",
+        "不声明 desktop-message 存在可审计 endpoint。",
+        "不声明全文案验收完成。",
+        "不声明 MAC/WIN 100% leaf 已完成。"
+      ],
+      "reason": "当前源码已把 app-shell index chunk 的启动、更新、提示和全局授权入口收口到 entry/runtime/service 边界，也把 desktop-message 保留为无 endpoint 的 source-only query owner。本 closeout 只关闭 source-only 边界登记的队列项，不修改 manifest 状态，不声明 covered，不声明 update/restart/window-path 后端完整恢复，也不声明 MAC/WIN 100% leaf 已完成。"
+    },
+    {
       "id": "relay-passthrough-audit-backend-skeleton-chain",
       "module": "relay",
       "status": "current-source-closed-partial",

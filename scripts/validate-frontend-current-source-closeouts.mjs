@@ -120,7 +120,7 @@ function manifestCloseoutKey(record) {
   ].join("\u0000");
 }
 
-function validateGateReports(closeout) {
+function validateGateReports(closeout, options = {}) {
   const reports = closeout.gateReports ?? [];
   if (reports.length === 0) {
     failures.push(`${closeout.id} 缺少 gate-report 证据`);
@@ -139,10 +139,18 @@ function validateGateReports(closeout) {
         failures.push(`${report} ${field}=${String(gate[field])}`);
       }
     }
-    if (gate.status !== "PASS") {
+    const status = String(gate.status ?? "");
+    const acceptedStatus = status === "PASS" || status.startsWith("accepted_full_leaf_100");
+    if (options.requirePassStatus === true && gate.status !== "PASS") {
       failures.push(`${report} status=${String(gate.status)}`);
     }
-    if (gate.frontendConsumerHandoff?.status !== "complete_current_source_frontend_chain") {
+    if (options.requirePassStatus !== true && !acceptedStatus) {
+      failures.push(`${report} status=${String(gate.status)}`);
+    }
+    if (
+      options.requireFrontendConsumerHandoff === true &&
+      gate.frontendConsumerHandoff?.status !== "complete_current_source_frontend_chain"
+    ) {
       failures.push(`${report} frontendConsumerHandoff.status=${String(gate.frontendConsumerHandoff?.status)}`);
     }
   }
@@ -150,7 +158,10 @@ function validateGateReports(closeout) {
 
 function validateMcpSkillsCloseout(closeout) {
   validateClosedDocs("mcp-skills", closeout.closedFrontendDocs);
-  validateGateReports(closeout);
+  validateGateReports(closeout, {
+    requirePassStatus: true,
+    requireFrontendConsumerHandoff: true,
+  });
 
   const expected = [
     {
@@ -188,6 +199,113 @@ function validateMcpSkillsCloseout(closeout) {
   validateRequiredSignals(closeout);
 }
 
+function validateAccountsAnalyticsCloseout(closeout) {
+  validateClosedDocs("accounts-analytics", closeout.closedFrontendDocs);
+  validateGateReports(closeout);
+
+  const expected = [
+    {
+      arrayName: "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
+      module: "accounts",
+      queryKey: "quota-history",
+      source: "assets/index-CL22l5v8.js",
+      status: "owner-closed",
+    },
+    {
+      arrayName: "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
+      module: "analytics",
+      queryKey: "usage-analytics",
+      source: "assets/index-CL22l5v8.js",
+      status: "owner-closed",
+    },
+  ];
+  const expectedKeys = new Set(expected.map(manifestCloseoutKey));
+  const actualKeys = new Set((closeout.closedManifestStatuses ?? []).map(manifestCloseoutKey));
+
+  for (const entry of closeout.closedManifestStatuses ?? []) {
+    if (!expectedKeys.has(manifestCloseoutKey(entry))) {
+      failures.push(`${closeout.id} 不允许关闭未验证 manifest 状态：${JSON.stringify(entry)}`);
+    }
+    if (entry.status !== "owner-closed") {
+      failures.push(`${closeout.id} 不得把 manifest 状态提升为 ${String(entry.status)}`);
+    }
+  }
+  for (const expectedEntry of expected) {
+    if (!actualKeys.has(manifestCloseoutKey(expectedEntry))) {
+      failures.push(`${closeout.id} 缺少 manifest closeout：${expectedEntry.module}/${expectedEntry.queryKey}`);
+    }
+  }
+
+  const boundaryNotes = closeout.backendBoundaryNotes ?? [];
+  if (!boundaryNotes.some((note) => note.includes("Rust analytics 后端仍是边界占位"))) {
+    failures.push(`${closeout.id} 必须声明 analytics Rust 后端仍是边界占位`);
+  }
+  const nonClaims = closeout.nonClaims ?? [];
+  for (const required of [
+    "不把 accounts 或 analytics 的 manifest 状态改成 covered。",
+    "不声明全文案验收完成。",
+    "不声明 MAC/WIN 100% leaf 已完成。",
+    "不声明 analytics Rust command/usecase/repository 已可调用闭合。",
+  ]) {
+    if (!nonClaims.includes(required)) {
+      failures.push(`${closeout.id} 缺少 nonClaims：${required}`);
+    }
+  }
+
+  validateRequiredSignals(closeout);
+}
+
+function validateAppShellSourceOnlyCloseout(closeout) {
+  validateClosedDocs("app-shell", closeout.closedFrontendDocs);
+
+  const expected = [
+    {
+      arrayName: "FRONTEND_DUMPED_INDEX_ASSET_SOURCES",
+      owner: "app-shell",
+      source: "assets/index-CL22l5v8.js",
+      status: "source-only",
+    },
+    {
+      arrayName: "FRONTEND_DUMPED_APP_SHELL_DESKTOP_MESSAGE_QUERY_MATRIX",
+      module: "app-shell",
+      queryKey: "desktop-message",
+      source: "assets/index-CL22l5v8.js",
+      status: "source-only",
+    },
+  ];
+  const expectedKeys = new Set(expected.map(manifestCloseoutKey));
+  const actualKeys = new Set((closeout.closedManifestStatuses ?? []).map(manifestCloseoutKey));
+
+  for (const entry of closeout.closedManifestStatuses ?? []) {
+    if (!expectedKeys.has(manifestCloseoutKey(entry))) {
+      failures.push(`${closeout.id} 不允许关闭未验证 manifest 状态：${JSON.stringify(entry)}`);
+    }
+    if (entry.status !== "source-only") {
+      failures.push(`${closeout.id} 不得把 manifest 状态提升为 ${String(entry.status)}`);
+    }
+  }
+  for (const expectedEntry of expected) {
+    if (!actualKeys.has(manifestCloseoutKey(expectedEntry))) {
+      failures.push(`${closeout.id} 缺少 manifest closeout：${expectedEntry.owner ?? expectedEntry.module}`);
+    }
+  }
+
+  const nonClaims = closeout.nonClaims ?? [];
+  for (const required of [
+    "不把 app-shell 的 source-only manifest 状态改成 covered。",
+    "不声明 update/restart/window-path 后端完整恢复。",
+    "不声明 desktop-message 存在可审计 endpoint。",
+    "不声明全文案验收完成。",
+    "不声明 MAC/WIN 100% leaf 已完成。",
+  ]) {
+    if (!nonClaims.includes(required)) {
+      failures.push(`${closeout.id} 缺少 nonClaims：${required}`);
+    }
+  }
+
+  validateRequiredSignals(closeout);
+}
+
 const closeouts = readJson(closeoutPath);
 if (closeouts.schema !== "open-aimami.frontend_current_source_closeouts.v1") {
   failures.push(`${toRepoPath(closeoutPath)} schema 不匹配`);
@@ -198,6 +316,10 @@ for (const closeout of closeouts.closeouts ?? []) {
     validatePluginsCloseout(closeout);
   } else if (closeout.id === "mcp-skills-index-query-owner-closed-chain") {
     validateMcpSkillsCloseout(closeout);
+  } else if (closeout.id === "accounts-analytics-index-query-owner-closed-chain") {
+    validateAccountsAnalyticsCloseout(closeout);
+  } else if (closeout.id === "app-shell-source-only-index-and-desktop-message-boundary") {
+    validateAppShellSourceOnlyCloseout(closeout);
   } else if (closeout.id === "relay-passthrough-audit-backend-skeleton-chain") {
     validateRelayCloseout(closeout);
   } else {
