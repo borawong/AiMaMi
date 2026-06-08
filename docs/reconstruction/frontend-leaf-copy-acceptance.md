@@ -6,17 +6,17 @@
 
 当前仓库不能证明 macOS / Windows 双平台前端已经达到 100% leaf，也不能证明 `src/locales/zh.json` 和 `src/locales/en.json` 的所有用户可见文案已经逐条对照 raw/internal 原文验收。
 
-`evidence/full-chain/internal/frontend-copy-acceptance.json` 当前已经存在，但状态是 `draft`。它列出 950 个 locale key 的逐条验收槽位，并从 raw dumped 主 bundle 中解析 i18n `zh/en translation` 对象。只有 raw translation 对象里的 key/value 与当前 locale 精确一致时，才把对应语言标成 accepted；不能把全 JS 字符串扫描命中当作文案来源。
+`evidence/full-chain/internal/frontend-copy-acceptance.json` 当前已经存在，但状态是 `draft`。它列出 774 个 locale key 的逐条验收槽位，并从 raw dumped 主 bundle 中解析 i18n `zh/en translation` 对象。只有 raw translation 对象里的 key/value 与当前 locale 精确一致时，才把对应语言标成 accepted；不能把全 JS 字符串扫描命中当作文案来源。
 
 ## 当前文案验收数字
 
-- `zh` locale key：950
-- `en` locale key：950
-- draft entries：950
+- `zh` locale key：774
+- `en` locale key：774
+- draft entries：774
 - raw control-flow key 证据：40
 - internal key 提及证据：9
 - raw 或 internal key 证据：44
-- source-sync-only：906
+- source-sync-only：730
 - raw translation 中文 key 证据：573
 - raw translation 英文 key 证据：573
 - raw translation 中文 key/value 精确一致：573
@@ -25,7 +25,7 @@
 - raw translation key 存在但当前文案不一致：0
 - zhAccepted：573
 - enAccepted：573
-- 缺少 raw/internal 文案来源：377
+- 缺少 raw/internal 文案来源：201
 
 ## 已有验证
 
@@ -40,7 +40,7 @@
 - `full-leaf-100-gap-audit.json` 顶层 `totals.full_leaf_100` 当前仍为 `false`。
 - internal gate-report 中仍存在严格 gate 失败字段。
 - Windows bootstrap frontend 文档仍包含 `partial/candidate` 信号，不能在 dim6 acceptance、managed state registry、bootstrap cache 等缺口关闭前移除。
-- `frontend-copy-acceptance.json` 仍是 draft，当前有 573 个 locale key 同时具备 raw translation 中文和英文 key/value 精确来源，剩余 377 个 locale key 仍缺少完整 raw/internal 文案来源。
+- `frontend-copy-acceptance.json` 仍是 draft，当前有 573 个 locale key 同时具备 raw translation 中文和英文 key/value 精确来源，剩余 201 个 locale key 仍缺少完整 raw/internal 文案来源。
 - `src/restoration/frontend-manifest/index.ts` 仍存在 `source-only`、`boundary-only`、`contract-service-only` 和 `owner-closed` 状态；这些是进度记录，不是 full leaf。
 
 ## 严格 gate
