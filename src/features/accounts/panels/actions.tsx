@@ -118,7 +118,7 @@ export function AccountActionsPanel({
       <div className="mt-4 grid gap-5 xl:grid-cols-3">
         <div className="space-y-3">
           <Label htmlFor="accounts-account-key">
-            {t("accounts.accountKeyInput")}
+            {t("accounts.snapshotKey")}
           </Label>
           <Input
             id="accounts-account-key"
@@ -251,13 +251,13 @@ export function AccountActionsPanel({
               size="sm"
               variant="outline"
               disabled={module.previewAccountImportWithDialog.isPending}
-              aria-label={t("accounts.io.chooseImportFile")}
+              aria-label={t("accounts.io.openDialogTitle")}
               onClick={() => void previewImportWithDialog()}
             >
               <ButtonBusyContent
                 busy={module.previewAccountImportWithDialog.isPending}
                 idleIcon={<FolderOpen className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.io.chooseImportFile")}
+                idleLabel={t("accounts.io.openDialogTitle")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
@@ -287,7 +287,7 @@ export function AccountActionsPanel({
               disabled={
                 !canUseImportFile || module.previewAccountImport.isPending
               }
-              aria-label={t("accounts.previewImport")}
+              aria-label={t("accounts.io.previewTitle")}
               onClick={() =>
                 void module.previewAccountImport.run({
                   filePath: importFilePath.trim(),
@@ -297,7 +297,7 @@ export function AccountActionsPanel({
               <ButtonBusyContent
                 busy={module.previewAccountImport.isPending}
                 idleIcon={<FileSearch className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.previewImport")}
+                idleLabel={t("accounts.io.previewTitle")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
@@ -306,7 +306,7 @@ export function AccountActionsPanel({
               size="sm"
               variant="outline"
               disabled={!canUseImportFile || module.importAccountsFromFile.isPending}
-              aria-label={t("accounts.importFromFile")}
+              aria-label={t("accounts.io.importAccount")}
               onClick={() =>
                 void module.importAccountsFromFile.run({
                   filePath: importFilePath.trim(),
@@ -318,7 +318,7 @@ export function AccountActionsPanel({
               <ButtonBusyContent
                 busy={module.importAccountsFromFile.isPending}
                 idleIcon={<Import className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.importFromFile")}
+                idleLabel={t("accounts.io.importAccount")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
@@ -377,13 +377,13 @@ export function AccountActionsPanel({
               size="sm"
               variant="outline"
               disabled={module.exportAccountsToFileWithDialog.isPending}
-              aria-label={t("accounts.io.saveAs")}
+              aria-label={t("accounts.io.saveDialogTitle")}
               onClick={() => void exportAccountsWithDialog()}
             >
               <ButtonBusyContent
                 busy={module.exportAccountsToFileWithDialog.isPending}
                 idleIcon={<Save className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.io.saveAs")}
+                idleLabel={t("accounts.io.saveDialogTitle")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
@@ -464,14 +464,13 @@ function showPreviewToast(
     accountRows.length,
   );
   toast({
-    title: t("accounts.io.previewSuccess"),
+    title: t("accounts.io.previewTitle"),
     description:
       count > 0
-        ? t("accounts.io.previewSuccessDescWithCount", {
+        ? t("accounts.io.previewCount", {
             count,
-            path: result.filePath,
           })
-        : t("accounts.io.previewSuccessDesc", { path: result.filePath }),
+        : t("accounts.io.previewDesc"),
     variant: "success",
   });
 }
