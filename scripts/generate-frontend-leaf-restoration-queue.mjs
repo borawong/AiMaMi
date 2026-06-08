@@ -90,6 +90,7 @@ function collectGateReportFailures() {
 }
 
 function collectManifestNonLeafStatuses() {
+  const closedManifestStatuses = loadClosedManifestStatuses();
   const manifestPath = repoPath("src", "restoration", "frontend-manifest", "index.ts");
   const lines = readFileSync(manifestPath, "utf8").split(/\r?\n/);
   const nonLeafStatuses = new Set(["source-only", "boundary-only", "contract-service-only", "owner-closed"]);
@@ -124,6 +125,7 @@ function collectManifestNonLeafStatuses() {
         module: null,
         owner: null,
         command: null,
+        queryKey: null,
         source: null,
         status: null,
       };
@@ -131,7 +133,7 @@ function collectManifestNonLeafStatuses() {
 
     if (!currentRecord) return;
 
-    for (const field of ["module", "owner", "command", "source"]) {
+    for (const field of ["module", "owner", "command", "queryKey", "source"]) {
       const match = line.match(new RegExp(`\\b${field}:\\s*"([^"]+)"`));
       if (match) currentRecord[field] = match[1];
     }
@@ -144,7 +146,7 @@ function collectManifestNonLeafStatuses() {
     objectDepth += (line.match(/{/g) ?? []).length;
     objectDepth -= (line.match(/}/g) ?? []).length;
     if (objectDepth <= 0) {
-      if (currentRecord.status) {
+      if (currentRecord.status && !closedManifestStatuses.has(manifestCloseoutKey(currentRecord))) {
         items.push({
           ...currentRecord,
           owner: currentRecord.owner ?? currentRecord.module,
@@ -156,6 +158,17 @@ function collectManifestNonLeafStatuses() {
     }
   });
   return items;
+}
+
+function manifestCloseoutKey(record) {
+  return [
+    record.arrayName ?? "",
+    record.module ?? record.owner ?? "",
+    record.queryKey ?? "",
+    record.command ?? "",
+    record.source ?? "",
+    record.status ?? "",
+  ].join("\u0000");
 }
 
 function collectFrontendDocSignals() {
@@ -206,6 +219,20 @@ function loadClosedFrontendDocs() {
     }
   }
   return closedDocs;
+}
+
+function loadClosedManifestStatuses() {
+  const closeoutsPath = repoPath("docs", "reconstruction", "frontend-current-source-closeouts.json");
+  if (!existsSync(closeoutsPath)) return new Set();
+  const closeouts = readJson(closeoutsPath);
+  const closedStatuses = new Set();
+  for (const closeout of closeouts.closeouts ?? []) {
+    if (closeout.status !== "current-source-closed-partial") continue;
+    for (const entry of closeout.closedManifestStatuses ?? []) {
+      closedStatuses.add(manifestCloseoutKey(entry));
+    }
+  }
+  return closedStatuses;
 }
 
 function collectLocaleCoverage() {

@@ -336,7 +336,33 @@ function loadClosedFrontendDocs() {
   return closedDocs;
 }
 
+function manifestCloseoutKey(record) {
+  return [
+    record.arrayName ?? "",
+    record.module ?? record.owner ?? "",
+    record.queryKey ?? "",
+    record.command ?? "",
+    record.source ?? "",
+    record.status ?? "",
+  ].join("\u0000");
+}
+
+function loadClosedManifestStatuses() {
+  const closeoutsPath = repoPath("docs", "reconstruction", "frontend-current-source-closeouts.json");
+  if (!existsSync(closeoutsPath)) return new Set();
+  const closeouts = readJson(closeoutsPath);
+  const closedStatuses = new Set();
+  for (const closeout of closeouts.closeouts ?? []) {
+    if (closeout.status !== "current-source-closed-partial") continue;
+    for (const entry of closeout.closedManifestStatuses ?? []) {
+      closedStatuses.add(manifestCloseoutKey(entry));
+    }
+  }
+  return closedStatuses;
+}
+
 function checkFrontendManifestStatuses() {
+  const closedManifestStatuses = loadClosedManifestStatuses();
   const manifestPath = repoPath("src", "restoration", "frontend-manifest", "index.ts");
   const lines = readText(manifestPath).split(/\r?\n/);
   const nonLeafStatuses = new Set(["source-only", "boundary-only", "contract-service-only", "owner-closed"]);
@@ -368,6 +394,7 @@ function checkFrontendManifestStatuses() {
         owner: null,
         module: null,
         command: null,
+        queryKey: null,
         source: null,
         status: null,
         statusLine: null,
@@ -375,7 +402,7 @@ function checkFrontendManifestStatuses() {
     }
     if (!currentRecord) return;
 
-    for (const field of ["module", "owner", "command", "source"]) {
+    for (const field of ["module", "owner", "command", "queryKey", "source"]) {
       const match = line.match(new RegExp(`\\b${field}:\\s*"([^"]+)"`));
       if (match) currentRecord[field] = match[1];
     }
@@ -388,12 +415,13 @@ function checkFrontendManifestStatuses() {
     objectDepth += (line.match(/{/g) ?? []).length;
     objectDepth -= (line.match(/}/g) ?? []).length;
     if (objectDepth <= 0) {
-      if (currentRecord.status) {
+      if (currentRecord.status && !closedManifestStatuses.has(manifestCloseoutKey(currentRecord))) {
         const owner = currentRecord.owner ?? currentRecord.module ?? "unknown";
         const command = currentRecord.command ? ` command=${currentRecord.command}` : "";
+        const queryKey = currentRecord.queryKey ? ` queryKey=${currentRecord.queryKey}` : "";
         const source = currentRecord.source ? ` source=${currentRecord.source}` : "";
         hits.push(
-          `${toRepoPath(manifestPath)}:${currentRecord.statusLine} ${currentRecord.arrayName} owner=${owner}${command}${source} manifest status=${currentRecord.status}`,
+          `${toRepoPath(manifestPath)}:${currentRecord.statusLine} ${currentRecord.arrayName} owner=${owner}${command}${queryKey}${source} manifest status=${currentRecord.status}`,
         );
       }
       objectDepth = 0;
