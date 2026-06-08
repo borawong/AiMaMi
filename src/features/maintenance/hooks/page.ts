@@ -165,7 +165,7 @@ export function useMaintenancePageController(): MaintenancePageController {
       label: t("maintenance.routerDiagnostics"),
       description: t("maintenance.routerDiagnosticsDesc"),
       actionLabel: t("maintenance.routerDiagnosticsAction"),
-      loadingLabel: t("maintenance.routerDiagnosing"),
+      loadingLabel: t("maintenance.diagnosing"),
       onAction: () => setRouterDiagnosticsOpen(true),
     },
     {
@@ -198,9 +198,9 @@ export function useMaintenancePageController(): MaintenancePageController {
       key: "forceKill",
       icon: AlertCircle,
       iconColor: "text-orange-500",
-      label: t("maintenance.forceKillCodex"),
-      description: t("maintenance.forceKillCodexDesc"),
-      actionLabel: t("maintenance.forceKillCodexAction"),
+      label: t("maintenance.forceKill"),
+      description: t("maintenance.forceKillDesc"),
+      actionLabel: t("maintenance.forceKillAction"),
       loadingLabel: t("maintenance.forceKilling"),
       onAction: () =>
         void runAction("forceKill", async () => {
@@ -217,7 +217,7 @@ export function useMaintenancePageController(): MaintenancePageController {
       icon: RotateCcw,
       iconColor: "text-rose-500",
       label: t("maintenance.resetConfig"),
-      description: t("maintenance.resetCodexConfigDesc"),
+      description: t("maintenance.resetConfigDesc"),
       actionLabel: t("maintenance.resetConfigAction"),
       loadingLabel: t("maintenance.resetConfigRunning"),
       onAction: () =>
@@ -225,7 +225,7 @@ export function useMaintenancePageController(): MaintenancePageController {
           await resetConfigMutation.mutateAsync();
           setActionResult("resetConfig", {
             type: "success",
-            message: t("maintenance.resetConfigResult"),
+            message: t("maintenance.resetConfigDone"),
           });
         }),
       variant: "destructive",
@@ -239,18 +239,16 @@ export function useMaintenancePageController(): MaintenancePageController {
       actionLabel: imageCompatQuery.data
         ? t("maintenance.imageCompatDisable")
         : t("maintenance.imageCompatEnable"),
-      loadingLabel: t("maintenance.imageCompatRunning"),
+      loadingLabel: t("maintenance.running"),
       onAction: () =>
         void runAction("imageCompat", async () => {
           const enabled = !(imageCompatQuery.data ?? false);
-          const nextEnabled = await setImageCompatMutation.mutateAsync({
+          await setImageCompatMutation.mutateAsync({
             enabled,
           });
           setActionResult("imageCompat", {
             type: "success",
-            message: t("maintenance.imageCompatResult", {
-              state: t(nextEnabled ? "maintenance.enabled" : "maintenance.disabled"),
-            }),
+            message: t("maintenance.imageCompatDone"),
           });
         }),
     },
