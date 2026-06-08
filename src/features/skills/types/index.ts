@@ -36,9 +36,6 @@ export type SkillsCacheEnvelope<
 
 export type SkillsPageTab = "installed" | "backups";
 export type SkillsPageTabLabelKey = "skills.installed" | "skills.backups";
-export type SkillsQueryFailureTextKey =
-  | "skills.loadFailed"
-  | "skills.loadFailedDesc";
 
 export interface SkillsPageTabItem {
   readonly value: SkillsPageTab;
@@ -72,10 +69,12 @@ export interface SkillsBackupsPanelController {
 }
 
 export interface SkillsQueryFailureAlertController {
-  titleKey: Extract<SkillsQueryFailureTextKey, "skills.loadFailed">;
-  descriptionKey: Extract<SkillsQueryFailureTextKey, "skills.loadFailedDesc">;
+  titleKey: "common.error";
+  descriptionKey: "messageBoard.loadError";
+  sourceTitleKey: "skills.loadFailed";
+  sourceDescriptionKey: "skills.loadFailedDesc";
   isRetrying: boolean;
-  retry: () => Promise<unknown>;
+  retry: () => Promise<unknown> | unknown;
 }
 
 export interface SkillsDialogController {

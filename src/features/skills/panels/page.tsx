@@ -162,7 +162,7 @@ function SkillsQueryFailureAlert({ alert }: SkillsQueryFailureAlertProps) {
             onClick={() => void alert.retry()}
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            {t("common.retry")}
+            {t("common.refresh")}
           </Button>
         </div>
       </div>

@@ -37,7 +37,7 @@ export function CustomInstructionsLoadErrorPanel({
             <ButtonBusyContent
               busy={refreshing}
               idleIcon={<RotateCw className="h-3.5 w-3.5" />}
-              idleLabel={t("common.retry")}
+              idleLabel={t("common.refresh")}
               busyLabel={t("common.refreshing")}
               spinnerClassName="h-3.5 w-3.5"
             />

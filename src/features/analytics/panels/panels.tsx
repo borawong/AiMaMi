@@ -34,10 +34,8 @@ const WARNING_CHART_COLOR = "#FFD36E";
 const READ_CHART_COLOR = "#FF9A8A";
 
 export function AnalyticsPageHeader() {
-  const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-1">
-      <h1 className="text-xl font-semibold tracking-normal">{t("nav.analytics")}</h1>
     </div>
   );
 }

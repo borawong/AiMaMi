@@ -20,6 +20,7 @@ export function useTrayShellFocusMainWindowAction(): TrayShellActionModel {
   return {
     id: "focus-main-window",
     labelKey: "trayShell.focusMainWindow",
+    displayKey: "tray.openMain",
     run: () => focusMutation.mutateAsync(),
     isPending: focusMutation.isPending,
   };

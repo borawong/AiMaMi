@@ -1,7 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Globe, Image, Monitor, Moon, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ButtonBusyContent } from "@/components/ui/busy";
+import { Globe, Monitor, Moon, Sun } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import {
   ACCENT_PRESETS,
@@ -107,39 +105,9 @@ export function SettingsAppearancePanel({
                 appearance.hotspotPending
               }
             />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={controller.actions.markHotspotReady}
-              disabled={!appearance.hasNotch || appearance.hotspotReadyPending}
-              aria-busy={appearance.hotspotReadyPending}
-            >
-              <ButtonBusyContent
-                busy={appearance.hotspotReadyPending}
-                idleLabel={t("settings.hotspotReady")}
-                busyLabel={t("settings.hotspotReadyBusy")}
-              />
-            </Button>
           </div>
         </SettingsRow>
       ) : null}
-
-      <SettingsRow
-        label={
-          <span className="inline-flex items-center gap-2">
-            <Image className="h-3.5 w-3.5 text-muted-foreground" />
-            {t("settings.imageCompat")}
-          </span>
-        }
-        description={t("settings.imageCompatDesc")}
-      >
-        <Switch
-          checked={appearance.imageCompatEnabled}
-          onCheckedChange={controller.actions.setImageCompatEnabled}
-          disabled={appearance.imageCompatLoading || appearance.imageCompatPending}
-        />
-      </SettingsRow>
     </SettingsSection>
   );
 }

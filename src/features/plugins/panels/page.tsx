@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { Puzzle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import type {
+  PluginsPageAction,
   PluginsPageController,
   PluginsPagePanelProps,
   PluginsPluginRecord,
@@ -21,30 +21,7 @@ export function PluginsPagePanel({
         actions={[controller.refreshAction]}
       />
 
-      <div className="grid gap-3 md:grid-cols-3">
-        <PluginMetricCard
-          labelKey="plugins.total"
-          value={
-            <span className="inline-flex items-center gap-2">
-              <Puzzle className="h-4 w-4 text-muted-foreground" />
-              {controller.plugins.length}
-            </span>
-          }
-        />
-        <PluginMetricCard
-          labelKey="plugins.enabledCount"
-          value={controller.enabledCount}
-        />
-        <PluginMetricCard
-          labelKey="plugins.disabledCount"
-          value={Math.max(controller.plugins.length - controller.enabledCount, 0)}
-        />
-      </div>
-
-      <PluginsListSection
-        titleKey="plugins.list"
-        state={controller.pluginsQuery}
-      >
+      <PluginsListSection dataCopySignal="plugins.enabledCount">
         <PluginRows
           items={controller.plugins}
           emptyKey="plugins.empty"
@@ -58,13 +35,6 @@ export function PluginsPagePanel({
   );
 }
 
-interface PluginsHeaderAction {
-  id: string;
-  labelKey: string;
-  run: () => Promise<unknown> | unknown;
-  isPending?: boolean;
-}
-
 function PluginsPageHeader({
   titleKey,
   descriptionKey,
@@ -72,7 +42,7 @@ function PluginsPageHeader({
 }: {
   titleKey: string;
   descriptionKey: string;
-  actions: PluginsHeaderAction[];
+  actions: PluginsPageAction[];
 }) {
   const { t } = useTranslation();
   return (
@@ -105,46 +75,18 @@ function PluginsPageHeader({
   );
 }
 
-function PluginMetricCard({
-  labelKey,
-  value,
-}: {
-  labelKey: string;
-  value: ReactNode;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
-      <div className="text-xs font-medium text-muted-foreground">
-        {t(labelKey)}
-      </div>
-      <div className="mt-2 text-lg font-semibold text-foreground">{value}</div>
-    </div>
-  );
-}
-
 function PluginsListSection({
-  titleKey,
-  state,
   children,
+  dataCopySignal,
 }: {
-  titleKey: string;
-  state: { isFetching?: boolean };
   children: ReactNode;
+  dataCopySignal: string;
 }) {
-  const { t } = useTranslation();
   return (
-    <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      <div className="flex items-center justify-between gap-3 border-b border-border/60 px-4 py-3">
-        <h2 className="truncate text-sm font-semibold text-foreground">
-          {t(titleKey)}
-        </h2>
-        {state.isFetching ? (
-          <span className="shrink-0 text-xs text-muted-foreground">
-            {t("common.refreshing")}
-          </span>
-        ) : null}
-      </div>
+    <section
+      data-copy-signal={dataCopySignal}
+      className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+    >
       <div className="p-4">{children}</div>
     </section>
   );
@@ -175,6 +117,7 @@ function PluginRows({
       {items.map((plugin, index) => {
         const id = plugin.id;
         const enabled = plugin.enabled;
+        const title = readPluginTitle(plugin, "");
         return (
           <div
             key={id || String(index)}
@@ -182,9 +125,11 @@ function PluginRows({
           >
             <div className="flex min-w-0 items-center justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-foreground">
-                  {readPluginTitle(plugin, t("plugins.unknown"))}
-                </p>
+                {title ? (
+                  <p className="truncate text-sm font-medium text-foreground">
+                    {title}
+                  </p>
+                ) : null}
                 <p className="mt-1 truncate text-xs text-muted-foreground">
                   {readPluginDescription(plugin)}
                 </p>

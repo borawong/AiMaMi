@@ -23,27 +23,31 @@
       "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/analytics-panel-D01GGJ7u.js",
       "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/analytics-panel-D01GGJ7u.js",
       "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/analytics-panel-D01GGJ7u.js",
-      "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/analytics-panel-D01GGJ7u.js"
+      "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/analytics-panel-D01GGJ7u.js",
+      "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js",
+      "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/settings-page-CHeElwco.js",
+      "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js",
+      "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/settings-page-CHeElwco.js"
     ],
     "internalRoot": "evidence/full-chain/internal"
   },
   "totals": {
-    "zhLocaleKeys": 653,
-    "enLocaleKeys": 653,
-    "entries": 653,
+    "zhLocaleKeys": 611,
+    "enLocaleKeys": 611,
+    "entries": 611,
     "rawControlFlowKeyBacked": 40,
     "internalKeyBacked": 12,
     "rawOrInternalKeyBacked": 47,
-    "sourceSyncOnly": 606,
-    "rawTranslationZhKeyBacked": 609,
-    "rawTranslationEnKeyBacked": 609,
-    "rawTranslationZhExact": 609,
-    "rawTranslationEnExact": 609,
-    "rawTranslationBothExact": 609,
+    "sourceSyncOnly": 564,
+    "rawTranslationZhKeyBacked": 611,
+    "rawTranslationEnKeyBacked": 611,
+    "rawTranslationZhExact": 611,
+    "rawTranslationEnExact": 611,
+    "rawTranslationBothExact": 611,
     "rawTranslationValueMismatch": 0,
-    "acceptedZh": 609,
-    "acceptedEn": 609,
-    "missingRawOrInternalCopySource": 44
+    "acceptedZh": 611,
+    "acceptedEn": 611,
+    "missingRawOrInternalCopySource": 0
   },
   "entries": [
     {
@@ -9417,24 +9421,6 @@
       ]
     },
     {
-      "key": "app.subtitle",
-      "zhValue": "本地助手",
-      "enValue": "Local Assistant",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "common.cancel",
       "zhValue": "取消",
       "enValue": "Cancel",
@@ -10057,42 +10043,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "common.retry",
-      "zhValue": "重试",
-      "enValue": "Retry",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "common.rootErrorDescription",
-      "zhValue": "应用根组件渲染失败，请重试或重新打开窗口。",
-      "enValue": "The application root failed to render. Retry or reopen the window.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "common.save",
@@ -11304,24 +11254,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "customInstructions.configureTab",
-      "zhValue": "配置指令",
-      "enValue": "Configure",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "customInstructions.confirmApply",
@@ -14138,24 +14070,6 @@
       ]
     },
     {
-      "key": "customInstructions.templatesTab",
-      "zhValue": "模板中心",
-      "enValue": "Templates",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "customInstructions.templatesTitle",
       "zhValue": "模板中心",
       "enValue": "Template Center",
@@ -14288,78 +14202,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "feature.restored.error",
-      "zhValue": "加载失败",
-      "enValue": "Failed to load",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "feature.restored.loading",
-      "zhValue": "正在加载",
-      "enValue": "Loading",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "feature.restored.ready",
-      "zhValue": "已同步",
-      "enValue": "Synced",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "feature.restored.refreshing",
-      "zhValue": "正在刷新",
-      "enValue": "Refreshing",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "feedback.errorDesc",
@@ -17975,24 +17817,6 @@
       ]
     },
     {
-      "key": "mcp.argsPlaceholder",
-      "zhValue": "arg1, arg2, ...",
-      "enValue": "arg1, arg2, ...",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "mcp.cancel",
       "zhValue": "取消",
       "enValue": "Cancel",
@@ -18931,24 +18755,6 @@
       ]
     },
     {
-      "key": "mcp.envPlaceholder",
-      "zhValue": "KEY=value",
-      "enValue": "KEY=value",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "mcp.headers",
       "zhValue": "请求头",
       "enValue": "Headers",
@@ -19014,24 +18820,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "mcp.headersPlaceholder",
-      "zhValue": "Authorization: Bearer ...",
-      "enValue": "Authorization: Bearer ...",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "mcp.name",
@@ -20579,24 +20367,6 @@
       ]
     },
     {
-      "key": "nav.analytics",
-      "zhValue": "分析",
-      "enValue": "Analytics",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "nav.collapse",
       "zhValue": "收起侧栏",
       "enValue": "Collapse Sidebar",
@@ -20729,24 +20499,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "nav.daemonAutoswitch",
-      "zhValue": "后台自动切换",
-      "enValue": "Daemon Autoswitch",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "nav.expand",
@@ -21752,24 +21504,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "nav.trayShell",
-      "zhValue": "托盘外壳",
-      "enValue": "Tray Shell",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "nav.voice",
@@ -24117,24 +23851,6 @@
       ]
     },
     {
-      "key": "plugins.disabledCount",
-      "zhValue": "已禁用",
-      "enValue": "Disabled",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "plugins.empty",
       "zhValue": "暂无可用插件",
       "enValue": "No plugins available",
@@ -24200,96 +23916,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "plugins.enabledCount",
-      "zhValue": "已启用",
-      "enValue": "Enabled",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "plugins.list",
-      "zhValue": "插件列表",
-      "enValue": "Plugin List",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "plugins.refreshContract",
-      "zhValue": "刷新插件契约",
-      "enValue": "Refresh Plugin Contract",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "plugins.total",
-      "zhValue": "插件",
-      "enValue": "Plugins",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "plugins.unknown",
-      "zhValue": "未知插件",
-      "enValue": "Unknown plugin",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "relay.anthropicBaseUrlHint",
@@ -33418,24 +33044,6 @@
       ]
     },
     {
-      "key": "routes.highIoFeedback",
-      "zhValue": "正在同步数据",
-      "enValue": "Syncing data",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "sessions.childThread",
       "zhValue": "子线程",
       "enValue": "Child Thread",
@@ -34240,24 +33848,6 @@
       ]
     },
     {
-      "key": "sessions.total",
-      "zhValue": "会话",
-      "enValue": "Sessions",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "sessions.totalSize",
       "zhValue": "总大小",
       "enValue": "Total Size",
@@ -34457,42 +34047,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "sessions.unknownProject",
-      "zhValue": "未知项目",
-      "enValue": "Unknown project",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "sessions.untitled",
-      "zhValue": "未命名会话",
-      "enValue": "Untitled session",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "settings.about",
@@ -38122,78 +37676,6 @@
       ]
     },
     {
-      "key": "settings.hotspotReady",
-      "zhValue": "就绪",
-      "enValue": "Ready",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "settings.hotspotReadyBusy",
-      "zhValue": "标记中",
-      "enValue": "Marking",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "settings.imageCompat",
-      "zhValue": "图片兼容模式",
-      "enValue": "Image compatibility mode",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "settings.imageCompatDesc",
-      "zhValue": "切换后端图片兼容能力的已还原 IPC 边界。",
-      "enValue": "Restored IPC boundary for toggling backend image compatibility.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "settings.language",
       "zhValue": "语言",
       "enValue": "Language",
@@ -38264,37 +37746,135 @@
       "key": "settings.languageEn",
       "zhValue": "English",
       "enValue": "English",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js:7:3465",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js:7:3465",
       "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
+      "copyEvidenceTier": "raw-literal-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
       "keyEvidence": {
         "rawControlFlow": [],
         "internalMentions": []
       },
-      "translationEvidence": []
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js",
+          "line": 7,
+          "column": 3465,
+          "offset": 4277,
+          "root": null,
+          "key": "settings.languageEn",
+          "rawValue": "English",
+          "evidenceKind": "raw-literal-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/settings-page-CHeElwco.js",
+          "line": 7,
+          "column": 3465,
+          "offset": 4277,
+          "root": null,
+          "key": "settings.languageEn",
+          "rawValue": "English",
+          "evidenceKind": "raw-literal-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js",
+          "line": 7,
+          "column": 3465,
+          "offset": 4277,
+          "root": null,
+          "key": "settings.languageEn",
+          "rawValue": "English",
+          "evidenceKind": "raw-literal-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/settings-page-CHeElwco.js",
+          "line": 7,
+          "column": 3465,
+          "offset": 4277,
+          "root": null,
+          "key": "settings.languageEn",
+          "rawValue": "English",
+          "evidenceKind": "raw-literal-key-value"
+        }
+      ]
     },
     {
       "key": "settings.languageZh",
       "zhValue": "中文",
       "enValue": "中文",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js:7:3434",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js:7:3434",
       "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
+      "copyEvidenceTier": "raw-literal-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
       "keyEvidence": {
         "rawControlFlow": [],
         "internalMentions": []
       },
-      "translationEvidence": []
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js",
+          "line": 7,
+          "column": 3434,
+          "offset": 4246,
+          "root": null,
+          "key": "settings.languageZh",
+          "rawValue": "中文",
+          "evidenceKind": "raw-literal-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/settings-page-CHeElwco.js",
+          "line": 7,
+          "column": 3434,
+          "offset": 4246,
+          "root": null,
+          "key": "settings.languageZh",
+          "rawValue": "中文",
+          "evidenceKind": "raw-literal-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/settings-page-CHeElwco.js",
+          "line": 7,
+          "column": 3434,
+          "offset": 4246,
+          "root": null,
+          "key": "settings.languageZh",
+          "rawValue": "中文",
+          "evidenceKind": "raw-literal-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/settings-page-CHeElwco.js",
+          "line": 7,
+          "column": 3434,
+          "offset": 4246,
+          "root": null,
+          "key": "settings.languageZh",
+          "rawValue": "中文",
+          "evidenceKind": "raw-literal-key-value"
+        }
+      ]
     },
     {
       "key": "settings.light",
@@ -39987,60 +39567,6 @@
       ]
     },
     {
-      "key": "settings.updateRestart",
-      "zhValue": "更新重启",
-      "enValue": "Update restart",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "settings.updateRestartBoundary",
-      "zhValue": "更新重启边界",
-      "enValue": "Update restart boundary",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "settings.updateRestartDesc",
-      "zhValue": "需要已安装更新的运行时证据，本切片只保留边界入口。",
-      "enValue": "Requires runtime evidence that an update is installed, so this slice exposes only the boundary entry.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "settings.version",
       "zhValue": "版本",
       "enValue": "Version",
@@ -40778,42 +40304,6 @@
       ]
     },
     {
-      "key": "skills.loadFailed",
-      "zhValue": "Skills 数据加载失败",
-      "enValue": "Failed to load Skills data",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "skills.loadFailedDesc",
-      "zhValue": "请稍后重试，或检查本地 Skills 目录后重新加载。",
-      "enValue": "Try again later, or check the local Skills directory and reload.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "skills.noBackups",
       "zhValue": "没有备份",
       "enValue": "No backups available",
@@ -41482,96 +40972,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "trayShell.client",
-      "zhValue": "通知客户端",
-      "enValue": "Notification client",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "trayShell.description",
-      "zhValue": "基于通知客户端与窗口聚焦 IPC 契约恢复托盘外壳模块入口。",
-      "enValue": "Restores the tray shell module entry from notification client and window focus IPC contracts.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "trayShell.focusMainWindow",
-      "zhValue": "聚焦主窗口",
-      "enValue": "Focus Main Window",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "trayShell.notificationClient",
-      "zhValue": "通知客户端状态",
-      "enValue": "Notification Client State",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "trayShell.ready",
-      "zhValue": "就绪",
-      "enValue": "Ready",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "update.checkTitle",
@@ -42778,60 +42178,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "voice.skeletonBoundary",
-      "zhValue": "后续补齐必须从仓库证据开始，先补模块 owner，再加入任何可执行的语音行为。",
-      "enValue": "Future work must start from repository evidence and fill the module owner gradually before adding any executable voice behavior.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "voice.skeletonDescription",
-      "zhValue": "原始语音功能不作为当前公开范围内的已还原功能处理，前端只保留路由入口和合同边界。",
-      "enValue": "The original voice feature is not treated as a restored public feature in the current scope, so the frontend only keeps the route and contract boundary.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "voice.skeletonTitle",
-      "zhValue": "语音模块空骨架",
-      "enValue": "Voice module skeleton",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "voice.templateCount",

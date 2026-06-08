@@ -18,10 +18,8 @@ export function TrayShellMetrics({ metrics }: TrayShellMetricsProps) {
 }
 
 function TrayShellMetric({ metric }: TrayShellMetricProps) {
-  const { t } = useTranslation();
-
   return (
-    <MetricFrame label={t(metric.labelKey)}>
+    <MetricFrame>
       <TrayShellMetricValue metric={metric} />
     </MetricFrame>
   );
@@ -56,16 +54,13 @@ function TrayShellMetricValue({ metric }: TrayShellMetricProps) {
 }
 
 function MetricFrame({
-  label,
   children,
 }: {
-  label: string;
   children: ReactNode;
 }) {
   return (
     <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
-      <div className="text-xs font-medium text-muted-foreground">{label}</div>
-      <div className="mt-2 min-w-0 text-lg font-semibold text-foreground">
+      <div className="min-w-0 text-lg font-semibold text-foreground">
         {children}
       </div>
     </div>

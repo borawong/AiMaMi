@@ -185,7 +185,7 @@ export const routeDefinitions: RouteDefinition[] = ([
   },
   {
     route: "analytics",
-    titleKey: "nav.analytics",
+    titleKey: "app.name",
     icon: BarChart3,
     visible: false,
     highIo: true,
@@ -273,7 +273,7 @@ export const routeDefinitions: RouteDefinition[] = ([
   },
   {
     route: "daemon-autoswitch",
-    titleKey: "nav.daemonAutoswitch",
+    titleKey: "app.name",
     icon: Activity,
     visible: false,
     highIo: true,
@@ -284,7 +284,7 @@ export const routeDefinitions: RouteDefinition[] = ([
   },
   {
     route: "tray-shell",
-    titleKey: "nav.trayShell",
+    titleKey: "app.name",
     icon: Headphones,
     visible: false,
     highIo: false,
