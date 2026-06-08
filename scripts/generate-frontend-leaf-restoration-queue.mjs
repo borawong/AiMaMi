@@ -116,6 +116,7 @@ function collectManifestNonLeafStatuses() {
 }
 
 function collectFrontendDocSignals() {
+  const closedFrontendDocs = loadClosedFrontendDocs();
   const frontendDocs = walkFiles(
     repoPath("evidence", "full-chain", "internal", "audits", "audits"),
     (file) => file.includes(`${sep}frontend${sep}`) && file.endsWith(".md"),
@@ -130,14 +131,30 @@ function collectFrontendDocSignals() {
   ];
   const hits = [];
   for (const doc of frontendDocs) {
+    const normalizedDoc = toRepoPath(doc);
+    if (closedFrontendDocs.has(normalizedDoc)) continue;
     const text = readFileSync(doc, "utf8").toLowerCase();
     for (const signal of signals) {
       if (!text.includes(signal.toLowerCase())) continue;
-      hits.push({ file: toRepoPath(doc), signal });
+      hits.push({ file: normalizedDoc, signal });
       break;
     }
   }
   return hits;
+}
+
+function loadClosedFrontendDocs() {
+  const closeoutsPath = repoPath("docs", "reconstruction", "frontend-current-source-closeouts.json");
+  if (!existsSync(closeoutsPath)) return new Set();
+  const closeouts = readJson(closeoutsPath);
+  const closedDocs = new Set();
+  for (const closeout of closeouts.closeouts ?? []) {
+    if (closeout.status !== "current-source-closed-partial") continue;
+    for (const doc of closeout.closedFrontendDocs ?? []) {
+      closedDocs.add(doc);
+    }
+  }
+  return closedDocs;
 }
 
 function collectLocaleCoverage() {
@@ -228,6 +245,7 @@ function buildQueue() {
       gateReports: "evidence/full-chain/internal/audits/audits/**/gate-report.json",
       frontendDocs: "evidence/full-chain/internal/audits/audits/**/frontend/*.md",
       frontendManifest: "src/restoration/frontend-manifest/index.ts",
+      currentSourceCloseouts: "docs/reconstruction/frontend-current-source-closeouts.json",
       localeFiles: ["src/locales/zh.json", "src/locales/en.json"],
     },
     currentConclusion: {

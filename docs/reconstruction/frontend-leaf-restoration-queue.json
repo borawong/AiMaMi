@@ -6,6 +6,7 @@
     "gateReports": "evidence/full-chain/internal/audits/audits/**/gate-report.json",
     "frontendDocs": "evidence/full-chain/internal/audits/audits/**/frontend/*.md",
     "frontendManifest": "src/restoration/frontend-manifest/index.ts",
+    "currentSourceCloseouts": "docs/reconstruction/frontend-current-source-closeouts.json",
     "localeFiles": [
       "src/locales/zh.json",
       "src/locales/en.json"
@@ -1215,10 +1216,6 @@
   ],
   "frontendDocSignals": [
     {
-      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-plugins/frontend/FRONTEND-FULL-CHAIN-109.md",
-      "signal": "missing frontend route/API/command/mock chain"
-    },
-    {
       "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-relay/frontend/FRONTEND-FULL-CHAIN-109.md",
       "signal": "blocked"
     },
@@ -1229,10 +1226,6 @@
     {
       "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-bootstrap/frontend/FRONTEND-FULL-CHAIN-109.md",
       "signal": "partial"
-    },
-    {
-      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-plugins/frontend/FRONTEND-FULL-CHAIN-109.md",
-      "signal": "missing frontend route/API/command/mock chain"
     },
     {
       "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay/frontend/FRONTEND-FULL-CHAIN-109.md",
