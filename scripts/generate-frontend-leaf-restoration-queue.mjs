@@ -283,7 +283,8 @@ if (process.argv.includes("--check")) {
     console.error(`缺少 ${toRepoPath(outputPath)}`);
     process.exit(1);
   }
-  const current = readFileSync(outputPath, "utf8");
+  const normalizeNewlines = (value) => value.replace(/\r\n/g, "\n");
+  const current = normalizeNewlines(readFileSync(outputPath, "utf8"));
   if (current !== output) {
     console.error(`${toRepoPath(outputPath)} 未同步，请运行 npm run generate:frontend-leaf-queue`);
     process.exit(1);
