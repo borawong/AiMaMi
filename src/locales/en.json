@@ -723,18 +723,6 @@
     "empty": "No plugins available",
     "unknown": "Unknown plugin"
   },
-  "daemonAutoswitch": {
-    "description": "Restores the daemon autoswitch module entry from bootstrap, pending auto-switch, and daemon runner IPC contracts.",
-    "bootstrap": "Bootstrap Seed",
-    "pending": "Pending Switch",
-    "runOnce": "Run Daemon Once",
-    "dismissPending": "Dismiss Pending",
-    "confirmPending": "Confirm Pending",
-    "confirmPendingRestart": "Confirm and Restart",
-    "enabled": "Auto switch",
-    "serviceState": "Service state",
-    "writtenAt": "Written at"
-  },
   "trayShell": {
     "description": "Restores the tray shell module entry from notification client and window focus IPC contracts.",
     "notificationClient": "Notification Client State",

@@ -723,18 +723,6 @@
     "empty": "暂无可用插件",
     "unknown": "未知插件"
   },
-  "daemonAutoswitch": {
-    "description": "基于 bootstrap、pending auto-switch 和 daemon runner IPC 契约恢复后台自动切换模块入口。",
-    "bootstrap": "启动种子",
-    "pending": "待处理切换",
-    "runOnce": "运行一次后台任务",
-    "dismissPending": "忽略待处理切换",
-    "confirmPending": "确认待处理切换",
-    "confirmPendingRestart": "确认并重启",
-    "enabled": "自动切换",
-    "serviceState": "服务状态",
-    "writtenAt": "写入时间"
-  },
   "trayShell": {
     "description": "基于通知客户端与窗口聚焦 IPC 契约恢复托盘外壳模块入口。",
     "notificationClient": "通知客户端状态",

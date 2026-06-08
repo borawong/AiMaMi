@@ -9,9 +9,6 @@ export function DaemonAutoswitchHeader() {
         <h2 className="text-lg font-semibold text-foreground">
           {t("nav.daemonAutoswitch")}
         </h2>
-        <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {t("daemonAutoswitch.description")}
-        </p>
       </div>
     </section>
   );

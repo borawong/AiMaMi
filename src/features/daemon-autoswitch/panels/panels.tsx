@@ -25,15 +25,10 @@ export function DaemonAutoswitchPanels({
 }
 
 function DaemonQueryPanel({ panel }: { panel: DaemonAutoswitchPanelModel }) {
-  const { t } = useTranslation();
-
   return (
     <BentoCard className="min-w-0 rounded-[8px]">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="truncate text-sm font-medium text-foreground">
-            {t(panel.titleKey)}
-          </h3>
           <DaemonStatusLine state={panel.state} />
         </div>
         <DaemonRefreshButton state={panel.state} />

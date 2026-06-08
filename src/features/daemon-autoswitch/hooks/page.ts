@@ -27,13 +27,11 @@ export function useDaemonAutoswitchPendingPrompt(): DaemonAutoswitchPendingPromp
     pendingQuery: queries.pendingQuery,
     dismissPendingAction: {
       id: "dismiss-pending",
-      labelKey: "daemonAutoswitch.dismissPending",
       run: () => mutations.dismissPendingMutation.mutateAsync(),
       isPending: mutations.dismissPendingMutation.isPending,
     },
     confirmPendingAndRestartAction: {
       id: "confirm-pending-restart",
-      labelKey: "daemonAutoswitch.confirmPendingRestart",
       run: () => mutations.confirmPendingAndRestartMutation.mutateAsync(),
       isPending: mutations.confirmPendingAndRestartMutation.isPending,
     },
@@ -52,7 +50,6 @@ export function useDaemonAutoswitchModule(): DaemonAutoswitchModuleController {
     runtimeSubscriptions,
     runOnceAction: {
       id: "run-once",
-      labelKey: "daemonAutoswitch.runOnce",
       run: () => mutations.runOnceMutation.mutateAsync(),
       isPending: mutations.runOnceMutation.isPending,
     },
@@ -78,7 +75,6 @@ export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageControl
   const metrics: DaemonAutoswitchMetricModel[] = [
     {
       id: "enabled",
-      labelKey: "daemonAutoswitch.enabled",
       value: {
         kind: "badge",
         value: enabled,
@@ -88,7 +84,6 @@ export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageControl
     },
     {
       id: "service-state",
-      labelKey: "daemonAutoswitch.serviceState",
       value: {
         kind: "text",
         icon: "activity",
@@ -97,7 +92,6 @@ export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageControl
     },
     {
       id: "written-at",
-      labelKey: "daemonAutoswitch.writtenAt",
       value: {
         kind: "time",
         icon: "clock",
@@ -109,14 +103,12 @@ export function useDaemonAutoswitchPageController(): DaemonAutoswitchPageControl
   const panels: DaemonAutoswitchPanelModel[] = [
     {
       id: "bootstrap",
-      titleKey: "daemonAutoswitch.bootstrap",
       state: module.bootstrapQuery,
       payload: bootstrap,
       icon: "toggle",
     },
     {
       id: "pending",
-      titleKey: "daemonAutoswitch.pending",
       state: module.pendingQuery,
       payload: pending,
     },

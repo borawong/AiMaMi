@@ -23,12 +23,9 @@ export function DaemonAutoswitchMetrics({
 }
 
 function DaemonMetricCard({ metric }: { metric: DaemonAutoswitchMetricModel }) {
-  const { t } = useTranslation();
-
   return (
     <BentoCard compact className="rounded-[8px]">
-      <span className="text-xs text-muted-foreground">{t(metric.labelKey)}</span>
-      <span className="mt-1 block min-w-0 truncate text-lg font-semibold text-foreground">
+      <span className="block min-w-0 truncate text-lg font-semibold text-foreground">
         <DaemonMetricValue value={metric.value} />
       </span>
     </BentoCard>

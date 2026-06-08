@@ -73,7 +73,6 @@ export interface DaemonAutoswitchRuntimeController {
 
 export interface DaemonAutoswitchAsyncAction {
   id: string;
-  labelKey: string;
   run: () => Promise<unknown>;
   isPending: boolean;
 }
@@ -116,21 +115,18 @@ export type DaemonAutoswitchMetricValue =
 
 export interface DaemonAutoswitchMetricModel {
   id: string;
-  labelKey: string;
   value: DaemonAutoswitchMetricValue;
 }
 
 export type DaemonAutoswitchPanelModel =
   | {
       id: "bootstrap";
-      titleKey: "daemonAutoswitch.bootstrap";
       state: DaemonAutoswitchQueryState;
       payload: BootstrapStatePayload | null;
       icon: "toggle";
     }
   | {
       id: "pending";
-      titleKey: "daemonAutoswitch.pending";
       state: DaemonAutoswitchQueryState;
       payload: PendingAutoSwitchStatePayload | null;
       icon?: undefined;
