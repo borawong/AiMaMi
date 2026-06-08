@@ -361,9 +361,31 @@ function loadClosedManifestStatuses() {
   return closedStatuses;
 }
 
+function loadBoundaryExceptions(manifestPath) {
+  const text = readText(manifestPath);
+  const match = text.match(/export const FRONTEND_DUMPED_BOUNDARY_EXCEPTIONS = \[([\s\S]*?)\] as const/);
+  if (!match) return [];
+  return [...match[1].matchAll(/\{[\s\S]*?\}/g)]
+    .map((block) => ({
+      module: block[0].match(/\bmodule:\s*"([^"]+)"/)?.[1] ?? null,
+      status: block[0].match(/\bstatus:\s*"([^"]+)"/)?.[1] ?? null,
+    }))
+    .filter((entry) => entry.module && entry.status);
+}
+
+function isBoundaryExceptionRecord(record, exceptions) {
+  const owner = record.owner ?? record.module ?? null;
+  return exceptions.some(
+    (exception) =>
+      exception.module === owner &&
+      exception.status === record.status,
+  );
+}
+
 function checkFrontendManifestStatuses() {
   const closedManifestStatuses = loadClosedManifestStatuses();
   const manifestPath = repoPath("src", "restoration", "frontend-manifest", "index.ts");
+  const boundaryExceptions = loadBoundaryExceptions(manifestPath);
   const lines = readText(manifestPath).split(/\r?\n/);
   const nonLeafStatuses = new Set(["source-only", "boundary-only", "contract-service-only", "owner-closed"]);
   const hits = [];
@@ -415,7 +437,11 @@ function checkFrontendManifestStatuses() {
     objectDepth += (line.match(/{/g) ?? []).length;
     objectDepth -= (line.match(/}/g) ?? []).length;
     if (objectDepth <= 0) {
-      if (currentRecord.status && !closedManifestStatuses.has(manifestCloseoutKey(currentRecord))) {
+      if (
+        currentRecord.status &&
+        !isBoundaryExceptionRecord(currentRecord, boundaryExceptions) &&
+        !closedManifestStatuses.has(manifestCloseoutKey(currentRecord))
+      ) {
         const owner = currentRecord.owner ?? currentRecord.module ?? "unknown";
         const command = currentRecord.command ? ` command=${currentRecord.command}` : "";
         const queryKey = currentRecord.queryKey ? ` queryKey=${currentRecord.queryKey}` : "";
