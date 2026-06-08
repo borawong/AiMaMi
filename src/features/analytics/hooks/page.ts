@@ -43,11 +43,11 @@ import type {
 import { useAnalyticsModule } from "./query";
 
 const PANELS = [
-  { value: "activity", labelKey: "analytics.panel.usage" },
+  { value: "activity", labelKey: "analytics.tabActivity" },
   { value: "sessions", labelKey: "analytics.tabSessions" },
   { value: "token", labelKey: "analytics.tabToken" },
   { value: "tools", labelKey: "analytics.tabTools" },
-  { value: "changes", labelKey: "analytics.panel.changes" },
+  { value: "changes", labelKey: "analytics.tabChanges" },
   { value: "quota", labelKey: "analytics.tabQuota" },
 ] as const;
 
@@ -60,7 +60,7 @@ const ANALYTICS_RANGES = [
 const ACTIVITY_RANGES = [
   { value: "week", labelKey: "analytics.rangeWeek" },
   { value: "month", labelKey: "analytics.rangeMonth" },
-  { value: "year", labelKey: "analytics.range.year" },
+  { value: "year", labelKey: "analytics.rangeYear" },
 ] as const;
 
 const CHART_COLOR = "var(--heatmap-color, #3FE6A1)";
@@ -275,12 +275,12 @@ function buildActivityPanel(
       {
         id: "weekActiveDays",
         label: t("analytics.weekActiveDays"),
-        value: t("analytics.daysValue", { count: weekActiveDays }),
+        value: `${weekActiveDays} ${t("analytics.days")}`,
       },
       {
         id: "monthActiveDays",
         label: t("analytics.monthActiveDays"),
-        value: t("analytics.daysValue", { count: monthActiveDays }),
+        value: `${monthActiveDays} ${t("analytics.days")}`,
       },
     ],
   };

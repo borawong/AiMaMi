@@ -571,15 +571,7 @@
   },
   "analytics": {
     "description": "Restores the analytics module entry from usage, session, token, tool, and change analytics IPC contracts.",
-    "panel": {
-      "usage": "Usage",
-      "changes": "Changes"
-    },
-    "range": {
-      "year": "Year"
-    },
     "heatmap": {
-      "sessions": "sessions",
       "active": "Active",
       "less": "Less",
       "more": "More"
@@ -594,7 +586,7 @@
     "avgTokenPerSession": "Avg/Session",
     "avgTurns": "Avg Turns",
     "changeTitle": "Code Changes",
-    "daysValue": "{{count}} days",
+    "days": "days",
     "editTasks": "Edit Tasks",
     "filesTotal": "Other Ops",
     "minutesValue": "{{count}} min",
@@ -627,13 +619,16 @@
     "weekActiveDays": "Active This Week",
     "writeOps": "Lines Added",
     "writeTotal": "Total Added",
+    "tabActivity": "Activity",
+    "tabChanges": "Changes",
     "tabToken": "Token",
     "tabSessions": "Sessions",
     "tabTools": "Tools",
     "tabQuota": "Quota",
     "rangeToday": "Today",
     "rangeWeek": "Week",
-    "rangeMonth": "Month"
+    "rangeMonth": "Month",
+    "rangeYear": "Year"
   },
   "relay": {
     "description": "Configure relay models for Codex; switch freely from the menu when smart router is on.",

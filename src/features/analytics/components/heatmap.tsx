@@ -122,7 +122,7 @@ export function Heatmap({ data, colorVar = "var(--heatmap-color, #3FE6A1)" }: He
         <ChartTooltip x={tooltip.x} y={tooltip.y}>
           <div className="font-semibold text-foreground">{formatHeatmapDate(tooltip.day.date)}</div>
           <div className="text-muted-foreground">
-            {tooltip.day.count} {t("analytics.heatmap.sessions")}
+            {tooltip.day.count} {t("analytics.tabSessions")}
           </div>
           {tooltip.day.activeMinutes != null && tooltip.day.activeMinutes > 0 && (
             <div className="text-muted-foreground">
