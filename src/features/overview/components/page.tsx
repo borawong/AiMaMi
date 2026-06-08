@@ -1,4 +1,3 @@
-import { OverviewDialogsHost } from "../dialogs";
 import { useOverviewPageController } from "../hooks";
 import { OverviewShell } from "../panels";
 
@@ -6,9 +5,6 @@ export function OverviewPage() {
   const controller = useOverviewPageController();
 
   return (
-    <>
-      <OverviewShell controller={controller} />
-      <OverviewDialogsHost dialogs={controller.dialogs} />
-    </>
+    <OverviewShell controller={controller} />
   );
 }
