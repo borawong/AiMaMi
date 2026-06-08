@@ -18,22 +18,22 @@
     "internalRoot": "evidence/full-chain/internal"
   },
   "totals": {
-    "zhLocaleKeys": 764,
-    "enLocaleKeys": 764,
-    "entries": 764,
+    "zhLocaleKeys": 760,
+    "enLocaleKeys": 760,
+    "entries": 760,
     "rawControlFlowKeyBacked": 40,
     "internalKeyBacked": 12,
     "rawOrInternalKeyBacked": 47,
-    "sourceSyncOnly": 717,
-    "rawTranslationZhKeyBacked": 592,
-    "rawTranslationEnKeyBacked": 592,
-    "rawTranslationZhExact": 592,
-    "rawTranslationEnExact": 592,
-    "rawTranslationBothExact": 592,
+    "sourceSyncOnly": 713,
+    "rawTranslationZhKeyBacked": 598,
+    "rawTranslationEnKeyBacked": 598,
+    "rawTranslationZhExact": 598,
+    "rawTranslationEnExact": 598,
+    "rawTranslationBothExact": 598,
     "rawTranslationValueMismatch": 0,
-    "acceptedZh": 592,
-    "acceptedEn": 592,
-    "missingRawOrInternalCopySource": 172
+    "acceptedZh": 598,
+    "acceptedEn": 598,
+    "missingRawOrInternalCopySource": 162
   },
   "entries": [
     {
@@ -16100,94 +16100,205 @@
       ]
     },
     {
-      "key": "maintenance.disabled",
-      "zhValue": "停用",
-      "enValue": "disabled",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.enabled",
-      "zhValue": "启用",
-      "enValue": "enabled",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.forceKillCodex",
-      "zhValue": "强制结束 Codex",
+      "key": "maintenance.forceKill",
+      "zhValue": "强制关闭 Codex",
       "enValue": "Force Kill Codex",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
       "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
       "keyEvidence": {
         "rawControlFlow": [],
         "internalMentions": []
       },
-      "translationEvidence": []
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.forceKill",
+          "rawValue": "强制关闭 Codex",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.forceKill",
+          "rawValue": "强制关闭 Codex",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.forceKill",
+          "rawValue": "Force Kill Codex",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.forceKill",
+          "rawValue": "Force Kill Codex",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
     },
     {
-      "key": "maintenance.forceKillCodexAction",
-      "zhValue": "强制结束",
+      "key": "maintenance.forceKillAction",
+      "zhValue": "强制关闭",
       "enValue": "Force Kill",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
       "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
       "keyEvidence": {
         "rawControlFlow": [],
         "internalMentions": []
       },
-      "translationEvidence": []
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.forceKillAction",
+          "rawValue": "强制关闭",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.forceKillAction",
+          "rawValue": "强制关闭",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.forceKillAction",
+          "rawValue": "Force Kill",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.forceKillAction",
+          "rawValue": "Force Kill",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
     },
     {
-      "key": "maintenance.forceKillCodexDesc",
-      "zhValue": "调用 dumped 的 force_kill_codex 命令，终止本地 Codex 进程。",
-      "enValue": "Invoke the dumped force_kill_codex command to terminate local Codex processes.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
+      "key": "maintenance.forceKillDesc",
+      "zhValue": "搜索并强制终止所有 Codex 相关进程（客户端、Helper、CLI、插件服务等），解决进程残留导致路由无法启动的问题。",
+      "enValue": "Find and force terminate all Codex-related processes (app, helpers, CLI, extension servers) to resolve lingering processes blocking router startup.",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
       "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
       "keyEvidence": {
         "rawControlFlow": [],
         "internalMentions": []
       },
-      "translationEvidence": []
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.forceKillDesc",
+          "rawValue": "搜索并强制终止所有 Codex 相关进程（客户端、Helper、CLI、插件服务等），解决进程残留导致路由无法启动的问题。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.forceKillDesc",
+          "rawValue": "搜索并强制终止所有 Codex 相关进程（客户端、Helper、CLI、插件服务等），解决进程残留导致路由无法启动的问题。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.forceKillDesc",
+          "rawValue": "Find and force terminate all Codex-related processes (app, helpers, CLI, extension servers) to resolve lingering processes blocking router startup.",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.forceKillDesc",
+          "rawValue": "Find and force terminate all Codex-related processes (app, helpers, CLI, extension servers) to resolve lingering processes blocking router startup.",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
     },
     {
       "key": "maintenance.forceKillResult",
@@ -16481,45 +16592,76 @@
       "translationEvidence": []
     },
     {
+      "key": "maintenance.imageCompatDone",
+      "zhValue": "已更新，将在下一次中转请求立即生效",
+      "enValue": "Updated. This applies to the next relay request.",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "source-sync-only",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": []
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.imageCompatDone",
+          "rawValue": "已更新，将在下一次中转请求立即生效",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.imageCompatDone",
+          "rawValue": "已更新，将在下一次中转请求立即生效",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.imageCompatDone",
+          "rawValue": "Updated. This applies to the next relay request.",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.imageCompatDone",
+          "rawValue": "Updated. This applies to the next relay request.",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
       "key": "maintenance.imageCompatEnable",
       "zhValue": "启用",
       "enValue": "Enable",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.imageCompatResult",
-      "zhValue": "图片兼容模式已{{state}}",
-      "enValue": "Image compatibility is now {{state}}",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.imageCompatRunning",
-      "zhValue": "更新中...",
-      "enValue": "Updating...",
       "zhAccepted": false,
       "enAccepted": false,
       "zhSource": null,
@@ -16937,24 +17079,6 @@
       ]
     },
     {
-      "key": "maintenance.resetCodexConfigDesc",
-      "zhValue": "调用 dumped 的 reset_codex_config 命令，重置本地 Codex 配置。",
-      "enValue": "Invoke the dumped reset_codex_config command to reset local Codex configuration.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "maintenance.resetConfig",
       "zhValue": "重置 Codex 配置",
       "enValue": "Reset Codex Config",
@@ -17089,22 +17213,138 @@
       ]
     },
     {
-      "key": "maintenance.resetConfigResult",
-      "zhValue": "reset_codex_config 已完成",
-      "enValue": "reset_codex_config completed",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
+      "key": "maintenance.resetConfigDesc",
+      "zhValue": "清空 config.toml，将 Codex 配置恢复到默认状态。重启 Codex 后生效。",
+      "enValue": "Clear config.toml to restore Codex configuration to defaults. Takes effect after restarting Codex.",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
       "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
       "keyEvidence": {
         "rawControlFlow": [],
         "internalMentions": []
       },
-      "translationEvidence": []
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.resetConfigDesc",
+          "rawValue": "清空 config.toml，将 Codex 配置恢复到默认状态。重启 Codex 后生效。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.resetConfigDesc",
+          "rawValue": "清空 config.toml，将 Codex 配置恢复到默认状态。重启 Codex 后生效。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.resetConfigDesc",
+          "rawValue": "Clear config.toml to restore Codex configuration to defaults. Takes effect after restarting Codex.",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.resetConfigDesc",
+          "rawValue": "Clear config.toml to restore Codex configuration to defaults. Takes effect after restarting Codex.",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
+      "key": "maintenance.resetConfigDone",
+      "zhValue": "config.toml 已重置，重启 Codex 后生效",
+      "enValue": "config.toml has been reset. Restart Codex for changes to take effect.",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "source-sync-only",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": []
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.resetConfigDone",
+          "rawValue": "config.toml 已重置，重启 Codex 后生效",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.resetConfigDone",
+          "rawValue": "config.toml 已重置，重启 Codex 后生效",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.resetConfigDone",
+          "rawValue": "config.toml has been reset. Restart Codex for changes to take effect.",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.resetConfigDone",
+          "rawValue": "config.toml has been reset. Restart Codex for changes to take effect.",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
     },
     {
       "key": "maintenance.resetConfigRunning",
@@ -17507,24 +17747,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "maintenance.routerDiagnosing",
-      "zhValue": "诊断中...",
-      "enValue": "Diagnosing...",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "maintenance.routerDiagnostics",
