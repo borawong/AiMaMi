@@ -879,18 +879,6 @@
   "manifestNonLeafStatuses": [
     {
       "file": "src/restoration/frontend-manifest/index.ts",
-      "recordLine": 165,
-      "line": 168,
-      "arrayName": "FRONTEND_DUMPED_INDEX_ASSET_SOURCES",
-      "module": null,
-      "owner": "app-shell",
-      "command": null,
-      "queryKey": null,
-      "source": "assets/index-CL22l5v8.js",
-      "status": "source-only"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
       "recordLine": 250,
       "line": 253,
       "arrayName": "FRONTEND_DUMPED_INDEX_ASSET_SOURCES",
@@ -900,42 +888,6 @@
       "queryKey": null,
       "source": "assets/index-CL22l5v8.js",
       "status": "boundary-only"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "recordLine": 295,
-      "line": 299,
-      "arrayName": "FRONTEND_DUMPED_APP_SHELL_DESKTOP_MESSAGE_QUERY_MATRIX",
-      "module": "app-shell",
-      "owner": "app-shell",
-      "command": null,
-      "queryKey": "desktop-message",
-      "source": "assets/index-CL22l5v8.js",
-      "status": "source-only"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "recordLine": 308,
-      "line": 313,
-      "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
-      "module": "accounts",
-      "owner": "accounts",
-      "command": null,
-      "queryKey": "quota-history",
-      "source": "assets/index-CL22l5v8.js",
-      "status": "owner-closed"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "recordLine": 321,
-      "line": 326,
-      "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
-      "module": "analytics",
-      "owner": "analytics",
-      "command": null,
-      "queryKey": "usage-analytics",
-      "source": "assets/index-CL22l5v8.js",
-      "status": "owner-closed"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
@@ -1459,7 +1411,7 @@
       "id": "manifest-non-full-leaf-statuses",
       "area": "frontend-manifest",
       "status": "open",
-      "blocker": "当前 frontend manifest 还有 41 个非 full leaf 状态。"
+      "blocker": "当前 frontend manifest 还有 37 个非 full leaf 状态。"
     },
     {
       "id": "gate-report-strict-failures",
