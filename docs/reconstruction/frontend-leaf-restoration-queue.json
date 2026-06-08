@@ -1347,13 +1347,13 @@
     "exists": true,
     "status": "draft",
     "totals": {
-      "zhLocaleKeys": 950,
-      "enLocaleKeys": 950,
-      "entries": 950,
+      "zhLocaleKeys": 774,
+      "enLocaleKeys": 774,
+      "entries": 774,
       "rawControlFlowKeyBacked": 40,
       "internalKeyBacked": 9,
       "rawOrInternalKeyBacked": 44,
-      "sourceSyncOnly": 906,
+      "sourceSyncOnly": 730,
       "rawTranslationZhKeyBacked": 573,
       "rawTranslationEnKeyBacked": 573,
       "rawTranslationZhExact": 573,
@@ -1362,7 +1362,7 @@
       "rawTranslationValueMismatch": 0,
       "acceptedZh": 573,
       "acceptedEn": 573,
-      "missingRawOrInternalCopySource": 377
+      "missingRawOrInternalCopySource": 201
     },
     "requiredForFullCopyAcceptance": true
   },
