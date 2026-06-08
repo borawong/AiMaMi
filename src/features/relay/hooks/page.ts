@@ -276,7 +276,7 @@ export function useRelayPageController(): RelayPageController {
         const name = readString(
           provider,
           ["name", "label", "id", "providerId", "key"],
-          t("relay.unknownProvider"),
+          "",
         );
         const ide = readString(provider, ["ide"], currentIde);
         const baseUrl = readString(provider, ["baseUrl", "url", "endpoint"]);
@@ -329,7 +329,7 @@ export function useRelayPageController(): RelayPageController {
   const proxyBaseUrl = readString(
     proxy,
     ["baseUrl", "url", "endpoint", "status", "message"],
-    t("relay.none"),
+    "",
   );
   const extraHeadersInvalid = Boolean(validateExtraHeaders(form.extraHeaders));
   const formValid = Boolean(form.name.trim() && form.baseUrl.trim() && !extraHeadersInvalid);

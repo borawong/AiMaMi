@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import {
-  Ban,
   Download,
   Edit3,
   FileJson,
@@ -11,10 +10,8 @@ import {
   Power,
   PowerOff,
   RadioTower,
-  RotateCw,
   Save,
   ShieldAlert,
-  ShieldCheck,
   Trash2,
   Upload,
   Wrench,
@@ -63,7 +60,6 @@ import {
   inferWireApi,
   isRecord,
   normalizeWireApi,
-  readNumber,
   readString,
 } from "../utils";
 
@@ -79,7 +75,7 @@ export function RelayPagePanels({
     <>
       <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <h1 className="text-xl font-semibold tracking-normal">{t("nav.relay")}</h1>
+          <h1 className="text-xl font-semibold tracking-normal">{t("relay.title")}</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
             {t("relay.description")}
           </p>
@@ -95,43 +91,6 @@ export function RelayPagePanels({
           {t(module.diagnosticsAction.labelKey)}
         </Button>
       </header>
-
-      <div className="grid gap-3 md:grid-cols-4">
-        <RelayMetric
-          label={t("relay.providerCount")}
-          value={
-            <span className="inline-flex items-center gap-2">
-              <RadioTower className="h-4 w-4 text-muted-foreground" />
-              {controller.providers.length ||
-                readNumber(controller.state, ["total", "providerCount"])}
-            </span>
-          }
-        />
-        <RelayMetric
-          label={t("relay.activeProvider")}
-          value={controller.activeProviderId || t("relay.none")}
-        />
-        <RelayMetric
-          label={t("relay.router")}
-          value={
-            <BoolBadge
-              value={controller.routerEnabled}
-              trueLabel={t("relay.enabled")}
-              falseLabel={t("relay.disabled")}
-            />
-          }
-        />
-        <RelayMetric
-          label={t("relay.passthrough")}
-          value={
-            <BoolBadge
-              value={controller.blocked}
-              trueLabel={t("relay.blocked")}
-              falseLabel={t("relay.allowed")}
-            />
-          }
-        />
-      </div>
 
       <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="min-w-0 rounded-[8px] border border-border bg-card">
@@ -238,38 +197,6 @@ export function RelayPagePanels({
               trueLabel={t("relay.codexRouter.switchOn")}
               falseLabel={t("relay.codexRouter.switchOff")}
             />
-            <div className="flex flex-wrap gap-2 pt-2">
-              <Button
-                type="button"
-                size="icon-sm"
-                variant="outline"
-                disabled={module.routerActions.restartCodexApp.isPending}
-                aria-label={t("relay.actionRestartApplication")}
-                onClick={() => void controller.actions.restartCodexApp()}
-              >
-                <RotateCw className="h-3.5 w-3.5" />
-              </Button>
-              <Button
-                type="button"
-                size="icon-sm"
-                variant="outline"
-                disabled={module.routerActions.setBlockOfficialPassthrough.isPending}
-                aria-label={t("relay.actionSetBlockPassthrough")}
-                onClick={() => void controller.actions.toggleBlockPassthrough()}
-              >
-                <Ban className="h-3.5 w-3.5" />
-              </Button>
-              <Button
-                type="button"
-                size="icon-sm"
-                variant="outline"
-                disabled={module.routerActions.diagnoseCodexRouter.isPending}
-                aria-label={t("relay.actionDiagnoseRouter")}
-                onClick={() => void controller.actions.diagnoseRouter()}
-              >
-                <ShieldCheck className="h-3.5 w-3.5" />
-              </Button>
-            </div>
           </div>
         </section>
 
@@ -279,10 +206,11 @@ export function RelayPagePanels({
               <Network className="h-4 w-4" />
             </span>
             <div className="min-w-0">
-              <h2 className="text-sm font-semibold">{t("relay.proxyStatus")}</h2>
-              <p className="mt-1 truncate font-mono text-xs text-muted-foreground">
-                {controller.proxyBaseUrl}
-              </p>
+              {controller.proxyBaseUrl ? (
+                <p className="truncate font-mono text-xs text-muted-foreground">
+                  {controller.proxyBaseUrl}
+                </p>
+              ) : null}
               <div className="mt-3">
                 <BoolBadge
                   value={controller.proxyRunning}
@@ -294,19 +222,16 @@ export function RelayPagePanels({
           </div>
         </section>
 
-        <section className="rounded-[8px] border border-border bg-card p-4">
-          <h2 className="text-sm font-semibold">{t("relay.passthrough")}</h2>
-          <div className="mt-3 max-h-[168px] space-y-2 overflow-y-auto">
-            {controller.auditItems.length === 0 ? (
-              <p className="text-xs text-muted-foreground">{t("relay.none")}</p>
-            ) : (
-              controller.auditItems.slice(0, 6).map((item, index) => (
+        {controller.auditItems.length > 0 ? (
+          <section className="rounded-[8px] border border-border bg-card p-4">
+            <div className="max-h-[168px] space-y-2 overflow-y-auto">
+              {controller.auditItems.slice(0, 6).map((item, index) => (
                 <div
                   key={`${readString(item, ["event", "type", "action"], "event")}-${index}`}
                   className="min-w-0 rounded-[8px] border border-border px-3 py-2"
                 >
                   <p className="truncate text-xs font-medium text-foreground">
-                    {readString(item, ["event", "type", "action"], t("relay.none"))}
+                    {readString(item, ["event", "type", "action"], "")}
                   </p>
                   <p className="mt-1 truncate text-[11px] text-muted-foreground">
                     {isRecord(item)
@@ -314,23 +239,12 @@ export function RelayPagePanels({
                       : ""}
                   </p>
                 </div>
-              ))
-            )}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        ) : null}
       </section>
     </>
-  );
-}
-
-function RelayMetric({ label, value }: { label: string; value: ReactNode }) {
-  return (
-    <div className="rounded-[8px] border border-border bg-card p-4">
-      <div className="text-xs font-medium text-muted-foreground">{label}</div>
-      <div className="mt-2 min-w-0 truncate text-sm font-semibold text-foreground">
-        {value}
-      </div>
-    </div>
   );
 }
 

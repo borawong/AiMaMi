@@ -29,7 +29,6 @@
     "accounts": "Accounts",
     "sessions": "Threads",
     "analytics": "Analytics",
-    "relay": "Relay",
     "daemonAutoswitch": "Daemon Autoswitch",
     "trayShell": "Tray Shell",
     "voice": "Typemami"
@@ -565,23 +564,8 @@
     "rangeYear": "Year"
   },
   "relay": {
+    "title": "Relay Models",
     "description": "Configure relay models for Codex; switch freely from the menu when smart router is on.",
-    "active": "Active State",
-    "proxyStatus": "Proxy Status",
-    "runDiagnostics": "Run Relay Diagnostics",
-    "providerCount": "Providers",
-    "activeProvider": "Active provider",
-    "none": "None",
-    "router": "Router",
-    "enabled": "Enabled",
-    "disabled": "Disabled",
-    "passthrough": "Passthrough",
-    "blocked": "Blocked",
-    "allowed": "Allowed",
-    "unknownProvider": "Unknown provider",
-    "actionRestartApplication": "Restart application",
-    "actionSetBlockPassthrough": "Toggle passthrough block",
-    "actionDiagnoseRouter": "Diagnose router",
     "codexRouter": {
       "blockPassthroughSaveFailed": "Failed to save intercept setting",
       "codexRunningTitle": "Could not quit Codex automatically",
@@ -723,6 +707,16 @@
     },
     "network": {
       "button": "Network mode",
+      "option": {
+        "system": {
+          "title": "Follow system proxy",
+          "desc": "Default behavior: honor system proxy and HTTPS_PROXY env vars. Required for overseas relays."
+        },
+        "direct": {
+          "title": "Force direct connection",
+          "desc": "Bypass system proxy and env vars. Use for relays that are directly reachable to avoid extra latency."
+        }
+      },
       "toast": {
         "saved": "Network mode updated",
         "saveFailed": "Failed to update network mode"

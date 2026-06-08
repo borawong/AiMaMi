@@ -22,22 +22,22 @@
     "internalRoot": "evidence/full-chain/internal"
   },
   "totals": {
-    "zhLocaleKeys": 702,
-    "enLocaleKeys": 702,
-    "entries": 702,
+    "zhLocaleKeys": 690,
+    "enLocaleKeys": 690,
+    "entries": 690,
     "rawControlFlowKeyBacked": 40,
     "internalKeyBacked": 12,
     "rawOrInternalKeyBacked": 47,
-    "sourceSyncOnly": 655,
-    "rawTranslationZhKeyBacked": 599,
-    "rawTranslationEnKeyBacked": 599,
-    "rawTranslationZhExact": 599,
-    "rawTranslationEnExact": 599,
-    "rawTranslationBothExact": 599,
+    "sourceSyncOnly": 643,
+    "rawTranslationZhKeyBacked": 604,
+    "rawTranslationEnKeyBacked": 604,
+    "rawTranslationZhExact": 604,
+    "rawTranslationEnExact": 604,
+    "rawTranslationBothExact": 604,
     "rawTranslationValueMismatch": 0,
-    "acceptedZh": 599,
-    "acceptedEn": 599,
-    "missingRawOrInternalCopySource": 103
+    "acceptedZh": 604,
+    "acceptedEn": 604,
+    "missingRawOrInternalCopySource": 86
   },
   "entries": [
     {
@@ -21117,24 +21117,6 @@
       ]
     },
     {
-      "key": "nav.relay",
-      "zhValue": "转发",
-      "enValue": "Relay",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "nav.sessions",
       "zhValue": "线程管理",
       "enValue": "Threads",
@@ -24209,114 +24191,6 @@
       "translationEvidence": []
     },
     {
-      "key": "relay.actionDiagnoseRouter",
-      "zhValue": "诊断路由",
-      "enValue": "Diagnose router",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "relay.actionRestartApplication",
-      "zhValue": "重启应用",
-      "enValue": "Restart application",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "relay.actionSetBlockPassthrough",
-      "zhValue": "切换直通阻断",
-      "enValue": "Toggle passthrough block",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "relay.active",
-      "zhValue": "当前激活状态",
-      "enValue": "Active State",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "relay.activeProvider",
-      "zhValue": "激活 Provider",
-      "enValue": "Active provider",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "relay.allowed",
-      "zhValue": "允许",
-      "enValue": "Allowed",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "relay.anthropicBaseUrlHint",
       "zhValue": "Anthropic 协议：保存时会自动去掉末尾的 /v1",
       "enValue": "Anthropic protocol: trailing /v1 will be stripped on save.",
@@ -24382,24 +24256,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "relay.blocked",
-      "zhValue": "已阻断",
-      "enValue": "Blocked",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "relay.codexRouter.blockPassthroughSaveFailed",
@@ -27246,24 +27102,6 @@
       ]
     },
     {
-      "key": "relay.disabled",
-      "zhValue": "已禁用",
-      "enValue": "Disabled",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "relay.edit",
       "zhValue": "编辑",
       "enValue": "Edit",
@@ -27463,24 +27301,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "relay.enabled",
-      "zhValue": "已启用",
-      "enValue": "Enabled",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "relay.extraHeadersInvalid",
@@ -31554,6 +31374,274 @@
       ]
     },
     {
+      "key": "relay.network.option.direct.desc",
+      "zhValue": "绕过系统代理与环境变量直接访问；国内可直连的中转用此模式可避免被代理绕远。",
+      "enValue": "Bypass system proxy and env vars. Use for relays that are directly reachable to avoid extra latency.",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "source-sync-only",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": []
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.network.option.direct.desc",
+          "rawValue": "绕过系统代理与环境变量直接访问；国内可直连的中转用此模式可避免被代理绕远。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.network.option.direct.desc",
+          "rawValue": "绕过系统代理与环境变量直接访问；国内可直连的中转用此模式可避免被代理绕远。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.network.option.direct.desc",
+          "rawValue": "Bypass system proxy and env vars. Use for relays that are directly reachable to avoid extra latency.",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.network.option.direct.desc",
+          "rawValue": "Bypass system proxy and env vars. Use for relays that are directly reachable to avoid extra latency.",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
+      "key": "relay.network.option.direct.title",
+      "zhValue": "强制直连",
+      "enValue": "Force direct connection",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "source-sync-only",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": []
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.network.option.direct.title",
+          "rawValue": "强制直连",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.network.option.direct.title",
+          "rawValue": "强制直连",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.network.option.direct.title",
+          "rawValue": "Force direct connection",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.network.option.direct.title",
+          "rawValue": "Force direct connection",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
+      "key": "relay.network.option.system.desc",
+      "zhValue": "默认行为，自动读取系统代理 / HTTPS_PROXY 环境变量；海外中转通常需要此模式。",
+      "enValue": "Default behavior: honor system proxy and HTTPS_PROXY env vars. Required for overseas relays.",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "source-sync-only",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": []
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.network.option.system.desc",
+          "rawValue": "默认行为，自动读取系统代理 / HTTPS_PROXY 环境变量；海外中转通常需要此模式。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.network.option.system.desc",
+          "rawValue": "默认行为，自动读取系统代理 / HTTPS_PROXY 环境变量；海外中转通常需要此模式。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.network.option.system.desc",
+          "rawValue": "Default behavior: honor system proxy and HTTPS_PROXY env vars. Required for overseas relays.",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.network.option.system.desc",
+          "rawValue": "Default behavior: honor system proxy and HTTPS_PROXY env vars. Required for overseas relays.",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
+      "key": "relay.network.option.system.title",
+      "zhValue": "跟随系统代理",
+      "enValue": "Follow system proxy",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "source-sync-only",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": []
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.network.option.system.title",
+          "rawValue": "跟随系统代理",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.network.option.system.title",
+          "rawValue": "跟随系统代理",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.network.option.system.title",
+          "rawValue": "Follow system proxy",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.network.option.system.title",
+          "rawValue": "Follow system proxy",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
       "key": "relay.network.toast.saveFailed",
       "zhValue": "更新网络模式失败",
       "enValue": "Failed to update network mode",
@@ -31755,42 +31843,6 @@
       ]
     },
     {
-      "key": "relay.none",
-      "zhValue": "无",
-      "enValue": "None",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "relay.passthrough",
-      "zhValue": "直通",
-      "enValue": "Passthrough",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "relay.preset.description",
       "zhValue": "从内置常用中转 provider 中一键导入，仅需补充 API Key 和模型 ID。",
       "enValue": "Import a curated relay provider, then just fill in your API key and model ID.",
@@ -31925,24 +31977,6 @@
       ]
     },
     {
-      "key": "relay.providerCount",
-      "zhValue": "Provider 数量",
-      "enValue": "Providers",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "relay.proxy.running",
       "zhValue": "本地代理运行中",
       "enValue": "Local proxy running",
@@ -32075,60 +32109,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "relay.proxyStatus",
-      "zhValue": "代理状态",
-      "enValue": "Proxy Status",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "relay.router",
-      "zhValue": "路由",
-      "enValue": "Router",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "relay.runDiagnostics",
-      "zhValue": "运行转发诊断",
-      "enValue": "Run Relay Diagnostics",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "relay.save",
@@ -32595,6 +32575,73 @@
           "root": "FR",
           "key": "relay.testDraftHint",
           "rawValue": "You changed the form without saving. This only tests the current draft and won't refresh the badge in the list.",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
+      "key": "relay.title",
+      "zhValue": "中转模型",
+      "enValue": "Relay Models",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "source-sync-only",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": []
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.title",
+          "rawValue": "中转模型",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "relay.title",
+          "rawValue": "中转模型",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.title",
+          "rawValue": "Relay Models",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "relay.title",
+          "rawValue": "Relay Models",
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
@@ -33268,24 +33315,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "relay.unknownProvider",
-      "zhValue": "未知 provider",
-      "enValue": "Unknown provider",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "routes.highIoFeedback",

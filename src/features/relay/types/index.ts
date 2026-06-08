@@ -180,7 +180,7 @@ export type RelayMutationController = {
   };
   diagnosticsAction: {
     id: "diagnostics";
-    labelKey: "relay.runDiagnostics";
+    labelKey: "relay.diagnostic.title";
     run: () => Promise<CoreEnvelope<RelayDiagnosticPayload>>;
     isPending: boolean;
   };

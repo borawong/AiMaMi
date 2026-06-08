@@ -29,7 +29,6 @@
     "accounts": "账号管理",
     "sessions": "线程管理",
     "analytics": "分析",
-    "relay": "转发",
     "daemonAutoswitch": "后台自动切换",
     "trayShell": "托盘外壳",
     "voice": "Typemami"
@@ -565,23 +564,8 @@
     "rangeYear": "年"
   },
   "relay": {
+    "title": "中转模型",
     "description": "为 Codex 配置中转模型，启用智能路由后菜单可自由切换。",
-    "active": "当前激活状态",
-    "proxyStatus": "代理状态",
-    "runDiagnostics": "运行转发诊断",
-    "providerCount": "Provider 数量",
-    "activeProvider": "激活 Provider",
-    "none": "无",
-    "router": "路由",
-    "enabled": "已启用",
-    "disabled": "已禁用",
-    "passthrough": "直通",
-    "blocked": "已阻断",
-    "allowed": "允许",
-    "unknownProvider": "未知 provider",
-    "actionRestartApplication": "重启应用",
-    "actionSetBlockPassthrough": "切换直通阻断",
-    "actionDiagnoseRouter": "诊断路由",
     "codexRouter": {
       "blockPassthroughSaveFailed": "接管开关保存失败",
       "codexRunningTitle": "无法自动退出 Codex",
@@ -723,6 +707,16 @@
     },
     "network": {
       "button": "网络模式",
+      "option": {
+        "system": {
+          "title": "跟随系统代理",
+          "desc": "默认行为，自动读取系统代理 / HTTPS_PROXY 环境变量；海外中转通常需要此模式。"
+        },
+        "direct": {
+          "title": "强制直连",
+          "desc": "绕过系统代理与环境变量直接访问；国内可直连的中转用此模式可避免被代理绕远。"
+        }
+      },
       "toast": {
         "saved": "已更新该中转的网络模式",
         "saveFailed": "更新网络模式失败"
