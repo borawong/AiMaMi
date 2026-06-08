@@ -396,7 +396,12 @@
           "file": "src-tauri/src/lib.rs",
           "includes": [
             "commands::system::load_snapshot",
-            "commands::system::refresh_usage_snapshot"
+            "commands::system::refresh_usage_snapshot",
+            "commands::analytics::load_usage_analytics",
+            "commands::analytics::load_quota_history",
+            "commands::analytics::load_token_analytics",
+            "commands::analytics::load_tool_analytics",
+            "commands::analytics::load_change_analytics"
           ]
         },
         {
@@ -420,13 +425,24 @@
         {
           "file": "src-tauri/src/commands/analytics.rs",
           "includes": [
-            "analytics 命令文件只保留后端入口边界，当前不注册可调用命令"
+            "pub fn load_usage_analytics",
+            "pub fn load_quota_history",
+            "pub fn load_token_analytics",
+            "pub fn load_tool_analytics",
+            "pub fn load_change_analytics",
+            "usecase::analytics::load_usage_analytics"
           ]
         },
         {
           "file": "src-tauri/src/application/usecase/analytics.rs",
           "includes": [
-            "analytics 用例文件只保留一次用户动作的事务边界，当前不写可执行流程"
+            "pub fn load_usage_analytics",
+            "pub fn load_quota_history",
+            "pub fn load_token_analytics",
+            "pub fn load_tool_analytics",
+            "pub fn load_change_analytics",
+            "\"analytics\"",
+            "\"load_usage_analytics\""
           ]
         },
         {
@@ -438,7 +454,12 @@
         {
           "file": "src-tauri/src/contracts/analytics.rs",
           "includes": [
-            "analytics 合同文件只保留跨层数据边界，当前不承诺具体字段"
+            "pub enum AnalyticsRange",
+            "pub struct UsageAnalyticsPayload",
+            "pub struct QuotaHistoryPayload",
+            "pub struct TokenAnalyticsPayload",
+            "pub struct ToolAnalyticsPayload",
+            "pub struct ChangeAnalyticsPayload"
           ]
         }
       ],

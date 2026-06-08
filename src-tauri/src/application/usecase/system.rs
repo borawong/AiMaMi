@@ -1,3 +1,4 @@
+use crate::application::ports::AppWindowPort;
 use crate::application::service::{
     current_timestamp, pending_status, restored_status, unsupported_status,
 };
@@ -285,8 +286,8 @@ pub fn system_info() -> SystemInfoPayload {
     }
 }
 
-pub fn focus_main_window(app: &tauri::AppHandle) -> Result<SystemActionPayload, CoreError> {
-    crate::platform::window::focus_main_window(app)?;
+pub fn focus_main_window(window: &impl AppWindowPort) -> Result<SystemActionPayload, CoreError> {
+    window.focus_main_window()?;
     Ok(SystemActionPayload {
         backend_status: restored_status("system", "focus_main_window", BackendEffect::Platform),
     })

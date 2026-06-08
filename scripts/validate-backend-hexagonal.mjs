@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { join, relative } from "node:path";
+import { basename, join, relative } from "node:path";
 
 const repoRoot = process.cwd();
 const backendRoot = join(repoRoot, "src-tauri", "src");
@@ -52,6 +52,29 @@ const voiceBoundaryFiles = [
   "contracts/voice.rs",
   "repository/voice.rs",
 ];
+
+const ipcCommandContractFile = join(repoRoot, "src", "contracts", "ipc", "commands.ts");
+const tauriLibFile = join(backendRoot, "lib.rs");
+
+const ipcDomainModuleMap = new Map([
+  ["accounts", "accounts"],
+  ["analytics", "analytics"],
+  ["custom-instructions", "custom_instructions"],
+  ["daemon-autoswitch", "system"],
+  ["maintenance", "system"],
+  ["mcp", "mcp"],
+  ["relay", "relay"],
+  ["runtime-extensions", "runtime_extensions"],
+  ["sessions", "sessions"],
+  ["settings", "system"],
+  ["skills", "skills"],
+  ["system", "system"],
+]);
+
+const ipcCommandModuleOverrides = new Map([["load_session_analytics", "sessions"]]);
+
+// 当前没有无 TS 合同的系统命令；迁移期如需豁免必须显式加入这里。
+const allowedExistingSystemCommands = new Set([]);
 
 const forbiddenSideEffectRules = [
   {
@@ -122,6 +145,41 @@ const forbiddenSideEffectRules = [
     ],
     reason: "禁止执行真实 Tauri 进程操作",
     allowedOwners: [/^src-tauri\/src\/lib\.rs$/, /^src-tauri\/src\/platform\//],
+  },
+];
+
+const tauriBoundaryScanRoots = ["application", "core"];
+
+const forbiddenApplicationCoreBoundaryRules = [
+  {
+    label: "#[tauri::command]",
+    patterns: [/#\s*\[\s*tauri\s*::\s*command\s*\]/g],
+    reason: "application/core 不得注册 Tauri 命令",
+  },
+  {
+    label: "tauri::",
+    patterns: [/\btauri\s*::/g],
+    reason: "application/core 不得依赖 Tauri 命名空间",
+  },
+  {
+    label: "AppHandle",
+    patterns: [/\bAppHandle\b/g],
+    reason: "application/core 不得接收或持有 Tauri app handle",
+  },
+  {
+    label: "Manager",
+    patterns: [/\bManager\b/g],
+    reason: "application/core 不得依赖 Tauri 管理 trait",
+  },
+  {
+    label: "State<",
+    patterns: [/\bState\s*</g],
+    reason: "application/core 不得依赖 Tauri state 注入类型",
+  },
+  {
+    label: "tauri_plugin_",
+    patterns: [/\btauri_plugin_[A-Za-z0-9_]*\b/g],
+    reason: "application/core 不得依赖 Tauri plugin 边界",
   },
 ];
 
@@ -305,6 +363,260 @@ function findRuleMatches(content, pattern) {
   return matches;
 }
 
+function commandPathKey(module, command) {
+  return `${module}::${command}`;
+}
+
+function readRequiredUtf8(path, description) {
+  if (!assertExists(path, description)) {
+    return "";
+  }
+
+  return readUtf8(path);
+}
+
+function parseIpcCommandDefinitions() {
+  const content = readRequiredUtf8(ipcCommandContractFile, "IPC command TS 合同文件");
+  if (content.length === 0) {
+    return [];
+  }
+
+  const match = content.match(
+    /export\s+const\s+IPC_COMMAND_DEFINITIONS\s*=\s*\[([\s\S]*?)\]\s+as\s+const\s*;/,
+  );
+  if (!match) {
+    failures.push(`${toRelative(ipcCommandContractFile)} 缺少可解析的 IPC_COMMAND_DEFINITIONS 数组`);
+    return [];
+  }
+
+  const definitions = [];
+  const objectPattern = /\{[\s\S]*?\}/g;
+  let definitionMatch;
+  let index = 0;
+
+  while ((definitionMatch = objectPattern.exec(match[1])) !== null) {
+    index += 1;
+    const definitionText = definitionMatch[0];
+    const domainMatch = definitionText.match(/(?:["']?domain["']?)\s*:\s*["']([^"']+)["']/);
+    const commandMatch = definitionText.match(/(?:["']?command["']?)\s*:\s*["']([^"']+)["']/);
+
+    if (!domainMatch || !commandMatch) {
+      failures.push(`${toRelative(ipcCommandContractFile)} IPC command 定义 #${index} 缺少 domain 或 command`);
+      continue;
+    }
+
+    definitions.push({ domain: domainMatch[1], command: commandMatch[1] });
+  }
+
+  if (definitions.length === 0) {
+    failures.push(`${toRelative(ipcCommandContractFile)} IPC_COMMAND_DEFINITIONS 未解析到任何 command 定义`);
+  }
+
+  return definitions;
+}
+
+function moduleForIpcCommand(definition) {
+  return ipcCommandModuleOverrides.get(definition.command) ?? ipcDomainModuleMap.get(definition.domain);
+}
+
+function expectedIpcCommandPaths(definitions) {
+  const expected = new Map();
+
+  for (const definition of definitions) {
+    if (definition.domain === "voice") {
+      continue;
+    }
+
+    const module = moduleForIpcCommand(definition);
+    if (!module) {
+      failures.push(
+        `${toRelative(ipcCommandContractFile)} 非 voice IPC command ${definition.domain}.${definition.command} 缺少 Rust owner 模块映射`,
+      );
+      continue;
+    }
+
+    const key = commandPathKey(module, definition.command);
+    if (expected.has(key)) {
+      failures.push(`${toRelative(ipcCommandContractFile)} 非 voice IPC command 重复映射到 commands::${key}`);
+      continue;
+    }
+
+    expected.set(key, { ...definition, module });
+  }
+
+  return expected;
+}
+
+function extractGenerateHandlerBody(content) {
+  const marker = /tauri\s*::\s*generate_handler!\s*\[/g;
+  const match = marker.exec(content);
+  if (!match) {
+    failures.push(`${toRelative(tauriLibFile)} 缺少 tauri::generate_handler! 注册表`);
+    return "";
+  }
+
+  const openBracket = content.indexOf("[", match.index);
+  let depth = 0;
+  for (let index = openBracket; index < content.length; index += 1) {
+    if (content[index] === "[") {
+      depth += 1;
+    } else if (content[index] === "]") {
+      depth -= 1;
+      if (depth === 0) {
+        return content.slice(openBracket + 1, index);
+      }
+    }
+  }
+
+  failures.push(`${toRelative(tauriLibFile)} tauri::generate_handler! 注册表缺少闭合方括号`);
+  return "";
+}
+
+function parseGenerateHandlerEntries() {
+  const original = readRequiredUtf8(tauriLibFile, "Tauri lib.rs 入口文件");
+  if (original.length === 0) {
+    return [];
+  }
+
+  const content = stripRustComments(original);
+  const handlerBody = extractGenerateHandlerBody(content);
+  if (handlerBody.length === 0) {
+    return [];
+  }
+
+  if (/\bcommands\s*::\s*voice\s*::/g.test(handlerBody)) {
+    failures.push(`${toRelative(tauriLibFile)} tauri::generate_handler! 不得注册 commands::voice::*`);
+  }
+
+  const entries = [];
+  const seen = new Set();
+  for (const rawEntry of handlerBody.split(",")) {
+    const entry = rawEntry.trim();
+    if (entry.length === 0) {
+      continue;
+    }
+
+    const normalized = entry.replace(/\s+/g, "");
+    const match = normalized.match(/^commands::([A-Za-z_][A-Za-z0-9_]*)::([A-Za-z_][A-Za-z0-9_]*)$/);
+    if (!match) {
+      failures.push(`${toRelative(tauriLibFile)} tauri::generate_handler! 含无法解析的注册项：${entry}`);
+      continue;
+    }
+
+    const [, module, command] = match;
+    const key = commandPathKey(module, command);
+    if (seen.has(key)) {
+      failures.push(`${toRelative(tauriLibFile)} tauri::generate_handler! 重复注册 commands::${key}`);
+      continue;
+    }
+
+    seen.add(key);
+    entries.push({ module, command, key });
+  }
+
+  return entries;
+}
+
+function collectTauriCommandFunctionsByModule() {
+  const commandsRoot = join(backendRoot, "commands");
+  const result = new Map();
+
+  for (const file of walkRustFiles(commandsRoot)) {
+    const fileName = basename(file);
+    if (fileName === "mod.rs") {
+      continue;
+    }
+
+    const module = fileName.replace(/\.rs$/, "");
+    const original = readUtf8(file);
+    const content = stripRustComments(original);
+    const relativePath = toRelative(file);
+    const attributes = [...content.matchAll(/#\s*\[\s*tauri\s*::\s*command\s*\]/g)];
+
+    for (let index = 0; index < attributes.length; index += 1) {
+      const attribute = attributes[index];
+      const segmentStart = attribute.index + attribute[0].length;
+      const segmentEnd = attributes[index + 1]?.index ?? content.length;
+      const segment = content.slice(segmentStart, segmentEnd);
+      const functionMatch = segment.match(/\bpub\s+fn\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(/);
+
+      if (!functionMatch) {
+        failures.push(
+          `${relativePath}:${lineNumberAt(original, attribute.index)} #[tauri::command] 必须关联 pub fn <command>`,
+        );
+        continue;
+      }
+
+      const command = functionMatch[1];
+      const line = lineNumberAt(original, segmentStart + functionMatch.index);
+      let moduleCommands = result.get(module);
+      if (!moduleCommands) {
+        moduleCommands = new Map();
+        result.set(module, moduleCommands);
+      }
+
+      if (moduleCommands.has(command)) {
+        failures.push(`${relativePath}:${line} 重复暴露 Rust IPC command：${command}`);
+      }
+
+      moduleCommands.set(command, { file, line });
+    }
+  }
+
+  return result;
+}
+
+function isAllowedExistingSystemCommand(module, command) {
+  return module === "system" && allowedExistingSystemCommands.has(command);
+}
+
+function validateIpcCommandRegistration() {
+  const definitions = parseIpcCommandDefinitions();
+  const expectedPaths = expectedIpcCommandPaths(definitions);
+  const registeredHandlers = parseGenerateHandlerEntries();
+  const registeredPathSet = new Set(registeredHandlers.map((handler) => handler.key));
+  const commandFunctionsByModule = collectTauriCommandFunctionsByModule();
+
+  for (const expected of expectedPaths.values()) {
+    const key = commandPathKey(expected.module, expected.command);
+    if (!registeredPathSet.has(key)) {
+      failures.push(
+        `${toRelative(tauriLibFile)} 缺少非 voice TS IPC command 注册：${expected.domain}.${expected.command} 应为 commands::${key}`,
+      );
+    }
+  }
+
+  for (const handler of registeredHandlers) {
+    const moduleCommands = commandFunctionsByModule.get(handler.module);
+    if (!moduleCommands?.has(handler.command)) {
+      failures.push(
+        `${toRelative(tauriLibFile)} 注册了 commands::${handler.key}，但 src-tauri/src/commands/${handler.module}.rs 缺少 #[tauri::command] pub fn ${handler.command}`,
+      );
+    }
+
+    if (!expectedPaths.has(handler.key) && !isAllowedExistingSystemCommand(handler.module, handler.command)) {
+      failures.push(`${toRelative(tauriLibFile)} 注册了非 TS IPC 合同 command：commands::${handler.key}`);
+    }
+  }
+
+  for (const [module, moduleCommands] of commandFunctionsByModule.entries()) {
+    if (module === "voice") {
+      continue;
+    }
+
+    for (const [command, location] of moduleCommands.entries()) {
+      const key = commandPathKey(module, command);
+      if (expectedPaths.has(key) || isAllowedExistingSystemCommand(module, command)) {
+        continue;
+      }
+
+      failures.push(
+        `${toRelative(location.file)}:${location.line} 额外暴露 Rust IPC command：#[tauri::command] pub fn ${command} 不在非 voice TS 合同或允许的现有系统命令中`,
+      );
+    }
+  }
+}
+
 function validateRequiredSkeleton() {
   assertExists(backendRoot, "后端源码目录");
 
@@ -349,6 +661,33 @@ function validateNoRealSideEffects() {
   }
 }
 
+function validateNoApplicationCoreTauriBoundaryLeaks() {
+  const rustFiles = tauriBoundaryScanRoots.flatMap((root) => walkRustFiles(join(backendRoot, root)));
+
+  for (const file of rustFiles) {
+    const original = readUtf8(file);
+    const content = stripRustComments(original);
+    const relativePath = toRelative(file);
+
+    for (const rule of forbiddenApplicationCoreBoundaryRules) {
+      const matchLines = [];
+      for (const pattern of rule.patterns) {
+        for (const index of findRuleMatches(content, pattern)) {
+          matchLines.push(lineNumberAt(original, index));
+        }
+      }
+
+      const uniqueLines = [...new Set(matchLines)].sort((left, right) => left - right);
+      for (const line of uniqueLines.slice(0, 3)) {
+        failures.push(`${relativePath}:${line} 违反 application/core Tauri 边界门禁：${rule.reason}：${rule.label}`);
+      }
+      if (uniqueLines.length > 3) {
+        failures.push(`${relativePath} 还有 ${uniqueLines.length - 3} 处 ${rule.label} 命中未展开`);
+      }
+    }
+  }
+}
+
 function validateVoiceSkeleton() {
   for (const file of voiceBoundaryFiles) {
     const absolute = join(backendRoot, file);
@@ -369,7 +708,9 @@ function validateVoiceSkeleton() {
 
 validateRequiredSkeleton();
 validateNoRealSideEffects();
+validateNoApplicationCoreTauriBoundaryLeaks();
 validateVoiceSkeleton();
+validateIpcCommandRegistration();
 
 if (failures.length > 0) {
   console.error("后端六边形骨架校验失败：");
@@ -379,4 +720,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("后端六边形校验通过：目录、边界文件、副作用 owner 和 voice 空骨架门禁满足当前规则。");
+console.log("后端六边形校验通过：目录、边界文件、副作用 owner、voice 空骨架和 IPC command 注册一致性门禁满足当前规则。");

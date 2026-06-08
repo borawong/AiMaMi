@@ -196,7 +196,8 @@ pub fn get_system_info() -> Result<CoreEnvelope<SystemInfoPayload>, String> {
 pub fn focus_main_window(
     app: tauri::AppHandle,
 ) -> Result<CoreEnvelope<SystemActionPayload>, String> {
-    usecase::system::focus_main_window(&app)
+    let window = crate::platform::window::TauriWindowPort::new(&app);
+    usecase::system::focus_main_window(&window)
         .map(CoreEnvelope::ok)
         .map_err(|error| error.to_string())
 }
