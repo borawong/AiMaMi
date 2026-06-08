@@ -1356,13 +1356,13 @@
       "sourceSyncOnly": 906,
       "rawTranslationZhKeyBacked": 573,
       "rawTranslationEnKeyBacked": 573,
-      "rawTranslationZhExact": 293,
-      "rawTranslationEnExact": 293,
-      "rawTranslationBothExact": 272,
-      "rawTranslationValueMismatch": 301,
-      "acceptedZh": 293,
-      "acceptedEn": 293,
-      "missingRawOrInternalCopySource": 678
+      "rawTranslationZhExact": 573,
+      "rawTranslationEnExact": 573,
+      "rawTranslationBothExact": 573,
+      "rawTranslationValueMismatch": 0,
+      "acceptedZh": 573,
+      "acceptedEn": 573,
+      "missingRawOrInternalCopySource": 377
     },
     "requiredForFullCopyAcceptance": true
   },
