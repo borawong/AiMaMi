@@ -18,22 +18,22 @@
     "internalRoot": "evidence/full-chain/internal"
   },
   "totals": {
-    "zhLocaleKeys": 770,
-    "enLocaleKeys": 770,
-    "entries": 770,
+    "zhLocaleKeys": 765,
+    "enLocaleKeys": 765,
+    "entries": 765,
     "rawControlFlowKeyBacked": 40,
-    "internalKeyBacked": 9,
-    "rawOrInternalKeyBacked": 44,
-    "sourceSyncOnly": 726,
-    "rawTranslationZhKeyBacked": 584,
-    "rawTranslationEnKeyBacked": 584,
-    "rawTranslationZhExact": 584,
-    "rawTranslationEnExact": 584,
-    "rawTranslationBothExact": 584,
+    "internalKeyBacked": 12,
+    "rawOrInternalKeyBacked": 47,
+    "sourceSyncOnly": 718,
+    "rawTranslationZhKeyBacked": 588,
+    "rawTranslationEnKeyBacked": 588,
+    "rawTranslationZhExact": 588,
+    "rawTranslationEnExact": 588,
+    "rawTranslationBothExact": 588,
     "rawTranslationValueMismatch": 0,
-    "acceptedZh": 584,
-    "acceptedEn": 584,
-    "missingRawOrInternalCopySource": 186
+    "acceptedZh": 588,
+    "acceptedEn": 588,
+    "missingRawOrInternalCopySource": 177
   },
   "entries": [
     {
@@ -102,42 +102,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "accounts.accountCount",
-      "zhValue": "账号数",
-      "enValue": "Accounts",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "accounts.accountKeyInput",
-      "zhValue": "账号 key",
-      "enValue": "Account key",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "accounts.accountKeyPlaceholder",
@@ -2739,42 +2703,6 @@
       "translationEvidence": []
     },
     {
-      "key": "accounts.importFromFile",
-      "zhValue": "从文件导入",
-      "enValue": "Import from file",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "accounts.io.chooseImportFile",
-      "zhValue": "选择备份",
-      "enValue": "Choose backup",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "accounts.io.exportAccount",
       "zhValue": "导出账号",
       "enValue": "Export",
@@ -3061,6 +2989,73 @@
       "translationEvidence": []
     },
     {
+      "key": "accounts.io.importAccount",
+      "zhValue": "导入账号",
+      "enValue": "Import",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "source-sync-only",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": []
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "accounts.io.importAccount",
+          "rawValue": "导入账号",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "accounts.io.importAccount",
+          "rawValue": "导入账号",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "accounts.io.importAccount",
+          "rawValue": "Import",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "accounts.io.importAccount",
+          "rawValue": "Import",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
       "key": "accounts.io.openDialogTitle",
       "zhValue": "选择账号备份文件",
       "enValue": "Choose accounts backup file",
@@ -3166,6 +3161,154 @@
       ]
     },
     {
+      "key": "accounts.io.previewCount",
+      "zhValue": "备份包含 {{count}} 个账号",
+      "enValue": "Backup contains {{count}} account(s)",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "internal-key",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": [
+          {
+            "source": "evidence/full-chain/internal/audits/audits/macos-1.0.9-accounts/logic/ACCOUNTS-PREVIEW-IMPORT-FIXTURE-UI-NOWRITE-CROSSCHECK-109.md",
+            "line": 54
+          },
+          {
+            "source": "evidence/full-chain/internal/audits/audits/macos-1.0.9-accounts/logic/ACCOUNTS-PREVIEW-IMPORT-VALID-DIALOG-FIELD-CONSUMPTION-STATIC-109.md",
+            "line": 83
+          }
+        ]
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "accounts.io.previewCount",
+          "rawValue": "备份包含 {{count}} 个账号",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "accounts.io.previewCount",
+          "rawValue": "备份包含 {{count}} 个账号",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "accounts.io.previewCount",
+          "rawValue": "Backup contains {{count}} account(s)",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "accounts.io.previewCount",
+          "rawValue": "Backup contains {{count}} account(s)",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
+      "key": "accounts.io.previewDesc",
+      "zhValue": "请确认备份内容后再决定如何导入。",
+      "enValue": "Review the backup contents before deciding how to import.",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "internal-key",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": [
+          {
+            "source": "evidence/full-chain/internal/audits/audits/macos-1.0.9-accounts/logic/ACCOUNTS-PREVIEW-IMPORT-FIXTURE-UI-NOWRITE-CROSSCHECK-109.md",
+            "line": 53
+          }
+        ]
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "accounts.io.previewDesc",
+          "rawValue": "请确认备份内容后再决定如何导入。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "accounts.io.previewDesc",
+          "rawValue": "请确认备份内容后再决定如何导入。",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "accounts.io.previewDesc",
+          "rawValue": "Review the backup contents before deciding how to import.",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "accounts.io.previewDesc",
+          "rawValue": "Review the backup contents before deciding how to import.",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
       "key": "accounts.io.previewFailed",
       "zhValue": "无法解析备份文件",
       "enValue": "Could not parse the backup file",
@@ -3254,76 +3397,76 @@
       ]
     },
     {
-      "key": "accounts.io.previewSuccess",
-      "zhValue": "已读取备份预览",
-      "enValue": "Backup preview loaded",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
+      "key": "accounts.io.previewTitle",
+      "zhValue": "预览账号备份",
+      "enValue": "Preview accounts backup",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "internal-key",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
       "keyEvidence": {
         "rawControlFlow": [],
-        "internalMentions": []
+        "internalMentions": [
+          {
+            "source": "evidence/full-chain/internal/audits/audits/macos-1.0.9-accounts/logic/ACCOUNTS-PREVIEW-IMPORT-FIXTURE-UI-NOWRITE-CROSSCHECK-109.md",
+            "line": 53
+          }
+        ]
       },
-      "translationEvidence": []
-    },
-    {
-      "key": "accounts.io.previewSuccessDesc",
-      "zhValue": "已选择 {{path}}，可以继续导入。",
-      "enValue": "Selected {{path}}. You can continue the import.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "accounts.io.previewSuccessDescWithCount",
-      "zhValue": "已选择 {{path}}，检测到 {{count}} 个账号。",
-      "enValue": "Selected {{path}} with {{count}} accounts.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "accounts.io.saveAs",
-      "zhValue": "另存备份",
-      "enValue": "Save backup as",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "accounts.io.previewTitle",
+          "rawValue": "预览账号备份",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "accounts.io.previewTitle",
+          "rawValue": "预览账号备份",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "accounts.io.previewTitle",
+          "rawValue": "Preview accounts backup",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "accounts.io.previewTitle",
+          "rawValue": "Preview accounts backup",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
     },
     {
       "key": "accounts.io.saveDialogTitle",
@@ -3919,24 +4062,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "accounts.previewImport",
-      "zhValue": "预览导入",
-      "enValue": "Preview import",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "accounts.profileName",

@@ -110,7 +110,7 @@ function AccountsFilterBar({
         ))}
       </select>
       <Badge variant="outline" className="ml-auto shrink-0">
-        {t("accounts.accountCount")}: {controller.accounts.length}
+        {t("accounts.listTitle")}: {controller.accounts.length}
       </Badge>
     </div>
   );
