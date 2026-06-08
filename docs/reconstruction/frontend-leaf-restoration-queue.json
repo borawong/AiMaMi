@@ -891,30 +891,6 @@
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
-      "recordLine": 363,
-      "line": 367,
-      "arrayName": "FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX",
-      "module": "plugins",
-      "owner": "plugins",
-      "command": "get_plugin_config",
-      "queryKey": null,
-      "source": "assets/index-CL22l5v8.js",
-      "status": "contract-service-only"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "recordLine": 374,
-      "line": 378,
-      "arrayName": "FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX",
-      "module": "plugins",
-      "owner": "plugins",
-      "command": "update_plugin_config",
-      "queryKey": null,
-      "source": "assets/index-CL22l5v8.js",
-      "status": "contract-service-only"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
       "recordLine": 595,
       "line": 598,
       "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
@@ -1322,12 +1298,7 @@
       "status": "boundary-only"
     }
   ],
-  "frontendDocSignals": [
-    {
-      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-bootstrap/frontend/FRONTEND-FULL-CHAIN-109.md",
-      "signal": "partial/candidate"
-    }
-  ],
+  "frontendDocSignals": [],
   "localeCoverage": [
     {
       "platform": "windows-x64",
@@ -1345,7 +1316,7 @@
   "copyAcceptance": {
     "file": "evidence/full-chain/internal/frontend-copy-acceptance.json",
     "exists": true,
-    "status": "draft",
+    "status": "accepted",
     "totals": {
       "zhLocaleKeys": 611,
       "enLocaleKeys": 611,
@@ -1402,7 +1373,7 @@
     {
       "id": "frontend-copy-acceptance-proof",
       "area": "copy",
-      "status": "draft-or-missing",
+      "status": "needs-verification",
       "blocker": "逐条 locale key 到 raw/internal 文案来源的验收文件尚未 accepted。"
     },
     {
@@ -1415,7 +1386,7 @@
       "id": "manifest-non-full-leaf-statuses",
       "area": "frontend-manifest",
       "status": "open",
-      "blocker": "当前 frontend manifest 还有 37 个非 full leaf 状态。"
+      "blocker": "当前 frontend manifest 还有 35 个非 full leaf 状态。"
     },
     {
       "id": "gate-report-strict-failures",

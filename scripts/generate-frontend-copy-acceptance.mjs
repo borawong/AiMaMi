@@ -763,10 +763,54 @@ function buildAcceptanceDraft() {
       entry.keyEvidence.rawControlFlow.length > 0 ||
       entry.keyEvidence.internalMentions.length > 0,
   ).length;
+  const totals = {
+    zhLocaleKeys: zhEntries.size,
+    enLocaleKeys: enEntries.size,
+    entries: entries.length,
+    rawControlFlowKeyBacked: rawObservedKeys,
+    internalKeyBacked: internalObservedKeys,
+    rawOrInternalKeyBacked: rawOrInternalObservedKeys,
+    sourceSyncOnly: entries.length - rawOrInternalObservedKeys,
+    rawTranslationZhKeyBacked: entries.filter((entry) =>
+      hasTranslationKey(rawTranslationEvidence, "zh", entry.key),
+    ).length,
+    rawTranslationEnKeyBacked: entries.filter((entry) =>
+      hasTranslationKey(rawTranslationEvidence, "en", entry.key),
+    ).length,
+    rawTranslationZhExact: entries.filter((entry) => entry.zhAccepted)
+      .length,
+    rawTranslationEnExact: entries.filter((entry) => entry.enAccepted)
+      .length,
+    rawTranslationBothExact: entries.filter(
+      (entry) =>
+        entry.zhAccepted &&
+        entry.enAccepted,
+    ).length,
+    rawTranslationValueMismatch: entries.filter(
+      (entry) =>
+        (hasTranslationKey(rawTranslationEvidence, "zh", entry.key) &&
+          !entry.zhAccepted) ||
+        (hasTranslationKey(rawTranslationEvidence, "en", entry.key) &&
+          !entry.enAccepted),
+    ).length,
+    acceptedZh: entries.filter((entry) => entry.zhAccepted).length,
+    acceptedEn: entries.filter((entry) => entry.enAccepted).length,
+    missingRawOrInternalCopySource: entries.filter(
+      (entry) => !entry.zhSource || !entry.enSource,
+    ).length,
+  };
+  const acceptanceStatus =
+    totals.entries === totals.zhLocaleKeys &&
+    totals.entries === totals.enLocaleKeys &&
+    totals.acceptedZh === totals.entries &&
+    totals.acceptedEn === totals.entries &&
+    totals.missingRawOrInternalCopySource === 0
+      ? "accepted"
+      : "draft";
 
   return {
     schema: "open-aimami.frontend.copy_acceptance.v1",
-    status: "draft",
+    status: acceptanceStatus,
     purpose:
       "逐条记录前端 locale 文案验收状态。本文件不是验收通过声明；只有 zhAccepted/enAccepted 同时为 true 且 zhSource/enSource 指向 raw/internal 原文时，才算对应 key 完成。",
     sources: {
@@ -782,42 +826,7 @@ function buildAcceptanceDraft() {
       ),
       internalRoot: "evidence/full-chain/internal",
     },
-    totals: {
-      zhLocaleKeys: zhEntries.size,
-      enLocaleKeys: enEntries.size,
-      entries: entries.length,
-      rawControlFlowKeyBacked: rawObservedKeys,
-      internalKeyBacked: internalObservedKeys,
-      rawOrInternalKeyBacked: rawOrInternalObservedKeys,
-      sourceSyncOnly: entries.length - rawOrInternalObservedKeys,
-      rawTranslationZhKeyBacked: entries.filter((entry) =>
-        hasTranslationKey(rawTranslationEvidence, "zh", entry.key),
-      ).length,
-      rawTranslationEnKeyBacked: entries.filter((entry) =>
-        hasTranslationKey(rawTranslationEvidence, "en", entry.key),
-      ).length,
-      rawTranslationZhExact: entries.filter((entry) => entry.zhAccepted)
-        .length,
-      rawTranslationEnExact: entries.filter((entry) => entry.enAccepted)
-        .length,
-      rawTranslationBothExact: entries.filter(
-        (entry) =>
-          entry.zhAccepted &&
-          entry.enAccepted,
-      ).length,
-      rawTranslationValueMismatch: entries.filter(
-        (entry) =>
-          (hasTranslationKey(rawTranslationEvidence, "zh", entry.key) &&
-            !entry.zhAccepted) ||
-          (hasTranslationKey(rawTranslationEvidence, "en", entry.key) &&
-            !entry.enAccepted),
-      ).length,
-      acceptedZh: entries.filter((entry) => entry.zhAccepted).length,
-      acceptedEn: entries.filter((entry) => entry.enAccepted).length,
-      missingRawOrInternalCopySource: entries.filter(
-        (entry) => !entry.zhSource || !entry.enSource,
-      ).length,
-    },
+    totals,
     entries,
   };
 }

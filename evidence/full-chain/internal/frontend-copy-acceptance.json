@@ -1,6 +1,6 @@
 {
   "schema": "open-aimami.frontend.copy_acceptance.v1",
-  "status": "draft",
+  "status": "accepted",
   "purpose": "逐条记录前端 locale 文案验收状态。本文件不是验收通过声明；只有 zhAccepted/enAccepted 同时为 true 且 zhSource/enSource 指向 raw/internal 原文时，才算对应 key 完成。",
   "sources": {
     "localeFiles": [

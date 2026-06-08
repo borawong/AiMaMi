@@ -83,6 +83,38 @@ function validatePluginsCloseout(closeout) {
     }
   }
 
+  const expectedManifestStatuses = [
+    {
+      arrayName: "FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX",
+      module: "plugins",
+      command: "get_plugin_config",
+      source: "assets/index-CL22l5v8.js",
+      status: "contract-service-only",
+    },
+    {
+      arrayName: "FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX",
+      module: "plugins",
+      command: "update_plugin_config",
+      source: "assets/index-CL22l5v8.js",
+      status: "contract-service-only",
+    },
+  ];
+  const expectedKeys = new Set(expectedManifestStatuses.map(manifestCloseoutKey));
+  const actualKeys = new Set((closeout.closedManifestStatuses ?? []).map(manifestCloseoutKey));
+  for (const entry of closeout.closedManifestStatuses ?? []) {
+    if (!expectedKeys.has(manifestCloseoutKey(entry))) {
+      failures.push(`plugins closeout 不允许关闭未验证 manifest 状态：${JSON.stringify(entry)}`);
+    }
+    if (entry.status !== "contract-service-only") {
+      failures.push(`plugins closeout 不得把 config manifest 状态提升为 ${String(entry.status)}`);
+    }
+  }
+  for (const expectedEntry of expectedManifestStatuses) {
+    if (!actualKeys.has(manifestCloseoutKey(expectedEntry))) {
+      failures.push(`plugins closeout 缺少 config manifest closeout：${expectedEntry.command}`);
+    }
+  }
+
   validateClosedDocs("plugins", closeout.closedFrontendDocs);
   validateRequiredSignals(closeout);
 }

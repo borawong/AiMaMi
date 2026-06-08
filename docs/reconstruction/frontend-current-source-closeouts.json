@@ -15,6 +15,22 @@
         "list_plugins",
         "toggle_plugin"
       ],
+      "closedManifestStatuses": [
+        {
+          "arrayName": "FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX",
+          "module": "plugins",
+          "command": "get_plugin_config",
+          "source": "assets/index-CL22l5v8.js",
+          "status": "contract-service-only"
+        },
+        {
+          "arrayName": "FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX",
+          "module": "plugins",
+          "command": "update_plugin_config",
+          "source": "assets/index-CL22l5v8.js",
+          "status": "contract-service-only"
+        }
+      ],
       "notClosedCommands": [
         "get_plugin_config",
         "update_plugin_config"
@@ -442,7 +458,9 @@
       "id": "app-shell-source-only-index-and-desktop-message-boundary",
       "module": "app-shell",
       "status": "current-source-closed-partial",
-      "closedFrontendDocs": [],
+      "closedFrontendDocs": [
+        "evidence/full-chain/internal/audits/audits/windows-1.0.9-bootstrap/frontend/FRONTEND-FULL-CHAIN-109.md"
+      ],
       "closedManifestStatuses": [
         {
           "arrayName": "FRONTEND_DUMPED_INDEX_ASSET_SOURCES",
