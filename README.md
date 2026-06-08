@@ -28,7 +28,7 @@ OpenAiMami 是一个面向个人本地工作流的桌面应用。本仓库公开
 | `evidence/full-chain/internal/` | 匿名化 internal 链条，包含 audit map、frontend map、distilled logic、raw leaf 和索引。 |
 | `evidence/binary-manifests/` | 外部大文件的大小、状态和哈希清单。 |
 | `src/` | 当前公开前端源码和主流前端模块化重构入口。 |
-| `src-tauri/` | 当前公开 Tauri 与 Rust 后端骨架。 |
+| `src-tauri/` | 当前公开 Tauri 与 Rust 后端六边形骨架，以及已补回的原始公开后端能力。 |
 | `LICENSE` | Apache License 许可文本。 |
 
 LFS/IDB 资料独立称为 `OpenAiMami IDB`。主仓库不直接保存大体积 IDB 文件，只保存匿名化 raw/internal、前端 dumped 文件、架构骨架、重建文档和独立资产清单。还原应以 `evidence/full-chain/internal` 和 `evidence/full-chain/raw` 为主线，IDB 只作为可选的独立参考资产，不能写成“只靠 IDB”。
@@ -40,9 +40,28 @@ LFS/IDB 资料独立称为 `OpenAiMami IDB`。主仓库不直接保存大体积 
 3. 从 internal 链条读取 audit map、frontend map、distilled logic、raw leaf 和版本差异材料。
 4. 前端按 route registry、entry/root、runtime initializer，以及深模块 Provider、StoreUpdater、Content、cache、hooks、dialogs、panels、components、types、tests 逐步还原。
 5. 前端实现应采用主流前端模块化架构重构并还原，不写入任何外部参考仓库名称。
-6. 后端明确保持六边形架构骨架，按 commands、application、core、platform、repository、adapters、contracts 边界渐进补齐。
-7. 不还原后端业务实现是项目范围选择；未选择还原的后端业务行为只能保留为契约、桩或待实现项。
+6. 后端明确保持六边形架构骨架，按 commands、application、core、platform、repository、adapters、contracts 边界渐进补齐；原始公开后端已经公开过的能力应补回骨架内。
+7. 未公开或未选择还原的后端业务行为只能保留为契约、桩或待实现项，不能写成真实闭源业务实现。
 8. 所有新增注释和文档使用中文，所有路径使用仓库相对路径。
+
+## 当前补回状态
+
+### 已做
+
+- 保留 Apache License 许可上下文、中文公开说明、raw/internal 主链路、前端 dumped 证据和匿名化规则。
+- 前端按当前公开证据恢复到主流模块化骨架，保留 route registry、entry/root、runtime initializer、深模块 Provider/StoreUpdater/Content、cache、hooks、dialogs、panels、components、types 和测试边界。
+- 后端不再只是空六边形目录；已把原始公开后端中可公开的 MCP、Skills、自定义指令、系统设置、系统信息、打开路径、热点开关状态、插件合同空列表和 Tauri command 注册补入当前六边形骨架。
+- 已把后端公开能力拆到 `commands`、`application/usecase`、`repository`、`repository/adapter`、`platform`、`contracts` 和 `core/error` 边界：command 只接参数和状态，usecase 负责编排，repository/adapter 负责文件读写，platform 负责系统能力，contracts 负责前后端可序列化数据形状。
+- `scripts/validate-backend-hexagonal.mjs` 已从“全仓禁止真实副作用”改成“按 owner 限制副作用”：文件系统只允许仓储/适配器边界，进程、窗口、shell 只允许平台边界，voice 仍保持空骨架门禁。
+- `README.md` 与 `README-cn.md` 保持中文同步，记录当前已经做了什么、没有做什么，方便 PR 继续补齐。
+
+### 未做
+
+- 后端闭源业务不做全量还原；没有公开证据支撑的业务行为仍只能保留为合同、桩、待实现项或测试缺口。
+- voice 前后端不做真实功能还原，只保留空骨架和说明；原始公开材料中与录音、语音运行时、快捷键、音频反馈、文本注入相关的内容不进入当前公开实现。
+- Accounts、Relay、Analytics、Sessions、Daemon 自动切换、更新安装、外部进程重启/强杀等后端能力仍未完成真实业务闭环；其中部分前端 wrapper 和后端命令只返回明确的未恢复状态。
+- MCP 写回当前使用结构化 TOML 保存，已在源码层面对接命令和数据，但还没有恢复原始实现中对注释和托管块位置的完整保留策略。
+- Rust 编译验收需要具备目标平台工具链；Windows 下缺少 MSVC `link.exe` 时，`cargo check` 会在第三方 crate build script 阶段失败。
 
 ## 可直接给 AI 的重建提示
 
@@ -79,8 +98,9 @@ LFS/IDB 资料独立称为 `OpenAiMami IDB`。主仓库不直接保存大体积 
 1. 后端按 commands、application、core、platform、repository、adapters、contracts 六边形骨架渐进补齐。
 2. commands 只作为薄适配层，不承载业务逻辑。
 3. application 负责用例编排，core 保留稳定领域类型，platform 和 repository 保留平台与存储边界，adapters 负责外部适配，contracts 负责前后端可序列化契约。
-4. 不把未选择还原的后端业务写成实现；这些行为必须写成契约、桩、待实现项或测试缺口。
-5. 不还原后端业务实现是项目范围选择，不要描述成材料缺口。
+4. 原始公开后端已经公开过的能力应补回骨架内，并保持 command、usecase、repository、platform、contracts 的 owner 边界。
+5. 不把未公开或未选择还原的后端业务写成实现；这些行为必须写成契约、桩、待实现项或测试缺口。
+6. 不还原闭源后端业务实现是项目范围选择，不要描述成材料缺口。
 
 第六步提交要求：
 1. 保留 Apache License 许可上下文。

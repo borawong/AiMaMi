@@ -1,15 +1,20 @@
-// contracts 聚合跨层合同边界，当前只声明空骨架模块。
-// 具体字段、响应形状和错误语义需要证据齐备后再补齐。
+pub mod accounts;
+pub mod analytics;
+pub mod backend_skeleton;
+pub mod custom_instructions;
+pub mod envelope;
+pub mod mcp;
+pub mod relay;
+pub mod runtime_extensions;
+pub mod sessions;
+pub mod skills;
+pub mod system;
+pub mod voice;
 
-pub(crate) mod accounts;
-pub(crate) mod analytics;
-pub(crate) mod backend_skeleton;
-pub(crate) mod custom_instructions;
-pub(crate) mod envelope;
-pub(crate) mod mcp;
-pub(crate) mod relay;
-pub(crate) mod runtime_extensions;
-pub(crate) mod sessions;
-pub(crate) mod skills;
-pub(crate) mod system;
-pub(crate) mod voice;
+pub use backend_skeleton::*;
+pub use custom_instructions::*;
+pub use envelope::*;
+pub use mcp::*;
+pub use runtime_extensions::*;
+pub use skills::*;
+pub use system::*;

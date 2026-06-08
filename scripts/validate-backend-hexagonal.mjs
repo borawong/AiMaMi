@@ -58,31 +58,40 @@ const forbiddenSideEffectRules = [
     label: "std::fs",
     patterns: [/\bstd::fs\b/g, /\bstd\s*::\s*\{\s*fs\b/g],
     reason: "禁止直接使用真实文件系统",
+    allowedOwners: [
+      /^src-tauri\/src\/repository\/adapter\/real_fs\.rs$/,
+      /^src-tauri\/src\/repository\/paths\.rs$/,
+    ],
   },
   {
     label: "tokio::fs",
     patterns: [/\btokio::fs\b/g, /\btokio\s*::\s*\{\s*fs\b/g],
     reason: "禁止直接使用异步真实文件系统",
+    allowedOwners: [/^src-tauri\/src\/repository\/adapter\/real_fs\.rs$/],
   },
   {
     label: "read_to_string",
-    patterns: [/\bread_to_string\s*\(/g],
+    patterns: [/\bstd\s*::\s*fs\s*::\s*read_to_string\s*\(/g],
     reason: "禁止在骨架期读取真实文件内容",
+    allowedOwners: [/^src-tauri\/src\/repository\/adapter\/real_fs\.rs$/],
   },
   {
     label: "write_to_string",
-    patterns: [/\bwrite_to_string\s*\(/g],
+    patterns: [/\bstd\s*::\s*fs\s*::\s*write\s*\(/g],
     reason: "禁止在骨架期写入真实文件内容",
+    allowedOwners: [/^src-tauri\/src\/repository\/adapter\/real_fs\.rs$/],
   },
   {
     label: "std::process::Command::new",
     patterns: [/\bstd\s*::\s*process\s*::\s*Command\s*::\s*new\s*\(/g, /\bCommand\s*::\s*new\s*\(/g],
     reason: "禁止启动真实外部进程",
+    allowedOwners: [/^src-tauri\/src\/platform\//],
   },
   {
     label: "reqwest",
     patterns: [/\breqwest\b/g],
     reason: "禁止发起真实 HTTP 能力",
+    allowedOwners: [/^src-tauri\/src\/platform\//, /^src-tauri\/src\/repository\/adapter\//],
   },
   {
     label: "Tauri window 操作",
@@ -92,6 +101,7 @@ const forbiddenSideEffectRules = [
       /\.(get_window|get_webview_window|create_window|emit|emit_all)\s*\(/g,
     ],
     reason: "禁止执行真实 Tauri 窗口操作",
+    allowedOwners: [/^src-tauri\/src\/platform\/window\.rs$/],
   },
   {
     label: "Tauri tray 操作",
@@ -100,6 +110,7 @@ const forbiddenSideEffectRules = [
       /\.(tray_handle|set_icon|set_menu|set_tooltip|set_title)\s*\(/g,
     ],
     reason: "禁止执行真实 Tauri 托盘操作",
+    allowedOwners: [/^src-tauri\/src\/platform\/tray\.rs$/],
   },
   {
     label: "Tauri process 操作",
@@ -110,6 +121,7 @@ const forbiddenSideEffectRules = [
       /\.\s*sidecar\s*\(/g,
     ],
     reason: "禁止执行真实 Tauri 进程操作",
+    allowedOwners: [/^src-tauri\/src\/lib\.rs$/, /^src-tauri\/src\/platform\//],
   },
 ];
 
@@ -311,8 +323,14 @@ function validateNoRealSideEffects() {
   for (const file of rustFiles) {
     const original = readUtf8(file);
     const content = stripRustComments(original);
+    const relativePath = toRelative(file);
 
     for (const rule of forbiddenSideEffectRules) {
+      const allowedOwners = rule.allowedOwners ?? [];
+      if (allowedOwners.some((owner) => owner.test(relativePath))) {
+        continue;
+      }
+
       const matchLines = [];
       for (const pattern of rule.patterns) {
         for (const index of findRuleMatches(content, pattern)) {
@@ -322,10 +340,10 @@ function validateNoRealSideEffects() {
 
       const uniqueLines = [...new Set(matchLines)].sort((left, right) => left - right);
       for (const line of uniqueLines.slice(0, 3)) {
-        failures.push(`${toRelative(file)}:${line} 违反真实副作用门禁：${rule.reason}（${rule.label}）`);
+        failures.push(`${relativePath}:${line} 违反六边形 owner 门禁：${rule.reason}（${rule.label}）`);
       }
       if (uniqueLines.length > 3) {
-        failures.push(`${toRelative(file)} 还有 ${uniqueLines.length - 3} 处 ${rule.label} 命中未展开`);
+        failures.push(`${relativePath} 还有 ${uniqueLines.length - 3} 处 ${rule.label} 命中未展开`);
       }
     }
   }
@@ -361,4 +379,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("后端六边形骨架校验通过：目录、边界文件、真实副作用禁用和 voice 空骨架门禁满足当前规则。");
+console.log("后端六边形校验通过：目录、边界文件、副作用 owner 和 voice 空骨架门禁满足当前规则。");
