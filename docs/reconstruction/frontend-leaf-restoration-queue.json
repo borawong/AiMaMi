@@ -1,0 +1,1319 @@
+{
+  "schema": "open-aimami.frontend_leaf_restoration_queue.v1",
+  "purpose": "记录 MAC/WIN 100% leaf 目标下，当前仓库仍不能通过的前端 leaf、文案和证据闭合缺口。",
+  "sourceOfTruth": {
+    "gapAudit": "evidence/full-chain/internal/data/data/full-leaf-100-gap-audit.json",
+    "gateReports": "evidence/full-chain/internal/audits/audits/**/gate-report.json",
+    "frontendDocs": "evidence/full-chain/internal/audits/audits/**/frontend/*.md",
+    "frontendManifest": "src/restoration/frontend-manifest/index.ts",
+    "localeFiles": [
+      "src/locales/zh.json",
+      "src/locales/en.json"
+    ]
+  },
+  "currentConclusion": {
+    "fullLeaf100": false,
+    "reason": "strict gate 仍有失败项；本文件是重建队列，不是验收通过声明。"
+  },
+  "gapAuditTotals": {
+    "consumerStartReady": 21,
+    "consumerStartBlocked": 16,
+    "strictImplementationUse": 4,
+    "readyToImplement": 0,
+    "implementation_use": false,
+    "gate_accepted": false,
+    "full_leaf_100": false,
+    "totalRows": 37
+  },
+  "gapAuditModules": {
+    "accounts": {
+      "rows": 9,
+      "consumerStartReady": 9,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0,
+      "legacyEightReducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/ACCOUNTS-SIX-DIM-MIGRATION-109.md",
+      "chatgptSessionImportReducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/ACCOUNTS-CHATGPT-SESSION-IMPORT-DIFF-109.md",
+      "fullLeafBlockers": [
+        "accepted runtime IPC request/response/error envelopes missing",
+        "durable side-effect and rollback fixtures missing",
+        "executed source archive acceptance mapping missing",
+        "Windows independent closure missing",
+        "import_chatgpt_session_account is Gate1 only; exact runtime envelopes and side-effect byte parity remain missing"
+      ],
+      "moduleExitAllowed": true,
+      "status": "accounts_gate1_closed_for_module_exit_strict_highest_still_blocked",
+      "historicalClosureQueue": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/ACCOUNTS-CURRENT-CLOSURE-QUEUE-109.md"
+    },
+    "plugins": {
+      "rows": 13,
+      "consumerStartReady": 2,
+      "consumerStartBlocked": 11,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0,
+      "reducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/PLUGINS-SIX-DIM-MIGRATION-109.md",
+      "activeModuleLock": true,
+      "moduleExitAllowed": false,
+      "gate1Ledger": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/PLUGINS-GATE1-13ROW-LEDGER-109.md",
+      "status": "plugins_active_2_of_13_start_ready_11_blocked"
+    },
+    "relay_targeted": {
+      "rows": 3,
+      "consumerStartReady": 3,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0,
+      "reducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/RELAY-TARGETED-SIX-DIM-MIGRATION-109.md"
+    },
+    "system": {
+      "rows": 9,
+      "consumerStartReady": 4,
+      "consumerStartBlocked": 5,
+      "strictImplementationUse": 4,
+      "readyToImplement": 0,
+      "reducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/SYSTEM-SIX-DIM-MIGRATION-109.md"
+    },
+    "tray": {
+      "rows": 3,
+      "consumerStartReady": 3,
+      "consumerStartBlocked": 0,
+      "strictImplementationUse": 0,
+      "readyToImplement": 0,
+      "reducer": "<source-location>/aimami/1.0.9/macos-universal/frontend-relay-diff/logic/TRAY-SIX-DIM-MIGRATION-109.md"
+    }
+  },
+  "gateReportFailures": [
+    {
+      "platform": "cross",
+      "area": "home-usage-frontend",
+      "file": "evidence/full-chain/internal/audits/audits/cross-1.0.9-home-usage-frontend/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "cross",
+      "area": "home-usage-frontend",
+      "file": "evidence/full-chain/internal/audits/audits/cross-1.0.9-home-usage-frontend/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "cross",
+      "area": "home-usage-frontend",
+      "file": "evidence/full-chain/internal/audits/audits/cross-1.0.9-home-usage-frontend/gate-report.json",
+      "path": "cluster_gate_summary.readyToImplement",
+      "value": 0
+    },
+    {
+      "platform": "cross",
+      "area": "relay-core-bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/cross-1.0.9-relay-core-bootstrap/gate-report.json",
+      "path": "readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "cross",
+      "area": "relay-core-bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/cross-1.0.9-relay-core-bootstrap/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "cross",
+      "area": "relay-core-bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/cross-1.0.9-relay-core-bootstrap/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "cross",
+      "area": "relay-core-bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/cross-1.0.9-relay-core-bootstrap/gate-report.json",
+      "path": "full_leaf_100",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-bootstrap/gate-report.json",
+      "path": "readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-bootstrap/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-bootstrap/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-bootstrap/gate-report.json",
+      "path": "full_leaf_100",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "maintenance",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-maintenance/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "maintenance",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-maintenance/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "maintenance",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-maintenance/gate-report.json",
+      "path": "dim6_missing",
+      "value": true
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "dim6_missing",
+      "value": true
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "leaves.get_mystery_unlock_grants.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "leaves.get_mystery_unlock_grants.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "leaves.merge_mystery_unlock_grants.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "leaves.merge_mystery_unlock_grants.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "leaves.mystery_route_allowed.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "leaves.mystery_route_allowed.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "mystery-unlock",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-mystery-unlock/gate-report.json",
+      "path": "cluster_gate_summary.readyToImplement",
+      "value": 0
+    },
+    {
+      "platform": "macos",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-relay-core/gate-report.json",
+      "path": "cluster_gates.18.dim6_missing",
+      "value": true
+    },
+    {
+      "platform": "macos",
+      "area": "relay",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-relay/gate-report.json",
+      "path": "full_leaf_100",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "system-shell-init",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-system-shell-init/gate-report.json",
+      "path": "readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "system-shell-init",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-system-shell-init/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "system-shell-init",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-system-shell-init/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "system-shell-init",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-system-shell-init/gate-report.json",
+      "path": "full_leaf_100",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-system/gate-report.json",
+      "path": "per_command_gate.note_usage_refresh_activity.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-system/gate-report.json",
+      "path": "per_command_gate.schedule_full_runtime_refresh.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-system/gate-report.json",
+      "path": "per_command_gate.start_auto_switch_pending_watcher.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-system/gate-report.json",
+      "path": "per_command_gate.start_usage_refresh_watcher.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-system/gate-report.json",
+      "path": "per_command_gate.update_usage_refresh_schedule.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "window-path",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-window-path/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "window-path",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-window-path/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "window-path",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-window-path/gate-report.json",
+      "path": "dim6_missing",
+      "value": true
+    },
+    {
+      "platform": "macos",
+      "area": "window-path",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-window-path/gate-report.json",
+      "path": "leaves.focus_main_window.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "window-path",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-window-path/gate-report.json",
+      "path": "leaves.focus_main_window.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "window-path",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-window-path/gate-report.json",
+      "path": "leaves.open_path.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "window-path",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-window-path/gate-report.json",
+      "path": "leaves.open_path.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "macos",
+      "area": "window-path",
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-window-path/gate-report.json",
+      "path": "cluster_gate_summary.readyToImplement",
+      "value": 0
+    },
+    {
+      "platform": "windows",
+      "area": "bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-bootstrap/gate-report.json",
+      "path": "gate_summary.readyToImplement",
+      "value": 0
+    },
+    {
+      "platform": "windows",
+      "area": "bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-bootstrap/gate-report.json",
+      "path": "gate_summary.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "bootstrap",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-bootstrap/gate-report.json",
+      "path": "gate_summary.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "maintenance",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-maintenance/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "maintenance",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-maintenance/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "maintenance",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-maintenance/gate-report.json",
+      "path": "dim6_missing",
+      "value": true
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_codex_writer.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_codex_writer.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_codex_writer.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_diagnostic.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_diagnostic.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_diagnostic.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_health_audit.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_health_audit.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_health_audit.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.bootstrap.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.bootstrap.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.bootstrap.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_fetch_models.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_fetch_models.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_fetch_models.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_translator.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_translator.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_translator.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_proxy_config.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_proxy_config.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_proxy_config.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_image_compat.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_image_compat.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_image_compat.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_sse.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_sse.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "relay-core",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay-core/gate-report.json",
+      "path": "clusters.relay_sse.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "dim6_missing",
+      "value": true
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "leaves.get_hotspot_enabled.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "leaves.get_hotspot_enabled.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "leaves.set_hotspot_enabled.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "leaves.set_hotspot_enabled.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "leaves.hotspot_ready.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "leaves.hotspot_ready.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-hotspot",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-hotspot/gate-report.json",
+      "path": "cluster_gate_summary.readyToImplement",
+      "value": 0
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "dim6_missing",
+      "value": true
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "leaves.get_usage_refresh_interval.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "leaves.get_usage_refresh_interval.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "leaves.set_usage_refresh_interval.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "leaves.set_usage_refresh_interval.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "leaves.refresh_usage_snapshot.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "leaves.refresh_usage_snapshot.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system-usage",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system-usage/gate-report.json",
+      "path": "cluster_gate_summary.readyToImplement",
+      "value": 0
+    },
+    {
+      "platform": "windows",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system/gate-report.json",
+      "path": "per_command.force_kill_codex.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system/gate-report.json",
+      "path": "per_command.force_kill_codex.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system/gate-report.json",
+      "path": "per_command.force_kill_codex.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system/gate-report.json",
+      "path": "per_command.diagnose_codex_router.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system/gate-report.json",
+      "path": "per_command.diagnose_codex_router.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system/gate-report.json",
+      "path": "per_command.diagnose_codex_router.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system/gate-report.json",
+      "path": "per_command.diagnose.readyToImplement",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system/gate-report.json",
+      "path": "per_command.diagnose.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "system",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-system/gate-report.json",
+      "path": "per_command.diagnose.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "ui",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-ui/gate-report.json",
+      "path": "gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "ui",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-ui/gate-report.json",
+      "path": "implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "ui",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-ui/gate-report.json",
+      "path": "dim6_missing",
+      "value": true
+    },
+    {
+      "platform": "windows",
+      "area": "ui",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-ui/gate-report.json",
+      "path": "leaves.set_app_theme.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "ui",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-ui/gate-report.json",
+      "path": "leaves.set_app_theme.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "ui",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-ui/gate-report.json",
+      "path": "leaves.theme_platform_diff.gate_accepted",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "ui",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-ui/gate-report.json",
+      "path": "leaves.theme_platform_diff.implementation_use",
+      "value": false
+    },
+    {
+      "platform": "windows",
+      "area": "ui",
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-ui/gate-report.json",
+      "path": "cluster_gate_summary.readyToImplement",
+      "value": 0
+    }
+  ],
+  "manifestNonLeafStatuses": [
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 92,
+      "module": "plugins",
+      "command": "import_remote_device_secret_if_empty",
+      "status": "contract-service-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 116,
+      "module": "app-shell",
+      "command": "import_remote_device_secret_if_empty",
+      "status": "source-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 137,
+      "module": "app-shell",
+      "command": "import_remote_device_secret_if_empty",
+      "status": "owner-closed"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 147,
+      "module": "voice",
+      "command": "import_remote_device_secret_if_empty",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 156,
+      "module": "voice",
+      "command": "import_remote_device_secret_if_empty",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 168,
+      "module": "voice",
+      "command": "import_remote_device_secret_if_empty",
+      "status": "source-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 253,
+      "module": "voice",
+      "command": "import_remote_device_secret_if_empty",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 299,
+      "module": "app-shell",
+      "command": "get_or_create_remote_device_secret",
+      "status": "source-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 313,
+      "module": "accounts",
+      "command": "get_or_create_remote_device_secret",
+      "status": "owner-closed"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 326,
+      "module": "analytics",
+      "command": "get_or_create_remote_device_secret",
+      "status": "owner-closed"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 339,
+      "module": "mcp",
+      "command": "get_or_create_remote_device_secret",
+      "status": "owner-closed"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 352,
+      "module": "skills",
+      "command": "get_or_create_remote_device_secret",
+      "status": "owner-closed"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 367,
+      "module": "plugins",
+      "command": "get_plugin_config",
+      "status": "contract-service-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 378,
+      "module": "plugins",
+      "command": "update_plugin_config",
+      "status": "contract-service-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 598,
+      "module": "voice",
+      "command": "load_voice_workspace",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 607,
+      "module": "voice",
+      "command": "upsert_voice_template",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 616,
+      "module": "voice",
+      "command": "remove_voice_template",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 625,
+      "module": "voice",
+      "command": "upsert_voice_vocabulary",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 634,
+      "module": "voice",
+      "command": "remove_voice_vocabulary",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 643,
+      "module": "voice",
+      "command": "replace_voice_vocabulary_kind",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 652,
+      "module": "voice",
+      "command": "upsert_voice_vocabulary_app_scope",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 661,
+      "module": "voice",
+      "command": "remove_voice_vocabulary_app_scope",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 670,
+      "module": "voice",
+      "command": "resolve_voice_vocabulary_app_info",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 679,
+      "module": "voice",
+      "command": "generate_voice_prompt",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 688,
+      "module": "voice",
+      "command": "load_voice_llm_config",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 697,
+      "module": "voice",
+      "command": "save_voice_llm_config",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 706,
+      "module": "voice",
+      "command": "test_voice_llm_config",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 715,
+      "module": "voice",
+      "command": "load_voice_asr_config",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 724,
+      "module": "voice",
+      "command": "save_voice_asr_config",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 733,
+      "module": "voice",
+      "command": "test_voice_asr_config",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 742,
+      "module": "voice",
+      "command": "remove_voice_history_entry",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 751,
+      "module": "voice",
+      "command": "load_voice_runtime_status",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 760,
+      "module": "voice",
+      "command": "request_voice_permissions",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 769,
+      "module": "voice",
+      "command": "request_accessibility_permission",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 778,
+      "module": "voice",
+      "command": "set_voice_global_shortcut",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 787,
+      "module": "voice",
+      "command": "capture_voice_trigger_key",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 796,
+      "module": "voice",
+      "command": "cancel_voice_trigger_capture",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 805,
+      "module": "voice",
+      "command": "set_voice_trigger_listener_suppressed",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 814,
+      "module": "voice",
+      "command": "set_voice_trigger_key",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 823,
+      "module": "voice",
+      "command": "set_voice_trigger_bindings",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 832,
+      "module": "voice",
+      "command": "update_voice_runtime_settings",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 841,
+      "module": "voice",
+      "command": "set_voice_processing_mode_id",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 850,
+      "module": "voice",
+      "command": "start_voice_capture",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 859,
+      "module": "voice",
+      "command": "stop_voice_capture",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 868,
+      "module": "voice",
+      "command": "inject_voice_text",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 877,
+      "module": "voice",
+      "command": "show_voice_search_overlay",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 886,
+      "module": "voice",
+      "command": "set_voice_mode_shortcut",
+      "status": "boundary-only"
+    },
+    {
+      "file": "src/restoration/frontend-manifest/index.ts",
+      "line": 895,
+      "module": "voice",
+      "command": "remove_voice_mode_shortcut",
+      "status": "boundary-only"
+    }
+  ],
+  "frontendDocSignals": [
+    {
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-plugins/frontend/FRONTEND-FULL-CHAIN-109.md",
+      "signal": "missing frontend route/API/command/mock chain"
+    },
+    {
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-relay/frontend/FRONTEND-FULL-CHAIN-109.md",
+      "signal": "blocked"
+    },
+    {
+      "file": "evidence/full-chain/internal/audits/audits/macos-1.0.9-relay/frontend/RELAY-PAGE-LOAD-CHAINS-DISTILLED.md",
+      "signal": "blocked"
+    },
+    {
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-bootstrap/frontend/FRONTEND-FULL-CHAIN-109.md",
+      "signal": "partial"
+    },
+    {
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-plugins/frontend/FRONTEND-FULL-CHAIN-109.md",
+      "signal": "missing frontend route/API/command/mock chain"
+    },
+    {
+      "file": "evidence/full-chain/internal/audits/audits/windows-1.0.9-relay/frontend/FRONTEND-FULL-CHAIN-109.md",
+      "signal": "blocked"
+    }
+  ],
+  "localeCoverage": [
+    {
+      "platform": "windows-x64",
+      "file": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/frontend/frontend-control-flow.jsonl",
+      "keyCount": 36,
+      "missingKeys": []
+    },
+    {
+      "platform": "macos",
+      "file": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/frontend/frontend-control-flow.jsonl",
+      "keyCount": 40,
+      "missingKeys": []
+    }
+  ],
+  "copyAcceptance": {
+    "file": "evidence/full-chain/internal/frontend-copy-acceptance.json",
+    "exists": false,
+    "requiredForFullCopyAcceptance": true
+  },
+  "sourceSignals": [
+    {
+      "id": "plugins-route-api-command-current",
+      "description": "plugins 旧 frontend 文档缺 route/API/command/mock chain；当前源码已存在 route/service/hooks，但 config UI 仍不是可见 leaf。",
+      "paths": [
+        "src/features/plugins/Content.tsx",
+        "src/features/plugins/components/page.tsx",
+        "src/features/plugins/hooks/query.ts",
+        "src/features/plugins/hooks/mutation.ts",
+        "src/services/plugins/index.ts"
+      ],
+      "existingPaths": [
+        "src/features/plugins/Content.tsx",
+        "src/features/plugins/components/page.tsx",
+        "src/features/plugins/hooks/query.ts",
+        "src/features/plugins/hooks/mutation.ts",
+        "src/services/plugins/index.ts"
+      ]
+    },
+    {
+      "id": "voice-empty-skeleton-current",
+      "description": "voice 按项目范围保留空骨架，不能计入 100% leaf。",
+      "paths": [
+        "src/features/voice/Content.tsx",
+        "src/features/voice/hooks/index.ts"
+      ],
+      "existingPaths": [
+        "src/features/voice/Content.tsx",
+        "src/features/voice/hooks/index.ts"
+      ]
+    }
+  ],
+  "nextQueue": [
+    {
+      "id": "frontend-copy-acceptance-proof",
+      "area": "copy",
+      "status": "missing",
+      "blocker": "缺少逐条 locale key 到 raw/internal 文案来源的验收文件。"
+    },
+    {
+      "id": "plugins-config-visible-leaf",
+      "area": "plugins",
+      "status": "blocked-by-raw-observation",
+      "blocker": "raw plugins acceptance 记录 get/update config 没有可见 UI trigger；不能编造 UI leaf。"
+    },
+    {
+      "id": "manifest-non-full-leaf-statuses",
+      "area": "frontend-manifest",
+      "status": "open",
+      "blocker": "当前 frontend manifest 还有 48 个非 full leaf 状态。"
+    },
+    {
+      "id": "gate-report-strict-failures",
+      "area": "internal-gate",
+      "status": "open",
+      "blocker": "当前 internal gate-report 还有 113 个严格字段失败。"
+    }
+  ]
+}

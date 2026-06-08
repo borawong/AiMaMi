@@ -9,6 +9,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
+    "generate:frontend-leaf-queue": "node scripts/generate-frontend-leaf-restoration-queue.mjs",
+    "validate:frontend-leaf-queue": "node scripts/generate-frontend-leaf-restoration-queue.mjs --check",
     "validate:public-boundary": "node scripts/validate-public-boundary.mjs",
     "validate:frontend-dumped": "node scripts/validate-frontend-dumped.mjs",
     "validate:frontend-evidence": "node scripts/validate-frontend-evidence.mjs",
