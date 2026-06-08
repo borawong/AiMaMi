@@ -240,7 +240,7 @@ export const routeDefinitions: RouteDefinition[] = ([
   },
   {
     route: "relay",
-    titleKey: "nav.relay",
+    titleKey: "relay.title",
     icon: RadioTower,
     visible: true,
     highIo: true,

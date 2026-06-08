@@ -228,7 +228,7 @@ export function useRelayMutations(): RelayMutationController {
     },
     diagnosticsAction: {
       id: "diagnostics",
-      labelKey: "relay.runDiagnostics",
+      labelKey: "relay.diagnostic.title",
       run: () => diagnosticsMutation.mutateAsync(),
       isPending: diagnosticsMutation.isPending,
     },
