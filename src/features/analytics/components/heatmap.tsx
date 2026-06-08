@@ -132,7 +132,7 @@ export function Heatmap({ data, colorVar = "var(--heatmap-color, #3FE6A1)" }: He
           )}
           {tooltip.day.tokens != null && tooltip.day.tokens > 0 && (
             <div className="text-muted-foreground">
-              {t("analytics.heatmap.tokens")} {formatHeatmapTokenCount(tooltip.day.tokens)}
+              {t("analytics.tabToken")} {formatHeatmapTokenCount(tooltip.day.tokens)}
             </div>
           )}
         </ChartTooltip>

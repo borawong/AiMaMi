@@ -143,7 +143,7 @@ function SessionsPanel({ model }: { model: AnalyticsPageController["sessions"] }
             <>
               <div className="font-semibold text-foreground">{item.date}</div>
               <div className="text-muted-foreground">
-                {item.count} {t("analytics.panel.sessions")}
+                {item.count} {t("analytics.tabSessions")}
               </div>
             </>
           );

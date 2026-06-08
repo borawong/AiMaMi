@@ -255,10 +255,7 @@
     "forceKillCodexAction": "强制结束",
     "forceKilling": "关闭中...",
     "forceKillResult": "已强制终止 {{count}} 个进程: {{processes}}",
-    "resetCodexConfig": "重置 Codex 配置",
     "resetCodexConfigDesc": "调用 dumped 的 reset_codex_config 命令，重置本地 Codex 配置。",
-    "resetCodexConfigAction": "重置配置",
-    "resettingConfig": "重置中...",
     "resetConfigResult": "reset_codex_config 已完成",
     "imageCompat": "Image 声明兼容",
     "imageCompatDesc": "关闭中转请求里的生图工具声明，避免不支持生图的上游返回 403 错误。",
@@ -267,7 +264,10 @@
     "imageCompatRunning": "更新中...",
     "imageCompatResult": "图片兼容模式已{{state}}",
     "enabled": "启用",
-    "disabled": "停用"
+    "disabled": "停用",
+    "resetConfig": "重置 Codex 配置",
+    "resetConfigAction": "重置配置",
+    "resetConfigRunning": "重置中..."
   },
   "settings": {
     "title": "设置",
@@ -581,22 +581,14 @@
     "description": "基于用量、会话、Token、工具和变更分析 IPC 契约恢复分析模块入口。",
     "panel": {
       "usage": "用量",
-      "sessions": "会话",
-      "tokens": "Token",
-      "tools": "工具",
-      "changes": "变更",
-      "quota": "配额"
+      "changes": "变更"
     },
     "range": {
-      "today": "今日",
-      "week": "本周",
-      "month": "本月",
       "year": "全年"
     },
     "heatmap": {
       "sessions": "会话",
       "active": "活跃",
-      "tokens": "Token",
       "less": "少",
       "more": "多"
     },
@@ -642,7 +634,14 @@
     "totalToken": "累计总量",
     "weekActiveDays": "本周活跃天数",
     "writeOps": "新增代码行",
-    "writeTotal": "新增总行数"
+    "writeTotal": "新增总行数",
+    "tabToken": "Token",
+    "tabSessions": "会话",
+    "tabTools": "工具",
+    "tabQuota": "配额",
+    "rangeToday": "今日",
+    "rangeWeek": "本周",
+    "rangeMonth": "本月"
   },
   "relay": {
     "description": "为 Codex 配置中转模型，启用智能路由后菜单可自由切换。",
