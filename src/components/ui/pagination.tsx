@@ -1,6 +1,5 @@
 import * as React from "react"
 import { ChevronLeft, ChevronRight, Ellipsis } from "lucide-react"
-import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
 import { ButtonProps, buttonVariants } from "@/components/ui/button"
@@ -10,12 +9,10 @@ const Pagination = ({
   "aria-label": ariaLabel,
   ...props
 }: React.ComponentProps<"nav">) => {
-  const { t } = useTranslation()
-
   return (
     <nav
       role="navigation"
-      aria-label={ariaLabel ?? t("ui.pagination.navigation")}
+      aria-label={ariaLabel}
       className={cn("mx-auto flex w-full justify-center", className)}
       {...props}
     />
@@ -74,17 +71,15 @@ const PaginationPrevious = ({
   "aria-label": ariaLabel,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => {
-  const { t } = useTranslation()
-
   return (
     <PaginationLink
-      aria-label={ariaLabel ?? t("ui.pagination.previousPage")}
+      aria-label={ariaLabel}
       size="default"
       className={cn("gap-1 pl-2.5", className)}
       {...props}
     >
       <ChevronLeft className="h-4 w-4" />
-      <span>{children ?? t("ui.pagination.previous")}</span>
+      {children ? <span>{children}</span> : null}
     </PaginationLink>
   )
 }
@@ -96,16 +91,14 @@ const PaginationNext = ({
   "aria-label": ariaLabel,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => {
-  const { t } = useTranslation()
-
   return (
     <PaginationLink
-      aria-label={ariaLabel ?? t("ui.pagination.nextPage")}
+      aria-label={ariaLabel}
       size="default"
       className={cn("gap-1 pr-2.5", className)}
       {...props}
     >
-      <span>{children ?? t("ui.pagination.next")}</span>
+      {children ? <span>{children}</span> : null}
       <ChevronRight className="h-4 w-4" />
     </PaginationLink>
   )
@@ -117,8 +110,6 @@ const PaginationEllipsis = ({
   children,
   ...props
 }: React.ComponentProps<"span">) => {
-  const { t } = useTranslation()
-
   return (
     <span
       aria-hidden
@@ -126,7 +117,7 @@ const PaginationEllipsis = ({
       {...props}
     >
       <Ellipsis className="h-4 w-4" />
-      <span className="sr-only">{children ?? t("ui.pagination.morePages")}</span>
+      {children ? <span className="sr-only">{children}</span> : null}
     </span>
   )
 }

@@ -28,13 +28,13 @@
     "internalRoot": "evidence/full-chain/internal"
   },
   "totals": {
-    "zhLocaleKeys": 663,
-    "enLocaleKeys": 663,
-    "entries": 663,
+    "zhLocaleKeys": 653,
+    "enLocaleKeys": 653,
+    "entries": 653,
     "rawControlFlowKeyBacked": 40,
     "internalKeyBacked": 12,
     "rawOrInternalKeyBacked": 47,
-    "sourceSyncOnly": 616,
+    "sourceSyncOnly": 606,
     "rawTranslationZhKeyBacked": 609,
     "rawTranslationEnKeyBacked": 609,
     "rawTranslationZhExact": 609,
@@ -43,7 +43,7 @@
     "rawTranslationValueMismatch": 0,
     "acceptedZh": 609,
     "acceptedEn": 609,
-    "missingRawOrInternalCopySource": 54
+    "missingRawOrInternalCopySource": 44
   },
   "entries": [
     {
@@ -41559,186 +41559,6 @@
       "key": "trayShell.ready",
       "zhValue": "就绪",
       "enValue": "Ready",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.breadcrumb.more",
-      "zhValue": "更多层级",
-      "enValue": "More levels",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.pagination.morePages",
-      "zhValue": "更多页面",
-      "enValue": "More pages",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.pagination.navigation",
-      "zhValue": "分页",
-      "enValue": "Pagination",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.pagination.next",
-      "zhValue": "下一页",
-      "enValue": "Next",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.pagination.nextPage",
-      "zhValue": "转到下一页",
-      "enValue": "Go to next page",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.pagination.previous",
-      "zhValue": "上一页",
-      "enValue": "Previous",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.pagination.previousPage",
-      "zhValue": "转到上一页",
-      "enValue": "Go to previous page",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.sidebar.mobileDescription",
-      "zhValue": "显示移动端侧栏。",
-      "enValue": "Displays the mobile sidebar.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.sidebar.title",
-      "zhValue": "侧栏",
-      "enValue": "Sidebar",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "ui.sidebar.toggle",
-      "zhValue": "切换侧栏",
-      "enValue": "Toggle Sidebar",
       "zhAccepted": false,
       "enAccepted": false,
       "zhSource": null,

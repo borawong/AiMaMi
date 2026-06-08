@@ -340,24 +340,6 @@
     "retry": "Retry",
     "rootErrorDescription": "The application root failed to render. Retry or reopen the window."
   },
-  "ui": {
-    "pagination": {
-      "navigation": "Pagination",
-      "previousPage": "Go to previous page",
-      "previous": "Previous",
-      "nextPage": "Go to next page",
-      "next": "Next",
-      "morePages": "More pages"
-    },
-    "sidebar": {
-      "title": "Sidebar",
-      "mobileDescription": "Displays the mobile sidebar.",
-      "toggle": "Toggle Sidebar"
-    },
-    "breadcrumb": {
-      "more": "More levels"
-    }
-  },
   "update": {
     "title": "Update Available",
     "checkTitle": "Check for Updates",
