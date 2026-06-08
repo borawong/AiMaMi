@@ -12,6 +12,7 @@
     "validate:public-boundary": "node scripts/validate-public-boundary.mjs",
     "validate:frontend-dumped": "node scripts/validate-frontend-dumped.mjs",
     "validate:frontend-evidence": "node scripts/validate-frontend-evidence.mjs",
+    "validate:frontend-leaf-copy": "node scripts/validate-frontend-leaf-copy-acceptance.mjs",
     "validate:frontend-layer-owners": "node scripts/validate-frontend-layer-owners.mjs",
     "validate:frontend-entry": "node scripts/validate-frontend-entry-architecture.mjs",
     "validate:backend-hexagonal": "node scripts/validate-backend-hexagonal.mjs",
