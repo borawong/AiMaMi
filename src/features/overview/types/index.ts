@@ -99,6 +99,7 @@ export interface OverviewHealthModel {
 export interface OverviewBoolBadgeModel {
   id: string;
   value: boolean;
+  labelKey: string;
   trueKey: string;
   falseKey: string;
 }
@@ -190,11 +191,7 @@ export interface OverviewMutationController {
 export interface OverviewModuleController
   extends OverviewQueryController,
     OverviewMutationController {
-  remoteDeviceSecret: string | null;
-  setRemoteDeviceSecret: (secret: string | null) => void;
-  importRemoteSecretDialog: OverviewImportRemoteSecretDialog;
   refreshUsageAction: OverviewAction;
-  focusMainWindowAction: OverviewAction;
 }
 
 export type OverviewDataPanelModel =
@@ -253,6 +250,5 @@ export interface OverviewPageController {
   health: OverviewHealthModel;
   metrics: OverviewMetricModel[];
   dataPanels: OverviewDataPanelModel[];
-  dialogs: OverviewDialogController;
   accountBoundaryAction: OverviewBoundaryAction;
 }

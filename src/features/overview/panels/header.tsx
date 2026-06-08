@@ -10,7 +10,7 @@ export function OverviewPageHeader({
   actions,
 }: {
   titleKey: string;
-  descriptionKey: string;
+  descriptionKey?: string;
   actions: OverviewAction[];
 }) {
   const { t } = useTranslation();
@@ -19,9 +19,11 @@ export function OverviewPageHeader({
     <section className="flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
       <div className="min-w-0">
         <h2 className="text-lg font-semibold text-foreground">{t(titleKey)}</h2>
-        <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {t(descriptionKey)}
-        </p>
+        {descriptionKey ? (
+          <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
+            {t(descriptionKey)}
+          </p>
+        ) : null}
       </div>
       <div className="flex flex-wrap gap-2">
         {actions.map((action) => (

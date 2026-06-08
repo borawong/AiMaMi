@@ -63,10 +63,11 @@ function MetricIcon({ icon }: { icon: OverviewMetricIcon }) {
 
 function OverviewBoolBadge({ badge }: { badge: OverviewBoolBadgeModel }) {
   const { t } = useTranslation();
+  const statusKey = badge.value ? badge.trueKey : badge.falseKey;
 
   return (
     <Badge variant={badge.value ? "default" : "outline"} className="shrink-0">
-      {t(badge.value ? badge.trueKey : badge.falseKey)}
+      {t(badge.labelKey)} {t(statusKey)}
     </Badge>
   );
 }

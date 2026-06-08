@@ -143,23 +143,27 @@ export function readOverviewActiveAccount(
 
 export function readOverviewSkillRecords(
   items: InstalledSkillSummary[],
+  locale?: string,
 ): OverviewSkillRecord[] {
   return items.map((item, index) => ({
     id: item.id || item.name || String(index),
     title: item.title || item.name || item.id,
-    updatedAtLabel: formatOverviewOptionalEpoch(item.updatedAt),
+    updatedAtLabel: formatOverviewOptionalEpoch(item.updatedAt, locale),
   }));
 }
 
-export function formatOverviewOptionalEpoch(value: number | null): string {
-  return value ? formatOverviewEpoch(value) : "";
+export function formatOverviewOptionalEpoch(
+  value: number | null,
+  locale?: string,
+): string {
+  return value ? formatOverviewEpoch(value, locale) : "";
 }
 
-export function formatOverviewEpoch(value: number): string {
+export function formatOverviewEpoch(value: number, locale?: string): string {
   const millis = value > 10_000_000_000 ? value : value * 1000;
   const date = new Date(millis);
   if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleString(undefined, {
+  return date.toLocaleString(locale || undefined, {
     month: "numeric",
     day: "numeric",
     hour: "2-digit",

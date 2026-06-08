@@ -14,7 +14,6 @@ export function OverviewShell({
     <div className="space-y-5">
       <OverviewPageHeader
         titleKey="nav.overview"
-        descriptionKey="overview.description"
         actions={controller.actions}
       />
 
