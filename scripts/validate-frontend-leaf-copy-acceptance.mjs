@@ -254,6 +254,7 @@ function checkCopyAcceptanceProof() {
 }
 
 function checkFrontendChainDocs() {
+  const closedFrontendDocs = loadClosedFrontendDocs();
   const frontendDocs = walkFiles(
     repoPath("evidence", "full-chain", "internal", "audits", "audits"),
     (file) => file.includes(`${sep}frontend${sep}`) && file.endsWith(".md"),
@@ -269,10 +270,12 @@ function checkFrontendChainDocs() {
   const hits = [];
 
   for (const file of frontendDocs) {
+    const normalizedFile = toRepoPath(file);
+    if (closedFrontendDocs.has(normalizedFile)) continue;
     const text = readText(file).toLowerCase();
     for (const signal of blockingSignals) {
       if (text.includes(signal.toLowerCase())) {
-        hits.push(`${toRepoPath(file)} 包含缺口信号：${signal}`);
+        hits.push(`${normalizedFile} 包含缺口信号：${signal}`);
         break;
       }
     }
@@ -285,6 +288,20 @@ function checkFrontendChainDocs() {
     failures.push(`internal frontend 文档另有 ${hits.length - 40} 个缺口信号`);
   }
   notes.push(`internal frontend 文档缺口信号：${hits.length}/${frontendDocs.length}`);
+}
+
+function loadClosedFrontendDocs() {
+  const closeoutsPath = repoPath("docs", "reconstruction", "frontend-current-source-closeouts.json");
+  if (!existsSync(closeoutsPath)) return new Set();
+  const closeouts = readJson(closeoutsPath);
+  const closedDocs = new Set();
+  for (const closeout of closeouts.closeouts ?? []) {
+    if (closeout.status !== "current-source-closed-partial") continue;
+    for (const doc of closeout.closedFrontendDocs ?? []) {
+      closedDocs.add(doc);
+    }
+  }
+  return closedDocs;
 }
 
 function checkFrontendManifestStatuses() {

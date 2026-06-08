@@ -1,0 +1,89 @@
+{
+  "schema": "open-aimami.frontend_current_source_closeouts.v1",
+  "purpose": "记录 internal frontend 旧缺口中，已经由当前公开源码闭合的部分；本文件不修改 raw/internal 原始证据，也不声明 100% leaf。",
+  "closeouts": [
+    {
+      "id": "plugins-current-route-api-command-mock-chain",
+      "module": "plugins",
+      "status": "current-source-closed-partial",
+      "closedFrontendDocs": [
+        "evidence/full-chain/internal/audits/audits/macos-1.0.9-plugins/frontend/FRONTEND-FULL-CHAIN-109.md",
+        "evidence/full-chain/internal/audits/audits/windows-1.0.9-plugins/frontend/FRONTEND-FULL-CHAIN-109.md"
+      ],
+      "rawAcceptance": "evidence/full-chain/raw/aimami/1.0.9/windows/plugins_frontend_acceptance_mapping/evidence/acceptance-matrix.json",
+      "closedCommands": [
+        "list_plugins",
+        "toggle_plugin"
+      ],
+      "notClosedCommands": [
+        "get_plugin_config",
+        "update_plugin_config"
+      ],
+      "requiredSourceSignals": [
+        {
+          "file": "src/routes/registry/registry.tsx",
+          "includes": [
+            "route: \"plugins\"",
+            "import(\"@/routes/desktop/main/plugins/page\")"
+          ]
+        },
+        {
+          "file": "src/routes/desktop/main/plugins/page.tsx",
+          "includes": [
+            "PluginsFeature"
+          ]
+        },
+        {
+          "file": "src/features/plugins/Content.tsx",
+          "includes": [
+            "DUMPED_PLUGINS_COMMANDS",
+            "<PluginsPage />"
+          ]
+        },
+        {
+          "file": "src/services/plugins/index.ts",
+          "includes": [
+            "invokeIpc<PluginsListEnvelope>(\"list_plugins\")",
+            "invokeIpc<PluginsToggleEnvelope>(\"toggle_plugin\"",
+            "invokeIpc<PluginsConfigEnvelope>(\"get_plugin_config\"",
+            "invokeIpc<PluginsConfigEnvelope>(\"update_plugin_config\""
+          ]
+        },
+        {
+          "file": "src/features/plugins/hooks/query.ts",
+          "includes": [
+            "pluginsService.list()",
+            "writePluginsListQueryPayload"
+          ]
+        },
+        {
+          "file": "src/features/plugins/hooks/mutation.ts",
+          "includes": [
+            "pluginsService.toggle",
+            "optimisticallyUpdatePluginsToggle",
+            "rollbackPluginsToggle",
+            "writePluginsMutationPayload"
+          ]
+        },
+        {
+          "file": "src/features/plugins/panels/page.tsx",
+          "includes": [
+            "controller.togglePlugin.run",
+            "plugins.empty",
+            "plugins.enabledCount"
+          ]
+        },
+        {
+          "file": "src/mocks/fixtures/commands.ts",
+          "includes": [
+            "list_plugins: listPluginsHandler",
+            "toggle_plugin: togglePluginHandler",
+            "get_plugin_config: getPluginConfigHandler",
+            "update_plugin_config: updatePluginConfigHandler"
+          ]
+        }
+      ],
+      "reason": "internal frontend 文档记录的是旧 source archive 缺 route/API/command/mock chain；当前公开源码已经补入 plugins route、service、query/mutation/cache、panel 和 IPC mock。raw acceptance 仍显示 get/update config 没有可见 UI trigger，因此本 closeout 只关闭 list/toggle 的当前源码链路，不把 config 提升为 UI leaf。"
+    }
+  ]
+}
