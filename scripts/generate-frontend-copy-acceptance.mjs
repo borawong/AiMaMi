@@ -122,6 +122,47 @@ const rawTranslationAssetSources = [
   },
 ];
 
+const rawLiteralCopySources = [
+  {
+    key: "accounts.io.filterName",
+    rawValue: "AiMaMi Accounts Backup",
+    locales: ["zh", "en"],
+    sources: [
+      {
+        platform: "windows-x64",
+        path: repoPath(
+          "evidence",
+          "full-chain",
+          "raw",
+          "aimami",
+          "1.0.9",
+          "windows-x64",
+          "frontend",
+          "tauri-dumped",
+          "assets",
+          "accounts-page-CJFT2P5o.js",
+        ),
+      },
+      {
+        platform: "macos",
+        path: repoPath(
+          "evidence",
+          "full-chain",
+          "raw",
+          "aimami",
+          "1.0.9",
+          "macos",
+          "frontend",
+          "macos-109-frontend-ccf-found-app",
+          "dumped",
+          "assets",
+          "accounts-page-CJFT2P5o.js",
+        ),
+      },
+    ],
+  },
+];
+
 function collectRawKeyEvidence() {
   const evidenceByKey = new Map();
 
@@ -384,6 +425,67 @@ function hasTranslationKey(evidenceByLocale, locale, key) {
   return (evidenceByLocale[locale].get(key) ?? []).length > 0;
 }
 
+function locateAllLiterals(text, rawValue) {
+  const offsets = [];
+  let searchStart = 0;
+  while (searchStart < text.length) {
+    const offset = text.indexOf(rawValue, searchStart);
+    if (offset === -1) break;
+    offsets.push(offset);
+    searchStart = offset + rawValue.length;
+  }
+  return offsets;
+}
+
+function addRawLiteralCopyEvidence(evidenceByLocale) {
+  for (const literalSource of rawLiteralCopySources) {
+    for (const source of literalSource.sources) {
+      if (!existsSync(source.path)) {
+        throw new Error(
+          `Missing raw literal source for ${literalSource.key}: ${toRepoPath(source.path)}`,
+        );
+      }
+
+      const text = readFileSync(source.path, "utf8");
+      const offsets = locateAllLiterals(text, literalSource.rawValue);
+      if (offsets.length === 0) {
+        throw new Error(
+          `Missing raw literal "${literalSource.rawValue}" for ${literalSource.key}: ${toRepoPath(source.path)}`,
+        );
+      }
+
+      for (const offset of offsets) {
+        const location = locateOffset(text, offset);
+        for (const locale of literalSource.locales) {
+          if (!evidenceByLocale[locale].has(literalSource.key)) {
+            evidenceByLocale[locale].set(literalSource.key, []);
+          }
+          evidenceByLocale[locale].get(literalSource.key).push({
+            locale,
+            platform: source.platform,
+            source: toRepoPath(source.path),
+            line: location.line,
+            column: location.column,
+            offset,
+            root: null,
+            key: literalSource.key,
+            rawValue: literalSource.rawValue,
+            evidenceKind: "raw-literal-key-value",
+          });
+        }
+      }
+    }
+  }
+}
+
+function acceptedCopyEvidenceTier(evidence) {
+  return evidence.some(
+    (entry) => entry.evidenceKind === "raw-literal-key-value",
+  )
+    ? "raw-literal-key-value"
+    : "raw-translation-object-key-value";
+}
+
 function buildAcceptanceDraft() {
   const zhPath = repoPath("src", "locales", "zh.json");
   const enPath = repoPath("src", "locales", "en.json");
@@ -393,6 +495,7 @@ function buildAcceptanceDraft() {
   const rawKeyEvidence = collectRawKeyEvidence();
   const internalKeyEvidence = collectInternalKeyEvidence(allKeys);
   const rawTranslationEvidence = collectRawTranslationEvidence();
+  addRawLiteralCopyEvidence(rawTranslationEvidence);
 
   const entries = allKeys.map((key) => {
     const rawEvidence = rawKeyEvidence.get(key) ?? [];
@@ -425,7 +528,7 @@ function buildAcceptanceDraft() {
     const accepted = zhAccepted && enAccepted;
     const translationEvidence = [...zhTranslation, ...enTranslation];
     const copyEvidenceTier = accepted
-      ? "raw-translation-object-key-value"
+      ? acceptedCopyEvidenceTier(translationEvidence)
       : zhAccepted || enAccepted
         ? "raw-translation-object-partial"
         : hasZhTranslationKey || hasEnTranslationKey
@@ -483,6 +586,9 @@ function buildAcceptanceDraft() {
       ),
       rawTranslationAssets: rawTranslationAssetSources.map((source) =>
         toRepoPath(source.path),
+      ),
+      rawLiteralCopyAssets: rawLiteralCopySources.flatMap((literalSource) =>
+        literalSource.sources.map((source) => toRepoPath(source.path)),
       ),
       internalRoot: "evidence/full-chain/internal",
     },

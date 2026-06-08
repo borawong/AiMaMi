@@ -96,7 +96,7 @@ function AccountDetailContent({
             {t("accounts.selectedAccount")}
           </p>
           <h2 className="mt-1 truncate text-lg font-semibold">
-            {accountEmail(account) || t("accounts.unknown")}
+            {accountEmail(account) || "-"}
           </h2>
           <button
             type="button"
@@ -113,7 +113,7 @@ function AccountDetailContent({
           variant={isActiveAccount(account) ? "default" : "secondary"}
           className="shrink-0"
         >
-          {formatPlan(accountPlan(account), t)}
+          {formatPlan(accountPlan(account), t("accounts.planUnknown"))}
         </Badge>
       </div>
 
@@ -159,7 +159,7 @@ function AccountDetailContent({
         <DetailRow
           label={t("accounts.authMode")}
           value={
-            formatAuthMode(readString(account, ["authMode"], ""), t) ||
+            formatAuthMode(readString(account, ["authMode"], "")) ||
             t("accounts.notAvailable")
           }
         />
