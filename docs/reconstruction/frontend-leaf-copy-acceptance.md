@@ -2,11 +2,15 @@
 
 本文记录当前仓库对前端 leaf 和全文案验收的真实状态。它不是完成声明，而是防止把静态扫描、key 同步或 draft 清单误报成 100% leaf。
 
+本文只校正前端 leaf 与文案验收口径，不改写项目中用户给出的架构决策原文或重构门禁原文。
+
 ## 当前结论
 
 当前仓库不能证明 macOS / Windows 双平台前端已经达到 100% leaf，也不能证明 `src/locales/zh.json` 和 `src/locales/en.json` 的所有用户可见文案已经逐条对照 raw/internal 原文验收。
 
 `evidence/full-chain/internal/frontend-copy-acceptance.json` 当前已经存在，但状态是 `draft`。它列出 773 个 locale key 的逐条验收槽位，并从 raw dumped 主 bundle 中解析 i18n `zh/en translation` 对象。只有 raw translation 对象里的 key/value 与当前 locale 精确一致时，才把对应语言标成 accepted；不能把全 JS 字符串扫描命中当作文案来源。
+
+`npm run validate:frontend-dumped` 只证明 raw dumped 的 IPC、service wrapper、module contract、route、query 和 control-flow 已有静态覆盖；它不证明实际全 leaf，也不证明全文案已经逐条验收。当前严格验收以 `npm run validate:frontend-leaf-copy` 为准。
 
 ## 当前文案验收数字
 
@@ -29,11 +33,11 @@
 
 ## 已有验证
 
-- `scripts/validate-frontend-dumped.mjs` 验证 raw dumped 的 IPC、service wrapper、模块 contract、route、query 和 control-flow 静态覆盖。
+- `scripts/validate-frontend-dumped.mjs` 验证 raw dumped 的 IPC、service wrapper、module contract、route、query 和 control-flow 静态覆盖；它不是实际全 leaf 或全文案逐条验收的通过证明。
 - `scripts/validate-frontend-evidence.mjs` 验证 raw control-flow 中出现的 locale key、route registry、page chunk、query key 和若干 owner gate。
 - `scripts/validate-i18n.mjs` 验证 `zh/en` key 同步、源码静态 `t("key")` 覆盖，以及明显乱码、问号和占位质量问题。
 - `scripts/generate-frontend-copy-acceptance.mjs` 生成全文案验收 draft；它解析 raw i18n translation 对象，不把普通字符串扫描命中当作 accepted。
-- `scripts/validate-frontend-leaf-copy-acceptance.mjs` 是严格 gate，当前应继续失败。
+- `scripts/validate-frontend-leaf-copy-acceptance.mjs` 对应 `npm run validate:frontend-leaf-copy`，是当前严格验收 gate；在 `frontend-copy-acceptance.json` 仍为 draft 时应继续失败。
 
 ## 明确缺口
 

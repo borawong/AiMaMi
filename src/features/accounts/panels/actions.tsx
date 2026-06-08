@@ -327,12 +327,12 @@ export function AccountActionsPanel({
 
         <div className="space-y-3 xl:col-span-2">
           <Label htmlFor="accounts-session-json">
-            {t("accounts.sessionJsonInput")}
+            {t("accounts.addAccountSessionInputLabel")}
           </Label>
           <Textarea
             id="accounts-session-json"
             value={sessionJson}
-            placeholder={t("accounts.sessionJsonPlaceholder")}
+            placeholder={t("accounts.addAccountSessionPlaceholder")}
             className="min-h-24"
             onChange={(event) => setSessionJson(event.target.value)}
           />
@@ -344,7 +344,7 @@ export function AccountActionsPanel({
               !canUseSessionJson ||
               module.importChatGptSessionAccount.isPending
             }
-            aria-label={t("accounts.importSession")}
+            aria-label={t("accounts.addAccountSessionImport")}
             onClick={() =>
               void module.importChatGptSessionAccount.run({
                 sessionJson,
@@ -355,7 +355,7 @@ export function AccountActionsPanel({
             <ButtonBusyContent
               busy={module.importChatGptSessionAccount.isPending}
               idleIcon={<Upload className="h-3.5 w-3.5" />}
-              idleLabel={t("accounts.importSession")}
+              idleLabel={t("accounts.addAccountSessionImport")}
               busyLabel={t("common.refreshing")}
             />
           </Button>
@@ -413,7 +413,7 @@ export function AccountActionsPanel({
               disabled={
                 !canUseExportTarget || module.exportAccountsToFile.isPending
               }
-              aria-label={t("accounts.exportAccounts")}
+              aria-label={t("accounts.io.exportAccount")}
               onClick={() =>
                 void module.exportAccountsToFile.run({
                   targetPath: exportTargetPath.trim(),
@@ -424,7 +424,7 @@ export function AccountActionsPanel({
               <ButtonBusyContent
                 busy={module.exportAccountsToFile.isPending}
                 idleIcon={<Download className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.exportAccounts")}
+                idleLabel={t("accounts.io.exportAccount")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
