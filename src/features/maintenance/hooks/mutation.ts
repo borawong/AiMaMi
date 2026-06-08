@@ -23,9 +23,7 @@ export function useMaintenanceActionMutations(
     mutationFn: () => maintenanceService.diagnose(),
     onSuccess: async (result) => {
       await writeMaintenanceActionPayload(queryClient, result);
-      options.onDiagnosed(result);
     },
-    onError: options.onDiagnoseError,
   });
 
   const cleanMutation = useMutation({

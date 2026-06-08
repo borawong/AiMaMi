@@ -1,4 +1,3 @@
-import type { UseQueryResult } from "@tanstack/react-query";
 import type { LucideIcon } from "lucide-react";
 import type { ModuleCacheEnvelope } from "@/features/_shared/cache";
 import type {
@@ -63,8 +62,6 @@ export interface MaintenanceActionResult {
 }
 
 export interface MaintenanceActionMutationCallbacks {
-  onDiagnosed: (result: DiagnosePayload) => void;
-  onDiagnoseError: (error: unknown) => void;
   onCleaned: (result: CleanPayload) => void;
   onCleanError: (error: unknown) => void;
   onRebuilt: (result: RebuildRegistryPayload) => void;
@@ -93,11 +90,14 @@ export type MaintenanceActionDefinition = Omit<
 >;
 
 export interface MaintenanceSystemInfoField {
-  label: string;
   value: string;
 }
 
-export type MaintenanceSystemInfoQuery = UseQueryResult<SystemInfoPayload, Error>;
+export interface MaintenanceSystemInfoQuery {
+  fields: MaintenanceSystemInfoField[];
+  loading: boolean;
+  error: unknown;
+}
 
 export interface MaintenanceRestartDialogController {
   open: boolean;
@@ -118,10 +118,8 @@ export interface MaintenanceRouterDiagnosticsDialogController {
 }
 
 export interface MaintenancePageController {
+  systemInfo: MaintenanceSystemInfoQuery;
   actions: MaintenanceActionView[];
-  systemInfoFields: MaintenanceSystemInfoField[];
-  systemInfoQuery: MaintenanceSystemInfoQuery;
-  systemInfoIcon: LucideIcon;
   restartDialog: MaintenanceRestartDialogController;
   routerDiagnosticsDialog: MaintenanceRouterDiagnosticsDialogController;
 }

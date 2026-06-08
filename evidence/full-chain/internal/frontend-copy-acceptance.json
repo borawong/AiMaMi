@@ -28,22 +28,22 @@
     "internalRoot": "evidence/full-chain/internal"
   },
   "totals": {
-    "zhLocaleKeys": 682,
-    "enLocaleKeys": 682,
-    "entries": 682,
+    "zhLocaleKeys": 673,
+    "enLocaleKeys": 673,
+    "entries": 673,
     "rawControlFlowKeyBacked": 40,
     "internalKeyBacked": 12,
     "rawOrInternalKeyBacked": 47,
-    "sourceSyncOnly": 635,
-    "rawTranslationZhKeyBacked": 607,
-    "rawTranslationEnKeyBacked": 607,
-    "rawTranslationZhExact": 607,
-    "rawTranslationEnExact": 607,
-    "rawTranslationBothExact": 607,
+    "sourceSyncOnly": 626,
+    "rawTranslationZhKeyBacked": 609,
+    "rawTranslationEnKeyBacked": 609,
+    "rawTranslationZhExact": 609,
+    "rawTranslationEnExact": 609,
+    "rawTranslationBothExact": 609,
     "rawTranslationValueMismatch": 0,
-    "acceptedZh": 607,
-    "acceptedEn": 607,
-    "missingRawOrInternalCopySource": 75
+    "acceptedZh": 609,
+    "acceptedEn": 609,
+    "missingRawOrInternalCopySource": 64
   },
   "entries": [
     {
@@ -16480,24 +16480,6 @@
       ]
     },
     {
-      "key": "maintenance.imageCompatDisable",
-      "zhValue": "停用",
-      "enValue": "Disable",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "maintenance.imageCompatDone",
       "zhValue": "已更新，将在下一次中转请求立即生效",
       "enValue": "Updated. This applies to the next relay request.",
@@ -16565,22 +16547,138 @@
       ]
     },
     {
-      "key": "maintenance.imageCompatEnable",
-      "zhValue": "启用",
-      "enValue": "Enable",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
+      "key": "maintenance.imageCompatOff",
+      "zhValue": "已关闭",
+      "enValue": "Disabled",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
       "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
       "keyEvidence": {
         "rawControlFlow": [],
         "internalMentions": []
       },
-      "translationEvidence": []
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.imageCompatOff",
+          "rawValue": "已关闭",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.imageCompatOff",
+          "rawValue": "已关闭",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.imageCompatOff",
+          "rawValue": "Disabled",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.imageCompatOff",
+          "rawValue": "Disabled",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
+    },
+    {
+      "key": "maintenance.imageCompatOn",
+      "zhValue": "已启用",
+      "enValue": "Enabled",
+      "zhAccepted": true,
+      "enAccepted": true,
+      "zhSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:17287",
+      "enSource": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js:284:73016",
+      "evidenceTier": "source-sync-only",
+      "copyEvidenceTier": "raw-translation-object-key-value",
+      "status": "raw-translation-object-copy-accepted",
+      "blocker": null,
+      "keyEvidence": {
+        "rawControlFlow": [],
+        "internalMentions": []
+      },
+      "translationEvidence": [
+        {
+          "locale": "zh",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.imageCompatOn",
+          "rawValue": "已启用",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "zh",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 17287,
+          "offset": 543608,
+          "root": "mR",
+          "key": "maintenance.imageCompatOn",
+          "rawValue": "已启用",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "windows-x64",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/windows-x64/frontend/tauri-dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.imageCompatOn",
+          "rawValue": "Enabled",
+          "evidenceKind": "raw-translation-object-key-value"
+        },
+        {
+          "locale": "en",
+          "platform": "macos",
+          "source": "evidence/full-chain/raw/aimami/1.0.9/macos/frontend/macos-109-frontend-ccf-found-app/dumped/assets/index-CL22l5v8.js",
+          "line": 284,
+          "column": 73016,
+          "offset": 599337,
+          "root": "FR",
+          "key": "maintenance.imageCompatOn",
+          "rawValue": "Enabled",
+          "evidenceKind": "raw-translation-object-key-value"
+        }
+      ]
     },
     {
       "key": "maintenance.noSwitchNeeded",
@@ -17655,60 +17753,6 @@
       ]
     },
     {
-      "key": "maintenance.routerDiagnostics",
-      "zhValue": "路由诊断",
-      "enValue": "Router Diagnostics",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.routerDiagnosticsAction",
-      "zhValue": "运行路由诊断",
-      "enValue": "Run Router Diagnostics",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.routerDiagnosticsDesc",
-      "zhValue": "调用 dumped 的 run_codex_router_diagnostics 命令，结果归维护模块 owner 处理。",
-      "enValue": "Invoke the dumped run_codex_router_diagnostics command and keep the result in the maintenance owner.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
       "key": "maintenance.running",
       "zhValue": "运行中...",
       "enValue": "Running...",
@@ -17841,114 +17885,6 @@
           "evidenceKind": "raw-translation-object-key-value"
         }
       ]
-    },
-    {
-      "key": "maintenance.systemInfo",
-      "zhValue": "系统信息",
-      "enValue": "System Info",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.systemInfoArch",
-      "zhValue": "架构",
-      "enValue": "Architecture",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.systemInfoDesc",
-      "zhValue": "调用 dumped 的 get_system_info 命令，只展示后端返回的基础运行环境字段。",
-      "enValue": "Invokes the dumped get_system_info command and only displays basic runtime fields returned by the backend.",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.systemInfoLoading",
-      "zhValue": "系统信息读取中...",
-      "enValue": "Loading system info...",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.systemInfoOs",
-      "zhValue": "系统",
-      "enValue": "System",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
-    },
-    {
-      "key": "maintenance.systemInfoVersion",
-      "zhValue": "版本",
-      "enValue": "Version",
-      "zhAccepted": false,
-      "enAccepted": false,
-      "zhSource": null,
-      "enSource": null,
-      "evidenceTier": "source-sync-only",
-      "copyEvidenceTier": "source-sync-only",
-      "status": "source-sync-only-copy-unaccepted",
-      "blocker": "当前未找到 raw/internal key 或原始文案来源。需要补齐来源后才能验收。",
-      "keyEvidence": {
-        "rawControlFlow": [],
-        "internalMentions": []
-      },
-      "translationEvidence": []
     },
     {
       "key": "maintenance.title",

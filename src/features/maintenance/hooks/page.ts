@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import {
   AlertCircle,
   CheckCircle2,
-  Info,
   RotateCcw,
   RotateCw,
   Stethoscope,
@@ -29,7 +28,7 @@ export function useMaintenancePageController(): MaintenancePageController {
   const runningKeysRef = useRef<Record<string, boolean>>({});
   const [restartConfirmOpen, setRestartConfirmOpen] = useState(false);
   const [routerDiagnosticsOpen, setRouterDiagnosticsOpen] = useState(false);
-  const { imageCompatQuery, systemInfoQuery } = useMaintenanceQueries();
+  const { systemInfoQuery, imageCompatQuery } = useMaintenanceQueries();
 
   const setActionResult = useCallback((key: string, result: MaintenanceActionResult) => {
     setResults((prev) => ({ ...prev, [key]: result }));
@@ -44,7 +43,6 @@ export function useMaintenancePageController(): MaintenancePageController {
   }, []);
 
   const {
-    diagnoseMutation,
     cleanMutation,
     rebuildMutation,
     restartMutation,
@@ -54,19 +52,6 @@ export function useMaintenancePageController(): MaintenancePageController {
     runRouterDiagnostics,
     fixRouterIssueAndRefresh,
   } = useMaintenanceActionMutations({
-    onDiagnosed: (res) => {
-      setActionResult("diagnose", {
-        type: "success",
-        message: t("maintenance.diagnoseResult", {
-          os: res.platform.os,
-          arch: res.platform.arch,
-          version: res.coreVersion,
-          count: res.registryState.accountCount,
-        }),
-      });
-    },
-    onDiagnoseError: (err) =>
-      setActionResult("diagnose", { type: "error", message: String(err) }),
     onCleaned: (res) => {
       setActionResult("clean", {
         type: "success",
@@ -129,21 +114,6 @@ export function useMaintenancePageController(): MaintenancePageController {
     });
   }, [restartMutation, runAction]);
 
-  const systemInfoFields: MaintenanceSystemInfoField[] = [
-    {
-      label: t("maintenance.systemInfoOs"),
-      value: systemInfoQuery.data?.os ?? "-",
-    },
-    {
-      label: t("maintenance.systemInfoArch"),
-      value: systemInfoQuery.data?.arch ?? "-",
-    },
-    {
-      label: t("maintenance.systemInfoVersion"),
-      value: systemInfoQuery.data?.osVersion ?? "-",
-    },
-  ];
-
   const actionDefinitions: MaintenanceActionDefinition[] = [
     {
       key: "diagnose",
@@ -152,19 +122,6 @@ export function useMaintenancePageController(): MaintenancePageController {
       label: t("maintenance.diagnose"),
       description: t("maintenance.diagnoseDesc"),
       actionLabel: t("maintenance.diagnoseAction"),
-      loadingLabel: t("maintenance.diagnosing"),
-      onAction: () =>
-        void runAction("diagnose", async () => {
-          await diagnoseMutation.mutateAsync();
-        }),
-    },
-    {
-      key: "routerDiagnostics",
-      icon: Stethoscope,
-      iconColor: "text-cyan-500",
-      label: t("maintenance.routerDiagnostics"),
-      description: t("maintenance.routerDiagnosticsDesc"),
-      actionLabel: t("maintenance.routerDiagnosticsAction"),
       loadingLabel: t("maintenance.diagnosing"),
       onAction: () => setRouterDiagnosticsOpen(true),
     },
@@ -237,8 +194,8 @@ export function useMaintenancePageController(): MaintenancePageController {
       label: t("maintenance.imageCompat"),
       description: t("maintenance.imageCompatDesc"),
       actionLabel: imageCompatQuery.data
-        ? t("maintenance.imageCompatDisable")
-        : t("maintenance.imageCompatEnable"),
+        ? t("maintenance.imageCompatOn")
+        : t("maintenance.imageCompatOff"),
       loadingLabel: t("maintenance.running"),
       onAction: () =>
         void runAction("imageCompat", async () => {
@@ -271,11 +228,25 @@ export function useMaintenancePageController(): MaintenancePageController {
     busy: Boolean(runningKeys[action.key]),
   }));
 
+  const systemInfoFields: MaintenanceSystemInfoField[] = [
+    {
+      value: systemInfoQuery.data?.os ?? "-",
+    },
+    {
+      value: systemInfoQuery.data?.arch ?? "-",
+    },
+    {
+      value: systemInfoQuery.data?.osVersion ?? "-",
+    },
+  ];
+
   return {
+    systemInfo: {
+      fields: systemInfoFields,
+      loading: systemInfoQuery.isLoading,
+      error: systemInfoQuery.error,
+    },
     actions,
-    systemInfoFields,
-    systemInfoQuery,
-    systemInfoIcon: Info,
     restartDialog: {
       open: restartConfirmOpen,
       onOpenChange: setRestartConfirmOpen,

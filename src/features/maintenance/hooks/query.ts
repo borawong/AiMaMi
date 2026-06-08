@@ -15,6 +15,17 @@ export function useMaintenanceCacheController() {
 export function useMaintenanceQueries() {
   const queryClient = useQueryClient();
 
+  const systemInfoQuery = useQuery({
+    queryKey: MAINTENANCE_SYSTEM_INFO_QUERY_KEY,
+    queryFn: () =>
+      runMaintenanceQuery(
+        queryClient,
+        MAINTENANCE_SYSTEM_INFO_QUERY_KEY,
+        () => maintenanceService.getSystemInfo(),
+      ),
+    staleTime: 30_000,
+  });
+
   const imageCompatQuery = useQuery({
     queryKey: MAINTENANCE_IMAGE_COMPAT_QUERY_KEY,
     queryFn: () =>
@@ -26,17 +37,8 @@ export function useMaintenanceQueries() {
     staleTime: 30_000,
   });
 
-  const systemInfoQuery = useQuery({
-    queryKey: MAINTENANCE_SYSTEM_INFO_QUERY_KEY,
-    queryFn: () =>
-      runMaintenanceQuery(queryClient, MAINTENANCE_SYSTEM_INFO_QUERY_KEY, () =>
-        maintenanceService.getSystemInfo(),
-      ),
-    staleTime: 30_000,
-  });
-
   return {
-    imageCompatQuery,
     systemInfoQuery,
+    imageCompatQuery,
   };
 }
