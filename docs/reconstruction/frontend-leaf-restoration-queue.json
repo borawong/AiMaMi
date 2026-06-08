@@ -1354,11 +1354,15 @@
       "internalKeyBacked": 9,
       "rawOrInternalKeyBacked": 44,
       "sourceSyncOnly": 906,
-      "literalZhBacked": 0,
-      "literalEnBacked": 0,
-      "acceptedZh": 0,
-      "acceptedEn": 0,
-      "missingRawOrInternalCopySource": 950
+      "rawTranslationZhKeyBacked": 573,
+      "rawTranslationEnKeyBacked": 573,
+      "rawTranslationZhExact": 293,
+      "rawTranslationEnExact": 293,
+      "rawTranslationBothExact": 272,
+      "rawTranslationValueMismatch": 301,
+      "acceptedZh": 293,
+      "acceptedEn": 293,
+      "missingRawOrInternalCopySource": 678
     },
     "requiredForFullCopyAcceptance": true
   },
