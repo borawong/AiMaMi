@@ -108,11 +108,8 @@ export function AccountActionsPanel({
     <BentoCard className="min-w-0">
       <div className="flex flex-col gap-1">
         <h3 className="text-sm font-medium text-foreground">
-          {t("accounts.actions")}
+          {t("nav.accounts")}
         </h3>
-        <p className="text-xs leading-5 text-muted-foreground">
-          {t("accounts.actionsDesc")}
-        </p>
       </div>
 
       <div className="mt-4 grid gap-5 xl:grid-cols-3">
@@ -123,7 +120,6 @@ export function AccountActionsPanel({
           <Input
             id="accounts-account-key"
             value={accountKey}
-            placeholder={t("accounts.accountKeyPlaceholder")}
             onChange={(event) => setAccountKey(event.target.value)}
           />
           <div className="flex flex-wrap gap-2">
@@ -132,7 +128,7 @@ export function AccountActionsPanel({
               size="sm"
               variant="outline"
               disabled={!canUseSingleAccount || module.switchAccount.isPending}
-              aria-label={t("accounts.switchAccount")}
+              aria-label={t("accounts.switchTo")}
               onClick={() =>
                 void module.switchAccount.run({
                   accountKey: accountKey.trim(),
@@ -142,7 +138,7 @@ export function AccountActionsPanel({
               <ButtonBusyContent
                 busy={module.switchAccount.isPending}
                 idleIcon={<UserCheck className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.switchAccount")}
+                idleLabel={t("accounts.switchTo")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
@@ -173,12 +169,11 @@ export function AccountActionsPanel({
 
         <div className="space-y-3">
           <Label htmlFor="accounts-key-list">
-            {t("accounts.accountKeysInput")}
+            {t("accounts.snapshotKey")}
           </Label>
           <Textarea
             id="accounts-key-list"
             value={accountKeysText}
-            placeholder={t("accounts.accountKeysPlaceholder")}
             className="min-h-20"
             onChange={(event) => setAccountKeysText(event.target.value)}
           />
@@ -188,7 +183,7 @@ export function AccountActionsPanel({
               size="sm"
               variant="outline"
               disabled={!canUseAccountKeys || module.removeAccounts.isPending}
-              aria-label={t("accounts.removeSelected")}
+              aria-label={t("accounts.removeSnapshot")}
               onClick={() =>
                 void module.removeAccounts.run({
                   accountKeys: selectedAccountKeys,
@@ -198,7 +193,7 @@ export function AccountActionsPanel({
               <ButtonBusyContent
                 busy={module.removeAccounts.isPending}
                 idleIcon={<Trash2 className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.removeSelected")}
+                idleLabel={t("accounts.removeSnapshot")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
@@ -207,13 +202,13 @@ export function AccountActionsPanel({
               size="sm"
               variant="outline"
               disabled={module.logout.isPending}
-              aria-label={t("accounts.logout")}
+              aria-label={t("common.close")}
               onClick={() => void module.logout.run()}
             >
               <ButtonBusyContent
                 busy={module.logout.isPending}
                 idleIcon={<LogOut className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.logout")}
+                idleLabel={t("common.close")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
@@ -222,12 +217,11 @@ export function AccountActionsPanel({
 
         <div className="space-y-3">
           <Label htmlFor="accounts-import-path">
-            {t("accounts.importFilePath")}
+            {t("accounts.io.openDialogTitle")}
           </Label>
           <Input
             id="accounts-import-path"
             value={importFilePath}
-            placeholder={t("accounts.importFilePlaceholder")}
             onChange={(event) => setImportFilePath(event.target.value)}
           />
           <div className="flex items-center gap-2">
@@ -242,7 +236,7 @@ export function AccountActionsPanel({
               htmlFor="accounts-overwrite-existing"
               className="text-xs text-muted-foreground"
             >
-              {t("accounts.overwriteExisting")}
+              {t("accounts.addAccountSessionOverwrite")}
             </Label>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -266,7 +260,7 @@ export function AccountActionsPanel({
               size="sm"
               variant="outline"
               disabled={!canUseImportFile || module.openPath.isPending}
-              aria-label={t("accounts.openImportPath")}
+              aria-label={t("accounts.io.openDialogTitle")}
               onClick={() =>
                 void module.openPath.run({
                   path: importFilePath.trim(),
@@ -276,7 +270,7 @@ export function AccountActionsPanel({
               <ButtonBusyContent
                 busy={module.openPath.isPending}
                 idleIcon={<ExternalLink className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.openImportPath")}
+                idleLabel={t("accounts.io.openDialogTitle")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
@@ -363,12 +357,11 @@ export function AccountActionsPanel({
 
         <div className="space-y-3">
           <Label htmlFor="accounts-export-target">
-            {t("accounts.exportTargetPath")}
+            {t("accounts.io.saveDialogTitle")}
           </Label>
           <Input
             id="accounts-export-target"
             value={exportTargetPath}
-            placeholder={t("accounts.exportTargetPlaceholder")}
             onChange={(event) => setExportTargetPath(event.target.value)}
           />
           <div className="flex flex-wrap gap-2">
@@ -392,7 +385,7 @@ export function AccountActionsPanel({
               size="sm"
               variant="outline"
               disabled={!canUseExportTarget || module.openPath.isPending}
-              aria-label={t("accounts.openExportPath")}
+              aria-label={t("accounts.io.saveDialogTitle")}
               onClick={() =>
                 void module.openPath.run({
                   path: exportTargetPath.trim(),
@@ -402,7 +395,7 @@ export function AccountActionsPanel({
               <ButtonBusyContent
                 busy={module.openPath.isPending}
                 idleIcon={<ExternalLink className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.openExportPath")}
+                idleLabel={t("accounts.io.saveDialogTitle")}
                 busyLabel={t("common.refreshing")}
               />
             </Button>
@@ -433,13 +426,13 @@ export function AccountActionsPanel({
               size="sm"
               variant="outline"
               disabled={module.attachMonitorAction.isPending}
-              aria-label={t("accounts.beginAttachMonitor")}
+              aria-label={t(module.attachMonitorAction.labelKey)}
               onClick={() => void module.attachMonitorAction.run()}
             >
               <ButtonBusyContent
                 busy={module.attachMonitorAction.isPending}
                 idleIcon={<MonitorUp className="h-3.5 w-3.5" />}
-                idleLabel={t("accounts.beginAttachMonitor")}
+                idleLabel={t(module.attachMonitorAction.labelKey)}
                 busyLabel={t("common.refreshing")}
               />
             </Button>

@@ -101,11 +101,11 @@ function AccountsFilterBar({
           controller.setPlanFilter(event.target.value as AccountPlanFilter)
         }
         className="h-8 rounded-[8px] border border-input bg-background px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-ring"
-        aria-label={t("accounts.planFilter")}
+        aria-label={t("accounts.allPlans")}
       >
         {controller.planFilters.map((plan) => (
           <option key={plan} value={plan}>
-            {plan === "all" ? t("accounts.allPlans") : formatPlan(plan, t)}
+            {plan === "all" ? t("accounts.allPlans") : formatPlan(plan, t("accounts.planUnknown"))}
           </option>
         ))}
       </select>

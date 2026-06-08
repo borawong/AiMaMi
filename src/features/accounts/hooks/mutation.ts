@@ -178,13 +178,13 @@ export function useAccountsPageMutations({
   return {
     refreshUsageSnapshotAction: {
       id: "refresh-usage-snapshot",
-      labelKey: "accounts.refreshUsageSnapshot",
+      labelKey: "common.refresh",
       run: refreshAccounts,
       isPending: refreshUsageSnapshotMutation.isPending,
     },
     attachMonitorAction: {
       id: "attach-monitor",
-      labelKey: "accounts.beginAttachMonitor",
+      labelKey: "accounts.addAccount",
       run: () => attachMonitorMutation.mutateAsync(undefined),
       isPending: attachMonitorMutation.isPending,
     },

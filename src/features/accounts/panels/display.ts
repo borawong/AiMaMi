@@ -1,23 +1,8 @@
-const PLAN_LABEL_KEYS: Record<string, string> = {
-  free: "accounts.planLabels.free",
-  plus: "accounts.planLabels.plus",
-  pro5x: "accounts.planLabels.pro5x",
-  pro20x: "accounts.planLabels.pro20x",
-  team: "accounts.planLabels.team",
-  business: "accounts.planLabels.business",
-  enterprise: "accounts.planLabels.enterprise",
-  edu: "accounts.planLabels.edu",
-};
-
-const AUTH_MODE_LABEL_KEYS: Record<string, string> = {
-  chatgpt: "accounts.authModes.chatgpt",
-  apikey: "accounts.authModes.apikey",
-};
-
-export function formatPlan(plan: string, t: (key: string) => string) {
-  if (!plan || plan === "unknown") return t("accounts.planUnknown");
-  const labelKey = PLAN_LABEL_KEYS[plan];
-  if (labelKey) return t(labelKey);
+export function formatPlan(plan: string, fallback: string) {
+  if (!plan || plan === "unknown") return fallback;
+  if (plan === "pro5x") return "5x Pro";
+  if (plan === "pro20x") return "20x Pro";
+  if (plan === "edu") return "Edu";
   return plan.charAt(0).toUpperCase() + plan.slice(1);
 }
 
@@ -73,9 +58,9 @@ export function formatEpoch(value: number) {
   });
 }
 
-export function formatAuthMode(value: string, t: (key: string) => string) {
-  const labelKey = AUTH_MODE_LABEL_KEYS[value];
-  if (labelKey) return t(labelKey);
+export function formatAuthMode(value: string) {
+  if (value === "apikey") return "API Key";
+  if (value === "chatgpt") return "ChatGPT OAuth";
   return value;
 }
 

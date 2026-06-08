@@ -75,7 +75,7 @@ function AccountListItem({
       <span className="min-w-0 flex-1">
         <span className="flex items-center justify-between gap-2">
           <span className="truncate text-[13px] font-medium">
-            {accountEmail(account) || t("accounts.unknown")}
+            {accountEmail(account) || "-"}
           </span>
           {isActiveAccount(account) ? (
             <Badge
@@ -103,7 +103,7 @@ function AccountListItem({
               selected && "border-white/35 bg-white/10 text-white hover:bg-white/10",
             )}
           >
-            {formatPlan(accountPlan(account), t)}
+            {formatPlan(accountPlan(account), t("accounts.planUnknown"))}
           </Badge>
           <AccountTokenStatusBadge account={account} selected={selected} />
           <QuotaInline

@@ -75,7 +75,7 @@ function PendingAutoSwitchPromptDialog({
   prompt: ReturnType<typeof usePendingAutoSwitchPrompt>;
 }) {
   const { t } = useTranslation();
-  const unknown = t("accounts.unknown");
+  const unknown = "-";
 
   return (
     <AlertDialog open={open}>
