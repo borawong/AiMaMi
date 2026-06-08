@@ -38,7 +38,6 @@ export function AnalyticsPageHeader() {
   return (
     <div className="flex flex-col gap-1">
       <h1 className="text-xl font-semibold tracking-normal">{t("nav.analytics")}</h1>
-      <p className="text-sm text-muted-foreground">{t("analytics.description")}</p>
     </div>
   );
 }
@@ -82,8 +81,6 @@ export function AnalyticsPanels({ controller }: { controller: AnalyticsPageContr
           <Input
             value={controller.quotaAccountKey}
             onChange={(event) => controller.setQuotaAccountKey(event.target.value)}
-            placeholder={t("analytics.quotaAccountKeyPlaceholder")}
-            aria-label={t("analytics.quotaAccountKey")}
           />
         </div>
       ) : null}
@@ -282,7 +279,6 @@ function QuotaPanel({ model }: { model: AnalyticsPageController["quota"] }) {
       loading={model.loading}
       errorMessage={model.errorMessage}
       empty={empty}
-      emptyKey={model.emptyKey}
     >
       <h3 className="mb-4 text-[13px] font-bold">{t("analytics.quotaTitle")}</h3>
       <Legend
@@ -325,13 +321,11 @@ function PanelBody({
   loading,
   errorMessage,
   empty,
-  emptyKey = "analytics.emptySeries",
   children,
 }: {
   loading: boolean;
   errorMessage: string | null;
   empty: boolean;
-  emptyKey?: string;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
@@ -346,9 +340,7 @@ function PanelBody({
   }
   if (empty) {
     return (
-      <div className="flex min-h-[260px] items-center justify-center rounded-[8px] border border-dashed border-border text-sm text-muted-foreground">
-        {t(emptyKey)}
-      </div>
+      <div className="min-h-[260px] rounded-[8px] border border-dashed border-border" />
     );
   }
   return <>{children}</>;

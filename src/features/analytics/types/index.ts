@@ -162,7 +162,6 @@ export interface AnalyticsQuotaPoint {
 
 export interface AnalyticsQuotaPanelModel extends AnalyticsPanelState {
   accountKey: string;
-  emptyKey: string;
   labels: string[];
   primaryRemaining: number[];
   secondaryRemaining: number[];

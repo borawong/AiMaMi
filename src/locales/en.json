@@ -503,18 +503,11 @@
     "unknownProject": "Unknown project"
   },
   "analytics": {
-    "description": "Restores the analytics module entry from usage, session, token, tool, and change analytics IPC contracts.",
     "heatmap": {
-      "active": "Active",
       "less": "Less",
       "more": "More"
     },
     "activeDays": "Active Days",
-    "quotaAccountKey": "Account key",
-    "quotaAccountKeyPlaceholder": "Enter an account key to load quota history",
-    "quotaAccountKeyRequired": "Enter an account key to load quota history",
-    "emptySeries": "No series data was found",
-    "unknownTool": "Unknown tool",
     "activityTitle": "Codex Activity Trend",
     "avgTokenPerSession": "Avg/Session",
     "avgTurns": "Avg Turns",
@@ -522,7 +515,6 @@
     "days": "days",
     "editTasks": "Edit Tasks",
     "filesTotal": "Other Ops",
-    "minutesValue": "{{count}} min",
     "monthActiveDays": "Active This Month",
     "netTotal": "Total Net",
     "quota1w": "1w Remaining",

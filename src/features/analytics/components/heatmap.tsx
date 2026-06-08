@@ -126,7 +126,7 @@ export function Heatmap({ data, colorVar = "var(--heatmap-color, #3FE6A1)" }: He
           </div>
           {tooltip.day.activeMinutes != null && tooltip.day.activeMinutes > 0 && (
             <div className="text-muted-foreground">
-              {t("analytics.heatmap.active")}{" "}
+              {t("analytics.todayActive")}{" "}
               {formatDuration(tooltip.day.activeMinutes)}
             </div>
           )}

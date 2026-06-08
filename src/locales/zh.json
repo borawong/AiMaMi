@@ -503,18 +503,11 @@
     "unknownProject": "未知项目"
   },
   "analytics": {
-    "description": "基于用量、会话、Token、工具和变更分析 IPC 契约恢复分析模块入口。",
     "heatmap": {
-      "active": "活跃",
-      "less": "少",
-      "more": "多"
+      "less": "Less",
+      "more": "More"
     },
     "activeDays": "活跃天数",
-    "quotaAccountKey": "账号 key",
-    "quotaAccountKeyPlaceholder": "输入账号 key 后读取配额历史",
-    "quotaAccountKeyRequired": "请输入账号 key 后读取配额历史",
-    "emptySeries": "没有找到序列数据",
-    "unknownTool": "未知工具",
     "activityTitle": "Codex 活跃趋势",
     "avgTokenPerSession": "每会话均值",
     "avgTurns": "平均轮数",
@@ -522,7 +515,6 @@
     "days": "天",
     "editTasks": "编辑任务",
     "filesTotal": "其他操作数",
-    "minutesValue": "{{count}} 分钟",
     "monthActiveDays": "本月活跃天数",
     "netTotal": "净增总行数",
     "quota1w": "1 周额度剩余",
@@ -544,7 +536,7 @@
     "tokenUsage": "时段 Token 用量",
     "toolTitle": "工具调用排行",
     "toolTypes": "工具种类",
-    "total": "总计",
+    "total": "Total",
     "totalCalls": "总调用",
     "totalOps": "净增代码行",
     "totalSessions": "会话总数",

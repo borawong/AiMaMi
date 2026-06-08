@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { formatInvokeError } from "@/lib/error";
+import { formatDuration } from "@/lib/time";
 import type {
   AnalyticsRange,
   ChangeAnalyticsPayload,
@@ -270,7 +271,7 @@ function buildActivityPanel(
       {
         id: "todayActive",
         label: t("analytics.todayActive"),
-        value: today ? t("analytics.minutesValue", { count: today }) : "-",
+        value: today ? formatDuration(today) : "-",
       },
       {
         id: "weekActiveDays",
@@ -406,17 +407,20 @@ function buildToolsPanel(
 ): AnalyticsToolsPanelModel {
   const topTools = readArray(payload, ["topTools"]);
   const totalCalls = readNumber(payload, ["totalCalls"]);
-  const tooltipPoints = topTools.map<AnalyticsToolPoint>((item) => {
-    const name = readString(item, ["name"], t("analytics.unknownTool"));
-    const count = readNumber(item, ["count"]);
-    return {
-      name,
-      count,
-      label: name,
-      value: count,
-      percentage: totalCalls > 0 ? Math.round((count / totalCalls) * 100) : 0,
-    };
-  });
+  const tooltipPoints = topTools
+    .map<AnalyticsToolPoint | null>((item) => {
+      const name = readString(item, ["name"], "").trim();
+      if (!name) return null;
+      const count = readNumber(item, ["count"]);
+      return {
+        name,
+        count,
+        label: name,
+        value: count,
+        percentage: totalCalls > 0 ? Math.round((count / totalCalls) * 100) : 0,
+      };
+    })
+    .filter((item): item is AnalyticsToolPoint => item != null);
 
   return {
     loading,
@@ -541,7 +545,6 @@ function buildQuotaPanel(
     loading,
     errorMessage,
     accountKey,
-    emptyKey: accountKey ? "analytics.emptySeries" : "analytics.quotaAccountKeyRequired",
     labels: tooltipPoints.map((point) => point.label),
     primaryRemaining: tooltipPoints.map((point) => point.primaryRemaining),
     secondaryRemaining: tooltipPoints.map((point) => point.secondaryRemaining),
