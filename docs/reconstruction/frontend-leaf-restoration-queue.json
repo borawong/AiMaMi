@@ -885,6 +885,7 @@
       "module": null,
       "owner": "app-shell",
       "command": null,
+      "queryKey": null,
       "source": "assets/index-CL22l5v8.js",
       "status": "source-only"
     },
@@ -896,6 +897,7 @@
       "module": null,
       "owner": "voice",
       "command": null,
+      "queryKey": null,
       "source": "assets/index-CL22l5v8.js",
       "status": "boundary-only"
     },
@@ -907,6 +909,7 @@
       "module": "app-shell",
       "owner": "app-shell",
       "command": null,
+      "queryKey": "desktop-message",
       "source": "assets/index-CL22l5v8.js",
       "status": "source-only"
     },
@@ -918,6 +921,7 @@
       "module": "accounts",
       "owner": "accounts",
       "command": null,
+      "queryKey": "quota-history",
       "source": "assets/index-CL22l5v8.js",
       "status": "owner-closed"
     },
@@ -929,28 +933,7 @@
       "module": "analytics",
       "owner": "analytics",
       "command": null,
-      "source": "assets/index-CL22l5v8.js",
-      "status": "owner-closed"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "recordLine": 334,
-      "line": 339,
-      "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
-      "module": "mcp",
-      "owner": "mcp",
-      "command": null,
-      "source": "assets/index-CL22l5v8.js",
-      "status": "owner-closed"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "recordLine": 347,
-      "line": 352,
-      "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
-      "module": "skills",
-      "owner": "skills",
-      "command": null,
+      "queryKey": "usage-analytics",
       "source": "assets/index-CL22l5v8.js",
       "status": "owner-closed"
     },
@@ -962,6 +945,7 @@
       "module": "plugins",
       "owner": "plugins",
       "command": "get_plugin_config",
+      "queryKey": null,
       "source": "assets/index-CL22l5v8.js",
       "status": "contract-service-only"
     },
@@ -973,6 +957,7 @@
       "module": "plugins",
       "owner": "plugins",
       "command": "update_plugin_config",
+      "queryKey": null,
       "source": "assets/index-CL22l5v8.js",
       "status": "contract-service-only"
     },
@@ -984,6 +969,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "load_voice_workspace",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -995,6 +981,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "upsert_voice_template",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1006,6 +993,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "remove_voice_template",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1017,6 +1005,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "upsert_voice_vocabulary",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1028,6 +1017,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "remove_voice_vocabulary",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1039,6 +1029,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "replace_voice_vocabulary_kind",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1050,6 +1041,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "upsert_voice_vocabulary_app_scope",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1061,6 +1053,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "remove_voice_vocabulary_app_scope",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1072,6 +1065,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "resolve_voice_vocabulary_app_info",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1083,6 +1077,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "generate_voice_prompt",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1094,6 +1089,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "load_voice_llm_config",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1105,6 +1101,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "save_voice_llm_config",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1116,6 +1113,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "test_voice_llm_config",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1127,6 +1125,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "load_voice_asr_config",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1138,6 +1137,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "save_voice_asr_config",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1149,6 +1149,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "test_voice_asr_config",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1160,6 +1161,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "remove_voice_history_entry",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1171,6 +1173,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "load_voice_runtime_status",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1182,6 +1185,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "request_voice_permissions",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1193,6 +1197,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "request_accessibility_permission",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1204,6 +1209,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "set_voice_global_shortcut",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1215,6 +1221,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "capture_voice_trigger_key",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1226,6 +1233,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "cancel_voice_trigger_capture",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1237,6 +1245,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "set_voice_trigger_listener_suppressed",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1248,6 +1257,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "set_voice_trigger_key",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1259,6 +1269,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "set_voice_trigger_bindings",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1270,6 +1281,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "update_voice_runtime_settings",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1281,6 +1293,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "set_voice_processing_mode_id",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1292,6 +1305,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "start_voice_capture",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1303,6 +1317,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "stop_voice_capture",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1314,6 +1329,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "inject_voice_text",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1325,6 +1341,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "show_voice_search_overlay",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1336,6 +1353,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "set_voice_mode_shortcut",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     },
@@ -1347,6 +1365,7 @@
       "module": "voice",
       "owner": "voice",
       "command": "remove_voice_mode_shortcut",
+      "queryKey": null,
       "source": null,
       "status": "boundary-only"
     }
@@ -1440,7 +1459,7 @@
       "id": "manifest-non-full-leaf-statuses",
       "area": "frontend-manifest",
       "status": "open",
-      "blocker": "当前 frontend manifest 还有 43 个非 full leaf 状态。"
+      "blocker": "当前 frontend manifest 还有 41 个非 full leaf 状态。"
     },
     {
       "id": "gate-report-strict-failures",

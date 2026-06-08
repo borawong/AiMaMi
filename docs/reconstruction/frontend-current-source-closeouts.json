@@ -86,6 +86,168 @@
       "reason": "internal frontend 文档记录的是旧 source archive 缺 route/API/command/mock chain；当前公开源码已经补入 plugins route、service、query/mutation/cache、panel 和 IPC mock。raw acceptance 仍显示 get/update config 没有可见 UI trigger，因此本 closeout 只关闭 list/toggle 的当前源码链路，不把 config 提升为 UI leaf。"
     },
     {
+      "id": "mcp-skills-index-query-owner-closed-chain",
+      "module": "mcp-skills",
+      "status": "current-source-closed-partial",
+      "closedFrontendDocs": [],
+      "closedManifestStatuses": [
+        {
+          "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
+          "module": "mcp",
+          "queryKey": "mcp-servers",
+          "source": "assets/index-CL22l5v8.js",
+          "status": "owner-closed"
+        },
+        {
+          "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
+          "module": "skills",
+          "queryKey": "installed-skills",
+          "source": "assets/index-CL22l5v8.js",
+          "status": "owner-closed"
+        }
+      ],
+      "gateReports": [
+        "evidence/full-chain/internal/audits/audits/windows-1.0.9-mcp/gate-report.json",
+        "evidence/full-chain/internal/audits/audits/macos-1.0.9-mcp/gate-report.json",
+        "evidence/full-chain/internal/audits/audits/windows-1.0.9-skills/gate-report.json",
+        "evidence/full-chain/internal/audits/audits/macos-1.0.9-skills/gate-report.json"
+      ],
+      "requiredSourceSignals": [
+        {
+          "file": "src/restoration/frontend-manifest/index.ts",
+          "includes": [
+            "module: \"mcp\"",
+            "queryKey: \"mcp-servers\"",
+            "status: \"owner-closed\"",
+            "ownerCache: \"src/features/mcp/cache/index.ts\"",
+            "ownerHook: \"src/features/mcp/hooks/query.ts\"",
+            "commands: [\"load_mcp_servers\"]",
+            "module: \"skills\"",
+            "queryKey: \"installed-skills\"",
+            "ownerCache: \"src/features/skills/cache/index.ts\"",
+            "ownerHook: \"src/features/skills/hooks/query.ts\"",
+            "commands: [\"load_installed_skills\"]"
+          ]
+        },
+        {
+          "file": "scripts/validate-frontend-dumped.mjs",
+          "includes": [
+            "queryKey: \"mcp-servers\"",
+            "queryKey: \"installed-skills\"",
+            "status: \"owner-closed\""
+          ]
+        },
+        {
+          "file": "src/services/mcp/index.ts",
+          "includes": [
+            "loadServers: () =>",
+            "invokeIpc<CoreEnvelope<McpServerListPayload>>(\"load_mcp_servers\")"
+          ]
+        },
+        {
+          "file": "src/features/mcp/hooks/query.ts",
+          "includes": [
+            "MCP_SERVERS_QUERY_KEY",
+            "mcpService.loadServers()",
+            "writeMcpCachePayload"
+          ]
+        },
+        {
+          "file": "src/features/mcp/cache/index.ts",
+          "includes": [
+            "createModuleCacheOwner<McpCachePayload>(\"mcp\")",
+            "MCP_SERVERS_QUERY_KEY = [\"mcp-servers\"]"
+          ]
+        },
+        {
+          "file": "src/services/skills/index.ts",
+          "includes": [
+            "loadInstalled: () =>",
+            "invokeIpc<CoreEnvelope<SkillListPayload>>(\"load_installed_skills\")"
+          ]
+        },
+        {
+          "file": "src/features/skills/hooks/query.ts",
+          "includes": [
+            "SKILLS_INSTALLED_QUERY_KEY",
+            "skillsService.loadInstalled()",
+            "writeSkillsCachePayload"
+          ]
+        },
+        {
+          "file": "src/features/skills/cache/index.ts",
+          "includes": [
+            "createModuleCacheOwner<SkillsCachePayload>(\"skills\")",
+            "SKILLS_INSTALLED_QUERY_KEY = [\"installed-skills\"]"
+          ]
+        },
+        {
+          "file": "src/features/overview/hooks/query.ts",
+          "includes": [
+            "mcpService.loadServers()",
+            "skillsService.loadInstalled()"
+          ]
+        },
+        {
+          "file": "src/mocks/fixtures/commands.ts",
+          "includes": [
+            "load_mcp_servers: loadMcpServersHandler",
+            "load_installed_skills: loadInstalledSkillsHandler"
+          ]
+        },
+        {
+          "file": "src-tauri/src/lib.rs",
+          "includes": [
+            "commands::mcp::load_mcp_servers",
+            "commands::skills::load_installed_skills"
+          ]
+        },
+        {
+          "file": "src-tauri/src/commands/mcp.rs",
+          "includes": [
+            "pub fn load_mcp_servers",
+            "usecase::mcp::load_servers"
+          ]
+        },
+        {
+          "file": "src-tauri/src/application/usecase/mcp.rs",
+          "includes": [
+            "pub fn load_servers",
+            "restored_status(\"mcp\", \"load_mcp_servers\""
+          ]
+        },
+        {
+          "file": "src-tauri/src/repository/mcp.rs",
+          "includes": [
+            "pub fn load_servers",
+            "fs.read_to_string"
+          ]
+        },
+        {
+          "file": "src-tauri/src/commands/skills.rs",
+          "includes": [
+            "pub fn load_installed_skills",
+            "usecase::skills::load_installed"
+          ]
+        },
+        {
+          "file": "src-tauri/src/application/usecase/skills.rs",
+          "includes": [
+            "pub fn load_installed",
+            "restored_status(\"skills\", \"load_installed_skills\""
+          ]
+        },
+        {
+          "file": "src-tauri/src/repository/skills.rs",
+          "includes": [
+            "pub fn load_installed",
+            "fs.read_to_string"
+          ]
+        }
+      ],
+      "reason": "mcp 和 skills 的双平台 gate-report 已达到 readyToImplement、implementation_use、gate_accepted、full_leaf_100 全 true；当前源码也已经闭合 service、query、cache、overview consumer、mock、command、usecase、repository 链路。本 closeout 只关闭 app-shell index query 的 owner-closed 队列项，不修改 manifest 状态，不声明全文案验收，也不声明 MAC/WIN 100% leaf 已完成。"
+    },
+    {
       "id": "relay-passthrough-audit-backend-skeleton-chain",
       "module": "relay",
       "status": "current-source-closed-partial",
