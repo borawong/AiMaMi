@@ -22,7 +22,7 @@ export function usePluginsPageController(): PluginsPageController {
     pluginsQuery,
     refreshAction: {
       id: "refresh-contract",
-      labelKey: "plugins.refreshContract",
+      labelKey: "common.refresh",
       run: () => refreshMutation.mutateAsync(),
       isPending: refreshMutation.isPending,
     },

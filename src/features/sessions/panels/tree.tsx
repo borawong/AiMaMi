@@ -120,7 +120,7 @@ function SessionGroupBlock({
           <div className="truncate text-[15px] font-semibold text-foreground">
             {group.key === SESSIONS_CONVERSATION_GROUP_KEY
               ? t("sessions.conversationGroup")
-              : group.name || t("sessions.unknownProject")}
+              : group.name || group.path}
           </div>
           {group.key !== SESSIONS_CONVERSATION_GROUP_KEY ? (
             <div className="truncate text-[13px] text-muted-foreground">{group.path}</div>
@@ -317,7 +317,7 @@ function SessionNodeText({
             focused ? "text-foreground" : "text-foreground/90",
           )}
         >
-          {readString(node.session, ["threadName", "title", "name", "id"], t("sessions.untitled"))}
+          {readString(node.session, ["threadName"], "")}
         </span>
       </div>
       <div className="mt-1 flex min-w-0 flex-nowrap items-center gap-2 text-[12px] text-muted-foreground">

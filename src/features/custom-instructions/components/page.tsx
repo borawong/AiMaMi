@@ -14,7 +14,7 @@ export function CustomInstructionsPage() {
 
   return (
     <div className="space-y-6">
-      <CustomInstructionsPageHeaderPanel {...controller.headerPanel} />
+      <CustomInstructionsPageHeaderPanel />
       <CustomInstructionsLoadErrorPanel {...controller.loadErrorPanel} />
       <CustomInstructionsPageBodyPanel {...controller.bodyPanel} />
       <CustomInstructionsPreviewApplyDialog {...controller.previewDialog} />

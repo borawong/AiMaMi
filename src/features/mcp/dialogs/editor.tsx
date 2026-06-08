@@ -63,7 +63,6 @@ export function McpEditorDialog({
                 value={editor.draft.args}
                 onChange={(value) => editor.onFieldChange("args", value)}
                 mono
-                placeholder={t("mcp.argsPlaceholder")}
               />
             </>
           ) : (
@@ -78,7 +77,6 @@ export function McpEditorDialog({
                 label={t("mcp.headers")}
                 value={editor.draft.headersText}
                 onChange={(value) => editor.onFieldChange("headersText", value)}
-                placeholder={t("mcp.headersPlaceholder")}
                 mono
               />
             </>
@@ -87,7 +85,6 @@ export function McpEditorDialog({
             label={t("mcp.env")}
             value={editor.draft.envText}
             onChange={(value) => editor.onFieldChange("envText", value)}
-            placeholder={t("mcp.envPlaceholder")}
             mono
           />
         </div>

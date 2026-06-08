@@ -22,15 +22,12 @@ function RootErrorFallback() {
     <div className="flex h-full flex-col items-center justify-center gap-4 p-8">
       <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-center">
         <h2 className="text-lg font-semibold text-destructive">{t("common.error")}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {t("common.rootErrorDescription")}
-        </p>
         <button
           type="button"
           onClick={() => window.location.reload()}
           className="mt-4 inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          {t("common.retry")}
+          {t("common.refresh")}
         </button>
       </div>
     </div>

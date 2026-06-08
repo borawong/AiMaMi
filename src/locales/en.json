@@ -1,7 +1,6 @@
 {
   "app": {
-    "name": "AiMaMi",
-    "subtitle": "Local Assistant"
+    "name": "AiMaMi"
   },
   "messageBoard": {
     "defaultTitle": "Messages",
@@ -28,9 +27,6 @@
     "sidebarLanguageEn": "English",
     "accounts": "Accounts",
     "sessions": "Threads",
-    "analytics": "Analytics",
-    "daemonAutoswitch": "Daemon Autoswitch",
-    "trayShell": "Tray Shell",
     "voice": "Typemami"
   },
   "overview": {
@@ -96,10 +92,7 @@
     "delete": "Delete",
     "confirmDelete": "Are you sure you want to delete this MCP server?",
     "pathCopied": "Config path copied",
-    "pathCopiedDesc": "The MCP config file path was copied to the clipboard.",
-    "argsPlaceholder": "arg1, arg2, ...",
-    "headersPlaceholder": "Authorization: Bearer ...",
-    "envPlaceholder": "KEY=value"
+    "pathCopiedDesc": "The MCP config file path was copied to the clipboard."
   },
   "skills": {
     "title": "Skills Management",
@@ -118,14 +111,10 @@
     "backupRootPath": "Backup Directory",
     "pathCopied": "Path copied",
     "pathCopiedDesc": "The path text was copied to the clipboard.",
-    "loadFailed": "Failed to load Skills data",
-    "loadFailedDesc": "Try again later, or check the local Skills directory and reload.",
     "confirmRemove": "Are you sure you want to remove this skill? A backup will be created automatically.",
     "confirmDeleteBackup": "Are you sure you want to delete this backup? This action cannot be undone."
   },
   "customInstructions": {
-    "configureTab": "Configure",
-    "templatesTab": "Templates",
     "title": "Custom Instructions",
     "description": "Manage Codex global custom instructions through ~/.codex/AGENTS.md without touching project-level AGENTS rules.",
     "templatesTitle": "Template Center",
@@ -291,18 +280,11 @@
     "updateAvailable": "Update Available",
     "upToDate": "Already up to date",
     "updateCheckFailed": "Failed to check for updates",
-    "updateRestart": "Update restart",
-    "updateRestartDesc": "Requires runtime evidence that an update is installed, so this slice exposes only the boundary entry.",
-    "updateRestartBoundary": "Update restart boundary",
     "hotspot": "Notch Overlay",
     "hotspotDesc": "Show real-time 5-hour and weekly quota percentages at the notch area. Click to return to the main window.",
     "hotspotEnabled": "Notch overlay enabled",
     "hotspotDisabled": "Notch overlay disabled",
     "hotspotNotSupported": "Only available on Macs with a notch display. This device is not compatible.",
-    "hotspotReady": "Ready",
-    "hotspotReadyBusy": "Marking",
-    "imageCompat": "Image compatibility mode",
-    "imageCompatDesc": "Restored IPC boundary for toggling backend image compatibility.",
     "languageZh": "中文",
     "languageEn": "English",
     "autoSwitch": "Auto Switch",
@@ -336,9 +318,7 @@
     "toastCopiedDesc": "Content was copied to the clipboard. You can paste it now.",
     "success": "Success",
     "refresh": "Refresh",
-    "refreshing": "Refreshing",
-    "retry": "Retry",
-    "rootErrorDescription": "The application root failed to render. Retry or reopen the window."
+    "refreshing": "Refreshing"
   },
   "update": {
     "title": "Update Available",
@@ -356,17 +336,6 @@
     "openApplications": "Open Applications Folder",
     "retry": "Retry",
     "skipThisTime": "Skip for now, try later"
-  },
-  "routes": {
-    "highIoFeedback": "Syncing data"
-  },
-  "feature": {
-    "restored": {
-      "loading": "Loading",
-      "error": "Failed to load",
-      "refreshing": "Refreshing",
-      "ready": "Synced"
-    }
   },
   "accounts": {
     "description": "Manage Codex account login, switching, quota monitoring and auto-rotation.",
@@ -457,10 +426,8 @@
   },
   "sessions": {
     "description": "View and manage all Codex project threads and child threads.",
-    "total": "Sessions",
     "totalSize": "Total Size",
     "empty": "No threads found",
-    "untitled": "Untitled session",
     "childThread": "Child Thread",
     "childThreadsInline": "{{count}} child threads",
     "conversationGroup": "Conversations",
@@ -472,8 +439,7 @@
     "orphanCount": "{{count}} orphan threads",
     "orphanThread": "Orphan Thread",
     "treeDescription": "Threads are grouped by project. Main threads can expand into child threads.",
-    "treeTitle": "Project / Main Thread / Child Thread",
-    "unknownProject": "Unknown project"
+    "treeTitle": "Project / Main Thread / Child Thread"
   },
   "analytics": {
     "heatmap": {
@@ -697,25 +663,9 @@
   },
   "plugins": {
     "description": "Manage AiMaMi's built-in plugins and extensions. Enable or disable as needed.",
-    "list": "Plugin List",
-    "refreshContract": "Refresh Plugin Contract",
-    "total": "Plugins",
-    "enabledCount": "Enabled",
-    "disabledCount": "Disabled",
-    "empty": "No plugins available",
-    "unknown": "Unknown plugin"
-  },
-  "trayShell": {
-    "description": "Restores the tray shell module entry from notification client and window focus IPC contracts.",
-    "notificationClient": "Notification Client State",
-    "focusMainWindow": "Focus Main Window",
-    "client": "Notification client",
-    "ready": "Ready"
+    "empty": "No plugins available"
   },
   "voice": {
-    "skeletonTitle": "Voice module skeleton",
-    "skeletonDescription": "The original voice feature is not treated as a restored public feature in the current scope, so the frontend only keeps the route and contract boundary.",
-    "skeletonBoundary": "Future work must start from repository evidence and fill the module owner gradually before adding any executable voice behavior.",
     "description": "Turn pasted transcription results, spoken drafts, and project vocabulary into Codex-ready task briefs, review prompts, and concise change summaries.",
     "templateCount": "Templates",
     "vocabularyCount": "Vocabulary",

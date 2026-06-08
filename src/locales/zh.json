@@ -1,7 +1,6 @@
 {
   "app": {
-    "name": "AiMaMi",
-    "subtitle": "本地助手"
+    "name": "AiMaMi"
   },
   "messageBoard": {
     "defaultTitle": "消息",
@@ -28,9 +27,6 @@
     "sidebarLanguageEn": "English",
     "accounts": "账号管理",
     "sessions": "线程管理",
-    "analytics": "分析",
-    "daemonAutoswitch": "后台自动切换",
-    "trayShell": "托盘外壳",
     "voice": "Typemami"
   },
   "overview": {
@@ -96,10 +92,7 @@
     "delete": "删除",
     "confirmDelete": "确定要删除这个 MCP 服务吗？",
     "pathCopied": "配置文件路径已复制",
-    "pathCopiedDesc": "配置文件路径已复制到剪贴板。",
-    "argsPlaceholder": "arg1, arg2, ...",
-    "headersPlaceholder": "Authorization: Bearer ...",
-    "envPlaceholder": "KEY=value"
+    "pathCopiedDesc": "配置文件路径已复制到剪贴板。"
   },
   "skills": {
     "title": "Skills 管理",
@@ -118,14 +111,10 @@
     "backupRootPath": "备份根目录",
     "pathCopied": "路径已复制",
     "pathCopiedDesc": "路径文本已复制到剪贴板。",
-    "loadFailed": "Skills 数据加载失败",
-    "loadFailedDesc": "请稍后重试，或检查本地 Skills 目录后重新加载。",
     "confirmRemove": "确定要移除此 Skill 吗？移除后会自动创建备份。",
     "confirmDeleteBackup": "确定要删除此备份吗？删除后不可恢复。"
   },
   "customInstructions": {
-    "configureTab": "配置指令",
-    "templatesTab": "模板中心",
     "title": "自定义指令",
     "description": "管理 Codex 的全局个性化指令，只作用于 ~/.codex/AGENTS.md，不影响项目级 AGENTS 规则。",
     "templatesTitle": "模板中心",
@@ -291,18 +280,11 @@
     "updateAvailable": "发现新版本",
     "upToDate": "当前已是最新版本",
     "updateCheckFailed": "检查更新失败",
-    "updateRestart": "更新重启",
-    "updateRestartDesc": "需要已安装更新的运行时证据，本切片只保留边界入口。",
-    "updateRestartBoundary": "更新重启边界",
     "hotspot": "刘海套子",
     "hotspotDesc": "在刘海区域实时显示当前账号的 5 小时和周额度百分比，点击可回到主窗口。",
     "hotspotEnabled": "刘海套子已开启",
     "hotspotDisabled": "刘海套子已关闭",
     "hotspotNotSupported": "仅支持带刘海屏的 Mac，当前设备不兼容此功能。",
-    "hotspotReady": "就绪",
-    "hotspotReadyBusy": "标记中",
-    "imageCompat": "图片兼容模式",
-    "imageCompatDesc": "切换后端图片兼容能力的已还原 IPC 边界。",
     "languageZh": "中文",
     "languageEn": "English",
     "autoSwitch": "自动切换",
@@ -336,9 +318,7 @@
     "toastCopiedDesc": "内容已复制到剪贴板，可直接粘贴使用。",
     "success": "操作成功",
     "refresh": "刷新",
-    "refreshing": "刷新中",
-    "retry": "重试",
-    "rootErrorDescription": "应用根组件渲染失败，请重试或重新打开窗口。"
+    "refreshing": "刷新中"
   },
   "update": {
     "title": "发现新版本",
@@ -356,17 +336,6 @@
     "openApplications": "打开应用程序文件夹",
     "retry": "重试",
     "skipThisTime": "暂时跳过，稍后再试"
-  },
-  "routes": {
-    "highIoFeedback": "正在同步数据"
-  },
-  "feature": {
-    "restored": {
-      "loading": "正在加载",
-      "error": "加载失败",
-      "refreshing": "正在刷新",
-      "ready": "已同步"
-    }
   },
   "accounts": {
     "description": "管理 Codex 账号的登录、切换、额度监控和自动轮换。",
@@ -457,10 +426,8 @@
   },
   "sessions": {
     "description": "查看和管理 Codex 的所有项目线程与子线程。",
-    "total": "会话",
     "totalSize": "总大小",
     "empty": "没有线程记录",
-    "untitled": "未命名会话",
     "childThread": "子线程",
     "childThreadsInline": "{{count}} 个子线程",
     "conversationGroup": "对话",
@@ -472,8 +439,7 @@
     "orphanCount": "{{count}} 条孤儿线程",
     "orphanThread": "孤儿线程",
     "treeDescription": "按项目分组展示线程，主线程可展开查看子线程。",
-    "treeTitle": "项目 / 主线程 / 子线程",
-    "unknownProject": "未知项目"
+    "treeTitle": "项目 / 主线程 / 子线程"
   },
   "analytics": {
     "heatmap": {
@@ -697,25 +663,9 @@
   },
   "plugins": {
     "description": "管理 AiMaMi 的内置插件和扩展功能，可按需启用或禁用。",
-    "list": "插件列表",
-    "refreshContract": "刷新插件契约",
-    "total": "插件",
-    "enabledCount": "已启用",
-    "disabledCount": "已禁用",
-    "empty": "暂无可用插件",
-    "unknown": "未知插件"
-  },
-  "trayShell": {
-    "description": "基于通知客户端与窗口聚焦 IPC 契约恢复托盘外壳模块入口。",
-    "notificationClient": "通知客户端状态",
-    "focusMainWindow": "聚焦主窗口",
-    "client": "通知客户端",
-    "ready": "就绪"
+    "empty": "暂无可用插件"
   },
   "voice": {
-    "skeletonTitle": "语音模块空骨架",
-    "skeletonDescription": "原始语音功能不作为当前公开范围内的已还原功能处理，前端只保留路由入口和合同边界。",
-    "skeletonBoundary": "后续补齐必须从仓库证据开始，先补模块 owner，再加入任何可执行的语音行为。",
     "description": "把外部转写结果、口述草稿和项目词库整理成可直接交给 Codex 的任务说明、评审指令或变更摘要。",
     "templateCount": "模板数量",
     "vocabularyCount": "词库条目",

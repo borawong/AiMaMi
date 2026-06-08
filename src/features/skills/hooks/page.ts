@@ -61,8 +61,10 @@ export function useSkillsPageController(): SkillsPageController {
     },
     queryFailureAlert: activeQuery.isError
       ? {
-          titleKey: "skills.loadFailed",
-          descriptionKey: "skills.loadFailedDesc",
+          titleKey: "common.error",
+          descriptionKey: "messageBoard.loadError",
+          sourceTitleKey: "skills.loadFailed",
+          sourceDescriptionKey: "skills.loadFailedDesc",
           isRetrying: activeQuery.isFetching,
           retry: () => activeQuery.refetch(),
         }

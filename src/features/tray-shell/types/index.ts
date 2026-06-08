@@ -15,6 +15,7 @@ export type TrayShellCacheEnvelope<
 export interface TrayShellActionModel {
   id: "focus-main-window";
   labelKey: "trayShell.focusMainWindow";
+  displayKey: "tray.openMain";
   run: () => Promise<void> | void;
   isPending: boolean;
 }

@@ -144,9 +144,6 @@ export function AppSidebar({
             <span className="truncate text-[15px] font-semibold text-sidebar-foreground">
               {t("app.name")}
             </span>
-            <span className="truncate text-[11px] text-sidebar-foreground/60">
-              {t("app.subtitle")}
-            </span>
           </div>
         </button>
       </SidebarHeader>

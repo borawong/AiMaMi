@@ -275,6 +275,82 @@ const rawLiteralCopySources = [
       },
     ],
   },
+  {
+    key: "settings.languageZh",
+    rawValue: "中文",
+    locales: ["zh", "en"],
+    sources: [
+      {
+        platform: "windows-x64",
+        path: repoPath(
+          "evidence",
+          "full-chain",
+          "raw",
+          "aimami",
+          "1.0.9",
+          "windows-x64",
+          "frontend",
+          "tauri-dumped",
+          "assets",
+          "settings-page-CHeElwco.js",
+        ),
+      },
+      {
+        platform: "macos",
+        path: repoPath(
+          "evidence",
+          "full-chain",
+          "raw",
+          "aimami",
+          "1.0.9",
+          "macos",
+          "frontend",
+          "macos-109-frontend-ccf-found-app",
+          "dumped",
+          "assets",
+          "settings-page-CHeElwco.js",
+        ),
+      },
+    ],
+  },
+  {
+    key: "settings.languageEn",
+    rawValue: "English",
+    locales: ["zh", "en"],
+    sources: [
+      {
+        platform: "windows-x64",
+        path: repoPath(
+          "evidence",
+          "full-chain",
+          "raw",
+          "aimami",
+          "1.0.9",
+          "windows-x64",
+          "frontend",
+          "tauri-dumped",
+          "assets",
+          "settings-page-CHeElwco.js",
+        ),
+      },
+      {
+        platform: "macos",
+        path: repoPath(
+          "evidence",
+          "full-chain",
+          "raw",
+          "aimami",
+          "1.0.9",
+          "macos",
+          "frontend",
+          "macos-109-frontend-ccf-found-app",
+          "dumped",
+          "assets",
+          "settings-page-CHeElwco.js",
+        ),
+      },
+    ],
+  },
 ];
 
 function collectRawKeyEvidence() {

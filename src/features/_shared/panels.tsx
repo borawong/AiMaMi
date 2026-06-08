@@ -63,24 +63,19 @@ export function EvidencePageHeader({
 }
 
 export function EvidenceStatusLine({ state }: { state: EvidenceQueryState }) {
-  const { t } = useTranslation();
-  const key = state.isLoading
-    ? "feature.restored.loading"
-    : state.isError
-      ? "feature.restored.error"
-      : state.isFetching
-        ? "feature.restored.refreshing"
-        : "feature.restored.ready";
+  if (!state.isLoading && !state.isError && !state.isFetching) {
+    return null;
+  }
 
   return (
     <span
+      aria-hidden="true"
       className={cn(
-        "text-xs text-muted-foreground",
-        state.isError && "text-destructive",
+        "block h-3 w-16 rounded-[3px] bg-muted",
+        state.isFetching && "animate-pulse",
+        state.isError && "bg-destructive/20",
       )}
-    >
-      {t(key)}
-    </span>
+    />
   );
 }
 
