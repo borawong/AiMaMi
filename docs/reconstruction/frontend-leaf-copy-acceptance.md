@@ -19,13 +19,13 @@
 - source-sync-only：906
 - raw translation 中文 key 证据：573
 - raw translation 英文 key 证据：573
-- raw translation 中文 key/value 精确一致：293
-- raw translation 英文 key/value 精确一致：293
-- raw translation 双语 key/value 同时精确一致：272
-- raw translation key 存在但当前文案不一致：301
-- zhAccepted：293
-- enAccepted：293
-- 缺少 raw/internal 文案来源：678
+- raw translation 中文 key/value 精确一致：573
+- raw translation 英文 key/value 精确一致：573
+- raw translation 双语 key/value 同时精确一致：573
+- raw translation key 存在但当前文案不一致：0
+- zhAccepted：573
+- enAccepted：573
+- 缺少 raw/internal 文案来源：377
 
 ## 已有验证
 
@@ -40,7 +40,7 @@
 - `full-leaf-100-gap-audit.json` 顶层 `totals.full_leaf_100` 当前仍为 `false`。
 - internal gate-report 中仍存在严格 gate 失败字段。
 - Windows bootstrap frontend 文档仍包含 `partial/candidate` 信号，不能在 dim6 acceptance、managed state registry、bootstrap cache 等缺口关闭前移除。
-- `frontend-copy-acceptance.json` 仍是 draft，当前只有 272 个 locale key 同时具备 raw translation 中文和英文 key/value 精确来源，剩余 678 个 locale key 仍缺少完整 raw/internal 文案来源。
+- `frontend-copy-acceptance.json` 仍是 draft，当前有 573 个 locale key 同时具备 raw translation 中文和英文 key/value 精确来源，剩余 377 个 locale key 仍缺少完整 raw/internal 文案来源。
 - `src/restoration/frontend-manifest/index.ts` 仍存在 `source-only`、`boundary-only`、`contract-service-only` 和 `owner-closed` 状态；这些是进度记录，不是 full leaf。
 
 ## 严格 gate
