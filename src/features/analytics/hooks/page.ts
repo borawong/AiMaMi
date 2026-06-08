@@ -44,22 +44,22 @@ import { useAnalyticsModule } from "./query";
 
 const PANELS = [
   { value: "activity", labelKey: "analytics.panel.usage" },
-  { value: "sessions", labelKey: "analytics.panel.sessions" },
-  { value: "token", labelKey: "analytics.panel.tokens" },
-  { value: "tools", labelKey: "analytics.panel.tools" },
+  { value: "sessions", labelKey: "analytics.tabSessions" },
+  { value: "token", labelKey: "analytics.tabToken" },
+  { value: "tools", labelKey: "analytics.tabTools" },
   { value: "changes", labelKey: "analytics.panel.changes" },
-  { value: "quota", labelKey: "analytics.panel.quota" },
+  { value: "quota", labelKey: "analytics.tabQuota" },
 ] as const;
 
 const ANALYTICS_RANGES = [
-  { value: "today", labelKey: "analytics.range.today" },
-  { value: "week", labelKey: "analytics.range.week" },
-  { value: "month", labelKey: "analytics.range.month" },
+  { value: "today", labelKey: "analytics.rangeToday" },
+  { value: "week", labelKey: "analytics.rangeWeek" },
+  { value: "month", labelKey: "analytics.rangeMonth" },
 ] as const;
 
 const ACTIVITY_RANGES = [
-  { value: "week", labelKey: "analytics.range.week" },
-  { value: "month", labelKey: "analytics.range.month" },
+  { value: "week", labelKey: "analytics.rangeWeek" },
+  { value: "month", labelKey: "analytics.rangeMonth" },
   { value: "year", labelKey: "analytics.range.year" },
 ] as const;
 

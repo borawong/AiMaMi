@@ -255,10 +255,7 @@
     "forceKillCodexAction": "Force Kill",
     "forceKilling": "Killing...",
     "forceKillResult": "Terminated {{count}} processes: {{processes}}",
-    "resetCodexConfig": "Reset Codex Config",
     "resetCodexConfigDesc": "Invoke the dumped reset_codex_config command to reset local Codex configuration.",
-    "resetCodexConfigAction": "Reset Config",
-    "resettingConfig": "Resetting...",
     "resetConfigResult": "reset_codex_config completed",
     "imageCompat": "Image Declaration Compat",
     "imageCompatDesc": "Disable image generation tool declarations in relay requests to avoid 403 errors from upstream providers that don't support image generation.",
@@ -267,7 +264,10 @@
     "imageCompatRunning": "Updating...",
     "imageCompatResult": "Image compatibility is now {{state}}",
     "enabled": "enabled",
-    "disabled": "disabled"
+    "disabled": "disabled",
+    "resetConfig": "Reset Codex Config",
+    "resetConfigAction": "Reset Config",
+    "resetConfigRunning": "Resetting..."
   },
   "settings": {
     "title": "Settings",
@@ -581,22 +581,14 @@
     "description": "Restores the analytics module entry from usage, session, token, tool, and change analytics IPC contracts.",
     "panel": {
       "usage": "Usage",
-      "sessions": "Sessions",
-      "tokens": "Token",
-      "tools": "Tools",
-      "changes": "Changes",
-      "quota": "Quota"
+      "changes": "Changes"
     },
     "range": {
-      "today": "Today",
-      "week": "Week",
-      "month": "Month",
       "year": "Year"
     },
     "heatmap": {
       "sessions": "sessions",
       "active": "Active",
-      "tokens": "Token",
       "less": "Less",
       "more": "More"
     },
@@ -642,7 +634,14 @@
     "totalToken": "Total Usage",
     "weekActiveDays": "Active This Week",
     "writeOps": "Lines Added",
-    "writeTotal": "Total Added"
+    "writeTotal": "Total Added",
+    "tabToken": "Token",
+    "tabSessions": "Sessions",
+    "tabTools": "Tools",
+    "tabQuota": "Quota",
+    "rangeToday": "Today",
+    "rangeWeek": "Week",
+    "rangeMonth": "Month"
   },
   "relay": {
     "description": "Configure relay models for Codex; switch freely from the menu when smart router is on.",

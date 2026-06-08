@@ -216,10 +216,10 @@ export function useMaintenancePageController(): MaintenancePageController {
       key: "resetConfig",
       icon: RotateCcw,
       iconColor: "text-rose-500",
-      label: t("maintenance.resetCodexConfig"),
+      label: t("maintenance.resetConfig"),
       description: t("maintenance.resetCodexConfigDesc"),
-      actionLabel: t("maintenance.resetCodexConfigAction"),
-      loadingLabel: t("maintenance.resettingConfig"),
+      actionLabel: t("maintenance.resetConfigAction"),
+      loadingLabel: t("maintenance.resetConfigRunning"),
       onAction: () =>
         void runAction("resetConfig", async () => {
           await resetConfigMutation.mutateAsync();
