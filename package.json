@@ -9,6 +9,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
+    "generate:frontend-copy-acceptance": "node scripts/generate-frontend-copy-acceptance.mjs",
+    "validate:frontend-copy-acceptance-draft": "node scripts/generate-frontend-copy-acceptance.mjs --check",
     "generate:frontend-leaf-queue": "node scripts/generate-frontend-leaf-restoration-queue.mjs",
     "validate:frontend-leaf-queue": "node scripts/generate-frontend-leaf-restoration-queue.mjs --check",
     "validate:frontend-closeouts": "node scripts/validate-frontend-current-source-closeouts.mjs",

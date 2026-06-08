@@ -243,6 +243,29 @@ function checkCopyAcceptanceProof() {
   if (entries.length !== zhEntries.size || entries.length !== enEntries.size) {
     failures.push(`${toRepoPath(proofPath)} entries=${entries.length}，locale zh/en=${zhEntries.size}/${enEntries.size}`);
   }
+  const acceptedEntries = entries.filter(
+    (entry) => entry.zhAccepted === true && entry.enAccepted === true,
+  );
+  const missingSourceEntries = entries.filter(
+    (entry) => !entry.zhSource || !entry.enSource,
+  );
+  notes.push(
+    `frontend-copy-acceptance：status=${String(proof.status)}，entries=${entries.length}，accepted=${acceptedEntries.length}，missingSource=${missingSourceEntries.length}`,
+  );
+
+  if (proof.status !== "accepted") {
+    const totals = proof.totals && typeof proof.totals === "object" ? proof.totals : {};
+    failures.push(
+      `${toRepoPath(proofPath)} 仍是草稿或未验收状态：acceptedZh=${String(totals.acceptedZh ?? acceptedEntries.length)} acceptedEn=${String(totals.acceptedEn ?? acceptedEntries.length)} missingRawOrInternalCopySource=${String(totals.missingRawOrInternalCopySource ?? missingSourceEntries.length)}`,
+    );
+    for (const entry of missingSourceEntries.slice(0, 10)) {
+      failures.push(`${toRepoPath(proofPath)} ${entry.key} 缺少 raw/internal 文案来源`);
+    }
+    if (missingSourceEntries.length > 10) {
+      failures.push(`${toRepoPath(proofPath)} 另有 ${missingSourceEntries.length - 10} 个 locale key 缺少 raw/internal 文案来源`);
+    }
+    return;
+  }
   for (const entry of entries) {
     if (entry.zhAccepted !== true || entry.enAccepted !== true) {
       failures.push(`${toRepoPath(proofPath)} ${entry.key} 未同时验收 zh/en`);
@@ -315,16 +338,66 @@ function loadClosedFrontendDocs() {
 
 function checkFrontendManifestStatuses() {
   const manifestPath = repoPath("src", "restoration", "frontend-manifest", "index.ts");
-  const text = readText(manifestPath);
+  const lines = readText(manifestPath).split(/\r?\n/);
   const nonLeafStatuses = new Set(["source-only", "boundary-only", "contract-service-only", "owner-closed"]);
   const hits = [];
+  let currentArray = null;
+  let objectDepth = 0;
+  let currentRecord = null;
 
-  text.split(/\r?\n/).forEach((line, index) => {
-    for (const match of line.matchAll(/status:\s*"([^"]+)"/g)) {
-      const status = match[1];
-      if (nonLeafStatuses.has(status)) {
-        hits.push(`${toRepoPath(manifestPath)}:${index + 1} manifest status=${status}`);
+  lines.forEach((line, index) => {
+    const arrayMatch = line.match(/^export const\s+([A-Z0-9_]+)\s*=\s*\[/);
+    if (arrayMatch) {
+      currentArray = arrayMatch[1];
+      objectDepth = 0;
+      currentRecord = null;
+      return;
+    }
+    if (!currentArray) return;
+    if (line.trim().startsWith("] as const") || line.trim().startsWith("] satisfies")) {
+      currentArray = null;
+      objectDepth = 0;
+      currentRecord = null;
+      return;
+    }
+    if (currentArray === "FRONTEND_DUMPED_BOUNDARY_EXCEPTIONS") return;
+
+    if (objectDepth === 0 && line.trim().startsWith("{")) {
+      currentRecord = {
+        arrayName: currentArray,
+        owner: null,
+        module: null,
+        command: null,
+        source: null,
+        status: null,
+        statusLine: null,
+      };
+    }
+    if (!currentRecord) return;
+
+    for (const field of ["module", "owner", "command", "source"]) {
+      const match = line.match(new RegExp(`\\b${field}:\\s*"([^"]+)"`));
+      if (match) currentRecord[field] = match[1];
+    }
+    const statusMatch = line.match(/\bstatus:\s*"([^"]+)"/);
+    if (statusMatch && nonLeafStatuses.has(statusMatch[1])) {
+      currentRecord.status = statusMatch[1];
+      currentRecord.statusLine = index + 1;
+    }
+
+    objectDepth += (line.match(/{/g) ?? []).length;
+    objectDepth -= (line.match(/}/g) ?? []).length;
+    if (objectDepth <= 0) {
+      if (currentRecord.status) {
+        const owner = currentRecord.owner ?? currentRecord.module ?? "unknown";
+        const command = currentRecord.command ? ` command=${currentRecord.command}` : "";
+        const source = currentRecord.source ? ` source=${currentRecord.source}` : "";
+        hits.push(
+          `${toRepoPath(manifestPath)}:${currentRecord.statusLine} ${currentRecord.arrayName} owner=${owner}${command}${source} manifest status=${currentRecord.status}`,
+        );
       }
+      objectDepth = 0;
+      currentRecord = null;
     }
   });
 

@@ -94,23 +94,66 @@ function collectManifestNonLeafStatuses() {
   const lines = readFileSync(manifestPath, "utf8").split(/\r?\n/);
   const nonLeafStatuses = new Set(["source-only", "boundary-only", "contract-service-only", "owner-closed"]);
   const items = [];
-  let currentModule = null;
-  let currentCommand = null;
+  let currentArray = null;
+  let objectDepth = 0;
+  let currentRecord = null;
 
   lines.forEach((line, index) => {
-    const moduleMatch = line.match(/module:\s*"([^"]+)"/);
-    if (moduleMatch) currentModule = moduleMatch[1];
-    const commandMatch = line.match(/command:\s*"([^"]+)"/);
-    if (commandMatch) currentCommand = commandMatch[1];
-    const statusMatch = line.match(/status:\s*"([^"]+)"/);
-    if (!statusMatch || !nonLeafStatuses.has(statusMatch[1])) return;
-    items.push({
-      file: toRepoPath(manifestPath),
-      line: index + 1,
-      module: currentModule,
-      command: currentCommand,
-      status: statusMatch[1],
-    });
+    const arrayMatch = line.match(/^export const\s+([A-Z0-9_]+)\s*=\s*\[/);
+    if (arrayMatch) {
+      currentArray = arrayMatch[1];
+      objectDepth = 0;
+      currentRecord = null;
+      return;
+    }
+    if (!currentArray) return;
+    if (line.trim().startsWith("] as const") || line.trim().startsWith("] satisfies")) {
+      currentArray = null;
+      objectDepth = 0;
+      currentRecord = null;
+      return;
+    }
+    if (currentArray === "FRONTEND_DUMPED_BOUNDARY_EXCEPTIONS") return;
+
+    if (objectDepth === 0 && line.trim().startsWith("{")) {
+      currentRecord = {
+        file: toRepoPath(manifestPath),
+        recordLine: index + 1,
+        line: null,
+        arrayName: currentArray,
+        module: null,
+        owner: null,
+        command: null,
+        source: null,
+        status: null,
+      };
+    }
+
+    if (!currentRecord) return;
+
+    for (const field of ["module", "owner", "command", "source"]) {
+      const match = line.match(new RegExp(`\\b${field}:\\s*"([^"]+)"`));
+      if (match) currentRecord[field] = match[1];
+    }
+    const statusMatch = line.match(/\bstatus:\s*"([^"]+)"/);
+    if (statusMatch && nonLeafStatuses.has(statusMatch[1])) {
+      currentRecord.status = statusMatch[1];
+      currentRecord.line = index + 1;
+    }
+
+    objectDepth += (line.match(/{/g) ?? []).length;
+    objectDepth -= (line.match(/}/g) ?? []).length;
+    if (objectDepth <= 0) {
+      if (currentRecord.status) {
+        items.push({
+          ...currentRecord,
+          owner: currentRecord.owner ?? currentRecord.module,
+          line: currentRecord.line ?? currentRecord.recordLine,
+        });
+      }
+      objectDepth = 0;
+      currentRecord = null;
+    }
   });
   return items;
 }
@@ -236,6 +279,27 @@ function collectSourceSignals() {
   }));
 }
 
+function collectCopyAcceptance(copyAcceptancePath) {
+  if (!existsSync(copyAcceptancePath)) {
+    return {
+      file: toRepoPath(copyAcceptancePath),
+      exists: false,
+      status: "missing",
+      totals: null,
+      requiredForFullCopyAcceptance: true,
+    };
+  }
+
+  const proof = readJson(copyAcceptancePath);
+  return {
+    file: toRepoPath(copyAcceptancePath),
+    exists: true,
+    status: proof.status ?? "unknown",
+    totals: proof.totals ?? null,
+    requiredForFullCopyAcceptance: true,
+  };
+}
+
 function buildQueue() {
   const gapAuditPath = repoPath("evidence", "full-chain", "internal", "data", "data", "full-leaf-100-gap-audit.json");
   const gapAudit = readJson(gapAuditPath);
@@ -244,6 +308,7 @@ function buildQueue() {
   const frontendDocSignals = collectFrontendDocSignals();
   const localeCoverage = collectLocaleCoverage();
   const copyAcceptancePath = repoPath("evidence", "full-chain", "internal", "frontend-copy-acceptance.json");
+  const copyAcceptance = collectCopyAcceptance(copyAcceptancePath);
 
   return {
     schema: "open-aimami.frontend_leaf_restoration_queue.v1",
@@ -266,18 +331,14 @@ function buildQueue() {
     manifestNonLeafStatuses,
     frontendDocSignals,
     localeCoverage,
-    copyAcceptance: {
-      file: toRepoPath(copyAcceptancePath),
-      exists: existsSync(copyAcceptancePath),
-      requiredForFullCopyAcceptance: true,
-    },
+    copyAcceptance,
     sourceSignals: collectSourceSignals(),
     nextQueue: [
       {
         id: "frontend-copy-acceptance-proof",
         area: "copy",
-        status: existsSync(copyAcceptancePath) ? "needs-verification" : "missing",
-        blocker: "缺少逐条 locale key 到 raw/internal 文案来源的验收文件。",
+        status: copyAcceptance.status === "accepted" ? "needs-verification" : "draft-or-missing",
+        blocker: "逐条 locale key 到 raw/internal 文案来源的验收文件尚未 accepted。",
       },
       {
         id: "plugins-config-visible-leaf",

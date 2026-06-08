@@ -879,338 +879,475 @@
   "manifestNonLeafStatuses": [
     {
       "file": "src/restoration/frontend-manifest/index.ts",
-      "line": 92,
-      "module": "plugins",
-      "command": "import_remote_device_secret_if_empty",
-      "status": "contract-service-only"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "line": 116,
-      "module": "app-shell",
-      "command": "import_remote_device_secret_if_empty",
-      "status": "source-only"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "line": 137,
-      "module": "app-shell",
-      "command": "import_remote_device_secret_if_empty",
-      "status": "owner-closed"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "line": 147,
-      "module": "voice",
-      "command": "import_remote_device_secret_if_empty",
-      "status": "boundary-only"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
-      "line": 156,
-      "module": "voice",
-      "command": "import_remote_device_secret_if_empty",
-      "status": "boundary-only"
-    },
-    {
-      "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 165,
       "line": 168,
-      "module": "voice",
-      "command": "import_remote_device_secret_if_empty",
+      "arrayName": "FRONTEND_DUMPED_INDEX_ASSET_SOURCES",
+      "module": null,
+      "owner": "app-shell",
+      "command": null,
+      "source": "assets/index-CL22l5v8.js",
       "status": "source-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 250,
       "line": 253,
-      "module": "voice",
-      "command": "import_remote_device_secret_if_empty",
+      "arrayName": "FRONTEND_DUMPED_INDEX_ASSET_SOURCES",
+      "module": null,
+      "owner": "voice",
+      "command": null,
+      "source": "assets/index-CL22l5v8.js",
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 295,
       "line": 299,
+      "arrayName": "FRONTEND_DUMPED_APP_SHELL_DESKTOP_MESSAGE_QUERY_MATRIX",
       "module": "app-shell",
-      "command": "get_or_create_remote_device_secret",
+      "owner": "app-shell",
+      "command": null,
+      "source": "assets/index-CL22l5v8.js",
       "status": "source-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 308,
       "line": 313,
+      "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
       "module": "accounts",
-      "command": "get_or_create_remote_device_secret",
+      "owner": "accounts",
+      "command": null,
+      "source": "assets/index-CL22l5v8.js",
       "status": "owner-closed"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 321,
       "line": 326,
+      "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
       "module": "analytics",
-      "command": "get_or_create_remote_device_secret",
+      "owner": "analytics",
+      "command": null,
+      "source": "assets/index-CL22l5v8.js",
       "status": "owner-closed"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 334,
       "line": 339,
+      "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
       "module": "mcp",
-      "command": "get_or_create_remote_device_secret",
+      "owner": "mcp",
+      "command": null,
+      "source": "assets/index-CL22l5v8.js",
       "status": "owner-closed"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 347,
       "line": 352,
+      "arrayName": "FRONTEND_DUMPED_APP_SHELL_INDEX_QUERY_MATRIX",
       "module": "skills",
-      "command": "get_or_create_remote_device_secret",
+      "owner": "skills",
+      "command": null,
+      "source": "assets/index-CL22l5v8.js",
       "status": "owner-closed"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 363,
       "line": 367,
+      "arrayName": "FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX",
       "module": "plugins",
+      "owner": "plugins",
       "command": "get_plugin_config",
+      "source": "assets/index-CL22l5v8.js",
       "status": "contract-service-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 374,
       "line": 378,
+      "arrayName": "FRONTEND_DUMPED_MODULE_RESTORATION_MATRIX",
       "module": "plugins",
+      "owner": "plugins",
       "command": "update_plugin_config",
+      "source": "assets/index-CL22l5v8.js",
       "status": "contract-service-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 595,
       "line": 598,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "load_voice_workspace",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 604,
       "line": 607,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "upsert_voice_template",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 613,
       "line": 616,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "remove_voice_template",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 622,
       "line": 625,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "upsert_voice_vocabulary",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 631,
       "line": 634,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "remove_voice_vocabulary",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 640,
       "line": 643,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "replace_voice_vocabulary_kind",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 649,
       "line": 652,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "upsert_voice_vocabulary_app_scope",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 658,
       "line": 661,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "remove_voice_vocabulary_app_scope",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 667,
       "line": 670,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "resolve_voice_vocabulary_app_info",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 676,
       "line": 679,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "generate_voice_prompt",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 685,
       "line": 688,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "load_voice_llm_config",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 694,
       "line": 697,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "save_voice_llm_config",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 703,
       "line": 706,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "test_voice_llm_config",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 712,
       "line": 715,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "load_voice_asr_config",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 721,
       "line": 724,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "save_voice_asr_config",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 730,
       "line": 733,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "test_voice_asr_config",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 739,
       "line": 742,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "remove_voice_history_entry",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 748,
       "line": 751,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "load_voice_runtime_status",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 757,
       "line": 760,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "request_voice_permissions",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 766,
       "line": 769,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "request_accessibility_permission",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 775,
       "line": 778,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "set_voice_global_shortcut",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 784,
       "line": 787,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "capture_voice_trigger_key",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 793,
       "line": 796,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "cancel_voice_trigger_capture",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 802,
       "line": 805,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "set_voice_trigger_listener_suppressed",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 811,
       "line": 814,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "set_voice_trigger_key",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 820,
       "line": 823,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "set_voice_trigger_bindings",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 829,
       "line": 832,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "update_voice_runtime_settings",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 838,
       "line": 841,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "set_voice_processing_mode_id",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 847,
       "line": 850,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "start_voice_capture",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 856,
       "line": 859,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "stop_voice_capture",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 865,
       "line": 868,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "inject_voice_text",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 874,
       "line": 877,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "show_voice_search_overlay",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 883,
       "line": 886,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "set_voice_mode_shortcut",
+      "source": null,
       "status": "boundary-only"
     },
     {
       "file": "src/restoration/frontend-manifest/index.ts",
+      "recordLine": 892,
       "line": 895,
+      "arrayName": "FRONTEND_DUMPED_CONTRACT_SLICE_D_COVERAGE",
       "module": "voice",
+      "owner": "voice",
       "command": "remove_voice_mode_shortcut",
+      "source": null,
       "status": "boundary-only"
     }
   ],
@@ -1236,7 +1373,22 @@
   ],
   "copyAcceptance": {
     "file": "evidence/full-chain/internal/frontend-copy-acceptance.json",
-    "exists": false,
+    "exists": true,
+    "status": "draft",
+    "totals": {
+      "zhLocaleKeys": 950,
+      "enLocaleKeys": 950,
+      "entries": 950,
+      "rawControlFlowKeyBacked": 40,
+      "internalKeyBacked": 9,
+      "rawOrInternalKeyBacked": 44,
+      "sourceSyncOnly": 906,
+      "literalZhBacked": 0,
+      "literalEnBacked": 0,
+      "acceptedZh": 0,
+      "acceptedEn": 0,
+      "missingRawOrInternalCopySource": 950
+    },
     "requiredForFullCopyAcceptance": true
   },
   "sourceSignals": [
@@ -1275,8 +1427,8 @@
     {
       "id": "frontend-copy-acceptance-proof",
       "area": "copy",
-      "status": "missing",
-      "blocker": "缺少逐条 locale key 到 raw/internal 文案来源的验收文件。"
+      "status": "draft-or-missing",
+      "blocker": "逐条 locale key 到 raw/internal 文案来源的验收文件尚未 accepted。"
     },
     {
       "id": "plugins-config-visible-leaf",
@@ -1288,7 +1440,7 @@
       "id": "manifest-non-full-leaf-statuses",
       "area": "frontend-manifest",
       "status": "open",
-      "blocker": "当前 frontend manifest 还有 48 个非 full leaf 状态。"
+      "blocker": "当前 frontend manifest 还有 43 个非 full leaf 状态。"
     },
     {
       "id": "gate-report-strict-failures",
