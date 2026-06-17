@@ -43,7 +43,8 @@ pub fn apply_custom_instruction(
         source,
     )
     .map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    let warnings = repo.sync_remote_servers_best_effort();
+    Ok(CoreEnvelope::ok_with_warnings(payload, warnings))
 }
 
 #[tauri::command]
@@ -53,7 +54,8 @@ pub fn clear_custom_instruction_block(
     let repo = repo.lock().map_err(|e| e.to_string())?;
     let payload =
         custom_instructions::clear_managed_block(repo.paths()).map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    let warnings = repo.sync_remote_servers_best_effort();
+    Ok(CoreEnvelope::ok_with_warnings(payload, warnings))
 }
 
 #[tauri::command]
@@ -64,5 +66,6 @@ pub fn rollback_custom_instruction(
     let repo = repo.lock().map_err(|e| e.to_string())?;
     let payload = custom_instructions::rollback_history(repo.paths(), &history_id)
         .map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    let warnings = repo.sync_remote_servers_best_effort();
+    Ok(CoreEnvelope::ok_with_warnings(payload, warnings))
 }

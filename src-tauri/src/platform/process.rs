@@ -155,7 +155,11 @@ mod win32_process {
 
             let path_str = String::from_utf16_lossy(&buf[..size as usize]);
             let p = PathBuf::from(path_str);
-            if p.exists() { Some(p) } else { None }
+            if p.exists() {
+                Some(p)
+            } else {
+                None
+            }
         }
     }
 }

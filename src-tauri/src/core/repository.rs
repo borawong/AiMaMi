@@ -81,10 +81,6 @@ fn default_true() -> bool {
     true
 }
 
-fn effective_api_config(_api: Option<&ApiConfig>) -> ApiConfig {
-    ApiConfig::default()
-}
-
 fn default_usage_refresh_interval() -> String {
     "1m".to_string()
 }
@@ -145,7 +141,7 @@ pub(crate) struct LoadedState {
     pub paths: AppPathState,
     pub settings: CodexMateSettings,
     pub registry: RegistryFile,
-    pub quota_store: QuotaStoreFile,
+    pub _quota_store: QuotaStoreFile,
     pub last_scan_at: i64,
     pub warnings: Vec<CoreWarning>,
     pub api_diagnostics: ApiDiagnostics,
@@ -253,11 +249,15 @@ impl Repository {
 
     pub fn rebuild_registry(&self) -> Result<CoreEnvelope<RebuildRegistryPayload>, CoreError> {
         let registry = self.rebuild_registry_state()?;
-        Ok(CoreEnvelope::ok(RebuildRegistryPayload {
-            account_count: registry.items.len() as i32,
-            active_account_key: registry.active_account_key,
-            registry_updated: true,
-        }))
+        let warnings = self.sync_remote_servers_best_effort();
+        Ok(CoreEnvelope::ok_with_warnings(
+            RebuildRegistryPayload {
+                account_count: registry.items.len() as i32,
+                active_account_key: registry.active_account_key,
+                registry_updated: true,
+            },
+            warnings,
+        ))
     }
 
     pub fn set_auto_switch(
@@ -284,9 +284,13 @@ impl Repository {
         }
 
         let payload = self.make_auto_switch_status(&registry);
-        Ok(CoreEnvelope::ok(AutoSwitchConfigPayload {
-            auto_switch: payload,
-        }))
+        let warnings = self.sync_remote_servers_best_effort();
+        Ok(CoreEnvelope::ok_with_warnings(
+            AutoSwitchConfigPayload {
+                auto_switch: payload,
+            },
+            warnings,
+        ))
     }
 
     pub fn configure_auto_switch(
@@ -319,9 +323,13 @@ impl Repository {
         self.save_registry(&registry)?;
 
         let payload = self.make_auto_switch_status(&registry);
-        Ok(CoreEnvelope::ok(AutoSwitchConfigPayload {
-            auto_switch: payload,
-        }))
+        let warnings = self.sync_remote_servers_best_effort();
+        Ok(CoreEnvelope::ok_with_warnings(
+            AutoSwitchConfigPayload {
+                auto_switch: payload,
+            },
+            warnings,
+        ))
     }
 
     pub fn set_api_proxy_config(
@@ -335,9 +343,13 @@ impl Repository {
         settings.api_proxy = normalized.clone();
         self.save_settings(&settings)?;
 
-        Ok(CoreEnvelope::ok(ApiModePayload {
-            api: ApiConfigPayload { proxy: normalized },
-        }))
+        let warnings = self.sync_remote_servers_best_effort();
+        Ok(CoreEnvelope::ok_with_warnings(
+            ApiModePayload {
+                api: ApiConfigPayload { proxy: normalized },
+            },
+            warnings,
+        ))
     }
 
     pub fn test_api_proxy_config(
@@ -417,13 +429,17 @@ impl Repository {
         let mut registry = self.load_registry_or_empty();
         let mut quota_store = quota_store::load_or_default(&self.paths.quota_store_path);
         if let Some(ref current_auth) = current_auth {
-            if let Err(error) = self.sync_current_auth_into_registry(&mut registry, current_auth) {
-                warnings.push(CoreWarning {
-                    code: "CURRENT_AUTH_SYNC_FAILED".into(),
-                    message: format!(
-                        "Failed to sync current auth.json into the AiMaMi registry: {error}"
-                    ),
-                });
+            match self.sync_current_auth_into_registry(&mut registry, current_auth) {
+                Ok(true) => warnings.extend(self.sync_remote_servers_best_effort()),
+                Ok(false) => {}
+                Err(error) => {
+                    warnings.push(CoreWarning {
+                        code: "CURRENT_AUTH_SYNC_FAILED".into(),
+                        message: format!(
+                            "Failed to sync current auth.json into the AiMaMi registry: {error}"
+                        ),
+                    });
+                }
             }
         }
         if let Err(error) =
@@ -439,7 +455,6 @@ impl Repository {
 
     pub(crate) fn load_local_state(&self) -> Result<LoadedState, CoreError> {
         let mut warnings: Vec<CoreWarning> = Vec::new();
-        let current_auth = self.load_current_auth_snapshot();
         let settings = self.load_settings();
         let registry = self.load_registry_or_empty();
         let quota_store = quota_store::load_or_default(&self.paths.quota_store_path);
@@ -469,7 +484,7 @@ impl Repository {
             paths: app_paths,
             settings,
             registry,
-            quota_store,
+            _quota_store: quota_store,
             last_scan_at,
             warnings,
             api_diagnostics: ApiDiagnostics::default(),
@@ -488,7 +503,7 @@ impl Repository {
         &self,
         registry: &mut RegistryFile,
         current_auth: &AuthSnapshot,
-    ) -> Result<(), CoreError> {
+    ) -> Result<bool, CoreError> {
         self.paths.ensure_directories()?;
 
         let snapshot_path = self.make_snapshot_path(&current_auth.account_key);
@@ -584,7 +599,7 @@ impl Repository {
             self.save_registry(registry)?;
         }
 
-        Ok(())
+        Ok(changed)
     }
 
     fn sync_legacy_registry_quota_into_store(
@@ -722,7 +737,6 @@ impl Repository {
         Ok(())
     }
 
-
     fn load_registry(&self) -> Result<RegistryFile, CoreError> {
         let data = std::fs::read_to_string(&self.paths.registry_path)?;
         let registry: RegistryFile = serde_json::from_str(&data)?;
@@ -774,7 +788,6 @@ impl Repository {
     pub(crate) fn save_quota_store(&self, quota_store: &QuotaStoreFile) -> Result<(), CoreError> {
         quota_store::save(&self.paths.quota_store_path, quota_store)
     }
-
 
     fn rebuild_registry_state(&self) -> Result<RegistryFile, CoreError> {
         self.paths.ensure_directories()?;
@@ -898,7 +911,7 @@ impl Repository {
             Ok(s) => s,
             Err(_) => return CodexMateSettings::default(),
         };
-        let mut v: serde_json::Value = match serde_json::from_str(&raw) {
+        let v: serde_json::Value = match serde_json::from_str(&raw) {
             Ok(j) => j,
             Err(_) => return CodexMateSettings::default(),
         };
@@ -995,6 +1008,7 @@ impl Repository {
         let mut settings = self.load_settings();
         settings.usage_refresh_interval = normalized.to_string();
         self.save_settings(&settings)?;
+        let _ = self.sync_remote_servers_best_effort();
         Ok(normalized.to_string())
     }
 
@@ -1009,6 +1023,9 @@ impl Repository {
         Ok(id)
     }
 
+    pub(crate) fn sync_remote_servers_best_effort(&self) -> Vec<CoreWarning> {
+        crate::core::ssh_remote::sync_all_enabled_best_effort(&self.paths)
+    }
 
     fn resolve_daemon_binary(&self) -> Result<PathBuf, CoreError> {
         std::env::current_exe().map_err(|e| {
@@ -1038,7 +1055,6 @@ fn prev_item<'a>(
             .find(|item| item.account_key == account_key)
     })
 }
-
 
 fn carry_over_registry_state(item: &mut RegistryItem, previous: Option<&RegistryItem>) {
     let Some(previous) = previous else { return };
@@ -1086,7 +1102,6 @@ fn carry_over_registry_state(item: &mut RegistryItem, previous: Option<&Registry
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1116,6 +1131,13 @@ mod tests {
                 account_id: None,
             },
             last_refresh: Some("2026-04-06T00:00:00Z".into()),
+            email: Some("user@example.com".into()),
+            account_email: Some("user@example.com".into()),
+            account_id: Some("acct-1".into()),
+            account_name: Some("User".into()),
+            workspace_name: Some("Workspace".into()),
+            profile_name: Some("Profile".into()),
+            plan: Some("plus".into()),
         };
         fs::write(path, serde_json::to_string_pretty(&auth).unwrap()).unwrap();
         make_auth_snapshot(&auth, path).unwrap()

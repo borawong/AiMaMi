@@ -33,6 +33,7 @@ import { REFRESH_OPTIONS, type RefreshInterval } from "@/hooks/use-auto-refresh"
 import { useBusyAction } from "@/hooks/use-busy-action";
 import { isMacPlatform } from "@/lib/platform";
 import { ApiProxyDialog } from "@/components/runtime/api-proxy-dialog";
+import { SshServersSection } from "@/components/settings/ssh-servers-section";
 
 type SnapshotEnvelope = Awaited<ReturnType<typeof api.loadSnapshot>>;
 interface SettingsPageProps {
@@ -371,6 +372,10 @@ export function SettingsPage({
             {t("common.edit")}
           </Button>
         </SettingRow>
+      </Section>
+
+      <Section title={t("settings.remoteServersSection")}>
+        <SshServersSection />
       </Section>
 
       <Section title={t("settings.about")}>

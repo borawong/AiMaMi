@@ -1,5 +1,6 @@
 import type {
   CoreEnvelope,
+  CoreSnapshotPayload,
   CleanPayload,
   RebuildRegistryPayload,
   AutoSwitchConfigPayload,
@@ -21,6 +22,11 @@ import type {
   SkillDeleteBackupPayload,
   CustomInstructionPreviewPayload,
   CustomInstructionStatePayload,
+  SshServerConfig,
+  SshServerListPayload,
+  SshServerSummary,
+  SshConnectionTestPayload,
+  SshSyncPayload,
 } from "@/types";
 import { isTauriRuntime } from "@/lib/tauri-runtime";
 
@@ -34,7 +40,7 @@ async function invoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T
 
 export const api = {
   loadSnapshot: (localOnly = false) =>
-    invoke<CoreEnvelope<Record<string, unknown>>>("load_snapshot", { localOnly }),
+    invoke<CoreEnvelope<CoreSnapshotPayload>>("load_snapshot", { localOnly }),
 
   clean: () =>
     invoke<CoreEnvelope<CleanPayload>>("clean"),
@@ -84,8 +90,17 @@ export const api = {
   loadMcpServers: () =>
     invoke<CoreEnvelope<McpServerListPayload>>("load_mcp_servers"),
 
-  upsertMcpServer: (name: string, config: Record<string, unknown>) =>
-    invoke<CoreEnvelope<McpServerMutationPayload>>("upsert_mcp_server", { name, config }),
+  upsertMcpServer: (config: {
+    name: string;
+    transport: string;
+    enabled: boolean;
+    command?: string;
+    args: string[];
+    url?: string;
+    headers: Record<string, string>;
+    environment: Record<string, string>;
+  }) =>
+    invoke<CoreEnvelope<McpServerMutationPayload>>("upsert_mcp_server", config),
 
   setMcpServerEnabled: (name: string, enabled: boolean) =>
     invoke<CoreEnvelope<McpServerMutationPayload>>("set_mcp_server_enabled", { name, enabled }),
@@ -93,44 +108,67 @@ export const api = {
   removeMcpServer: (name: string) =>
     invoke<CoreEnvelope<McpServerRemovePayload>>("remove_mcp_server", { name }),
 
+
+  loadSshServers: () =>
+    invoke<CoreEnvelope<SshServerListPayload>>("load_ssh_servers"),
+
+  upsertSshServer: (id: string | undefined, config: SshServerConfig) =>
+    invoke<CoreEnvelope<SshServerSummary>>("upsert_ssh_server", { id, config }),
+
+  removeSshServer: (id: string) =>
+    invoke<CoreEnvelope<SshServerSummary>>("remove_ssh_server", { id }),
+
+  testSshServer: (params: { id?: string; config?: SshServerConfig }) =>
+    invoke<CoreEnvelope<SshConnectionTestPayload>>("test_ssh_server", params),
+
+  syncSshServer: (id: string) =>
+    invoke<CoreEnvelope<SshSyncPayload>>("sync_ssh_server", { id }),
+
+  syncAllSshServers: () =>
+    invoke<CoreEnvelope<SshSyncPayload>>("sync_all_ssh_servers"),
+
+  openSshServer: (id: string) =>
+    invoke<void>("open_ssh_server", { id }),
+
   loadInstalledSkills: () =>
     invoke<CoreEnvelope<SkillListPayload>>("load_installed_skills"),
 
   loadSkillBackups: () =>
     invoke<CoreEnvelope<SkillBackupListPayload>>("load_skill_backups"),
 
-  importSkill: (sourcePath: string) =>
-    invoke<CoreEnvelope<SkillImportPayload>>("import_skill", { sourcePath }),
+  importSkill: (path: string) =>
+    invoke<CoreEnvelope<SkillImportPayload>>("import_skill", { path }),
 
-  removeSkill: (name: string) =>
-    invoke<CoreEnvelope<SkillRemovePayload>>("remove_skill", { name }),
+  removeSkill: (id: string) =>
+    invoke<CoreEnvelope<SkillRemovePayload>>("remove_skill", { id }),
 
-  restoreSkillBackup: (name: string) =>
-    invoke<CoreEnvelope<SkillRestorePayload>>("restore_skill_backup", { name }),
+  restoreSkillBackup: (id: string) =>
+    invoke<CoreEnvelope<SkillRestorePayload>>("restore_skill_backup", { id }),
 
-  deleteSkillBackup: (name: string) =>
-    invoke<CoreEnvelope<SkillDeleteBackupPayload>>("delete_skill_backup", { name }),
+  deleteSkillBackup: (id: string) =>
+    invoke<CoreEnvelope<SkillDeleteBackupPayload>>("delete_skill_backup", { id }),
 
   loadCustomInstructionState: () =>
     invoke<CoreEnvelope<CustomInstructionStatePayload>>("load_custom_instruction_state"),
 
-  previewCustomInstructionApply: (templateId: string, content: string) =>
+  previewCustomInstructionApply: (content: string) =>
     invoke<CoreEnvelope<CustomInstructionPreviewPayload>>("preview_custom_instruction_apply", {
-      templateId,
       content,
     }),
 
-  applyCustomInstruction: (templateId: string, content: string) =>
-    invoke<CoreEnvelope<CustomInstructionStatePayload>>("apply_custom_instruction", {
-      templateId,
-      content,
-    }),
+  applyCustomInstruction: (params: {
+    content: string;
+    templateCode?: string;
+    templateTitle?: string;
+    source?: string;
+  }) =>
+    invoke<CoreEnvelope<CustomInstructionStatePayload>>("apply_custom_instruction", params),
 
   clearCustomInstructionBlock: () =>
     invoke<CoreEnvelope<CustomInstructionStatePayload>>("clear_custom_instruction_block"),
 
-  rollbackCustomInstruction: () =>
-    invoke<CoreEnvelope<CustomInstructionStatePayload>>("rollback_custom_instruction"),
+  rollbackCustomInstruction: (historyId: string) =>
+    invoke<CoreEnvelope<CustomInstructionStatePayload>>("rollback_custom_instruction", { historyId }),
 
   hasNotch: () =>
     invoke<boolean>("has_notch").catch(() => false),

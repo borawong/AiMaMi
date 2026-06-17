@@ -173,7 +173,6 @@ pub struct RateLimitWindow {
     pub resets_at: Option<i64>,
 }
 
-
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct AppPathState {
@@ -533,6 +532,104 @@ fn default_auto_inject() -> bool {
     true
 }
 
+// ---------------------------------------------------------------------------
+// SSH remote payloads
+// ---------------------------------------------------------------------------
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
+#[serde(rename_all = "lowercase")]
+pub enum SshSyncStatus {
+    Success,
+    Failed,
+    Skipped,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SshServerConfig {
+    pub alias: String,
+    pub host: String,
+    #[serde(default)]
+    pub user: Option<String>,
+    #[serde(default)]
+    pub port: Option<u16>,
+    #[serde(default)]
+    pub key_path: Option<String>,
+    #[serde(default = "default_remote_codex_home")]
+    pub remote_codex_home: String,
+    #[serde(default = "default_true_bool")]
+    pub enabled: bool,
+}
+
+fn default_remote_codex_home() -> String {
+    "~/.codex".into()
+}
+
+fn default_true_bool() -> bool {
+    true
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SshServerSummary {
+    pub id: String,
+    pub alias: String,
+    pub host: String,
+    #[serde(default)]
+    pub user: Option<String>,
+    #[serde(default)]
+    pub port: Option<u16>,
+    #[serde(default)]
+    pub key_path: Option<String>,
+    pub remote_codex_home: String,
+    pub enabled: bool,
+    #[serde(default)]
+    pub last_sync_status: Option<SshSyncStatus>,
+    #[serde(default)]
+    pub last_synced_at: Option<i64>,
+    #[serde(default)]
+    pub last_error: Option<String>,
+    pub created_at: i64,
+    pub updated_at: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SshServerListPayload {
+    pub items: Vec<SshServerSummary>,
+    pub total: i32,
+    pub source_path: String,
+    pub last_scan_at: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SshConnectionTestPayload {
+    #[serde(default)]
+    pub server_id: Option<String>,
+    pub reachable: bool,
+    pub code: String,
+    pub message: String,
+    pub elapsed_ms: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SshSyncResult {
+    pub server_id: String,
+    pub alias: String,
+    pub status: SshSyncStatus,
+    #[serde(default)]
+    pub message: Option<String>,
+    #[serde(default)]
+    pub synced_at: Option<i64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct SshSyncPayload {
+    pub results: Vec<SshSyncResult>,
+}
 
 // ---------------------------------------------------------------------------
 // MCP payloads
@@ -667,7 +764,6 @@ pub struct SkillDeleteBackupPayload {
     pub remaining_backup_count: i32,
 }
 
-
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct CleanPayload {
@@ -684,13 +780,11 @@ pub struct RebuildRegistryPayload {
     pub registry_updated: bool,
 }
 
-
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub struct AutoSwitchConfigPayload {
     pub auto_switch: AutoSwitchStatusPayload,
 }
-
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -726,7 +820,6 @@ pub struct UpdateInstallabilityPayload {
     pub translocated: bool,
     pub quarantined: bool,
 }
-
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
@@ -783,7 +876,6 @@ pub struct DiagnosePayload {
     pub session_state: DiagnoseSessionState,
     pub api_state: DiagnoseApiState,
 }
-
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]

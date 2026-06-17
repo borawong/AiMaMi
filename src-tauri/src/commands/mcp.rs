@@ -56,11 +56,15 @@ pub fn upsert_mcp_server(
     };
     let saved = mcp::upsert_mcp_server(&paths.config_path, &server).map_err(|e| e.to_string())?;
     let all = mcp::load_mcp_servers(&paths.config_path).map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(McpServerMutationPayload {
-        server: saved,
-        total: all.len() as i32,
-        source_path: paths.config_path.display().to_string(),
-    }))
+    let warnings = repo.sync_remote_servers_best_effort();
+    Ok(CoreEnvelope::ok_with_warnings(
+        McpServerMutationPayload {
+            server: saved,
+            total: all.len() as i32,
+            source_path: paths.config_path.display().to_string(),
+        },
+        warnings,
+    ))
 }
 
 #[tauri::command]
@@ -74,11 +78,15 @@ pub fn set_mcp_server_enabled(
     let saved = mcp::set_mcp_server_enabled(&paths.config_path, &name, enabled)
         .map_err(|e| e.to_string())?;
     let all = mcp::load_mcp_servers(&paths.config_path).map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(McpServerMutationPayload {
-        server: saved,
-        total: all.len() as i32,
-        source_path: paths.config_path.display().to_string(),
-    }))
+    let warnings = repo.sync_remote_servers_best_effort();
+    Ok(CoreEnvelope::ok_with_warnings(
+        McpServerMutationPayload {
+            server: saved,
+            total: all.len() as i32,
+            source_path: paths.config_path.display().to_string(),
+        },
+        warnings,
+    ))
 }
 
 #[tauri::command]
@@ -90,9 +98,13 @@ pub fn remove_mcp_server(
     let paths = repo.paths();
     mcp::remove_mcp_server(&paths.config_path, &name).map_err(|e| e.to_string())?;
     let all = mcp::load_mcp_servers(&paths.config_path).map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(McpServerRemovePayload {
-        removed_name: name,
-        total: all.len() as i32,
-        source_path: paths.config_path.display().to_string(),
-    }))
+    let warnings = repo.sync_remote_servers_best_effort();
+    Ok(CoreEnvelope::ok_with_warnings(
+        McpServerRemovePayload {
+            removed_name: name,
+            total: all.len() as i32,
+            source_path: paths.config_path.display().to_string(),
+        },
+        warnings,
+    ))
 }

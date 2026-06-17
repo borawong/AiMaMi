@@ -5,6 +5,16 @@ use std::sync::Mutex;
 use tauri::{AppHandle, Manager, State};
 
 #[tauri::command]
+pub fn load_snapshot(
+    repo: State<'_, Mutex<Repository>>,
+    local_only: Option<bool>,
+) -> Result<CoreEnvelope<CoreSnapshotPayload>, String> {
+    let _ = local_only;
+    let repo = repo.lock().map_err(|e| e.to_string())?;
+    repo.load_snapshot_local().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 pub fn clean(repo: State<'_, Mutex<Repository>>) -> Result<CoreEnvelope<CleanPayload>, String> {
     let repo = repo.lock().map_err(|e| e.to_string())?;
     repo.clean().map_err(|e| e.to_string())

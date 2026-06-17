@@ -72,7 +72,6 @@ pub fn remove_mcp_server(config_path: &Path, name: &str) -> Result<(), CoreError
     Ok(())
 }
 
-
 fn write_mcp_server(config_path: &Path, server: &McpServerSummary) -> Result<(), CoreError> {
     let original = load_config_text(config_path)?;
     let document = parse_mcp_document(&original);

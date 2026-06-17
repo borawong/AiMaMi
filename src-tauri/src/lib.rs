@@ -106,11 +106,19 @@ pub fn run() {
             commands::skills::remove_skill,
             commands::skills::restore_skill_backup,
             commands::skills::delete_skill_backup,
+            commands::ssh_remote::load_ssh_servers,
+            commands::ssh_remote::upsert_ssh_server,
+            commands::ssh_remote::remove_ssh_server,
+            commands::ssh_remote::test_ssh_server,
+            commands::ssh_remote::sync_ssh_server,
+            commands::ssh_remote::sync_all_ssh_servers,
+            commands::ssh_remote::open_ssh_server,
             commands::custom_instructions::load_custom_instruction_state,
             commands::custom_instructions::preview_custom_instruction_apply,
             commands::custom_instructions::apply_custom_instruction,
             commands::custom_instructions::clear_custom_instruction_block,
             commands::custom_instructions::rollback_custom_instruction,
+            commands::system::load_snapshot,
             commands::system::clean,
             commands::system::rebuild_registry,
             commands::system::set_auto_switch,
@@ -142,9 +150,7 @@ pub fn run() {
         move || commands::hotspot::force_reveal_main_window(&handle)
     })
     .map_err(|error| {
-        eprintln!(
-            "[AiMaMi] failed to start single-instance activation watcher: {error}"
-        );
+        eprintln!("[AiMaMi] failed to start single-instance activation watcher: {error}");
         error
     })
     .ok();
@@ -163,6 +169,16 @@ pub fn run() {
             commands::hotspot::force_reveal_main_window(_app_handle);
         }
     });
+}
+
+pub fn run_daemon_once_cli() -> Result<(), String> {
+    let repo = Repository::new();
+    let auto_switch_enabled = repo.auto_switch_config().enabled;
+    let payload = repo
+        .build_daemon_payload(auto_switch_enabled)
+        .map_err(|e| e.to_string())?;
+    eprintln!("[AiMaMi] daemon run once at {}", payload.data.executed_at);
+    Ok(())
 }
 
 fn load_tray_template_icon() -> Result<Image<'static>, String> {

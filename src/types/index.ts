@@ -3,6 +3,55 @@ export type ApiProxyMode = "direct" | "manual";
 export type ApiReachabilityStatus = "unknown" | "reachable" | "unreachable";
 export type AutoSwitchRuntimeState = "running" | "stopped" | "notInstalled" | "unknown";
 export type McpTransport = "stdio" | "http" | "sse" | "unknown";
+
+export type SshSyncStatus = "success" | "failed" | "skipped";
+
+export interface SshServerConfig {
+  alias: string;
+  host: string;
+  user?: string | null;
+  port?: number | null;
+  keyPath?: string | null;
+  remoteCodexHome: string;
+  enabled: boolean;
+}
+
+export interface SshServerSummary extends SshServerConfig {
+  id: string;
+  lastSyncStatus?: SshSyncStatus | null;
+  lastSyncedAt?: number | null;
+  lastError?: string | null;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface SshServerListPayload {
+  items: SshServerSummary[];
+  total: number;
+  sourcePath: string;
+  lastScanAt: number;
+}
+
+export interface SshConnectionTestPayload {
+  serverId: string | null;
+  reachable: boolean;
+  code: string;
+  message: string;
+  elapsedMs: number;
+}
+
+export interface SshSyncResult {
+  serverId: string;
+  alias: string;
+  status: SshSyncStatus;
+  message?: string | null;
+  syncedAt?: number | null;
+}
+
+export interface SshSyncPayload {
+  results: SshSyncResult[];
+}
+
 export type CustomInstructionProtectionState = "ready" | "unmanaged" | "protected";
 export type CustomInstructionHistoryAction = "apply" | "clear" | "rollback";
 export type VoiceTemplateKind = "dictation" | "task" | "review" | "translation" | "summary" | "custom";

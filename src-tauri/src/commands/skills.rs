@@ -46,7 +46,8 @@ pub fn import_skill(
     let paths = repo.paths();
     let payload = skills::import_skill(&paths.skills_dir, &paths.codexmate_dir, &path)
         .map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    let warnings = repo.sync_remote_servers_best_effort();
+    Ok(CoreEnvelope::ok_with_warnings(payload, warnings))
 }
 
 #[tauri::command]
@@ -58,7 +59,8 @@ pub fn remove_skill(
     let paths = repo.paths();
     let payload = skills::remove_skill(&paths.skills_dir, &paths.codexmate_dir, &id)
         .map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    let warnings = repo.sync_remote_servers_best_effort();
+    Ok(CoreEnvelope::ok_with_warnings(payload, warnings))
 }
 
 #[tauri::command]
@@ -70,7 +72,8 @@ pub fn restore_skill_backup(
     let paths = repo.paths();
     let payload = skills::restore_skill_backup(&paths.skills_dir, &paths.codexmate_dir, &id)
         .map_err(|e| e.to_string())?;
-    Ok(CoreEnvelope::ok(payload))
+    let warnings = repo.sync_remote_servers_best_effort();
+    Ok(CoreEnvelope::ok_with_warnings(payload, warnings))
 }
 
 #[tauri::command]

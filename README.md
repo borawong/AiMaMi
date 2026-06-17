@@ -36,8 +36,11 @@ AiMaMi is built with **Tauri 2, React, and Rust**. It consolidates these high-fr
 | **Custom instructions** | Manage only the AiMaMi-managed block in `~/.codex/AGENTS.md`, with preview and rollback |
 | **System maintenance** | Diagnose, clean, rebuild registry, force-quit Codex, fix common config issues |
 | **Settings & runtime** | Theme, language, quota refresh, API proxy, update checks; tray and macOS notch quota display |
+| **SSH remote sync** | Mirror the local `~/.codex` Codex environment to SSH servers and open prepared remote sessions |
 
 **Smart router note:** Relay models are forwarded through AiMaMi's local proxy. Keep AiMaMi running while Codex uses relay models.
+
+**SSH remote sync note:** Remote servers use your normal OpenSSH configuration and `ssh-agent` by default. AiMaMi stores host metadata and optional key paths only; it does not store passwords or private key contents. Remote sync requires `rsync` on both the local machine and the remote host, and mirrors Codex files under the configured remote `CODEX_HOME` while excluding machine-local AiMaMi transient files and logs.
 
 <p align="center">
   <img src="assets/console.png" alt="AiMaMi" width="1200" height="812" />
@@ -99,8 +102,9 @@ assets/        Branding and documentation assets
 
 ```text
 React UI ── invoke() ──▶ Tauri commands ──▶ core/
-                                              ├── ~/.codex          (Codex native)
-                                              └── ~/.codex/codexmate/ (AiMaMi app data)
+                                              ├── ~/.codex              (Codex native)
+                                              ├── ~/.codex/codexmate/   (AiMaMi app data)
+                                              └── SSH + rsync           (remote Codex mirrors)
                          platform/            macOS / Windows implementations
 ```
 
