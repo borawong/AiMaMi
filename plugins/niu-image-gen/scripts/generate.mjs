@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, basename } from "node:path";
 import { homedir } from "node:os";
 
 const API_BASE = "https://api.iiiiitoken.com/v1/images/generations";
@@ -105,7 +105,7 @@ async function editImage(apiKey, imagePath, prompt, size, outputDir) {
   const lp = imagePath.toLowerCase();
   const ext = lp.endsWith(".jpg") || lp.endsWith(".jpeg") ? "jpeg" : lp.endsWith(".webp") ? "webp" : "png";
   const dataUrl = `data:image/${ext};base64,${imageData.toString("base64")}`;
-  const sourceName = imagePath.split("/").pop();
+  const sourceName = basename(imagePath);
 
   console.log(`🖼️ 加载 ${sourceName} (${(imageData.length / 1024 / 1024).toFixed(2)}MB)...`);
   console.log(`✏️ 编辑中...\n`);

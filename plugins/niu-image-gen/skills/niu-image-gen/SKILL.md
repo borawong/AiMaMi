@@ -410,7 +410,7 @@ These rules apply to ALL branches:
 |-------|--------|
 | 503 "No available compatible accounts" | Wait 30s, retry once. If still fails, tell user the API is temporarily busy. |
 | 400 with size error | Fall back to closest valid size and retry. |
-| Timeout (120s) | Report and offer to retry. |
+| Timeout (generation 120s / edit 180s) | Report and offer to retry. |
 | Missing API key | Guide through `--set-key` setup (Branch A W1). |
 
 ## Hard constraints
