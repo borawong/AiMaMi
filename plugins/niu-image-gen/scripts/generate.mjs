@@ -192,21 +192,18 @@ async function runBatch(apiKey, prompts, size, concurrency, outputDir, isVariati
   if (isVariation) {
     const NUM = ["①", "②", "③", "④"];
     const p = results[0].prompt;
-    const pDisplay = p.length > 50 ? p.slice(0, 50) + "..." : p;
     const totalMB = ok.reduce((sum, r) => sum + parseFloat(r.fileSize), 0).toFixed(2);
-    console.log(`🎨 "${pDisplay}" × ${results.length}\n`);
+    console.log(`🎨 "${p}" × ${results.length}\n`);
     console.log(`✅ ${(totalTime / 1000).toFixed(1)}s ｜ 共 ${totalMB}MB`);
     ok.forEach((r, i) => console.log(`${NUM[i] || "·"} ${basename(r.path)}  ${r.fileSize}`));
     fail.forEach((r) => console.log(`❌ ${r.error}`));
   } else {
     for (const r of results) {
       if (r.ok) {
-        const p = r.prompt.length > 30 ? r.prompt.slice(0, 30) + "..." : r.prompt;
-        console.log(`🎨 "${p}" ✅ ${(r.elapsed / 1000).toFixed(1)}s ｜ ${r.fileSize}`);
+        console.log(`🎨 "${r.prompt}" ✅ ${(r.elapsed / 1000).toFixed(1)}s ｜ ${r.fileSize}`);
         console.log(`📁 ${r.path}`);
       } else {
-        const p = r.prompt.length > 30 ? r.prompt.slice(0, 30) + "..." : r.prompt;
-        console.log(`🎨 "${p}" ❌ ${r.error}`);
+        console.log(`🎨 "${r.prompt}" ❌ ${r.error}`);
       }
       console.log();
     }
@@ -371,8 +368,7 @@ async function main() {
 
     const result = await editImage(apiKey, flags.image, prompts[0], size, outputDir);
     if (result.ok) {
-      const p = prompts[0].length > 50 ? prompts[0].slice(0, 50) + "..." : prompts[0];
-      console.log(`✏️ "${p}"\n\n✅ ${(result.elapsed / 1000).toFixed(1)}s ｜ ${result.fileSize}\n📍 ${result.path}\n🖼️ 原图: ${result.sourceName}`);
+      console.log(`✏️ "${prompts[0]}"\n\n✅ ${(result.elapsed / 1000).toFixed(1)}s ｜ ${result.fileSize}\n📍 ${result.path}\n🖼️ 原图: ${result.sourceName}`);
     } else {
       console.error(`❌ 编辑失败: ${result.error}`);
       process.exit(1);
@@ -442,8 +438,7 @@ async function main() {
 
   const result = await generate(apiKey, prompt, size, outputDir);
   if (result.ok) {
-    const p = prompt.length > 50 ? prompt.slice(0, 50) + "..." : prompt;
-    console.log(`🎨 "${p}"\n\n✅ ${(result.elapsed / 1000).toFixed(1)}s ｜ ${result.fileSize}\n📍 ${result.path}`);
+    console.log(`🎨 "${prompt}"\n\n✅ ${(result.elapsed / 1000).toFixed(1)}s ｜ ${result.fileSize}\n📍 ${result.path}`);
   } else {
     console.error(`❌ 生成失败: ${result.error}`);
     process.exit(1);
