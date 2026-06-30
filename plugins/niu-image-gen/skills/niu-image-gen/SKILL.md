@@ -18,8 +18,9 @@ SCRIPT="$HOME/plugins/niu-image-gen/scripts/generate.mjs"
 ## 🔴 输出规则（最高优先级，所有 Branch 都必须遵守）
 
 1. **脚本输出 = 最终展示内容**：运行脚本后，将脚本的 stdout 输出**原样展示**给用户。不要改写、省略、翻译、合并或重新组织脚本的输出。
-2. **交互提示 = 原样输出**：本文件中所有 `「📋 原样输出」` 标记后面的引用块（`>` 开头），必须**逐字输出**给用户，包括所有 emoji、表格、分隔线。不得用自己的话重新表述。
-3. **禁止纯文本降级**：不要去掉 emoji，不要把表格改成逗号列表，不要把多行合并成一行。
+2. **禁止代码块包裹**：脚本输出是格式化好的纯文本，**绝对不要**用 ` ``` ` 代码块包裹。直接作为普通消息文本展示。
+3. **交互提示 = 原样输出**：本文件中所有 `「📋 原样输出」` 标记后面的引用块（`>` 开头），必须**逐字输出**给用户，包括所有 emoji、表格、分隔线。不得用自己的话重新表述。
+4. **禁止纯文本降级**：不要去掉 emoji，不要把表格改成逗号列表，不要把多行合并成一行。
 
 ---
 
@@ -182,7 +183,7 @@ node "$SCRIPT" --prompt "<extracted prompt>" [--quality Q] [--ratio R]
 
 Only pass `--quality` / `--ratio` if the user explicitly requested them. Otherwise the script reads the saved quickMode config automatically.
 
-4. **直接展示脚本输出，不要改写。** 然后从脚本输出中提取 .png 文件的完整路径（📍 或 📁 后面的路径），将每张图片读取并内嵌展示给用户。展示顺序：先脚本文本，再图片。
+4. **直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 脚本输出本身就是格式化好的纯文本，直接作为普通消息展示。然后从脚本输出中提取 .png 文件的完整路径（📍 或 📁 后面的路径），将每张图片读取并内嵌展示给用户。展示顺序：先脚本文本，再图片。
 
 **Do NOT** add a "需要调整参数吗?" prompt at the end of every generation. Keep it clean. The user knows they can say "修改配置" if needed.
 
@@ -326,7 +327,7 @@ node "$SCRIPT" --batch <file.json> [--quality Q --ratio R --concurrency N]
 
 ### Step 5: Report
 
-**直接展示脚本输出，不要改写。** 然后从脚本输出中提取所有 .png 文件的完整路径（📁 后面的路径），将每张图片读取并内嵌展示给用户。批量模式下每张图片展示在对应的 prompt 结果下方。
+**直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 脚本输出本身就是格式化好的纯文本，直接作为普通消息展示。然后从脚本输出中提取所有 .png 文件的完整路径（📁 后面的路径），将每张图片读取并内嵌展示给用户。批量模式下每张图片展示在对应的 prompt 结果下方。
 
 If any failed, offer to retry the failed ones.
 
