@@ -184,7 +184,7 @@ node "$SCRIPT" --prompt "<extracted prompt>" [--quality Q] [--ratio R]
 
 Only pass `--quality` / `--ratio` if the user explicitly requested them. Otherwise the script reads the saved quickMode config automatically.
 
-4. **直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 脚本输出本身就是格式化好的纯文本，直接作为普通消息展示。然后从脚本输出中提取 .png 文件的完整路径（📍 或 📁 后面的路径），将每张图片读取并内嵌展示给用户。展示顺序：先脚本文本，再图片，最后单独一行追加编辑提示：`✏️ 想编辑？换背景 / 改风格 / 去元素 — 说一声就行`
+4. **直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 脚本输出本身就是格式化好的纯文本，直接作为普通消息展示。然后提取图片路径并内嵌展示：单张时直接用 📍 后面的完整文件路径；多张变体时将 📍 后面的目录与 ①②③④ 行的文件名拼接成完整路径。展示顺序：先脚本文本，再图片，最后单独一行追加编辑提示：`✏️ 想编辑？换背景 / 改风格 / 去元素 — 说一声就行`
 
 **Do NOT** add a "需要调整参数吗?" prompt at the end of every generation. Keep it clean. The user knows they can say "修改配置" if needed.
 
