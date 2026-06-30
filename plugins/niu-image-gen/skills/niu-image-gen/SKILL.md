@@ -182,7 +182,7 @@ node "$SCRIPT" --prompt "<extracted prompt>" [--quality Q] [--ratio R]
 
 Only pass `--quality` / `--ratio` if the user explicitly requested them. Otherwise the script reads the saved quickMode config automatically.
 
-4. **直接展示脚本输出，不要改写。** 脚本会输出包含文件名、大小、耗时的格式化结果。
+4. **直接展示脚本输出，不要改写。** 然后从脚本输出中提取 .png 文件的完整路径（📍 或 📁 后面的路径），将每张图片读取并内嵌展示给用户。展示顺序：先脚本文本，再图片。
 
 **Do NOT** add a "需要调整参数吗?" prompt at the end of every generation. Keep it clean. The user knows they can say "修改配置" if needed.
 
@@ -326,7 +326,7 @@ node "$SCRIPT" --batch <file.json> [--quality Q --ratio R --concurrency N]
 
 ### Step 5: Report
 
-**直接展示脚本输出，不要改写。** 脚本会输出包含成功/失败数、耗时、文件列表的格式化结果。
+**直接展示脚本输出，不要改写。** 然后从脚本输出中提取所有 .png 文件的完整路径（📁 后面的路径），将每张图片读取并内嵌展示给用户。批量模式下每张图片展示在对应的 prompt 结果下方。
 
 If any failed, offer to retry the failed ones.
 

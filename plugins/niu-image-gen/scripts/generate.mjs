@@ -99,23 +99,20 @@ async function generate(apiKey, prompt, size, outputDir) {
 async function batchGenerate(apiKey, prompts, size, concurrency, outputDir) {
   const total = prompts.length;
   const results = new Array(total);
-  let completed = 0;
   let nextIdx = 0;
 
   async function worker() {
     while (nextIdx < total) {
       const idx = nextIdx++;
       const prompt = prompts[idx];
-      console.log(`[${idx + 1}/${total}] Generating: "${prompt.slice(0, 50)}${prompt.length > 50 ? "..." : ""}"`);
+      console.log(`[${idx + 1}/${total}] 生成中: "${prompt.slice(0, 30)}${prompt.length > 30 ? "..." : ""}"`);
       const result = await generate(apiKey, prompt, size, outputDir);
       results[idx] = { prompt, ...result };
-      completed++;
       if (result.ok) {
-        console.log(`[${idx + 1}/${total}] ✅ ${result.elapsed}ms → ${result.path}`);
+        console.log(`[${idx + 1}/${total}] ✅ ${(result.elapsed / 1000).toFixed(1)}s`);
       } else {
         console.log(`[${idx + 1}/${total}] ❌ ${result.error}`);
       }
-      console.log(`Progress: ${completed}/${total}`);
     }
   }
 
@@ -123,9 +120,10 @@ async function batchGenerate(apiKey, prompts, size, concurrency, outputDir) {
   return results;
 }
 
-async function runBatch(apiKey, prompts, size, concurrency, outputDir) {
-  console.log(`\n📦 批量生成中: ${prompts.length} 张, 尺寸=${size}, 并发=${concurrency}`);
-  console.log(`📍 输出: ${outputDir}\n`);
+async function runBatch(apiKey, prompts, size, concurrency, outputDir, isVariation = false) {
+  if (!isVariation) {
+    console.log(`\n📦 批量 ${prompts.length} 张\n`);
+  }
 
   const startAll = Date.now();
   const results = await batchGenerate(apiKey, prompts, size, concurrency, outputDir);
@@ -134,17 +132,26 @@ async function runBatch(apiKey, prompts, size, concurrency, outputDir) {
   const ok = results.filter((r) => r.ok);
   const fail = results.filter((r) => !r.ok);
 
-  console.log(`\n${"─".repeat(40)}`);
-  console.log(`🎉 批量生成完毕！\n`);
-  console.log(`✅ ${ok.length}/${results.length} 张成功 ｜ ⏱️ 总耗时 ${(totalTime / 1000).toFixed(1)}s\n`);
-  if (ok.length) {
-    ok.forEach((r) => console.log(`📁 ${r.path.split("/").pop()} (${r.fileSize})`));
-    console.log();
+  console.log();
+
+  if (!isVariation) {
+    for (const r of results) {
+      if (r.ok) {
+        const p = r.prompt.length > 30 ? r.prompt.slice(0, 30) + "..." : r.prompt;
+        console.log(`🎨 "${p}" ✅ ${(r.elapsed / 1000).toFixed(1)}s ｜ ${r.fileSize}`);
+        console.log(`📁 ${r.path}`);
+      } else {
+        const p = r.prompt.length > 30 ? r.prompt.slice(0, 30) + "..." : r.prompt;
+        console.log(`🎨 "${p}" ❌ ${r.error}`);
+      }
+      console.log();
+    }
   }
-  if (fail.length) {
-    console.log(`❌ 失败:`);
-    fail.forEach((r) => console.log(`  "${r.prompt.slice(0, 40)}..." → ${r.error}`));
-    console.log();
+
+  console.log(`✅ ${ok.length}/${results.length} ｜ ${(totalTime / 1000).toFixed(1)}s`);
+  if (isVariation) {
+    ok.forEach((r) => console.log(`📁 ${r.path.split("/").pop()} (${r.fileSize})`));
+    fail.forEach((r) => console.log(`❌ ${r.error}`));
   }
   console.log(`📍 ${outputDir}`);
   return fail.length > 0 ? 1 : 0;
@@ -336,20 +343,17 @@ async function main() {
   const count = Math.max(1, Math.min(flags.count ?? qm?.count ?? DEFAULTS.count, 4));
 
   if (count > 1) {
-    console.log(`\n🎨 正在生成 ${count} 张变体: ${quality} ${RATIO_NAMES[ratio] || ratio} (${size})`);
-    console.log(`📝 提示词: "${prompt}"`);
-    console.log(`📍 输出: ${outputDir}\n`);
-    process.exit(await runBatch(apiKey, Array(count).fill(prompt), size, Math.min(count, 4), outputDir));
+    console.log(`\n🎨 "${prompt}" × ${count}\n`);
+    process.exit(await runBatch(apiKey, Array(count).fill(prompt), size, Math.min(count, 4), outputDir, true));
   }
 
   // Single image
-  console.log(`\n🎨 正在生成: ${quality} ${RATIO_NAMES[ratio] || ratio} (${size})`);
-  console.log(`📝 提示词: "${prompt}"`);
-  console.log(`📍 输出: ${outputDir}\n`);
+  console.log(`\n🎨 正在生成...\n`);
 
   const result = await generate(apiKey, prompt, size, outputDir);
   if (result.ok) {
-    console.log(`🎉 图片已生成！\n\n📁 ${result.path.split("/").pop()} (${result.fileSize})\n⏱️ 耗时 ${(result.elapsed / 1000).toFixed(1)}s\n📍 ${outputDir}`);
+    const p = prompt.length > 50 ? prompt.slice(0, 50) + "..." : prompt;
+    console.log(`🎨 "${p}"\n\n✅ ${(result.elapsed / 1000).toFixed(1)}s ｜ ${result.fileSize}\n📍 ${result.path}`);
   } else {
     console.error(`❌ 生成失败: ${result.error}`);
     process.exit(1);
