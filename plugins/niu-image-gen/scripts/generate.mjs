@@ -102,7 +102,8 @@ async function editImage(apiKey, imagePath, prompt, size, outputDir) {
   }
 
   const imageData = readFileSync(imagePath);
-  const ext = imagePath.toLowerCase().endsWith(".jpg") || imagePath.toLowerCase().endsWith(".jpeg") ? "jpeg" : "png";
+  const lp = imagePath.toLowerCase();
+  const ext = lp.endsWith(".jpg") || lp.endsWith(".jpeg") ? "jpeg" : lp.endsWith(".webp") ? "webp" : "png";
   const dataUrl = `data:image/${ext};base64,${imageData.toString("base64")}`;
   const sourceName = imagePath.split("/").pop();
 

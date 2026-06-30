@@ -1,6 +1,6 @@
 ---
 name: "niu-image-gen"
-description: "Generate images using the Niu Image Gen plugin. Trigger when the user wants to create, draw, or generate images via Niu Image Gen, wants batch image generation, or needs AI-generated images saved to disk. Do not use for editing existing images, the built-in image_gen tool, or SVG/vector work."
+description: "Generate or edit images using the Niu Image Gen plugin. Trigger when the user wants to create, draw, generate, or edit images via Niu Image Gen, wants batch image generation, needs AI-generated images saved to disk, or wants to modify an existing image (change background, remove object, change style, etc.). Do not use for the built-in image_gen tool or SVG/vector work."
 ---
 
 # Niu Image Gen 🎨
@@ -420,4 +420,5 @@ These rules apply to ALL branches:
 - Maximum batch size: 20 prompts per run.
 - Maximum concurrency: 10.
 - Maximum count (quick mode): 4.
+- Generation timeout: 120s. Edit timeout: 180s.
 - Pixel budget: ≤8,294,400 px. Longest edge ≤3,840. Dimensions divisible by 16.
