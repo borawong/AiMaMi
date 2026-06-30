@@ -201,7 +201,7 @@ async function runBatch(apiKey, prompts, size, concurrency, outputDir, isVariati
 
   console.log(`✅ ${ok.length}/${results.length} ｜ ${(totalTime / 1000).toFixed(1)}s`);
   if (isVariation) {
-    ok.forEach((r) => console.log(`📁 ${r.path.split("/").pop()} (${r.fileSize})`));
+    ok.forEach((r) => console.log(`📁 ${basename(r.path)} (${r.fileSize})`));
     fail.forEach((r) => console.log(`❌ ${r.error}`));
   }
   console.log(`📍 ${outputDir}`);
