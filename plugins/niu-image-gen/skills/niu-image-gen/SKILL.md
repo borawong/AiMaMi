@@ -184,7 +184,7 @@ node "$SCRIPT" --prompt "<extracted prompt>" [--quality Q] [--ratio R]
 
 Only pass `--quality` / `--ratio` if the user explicitly requested them. Otherwise the script reads the saved quickMode config automatically.
 
-4. **直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 脚本输出本身就是格式化好的纯文本，直接作为普通消息展示。然后从脚本输出中提取 .png 文件的完整路径（📍 或 📁 后面的路径），将每张图片读取并内嵌展示给用户。展示顺序：先脚本文本，再图片。
+4. **直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 脚本输出本身就是格式化好的纯文本，直接作为普通消息展示。然后从脚本输出中提取 .png 文件的完整路径（📍 或 📁 后面的路径），将每张图片读取并内嵌展示给用户。展示顺序：先脚本文本，再图片，最后单独一行追加编辑提示：`✏️ 想编辑？换背景 / 改风格 / 去元素 — 说一声就行`
 
 **Do NOT** add a "需要调整参数吗?" prompt at the end of every generation. Keep it clean. The user knows they can say "修改配置" if needed.
 
@@ -328,7 +328,7 @@ node "$SCRIPT" --batch <file.json> [--quality Q --ratio R --concurrency N]
 
 ### Step 5: Report
 
-**直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 脚本输出本身就是格式化好的纯文本，直接作为普通消息展示。然后从脚本输出中提取所有 .png 文件的完整路径（📁 后面的路径），将每张图片读取并内嵌展示给用户。批量模式下每张图片展示在对应的 prompt 结果下方。
+**直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 脚本输出本身就是格式化好的纯文本，直接作为普通消息展示。然后从脚本输出中提取所有 .png 文件的完整路径（📁 后面的路径），将每张图片读取并内嵌展示给用户。批量模式下每张图片展示在对应的 prompt 结果下方。全部展示完毕后单独一行追加编辑提示：`✏️ 想编辑其中某张？告诉我哪张和要改什么`
 
 If any failed, offer to retry the failed ones.
 
@@ -390,7 +390,7 @@ Only pass `--quality` / `--ratio` if the user explicitly requested them. Otherwi
 
 ### Step 4: Show result
 
-**直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 然后从脚本输出中提取 .png 文件的完整路径（📍 后面的路径），将编辑后的图片读取并内嵌展示给用户。
+**直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 然后从脚本输出中提取 .png 文件的完整路径（📍 后面的路径），将编辑后的图片读取并内嵌展示给用户。展示完毕后单独一行追加编辑提示：`✏️ 继续改？直接说下一步要改什么`
 
 The user can continue editing the result by saying another edit instruction — in that case, use the NEWLY edited image as the source (not the original), and loop back to Step 2.
 

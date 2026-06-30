@@ -147,7 +147,7 @@ async function editImage(apiKey, imagePath, prompt, size, outputDir) {
   }
 }
 
-async function batchGenerate(apiKey, prompts, size, concurrency, outputDir) {
+async function batchGenerate(apiKey, prompts, size, concurrency, outputDir, isVariation = false) {
   const total = prompts.length;
   const results = new Array(total);
   let nextIdx = 0;
@@ -156,13 +156,17 @@ async function batchGenerate(apiKey, prompts, size, concurrency, outputDir) {
     while (nextIdx < total) {
       const idx = nextIdx++;
       const prompt = prompts[idx];
-      console.log(`[${idx + 1}/${total}] 生成中: "${prompt.slice(0, 30)}${prompt.length > 30 ? "..." : ""}"`);
+      if (isVariation) {
+        console.log(`⏳ [${idx + 1}/${total}]`);
+      } else {
+        console.log(`[${idx + 1}/${total}] 生成中: "${prompt.slice(0, 30)}${prompt.length > 30 ? "..." : ""}"`);
+      }
       const result = await generate(apiKey, prompt, size, outputDir);
       results[idx] = { prompt, ...result };
       if (result.ok) {
-        console.log(`[${idx + 1}/${total}] ✅ ${(result.elapsed / 1000).toFixed(1)}s`);
+        console.log(`✅ [${idx + 1}/${total}] ${(result.elapsed / 1000).toFixed(1)}s`);
       } else {
-        console.log(`[${idx + 1}/${total}] ❌ ${result.error}`);
+        console.log(`❌ [${idx + 1}/${total}] ${result.error}`);
       }
     }
   }
@@ -177,7 +181,7 @@ async function runBatch(apiKey, prompts, size, concurrency, outputDir, isVariati
   }
 
   const startAll = Date.now();
-  const results = await batchGenerate(apiKey, prompts, size, concurrency, outputDir);
+  const results = await batchGenerate(apiKey, prompts, size, concurrency, outputDir, isVariation);
   const totalTime = Date.now() - startAll;
 
   const ok = results.filter((r) => r.ok);
@@ -185,7 +189,16 @@ async function runBatch(apiKey, prompts, size, concurrency, outputDir, isVariati
 
   console.log();
 
-  if (!isVariation) {
+  if (isVariation) {
+    const NUM = ["①", "②", "③", "④"];
+    const p = results[0].prompt;
+    const pDisplay = p.length > 50 ? p.slice(0, 50) + "..." : p;
+    const totalMB = ok.reduce((sum, r) => sum + parseFloat(r.fileSize), 0).toFixed(2);
+    console.log(`🎨 "${pDisplay}" × ${results.length}\n`);
+    console.log(`✅ ${(totalTime / 1000).toFixed(1)}s ｜ 共 ${totalMB}MB`);
+    ok.forEach((r, i) => console.log(`${NUM[i] || "·"} ${basename(r.path)}  ${r.fileSize}`));
+    fail.forEach((r) => console.log(`❌ ${r.error}`));
+  } else {
     for (const r of results) {
       if (r.ok) {
         const p = r.prompt.length > 30 ? r.prompt.slice(0, 30) + "..." : r.prompt;
@@ -197,12 +210,7 @@ async function runBatch(apiKey, prompts, size, concurrency, outputDir, isVariati
       }
       console.log();
     }
-  }
-
-  console.log(`✅ ${ok.length}/${results.length} ｜ ${(totalTime / 1000).toFixed(1)}s`);
-  if (isVariation) {
-    ok.forEach((r) => console.log(`📁 ${basename(r.path)} (${r.fileSize})`));
-    fail.forEach((r) => console.log(`❌ ${r.error}`));
+    console.log(`✅ ${ok.length}/${results.length} ｜ ${(totalTime / 1000).toFixed(1)}s`);
   }
   console.log(`📍 ${outputDir}`);
   return fail.length > 0 ? 1 : 0;
@@ -425,12 +433,12 @@ async function main() {
   const count = Math.max(1, Math.min(flags.count ?? qm?.count ?? DEFAULTS.count, 4));
 
   if (count > 1) {
-    console.log(`\n🎨 "${prompt}" × ${count}\n`);
+    console.log();
     process.exit(await runBatch(apiKey, Array(count).fill(prompt), size, Math.min(count, 4), outputDir, true));
   }
 
   // Single image
-  console.log(`\n🎨 正在生成...\n`);
+  console.log(`\n⏳ 生成中...\n`);
 
   const result = await generate(apiKey, prompt, size, outputDir);
   if (result.ok) {
