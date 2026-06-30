@@ -1,0 +1,20 @@
+{
+  "name": "niu-image-gen",
+  "version": "1.0.0",
+  "description": "Generate images via third-party API with interactive quality/ratio selection and batch support.",
+  "author": {
+    "name": "BORAWONG"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Niu Image Gen",
+    "shortDescription": "AI image generation with batch mode, quality & ratio selection.",
+    "longDescription": "Generate high-quality images using a third-party image generation API. Interactive workflow guides you through quality (1K/2K/4K), aspect ratio (square/landscape/portrait), and batch generation with concurrency control.",
+    "developerName": "BORAWONG",
+    "category": "Productivity",
+    "capabilities": ["Write"],
+    "composerIcon": "./assets/logo.png",
+    "logo": "./assets/logo.png",
+    "defaultPrompt": "I want to generate some images"
+  }
+}

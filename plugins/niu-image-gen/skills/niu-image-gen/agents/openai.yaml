@@ -1,0 +1,4 @@
+interface:
+  display_name: "Niu Image Gen"
+  short_description: "Generate images with quality & ratio selection and batch mode"
+  default_prompt: "I want to generate some images"
