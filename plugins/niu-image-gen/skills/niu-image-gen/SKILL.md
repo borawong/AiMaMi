@@ -53,10 +53,11 @@ Fields can be `null` if not yet configured.
 | 2 | `hasKey` is `true` AND `quickMode` is `null` | → **Branch A2**: Quick Mode Setup |
 | 3 | User intent is to modify config (keywords: 修改配置、设置、更改参数、配置、settings) | → **Branch C**: Modify Config |
 | 4 | User intent is batch generation (keywords: 批量、batch) | → **Branch D**: Batch Mode |
-| 5 | `quickMode` exists AND user message contains a prompt | → **Branch B**: Quick Mode |
-| 6 | `quickMode` exists AND user message has no clear prompt | → **Branch E**: Help |
+| 5 | User intent is to edit an existing image (keywords: 编辑、修改图片、改一下、换背景、去掉、加上、变成、改成、edit、remove、replace — AND references an image or a previous generation exists) | → **Branch F**: Edit Image |
+| 6 | `quickMode` exists AND user message contains a prompt | → **Branch B**: Quick Mode |
+| 7 | `quickMode` exists AND user message has no clear prompt | → **Branch E**: Help |
 
-**IMPORTANT**: Rules are ORDERED. Rule 3 beats Rule 5 — if the user says "修改配置", go to Branch C even though quickMode exists. Rule 4 beats Rule 5 — "批量生成猫" goes to Branch D, not Branch B.
+**IMPORTANT**: Rules are ORDERED. Rule 3 beats Rule 6 — if the user says "修改配置", go to Branch C even though quickMode exists. Rule 4 beats Rule 6 — "批量生成猫" goes to Branch D, not Branch B. Rule 5 beats Rule 6 — "把背景换成海边" after a generation goes to Branch F, not Branch B.
 
 ---
 
@@ -343,11 +344,55 @@ User @ the plugin but didn't give a prompt or a command.
 >
 > ⚡ **生成图片**：@我 + 图片描述（例：一只赛博朋克风格的猫）
 >
+> ✏️ **编辑图片**：生成后说「换个背景」「去掉XX」「改成XX风格」
+>
 > 📦 **批量生成**：跟我说「批量生成」
 >
 > ⚙️ **修改配置**：跟我说「修改配置」
 >
 > 📊 **当前快速模式**：[Q] [R] ×[N]
+
+---
+
+## Branch F: ✏️ Edit Image
+
+User wants to modify an existing image (change background, remove object, change style, add element, etc.).
+
+**Trigger keywords**: 编辑 / 修改 / 改一下 / 换背景 / 去掉 / 加上 / 变成 / 改成 / remove / replace / change / edit — AND references an image or a previous generation exists in this conversation.
+
+### Step 1: Determine image source
+
+1. **User specified a file path** (e.g., "编辑 ~/Desktop/photo.png") → use that path directly.
+2. **Last generated image exists in this conversation** (from a prior Branch B/D run) → use that image's path. No need to ask.
+3. **No image available** → show this prompt:
+
+「📋 原样输出」
+
+> 🖼️ **你想编辑哪张图？**
+>
+> 发送文件路径，或者把图片拖进对话。
+
+Wait for user to provide a path, then continue.
+
+### Step 2: Extract edit prompt
+
+Extract the edit instruction from the user's message. The edit prompt is what the user wants to change (e.g., "把背景换成海边" → prompt is "把背景换成海边").
+
+### Step 3: Run edit
+
+```bash
+node "$SCRIPT" --edit --image "<image_path>" --prompt "<edit instruction>" [--quality Q] [--ratio R]
+```
+
+Only pass `--quality` / `--ratio` if the user explicitly requested them. Otherwise the script uses saved quickMode config.
+
+**This is zero-confirmation, same as Branch B.** Do NOT ask "确定要编辑吗?". Just run it.
+
+### Step 4: Show result
+
+**直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 然后从脚本输出中提取 .png 文件的完整路径（📍 后面的路径），将编辑后的图片读取并内嵌展示给用户。
+
+The user can continue editing the result by saying another edit instruction — in that case, use the NEWLY edited image as the source (not the original), and loop back to Step 2.
 
 ---
 

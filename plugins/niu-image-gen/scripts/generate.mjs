@@ -96,6 +96,56 @@ async function generate(apiKey, prompt, size, outputDir) {
   }
 }
 
+async function editImage(apiKey, imagePath, prompt, size, outputDir) {
+  if (!existsSync(imagePath)) {
+    return { ok: false, elapsed: 0, error: `文件不存在: ${imagePath}` };
+  }
+
+  const imageData = readFileSync(imagePath);
+  const ext = imagePath.toLowerCase().endsWith(".jpg") || imagePath.toLowerCase().endsWith(".jpeg") ? "jpeg" : "png";
+  const dataUrl = `data:image/${ext};base64,${imageData.toString("base64")}`;
+  const sourceName = imagePath.split("/").pop();
+
+  console.log(`🖼️ 加载 ${sourceName} (${(imageData.length / 1024 / 1024).toFixed(2)}MB)...`);
+  console.log(`✏️ 编辑中...\n`);
+
+  const start = Date.now();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 180_000);
+
+  try {
+    const res = await fetch(API_BASE, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify({ model: MODEL, prompt, n: 1, size, image: dataUrl }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    const elapsed = Date.now() - start;
+
+    if (!res.ok) {
+      const body = await res.text();
+      let msg;
+      try { msg = JSON.parse(body).error?.message || body; } catch { msg = body; }
+      return { ok: false, elapsed, error: `HTTP ${res.status}: ${msg}` };
+    }
+
+    const data = await res.json();
+    const b64 = data.data?.[0]?.b64_json;
+    if (!b64) return { ok: false, elapsed, error: "No image data in response" };
+
+    const buf = Buffer.from(b64, "base64");
+    const filename = `edit_${timestamp()}_${Math.random().toString(36).slice(2, 6)}.png`;
+    const filepath = join(outputDir, filename);
+    writeFileSync(filepath, buf);
+
+    return { ok: true, elapsed, path: filepath, fileSize: `${(buf.length / 1024 / 1024).toFixed(2)}MB`, sourceName };
+  } catch (err) {
+    clearTimeout(timeout);
+    return { ok: false, elapsed: Date.now() - start, error: err.name === "AbortError" ? "Timeout (180s)" : err.message };
+  }
+}
+
 async function batchGenerate(apiKey, prompts, size, concurrency, outputDir) {
   const total = prompts.length;
   const results = new Array(total);
@@ -171,6 +221,9 @@ GENERATE:
   --batch <file.json>   [--quality Q] [--ratio R] [--concurrency N]
   --batch-inline "p1" "p2" ...   [--quality Q] [--ratio R] [--concurrency N]
 
+EDIT:
+  --edit --image <path> --prompt "..."  [--quality Q] [--ratio R]
+
 Explicit flags override saved config. Without flags, saved mode config is used.
 
 SIZE MATRIX:
@@ -205,7 +258,9 @@ function parseArgs(argv) {
       args.flags.batchInline = true;
       continue;
     }
-    else if (a === "--help" || a === "-h")             args.flags.help = true;
+    else if (a === "--edit")                             args.flags.edit = true;
+    else if (a === "--image" && argv[i + 1])            args.flags.image = argv[++i];
+    else if (a === "--help" || a === "-h")              args.flags.help = true;
     i++;
   }
   return args;
@@ -285,8 +340,34 @@ async function main() {
     process.exit(0);
   }
 
-  if (flags.help || (prompts.length === 0 && !flags.batchFile)) {
+  if (flags.help || (prompts.length === 0 && !flags.batchFile && !flags.edit)) {
     printUsage();
+    process.exit(0);
+  }
+
+  // ── Edit command ──
+
+  if (flags.edit) {
+    if (!flags.image) { console.error("ERROR: --edit requires --image <path>"); process.exit(1); }
+    if (prompts.length === 0) { console.error("ERROR: --edit requires --prompt <text>"); process.exit(1); }
+
+    const apiKey = getApiKey();
+    const cfg = loadConfig();
+    const qm = cfg?.quickMode;
+    const quality = (flags.quality || qm?.quality || DEFAULTS.quality).toUpperCase();
+    const ratio = (flags.ratio || qm?.ratio || DEFAULTS.ratio).toLowerCase();
+    const size = resolveSize(quality, ratio);
+    if (!size) { console.error(`ERROR: Invalid quality="${quality}" or ratio="${ratio}".`); process.exit(1); }
+    const outputDir = resolveOutputDir(flags.outputDir);
+
+    const result = await editImage(apiKey, flags.image, prompts[0], size, outputDir);
+    if (result.ok) {
+      const p = prompts[0].length > 50 ? prompts[0].slice(0, 50) + "..." : prompts[0];
+      console.log(`✏️ "${p}"\n\n✅ ${(result.elapsed / 1000).toFixed(1)}s ｜ ${result.fileSize}\n📍 ${result.path}\n🖼️ 原图: ${result.sourceName}`);
+    } else {
+      console.error(`❌ 编辑失败: ${result.error}`);
+      process.exit(1);
+    }
     process.exit(0);
   }
 
