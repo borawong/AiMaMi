@@ -12,7 +12,7 @@
   "app": {
     "macOSPrivateApi": true,
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; img-src 'self' asset: https: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' ipc: http://localhost:* ws://localhost:* https://localhost:* tauri://localhost"
     },
     "windows": [
       {
