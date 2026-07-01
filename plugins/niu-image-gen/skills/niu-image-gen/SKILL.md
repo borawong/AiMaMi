@@ -360,11 +360,13 @@ User wants to modify an existing image (change background, remove object, change
 
 **Trigger keywords**: 编辑 / 修改 / 改一下 / 换背景 / 去掉 / 加上 / 变成 / 改成 / remove / replace / change / edit — AND references an image or a previous generation exists in this conversation.
 
-### Step 1: Determine image source
+### Step 1: Determine image source(s)
 
-1. **User specified a file path** (e.g., "编辑 ~/Desktop/photo.png") → use that path directly.
-2. **Last generated image exists in this conversation** (from a prior Branch B/D run) → use that image's path. No need to ask.
-3. **No image available** → show this prompt:
+1. **User specified file path(s)** (e.g., "编辑 ~/Desktop/photo.png") → use directly. If multiple paths mentioned, collect all.
+2. **User references multiple previous generations** (e.g., "把刚才那几张都改成..." / "这些图全部..." / "每张都...") → collect all previous generation paths from this conversation.
+3. **User references a specific previous generation** (e.g., "改第②张" / "编辑第二张") → use that specific path.
+4. **Last generated image exists in this conversation** (from a prior Branch B/D/F run) → use that image's path. No need to ask.
+5. **No image available** → show this prompt:
 
 「📋 原样输出」
 
@@ -378,21 +380,45 @@ Wait for user to provide a path, then continue.
 
 Extract the edit instruction from the user's message. The edit prompt is what the user wants to change (e.g., "把背景换成海边" → prompt is "把背景换成海边").
 
-### Step 3: Run edit
+### Step 3: Determine edit mode and run
+
+Check the collected image(s) and user intent to pick one of three modes:
+
+**Mode A — Multi-source batch edit** (multiple different source images, same edit prompt):
+
+Trigger: Step 1 collected more than one image path.
+
+```bash
+node "$SCRIPT" --edit --image "<path1>" --image "<path2>" --image "<path3>" --prompt "<edit instruction>" [--quality Q] [--ratio R] [--concurrency N]
+```
+
+**Mode B — Multi-variation edit** (one source image, multiple edit variations):
+
+Trigger: user wants multiple versions of the same edit. Keywords: 几个版本 / 多个版本 / 出N个 / N个变体 / 多出几个 / 给我N个不同的 / N variations. Extract count from user intent (default 2, max 4).
+
+```bash
+node "$SCRIPT" --edit --image "<image_path>" --prompt "<edit instruction>" --count <N> [--quality Q] [--ratio R]
+```
+
+**Mode C — Single edit** (default, one source image, one result):
 
 ```bash
 node "$SCRIPT" --edit --image "<image_path>" --prompt "<edit instruction>" [--quality Q] [--ratio R]
 ```
 
-Only pass `--quality` / `--ratio` if the user explicitly requested them. Otherwise the script uses saved quickMode config.
+Only pass `--quality` / `--ratio` / `--concurrency` if the user explicitly requested them. Otherwise the script uses saved config.
 
-**This is zero-confirmation, same as Branch B.** Do NOT ask "确定要编辑吗?". Just run it.
+**All modes are zero-confirmation, same as Branch B.** Do NOT ask "确定要编辑吗?". Just run it.
 
 ### Step 4: Show result
 
-**直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 然后从脚本输出中提取 .png 文件的完整路径（📍 后面的路径），将编辑后的图片读取并内嵌展示给用户。展示完毕后单独一行追加编辑提示：`✏️ 继续改？直接说下一步要改什么`
+**直接展示脚本输出，不要改写，不要用代码块（\`\`\`）包裹。** 然后提取图片路径并内嵌展示：
 
-The user can continue editing the result by saying another edit instruction — in that case, use the NEWLY edited image as the source (not the original), and loop back to Step 2.
+- **Mode C (单张编辑)**: 用 📍 后面的完整文件路径。展示后追加：`✏️ 继续改？直接说下一步要改什么`
+- **Mode B (多变体编辑)**: 将 📍 后的目录与 ①②③④ 行的文件名拼接。展示后追加：`✏️ 继续改？直接说下一步要改什么`
+- **Mode A (批量编辑)**: 将 📍 后的目录与 ①②... 行的文件名拼接（忽略 ← 后的原图名）。展示后追加：`✏️ 想继续编辑？告诉我哪张和要改什么`
+
+The user can continue editing a result by saying another edit instruction — in that case, use the NEWLY edited image as the source (not the original), and loop back to Step 2.
 
 ---
 
@@ -419,6 +445,7 @@ These rules apply to ALL branches:
 - **Never display the user's full API key in chat.**
 - Maximum batch size: 20 prompts per run.
 - Maximum concurrency: 10.
-- Maximum count (quick mode): 4.
+- Maximum count (quick mode / edit variations): 4.
+- Maximum batch edit images: 10.
 - Generation timeout: 120s. Edit timeout: 180s.
 - Pixel budget: ≤8,294,400 px. Longest edge ≤3,840. Dimensions divisible by 16.

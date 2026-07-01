@@ -96,9 +96,9 @@ async function generate(apiKey, prompt, size, outputDir) {
   }
 }
 
-async function editImage(apiKey, imagePath, prompt, size, outputDir) {
+async function editImage(apiKey, imagePath, prompt, size, outputDir, count = 1, silent = false) {
   if (!existsSync(imagePath)) {
-    return { ok: false, elapsed: 0, error: `文件不存在: ${imagePath}` };
+    return { ok: false, elapsed: 0, error: `文件不存在: ${imagePath}`, sourceName: basename(imagePath) };
   }
 
   const imageData = readFileSync(imagePath);
@@ -107,8 +107,10 @@ async function editImage(apiKey, imagePath, prompt, size, outputDir) {
   const dataUrl = `data:image/${ext};base64,${imageData.toString("base64")}`;
   const sourceName = basename(imagePath);
 
-  console.log(`🖼️ 加载 ${sourceName} (${(imageData.length / 1024 / 1024).toFixed(2)}MB)...`);
-  console.log(`✏️ 编辑中...\n`);
+  if (!silent) {
+    console.log(`🖼️ 加载 ${sourceName} (${(imageData.length / 1024 / 1024).toFixed(2)}MB)...`);
+    console.log(count > 1 ? `✏️ 编辑中 × ${count}...\n` : `✏️ 编辑中...\n`);
+  }
 
   const start = Date.now();
   const controller = new AbortController();
@@ -118,7 +120,7 @@ async function editImage(apiKey, imagePath, prompt, size, outputDir) {
     const res = await fetch(API_BASE, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({ model: MODEL, prompt, n: 1, size, image: dataUrl }),
+      body: JSON.stringify({ model: MODEL, prompt, n: count, size, image: dataUrl }),
       signal: controller.signal,
     });
     clearTimeout(timeout);
@@ -128,12 +130,29 @@ async function editImage(apiKey, imagePath, prompt, size, outputDir) {
       const body = await res.text();
       let msg;
       try { msg = JSON.parse(body).error?.message || body; } catch { msg = body; }
-      return { ok: false, elapsed, error: `HTTP ${res.status}: ${msg}` };
+      return { ok: false, elapsed, error: `HTTP ${res.status}: ${msg}`, sourceName };
     }
 
     const data = await res.json();
+
+    if (count > 1) {
+      const results = [];
+      const ts = timestamp();
+      for (let i = 0; i < (data.data?.length || 0); i++) {
+        const b64 = data.data[i]?.b64_json;
+        if (b64) {
+          const buf = Buffer.from(b64, "base64");
+          const filename = `edit_${ts}_${i + 1}_${Math.random().toString(36).slice(2, 6)}.png`;
+          const filepath = join(outputDir, filename);
+          writeFileSync(filepath, buf);
+          results.push({ path: filepath, fileSize: `${(buf.length / 1024 / 1024).toFixed(2)}MB` });
+        }
+      }
+      return { ok: results.length > 0, elapsed, results, sourceName };
+    }
+
     const b64 = data.data?.[0]?.b64_json;
-    if (!b64) return { ok: false, elapsed, error: "No image data in response" };
+    if (!b64) return { ok: false, elapsed, error: "No image data in response", sourceName };
 
     const buf = Buffer.from(b64, "base64");
     const filename = `edit_${timestamp()}_${Math.random().toString(36).slice(2, 6)}.png`;
@@ -143,8 +162,50 @@ async function editImage(apiKey, imagePath, prompt, size, outputDir) {
     return { ok: true, elapsed, path: filepath, fileSize: `${(buf.length / 1024 / 1024).toFixed(2)}MB`, sourceName };
   } catch (err) {
     clearTimeout(timeout);
-    return { ok: false, elapsed: Date.now() - start, error: err.name === "AbortError" ? "Timeout (180s)" : err.message };
+    return { ok: false, elapsed: Date.now() - start, error: err.name === "AbortError" ? "Timeout (180s)" : err.message, sourceName };
   }
+}
+
+async function runBatchEdit(apiKey, imagePaths, prompt, size, concurrency, outputDir) {
+  const total = imagePaths.length;
+  console.log(`\n✏️ 批量编辑 ${total} 张\n`);
+
+  const startAll = Date.now();
+  const results = new Array(total);
+  let nextIdx = 0;
+
+  async function worker() {
+    while (nextIdx < total) {
+      const idx = nextIdx++;
+      const imagePath = imagePaths[idx];
+      console.log(`⏳ [${idx + 1}/${total}] ${basename(imagePath)}`);
+      const result = await editImage(apiKey, imagePath, prompt, size, outputDir, 1, true);
+      results[idx] = result;
+      if (result.ok) {
+        console.log(`✅ [${idx + 1}/${total}] ${(result.elapsed / 1000).toFixed(1)}s`);
+      } else {
+        console.log(`❌ [${idx + 1}/${total}] ${result.error}`);
+      }
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(concurrency, total) }, () => worker()));
+  const totalTime = Date.now() - startAll;
+
+  const ok = results.filter(r => r.ok);
+  const fail = results.filter(r => !r.ok);
+
+  console.log();
+
+  const NUM = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨", "⑩"];
+  console.log(`✏️ "${prompt}"\n`);
+  const totalMB = ok.reduce((sum, r) => sum + parseFloat(r.fileSize), 0).toFixed(2);
+  console.log(`✅ ${ok.length}/${total} ｜ ${(totalTime / 1000).toFixed(1)}s ｜ 共 ${totalMB}MB`);
+  ok.forEach((r, i) => console.log(`${NUM[i] || "·"} ${basename(r.path)} ← ${r.sourceName}  ${r.fileSize}`));
+  fail.forEach(r => console.log(`❌ ${r.sourceName}: ${r.error}`));
+  console.log(`📍 ${outputDir}`);
+
+  return fail.length > 0 ? 1 : 0;
 }
 
 async function batchGenerate(apiKey, prompts, size, concurrency, outputDir, isVariation = false) {
@@ -228,7 +289,8 @@ GENERATE:
   --batch-inline "p1" "p2" ...   [--quality Q] [--ratio R] [--concurrency N]
 
 EDIT:
-  --edit --image <path> --prompt "..."  [--quality Q] [--ratio R]
+  --edit --image <path> --prompt "..."  [--quality Q] [--ratio R] [--count N]
+  --edit --image <p1> --image <p2> --prompt "..."  [--concurrency N]
 
 Explicit flags override saved config. Without flags, saved mode config is used.
 
@@ -265,7 +327,7 @@ function parseArgs(argv) {
       continue;
     }
     else if (a === "--edit")                             args.flags.edit = true;
-    else if (a === "--image" && argv[i + 1])            args.flags.image = argv[++i];
+    else if (a === "--image" && argv[i + 1]) { if (!args.flags.images) args.flags.images = []; args.flags.images.push(argv[++i]); }
     else if (a === "--help" || a === "-h")              args.flags.help = true;
     i++;
   }
@@ -354,7 +416,8 @@ async function main() {
   // ── Edit command ──
 
   if (flags.edit) {
-    if (!flags.image) { console.error("ERROR: --edit requires --image <path>"); process.exit(1); }
+    const images = flags.images || [];
+    if (images.length === 0) { console.error("ERROR: --edit requires --image <path>"); process.exit(1); }
     if (prompts.length === 0) { console.error("ERROR: --edit requires --prompt <text>"); process.exit(1); }
 
     const apiKey = getApiKey();
@@ -366,7 +429,32 @@ async function main() {
     if (!size) { console.error(`ERROR: Invalid quality="${quality}" or ratio="${ratio}".`); process.exit(1); }
     const outputDir = resolveOutputDir(flags.outputDir);
 
-    const result = await editImage(apiKey, flags.image, prompts[0], size, outputDir);
+    if (images.length > 1) {
+      const bm = cfg?.batchMode;
+      const concurrency = Math.max(1, Math.min(flags.concurrency ?? bm?.concurrency ?? DEFAULTS.concurrency, 10));
+      process.exit(await runBatchEdit(apiKey, images, prompts[0], size, concurrency, outputDir));
+    }
+
+    const count = Math.max(1, Math.min(flags.count ?? 1, 4));
+
+    if (count > 1) {
+      const result = await editImage(apiKey, images[0], prompts[0], size, outputDir, count);
+      if (result.ok) {
+        const NUM = ["①", "②", "③", "④"];
+        const totalMB = result.results.reduce((sum, r) => sum + parseFloat(r.fileSize), 0).toFixed(2);
+        console.log(`✏️ "${prompts[0]}" × ${count}\n`);
+        console.log(`✅ ${(result.elapsed / 1000).toFixed(1)}s ｜ 共 ${totalMB}MB`);
+        result.results.forEach((r, i) => console.log(`${NUM[i] || "·"} ${basename(r.path)}  ${r.fileSize}`));
+        console.log(`📍 ${outputDir}`);
+        console.log(`🖼️ 原图: ${result.sourceName}`);
+      } else {
+        console.error(`❌ 编辑失败: ${result.error}`);
+        process.exit(1);
+      }
+      process.exit(0);
+    }
+
+    const result = await editImage(apiKey, images[0], prompts[0], size, outputDir);
     if (result.ok) {
       console.log(`✏️ "${prompts[0]}"\n\n✅ ${(result.elapsed / 1000).toFixed(1)}s ｜ ${result.fileSize}\n📍 ${result.path}\n🖼️ 原图: ${result.sourceName}`);
     } else {
