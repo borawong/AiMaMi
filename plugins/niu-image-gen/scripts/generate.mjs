@@ -61,7 +61,7 @@ function resolveOutputDir(userDir) {
 async function generate(apiKey, prompt, size, outputDir) {
   const start = Date.now();
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 120_000);
+  const timeout = setTimeout(() => controller.abort(), 220_000);
 
   try {
     const res = await fetch(API_BASE, {
@@ -92,7 +92,7 @@ async function generate(apiKey, prompt, size, outputDir) {
     return { ok: true, elapsed, path: filepath, fileSize: `${(buf.length / 1024 / 1024).toFixed(2)}MB` };
   } catch (err) {
     clearTimeout(timeout);
-    return { ok: false, elapsed: Date.now() - start, error: err.name === "AbortError" ? "Timeout (120s)" : err.message };
+    return { ok: false, elapsed: Date.now() - start, error: err.name === "AbortError" ? "Timeout (220s)" : err.message };
   }
 }
 
@@ -114,7 +114,7 @@ async function editImage(apiKey, imagePath, prompt, size, outputDir, count = 1, 
 
   const start = Date.now();
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 180_000);
+  const timeout = setTimeout(() => controller.abort(), 250_000);
 
   try {
     const res = await fetch(API_BASE, {
@@ -162,7 +162,7 @@ async function editImage(apiKey, imagePath, prompt, size, outputDir, count = 1, 
     return { ok: true, elapsed, path: filepath, fileSize: `${(buf.length / 1024 / 1024).toFixed(2)}MB`, sourceName };
   } catch (err) {
     clearTimeout(timeout);
-    return { ok: false, elapsed: Date.now() - start, error: err.name === "AbortError" ? "Timeout (180s)" : err.message, sourceName };
+    return { ok: false, elapsed: Date.now() - start, error: err.name === "AbortError" ? "Timeout (250s)" : err.message, sourceName };
   }
 }
 
