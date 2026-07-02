@@ -1,6 +1,6 @@
 {
   "name": "niu-image-gen",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate images via third-party API with interactive quality/ratio selection and batch support.",
   "author": {
     "name": "BORAWONG"
